@@ -153,7 +153,6 @@
             margin-bottom: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        
         /* Visits Page Styles */
         .visits-container {
             display: none;
@@ -199,6 +198,14 @@
         .back-button:hover {
             background-color: #1a252f;
         }
+        .loading {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .error-message {
+            color: #e74c3c;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -236,7 +243,7 @@
             <div class="section">
                 <div class="section-title">Clients</div>
                 <ul class="section-content" id="clientList">
-                    <!-- Clients will be populated by JavaScript -->
+                    <li class="loading">Loading clients...</li>
                 </ul>
             </div>
             <div class="section">
@@ -267,158 +274,273 @@
     <div class="visits-container" id="visitsContainer">
         <button class="back-button" id="backButton">← Back to Dashboard</button>
         <h2>Client Visits</h2>
-        <div id="clientVisitsList">
-            <!-- Client visits will be populated by JavaScript -->
-        </div>
+        <div id="clientVisitsList" class="loading">Loading visits...</div>
     </div>
 
     <script>
-    // Your GitHub repository details
-    const repoOwner = 'Qualinova7';
-    const repoName = 'QualiNova';
-    const folderPath = ''; // Root directory, or specify if files are in a subfolder
-
-    // Function to fetch visit files from GitHub
-    async function fetchVisitFiles() {
-        try {
-            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`;
-            const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error('Failed to fetch files');
-            
-            const files = await response.json();
-            return files
-                .filter(file => file.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/))
-                .map(file => file.name);
-        } catch (error) {
-            console.error("Error fetching files:", error);
-            return []; // Fallback to mock data if API fails
-        }
-    }
-
-    // Updated function to get client names
-    async function getClientNamesFromVisits() {
-        const visitFiles = await fetchVisitFiles();
-        const clients = new Set();
+        // Debugging flag - set to true to see console logs
+        const DEBUG = true;
         
-        visitFiles.forEach(file => {
-            const match = file.match(/^A_([^_]+)_/);
-            if (match) clients.add(match[1]);
-        });
-        
-        return Array.from(clients).sort();
-    }
+        // Your GitHub repository details
+        const repoOwner = 'Qualinova7';
+        const repoName = 'QualiNova';
+        const folderPath = ''; // Root directory, or specify if files are in a subfolder
 
-    // Updated function to get visits for a client
-    async function getVisitsForClient(clientName) {
-        const visitFiles = await fetchVisitFiles();
-        return visitFiles
-            .filter(file => file.startsWith(`A_${clientName}_`))
-            .map(file => {
-                const dateMatch = file.match(/_(\d{2})_(\d{2})_(\d{4})\./);
-                const [_, month, day, year] = dateMatch || [];
-                return {
-                    filename: file,
-                    date: dateMatch ? new Date(`${year}-${month}-${day}`) : new Date(0),
-                    displayName: dateMatch ? `Visit ${month}/${day}/${year}` : file
-                };
-            })
-            .sort((a, b) => b.date - a.date);
-    }
+        // Mock data for fallback
+        const mockVisitFiles = [
+            "A_CTOR_05_25_2025.xlsx",
+            "A_ABC_05_20_2025.xlsx",
+            "A_ABC_04_15_2025.xlsx",
+            "A_DELTA_03_10_2025.xlsx",
+            "A_GLOBAL_02_05_2025.xlsx"
+        ];
 
-    // Update populateClientList to be async
-    async function populateClientList() {
-        const clientList = document.getElementById('clientList');
-        clientList.innerHTML = '<li>Loading clients...</li>';
-        
-        try {
-            const clients = await getClientNamesFromVisits();
-            clientList.innerHTML = '';
-            
-            if (clients.length === 0) {
-                clientList.innerHTML = '<li>No clients found</li>';
-                return;
+        // Function to log debug messages
+        function debugLog(message) {
+            if (DEBUG) {
+                console.log(`[DEBUG] ${message}`);
             }
+        }
+
+        // Function to update Egypt date and time
+        function updateEgyptDateTime() {
+            const options = {
+                timeZone: 'Africa/Cairo',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
             
-            clients.forEach(client => {
-                const li = document.createElement('li');
-                li.textContent = client;
-                li.addEventListener('click', () => showClientVisits(client));
-                clientList.appendChild(li);
+            const now = new Date();
+            const egyptDateTime = now.toLocaleString('en-US', options);
+            document.getElementById('egyptDateTime').textContent = egyptDateTime;
+        }
+
+        // Function to fetch visit files from GitHub
+        async function fetchVisitFiles() {
+            try {
+                debugLog("Attempting to fetch files from GitHub...");
+                const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`;
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API responded with status ${response.status}`);
+                }
+                
+                const files = await response.json();
+                debugLog("Successfully fetched files from GitHub");
+                
+                // Filter for Excel files with the correct naming pattern
+                const visitFiles = files
+                    .filter(file => file.type === 'file')
+                    .map(file => file.name)
+                    .filter(name => name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i));
+                
+                debugLog(`Found ${visitFiles.length} valid visit files`);
+                return visitFiles.length > 0 ? visitFiles : mockVisitFiles;
+                
+            } catch (error) {
+                debugLog(`Error fetching files: ${error.message}. Using mock data as fallback.`);
+                return mockVisitFiles;
+            }
+        }
+
+        // Function to extract client names from visit files
+        function getClientNamesFromFiles(files) {
+            const clients = new Set();
+            files.forEach(file => {
+                const match = file.match(/^A_([^_]+)_/i);
+                if (match) {
+                    clients.add(match[1]);
+                }
             });
-        } catch (error) {
-            clientList.innerHTML = '<li>Error loading clients</li>';
-            console.error(error);
+            return Array.from(clients).sort();
         }
-    }
 
-    // Update showAllVisits to be async
-    async function showAllVisits() {
-        document.getElementById('mainContent').style.display = 'none';
-        const visitsContainer = document.getElementById('visitsContainer');
-        visitsContainer.style.display = 'block';
-        
-        const visitsList = document.getElementById('clientVisitsList');
-        visitsList.innerHTML = '<div>Loading visits...</div>';
-        
-        try {
-            const clients = await getClientNamesFromVisits();
-            visitsList.innerHTML = '';
+        // Function to process visits for a specific client
+        function processVisitsForClient(files, clientName) {
+            return files
+                .filter(file => file.match(new RegExp(`^A_${clientName}_\\d{2}_\\d{2}_\\d{4}\\.xlsx$`, 'i')))
+                .map(file => {
+                    const dateMatch = file.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
+                    if (dateMatch) {
+                        const [_, month, day, year] = dateMatch;
+                        return {
+                            filename: file,
+                            date: new Date(`${year}-${month}-${day}`),
+                            displayName: `Visit ${month}/${day}/${year}`
+                        };
+                    }
+                    return {
+                        filename: file,
+                        date: new Date(0),
+                        displayName: file
+                    };
+                })
+                .sort((a, b) => b.date - a.date);
+        }
+
+        // Function to populate client list in sidebar
+        async function populateClientList() {
+            const clientList = document.getElementById('clientList');
             
-            if (clients.length === 0) {
-                visitsList.innerHTML = '<div>No visits found</div>';
-                return;
+            try {
+                clientList.innerHTML = '<li class="loading">Loading clients...</li>';
+                const visitFiles = await fetchVisitFiles();
+                const clients = getClientNamesFromFiles(visitFiles);
+                
+                if (clients.length === 0) {
+                    clientList.innerHTML = '<li>No clients found</li>';
+                    return;
+                }
+                
+                clientList.innerHTML = '';
+                clients.forEach(client => {
+                    const li = document.createElement('li');
+                    li.textContent = client;
+                    li.addEventListener('click', () => showClientVisits(client));
+                    clientList.appendChild(li);
+                });
+                
+            } catch (error) {
+                debugLog(`Error populating client list: ${error.message}`);
+                clientList.innerHTML = '<li class="error-message">Error loading clients</li>';
             }
+        }
+
+        // Function to show all visits
+        async function showAllVisits() {
+            const mainContent = document.getElementById('mainContent');
+            const visitsContainer = document.getElementById('visitsContainer');
+            const visitsList = document.getElementById('clientVisitsList');
             
-            for (const client of clients) {
-                const clientArrow = document.createElement('div');
-                clientArrow.className = 'client-arrow';
-                clientArrow.innerHTML = `<span>${client}</span><span>▼</span>`;
+            mainContent.style.display = 'none';
+            visitsContainer.style.display = 'block';
+            visitsList.innerHTML = '<div class="loading">Loading visits...</div>';
+            
+            try {
+                const visitFiles = await fetchVisitFiles();
+                const clients = getClientNamesFromFiles(visitFiles);
                 
-                const visitsContainer = document.createElement('div');
-                visitsContainer.className = 'visit-files';
-                visitsContainer.style.display = 'none';
+                if (clients.length === 0) {
+                    visitsList.innerHTML = '<div>No visits found</div>';
+                    return;
+                }
                 
-                const visits = await getVisitsForClient(client);
-                visits.forEach(visit => {
-                    const visitElement = document.createElement('div');
-                    visitElement.className = 'visit-file';
-                    visitElement.textContent = visit.displayName;
-                    visitElement.addEventListener('click', () => {
-                        // Open the raw file from GitHub
-                        window.open(
-                            `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
-                            '_blank'
-                        );
+                visitsList.innerHTML = '';
+                
+                for (const client of clients) {
+                    const visits = processVisitsForClient(visitFiles, client);
+                    
+                    const clientArrow = document.createElement('div');
+                    clientArrow.className = 'client-arrow';
+                    clientArrow.innerHTML = `<span>${client}</span><span>▼</span>`;
+                    
+                    const visitsContainer = document.createElement('div');
+                    visitsContainer.className = 'visit-files';
+                    visitsContainer.style.display = 'none';
+                    
+                    visits.forEach(visit => {
+                        const visitElement = document.createElement('div');
+                        visitElement.className = 'visit-file';
+                        visitElement.textContent = visit.displayName;
+                        visitElement.addEventListener('click', () => {
+                            window.open(
+                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
+                                '_blank'
+                            );
+                        });
+                        visitsContainer.appendChild(visitElement);
                     });
-                    visitsContainer.appendChild(visitElement);
-                });
+                    
+                    clientArrow.addEventListener('click', () => {
+                        visitsContainer.style.display = 
+                            visitsContainer.style.display === 'none' ? 'block' : 'none';
+                    });
+                    
+                    visitsList.appendChild(clientArrow);
+                    visitsList.appendChild(visitsContainer);
+                }
                 
-                clientArrow.addEventListener('click', () => {
-                    visitsContainer.style.display = 
-                        visitsContainer.style.display === 'none' ? 'block' : 'none';
-                });
-                
-                visitsList.appendChild(clientArrow);
-                visitsList.appendChild(visitsContainer);
+            } catch (error) {
+                debugLog(`Error showing visits: ${error.message}`);
+                visitsList.innerHTML = '<div class="error-message">Error loading visits</div>';
             }
-        } catch (error) {
-            visitsList.innerHTML = '<div>Error loading visits</div>';
-            console.error(error);
         }
-    }
 
-    // Rest of your existing code (date/time functions, event listeners) remains the same
-    updateEgyptDateTime();
-    setInterval(updateEgyptDateTime, 1000);
-    
-    document.getElementById('visitsButton').addEventListener('click', showAllVisits);
-    document.getElementById('backButton').addEventListener('click', () => {
-        document.getElementById('mainContent').style.display = 'flex';
-        document.getElementById('visitsContainer').style.display = 'none';
-    });
+        // Function to show visits for a specific client
+        async function showClientVisits(clientName) {
+            const mainContent = document.getElementById('mainContent');
+            const visitsContainer = document.getElementById('visitsContainer');
+            const visitsList = document.getElementById('clientVisitsList');
+            
+            mainContent.style.display = 'none';
+            visitsContainer.style.display = 'block';
+            visitsList.innerHTML = '<div class="loading">Loading visits...</div>';
+            
+            try {
+                const visitFiles = await fetchVisitFiles();
+                const visits = processVisitsForClient(visitFiles, clientName);
+                
+                visitsList.innerHTML = '';
+                
+                const clientHeader = document.createElement('div');
+                clientHeader.className = 'client-arrow';
+                clientHeader.innerHTML = `<span>${clientName}</span><span>▼</span>`;
+                
+                const visitsContainerDiv = document.createElement('div');
+                visitsContainerDiv.className = 'visit-files';
+                
+                if (visits.length === 0) {
+                    visitsContainerDiv.innerHTML = '<div>No visits found for this client</div>';
+                } else {
+                    visits.forEach(visit => {
+                        const visitElement = document.createElement('div');
+                        visitElement.className = 'visit-file';
+                        visitElement.textContent = visit.displayName;
+                        visitElement.addEventListener('click', () => {
+                            window.open(
+                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
+                                '_blank'
+                            );
+                        });
+                        visitsContainerDiv.appendChild(visitElement);
+                    });
+                }
+                
+                clientHeader.addEventListener('click', () => {
+                    visitsContainerDiv.style.display = 
+                        visitsContainerDiv.style.display === 'none' ? 'block' : 'none';
+                });
+                
+                visitsList.appendChild(clientHeader);
+                visitsList.appendChild(visitsContainerDiv);
+                visitsContainerDiv.style.display = 'block';
+                
+            } catch (error) {
+                debugLog(`Error showing client visits: ${error.message}`);
+                visitsList.innerHTML = '<div class="error-message">Error loading visits</div>';
+            }
+        }
 
-    // Initialize
-    populateClientList();
-</script>
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateEgyptDateTime();
+            setInterval(updateEgyptDateTime, 1000);
+            
+            document.getElementById('visitsButton').addEventListener('click', showAllVisits);
+            document.getElementById('backButton').addEventListener('click', () => {
+                document.getElementById('mainContent').style.display = 'flex';
+                document.getElementById('visitsContainer').style.display = 'none';
+            });
+            
+            populateClientList();
+        });
+    </script>
 </body>
 </html>
