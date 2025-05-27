@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualitech International - MechNova</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .page-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .company-name {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 180px;
+        }
+        .qualitech {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: 0.5px;
+        }
+        .international {
+            font-size: 16px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+        .center-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 30px;
+            max-width: 600px;
+        }
+        .date-time {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-align: center;
+            width: 100%;
+            color: #555;
+        }
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.2);
+        }
+        .nav-bar {
+            background-color: #2c3e50;
+            padding: 12px 0;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            padding: 0 20px;
+            font-size: 15px;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-button:hover {
+            color: #3498db;
+        }
+        .separator {
+            color: rgba(255,255,255,0.3);
+        }
+        .main-content {
+            display: flex;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 220px;
+            border-right: 1px solid #eee;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .section-content {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .section-content li {
+            padding: 8px 0;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .section-content li:hover {
+            color: #3498db;
+            padding-left: 5px;
+        }
+        .activities {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .activities .section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        /* New styles for the visit browser */
+        .visit-browser {
+            display: none;
+            width: 100%;
+        }
+        .client-folder {
+            margin-bottom: 10px;
+        }
+        .folder-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .folder-header:hover {
+            background-color: #e0e0e0;
+        }
+        .folder-arrow {
+            margin-right: 10px;
+            transition: transform 0.2s ease;
+        }
+        .folder-arrow.expanded {
+            transform: rotate(90deg);
+        }
+        .folder-name {
+            font-weight: 500;
+        }
+        .excel-files {
+            display: none;
+            margin-left: 20px;
+            padding: 5px 0;
+            list-style-type: none;
+        }
+        .excel-file {
+            padding: 6px 10px;
+            margin: 2px 0;
+            background-color: #f8f8f8;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .excel-file:hover {
+            background-color: #e8f4fd;
+            color: #3498db;
+        }
+        .back-button {
+            display: none;
+            margin-bottom: 15px;
+            padding: 8px 15px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .back-button:hover {
+            background-color: #1a252f;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">QualiNova</div>
+    
+    <div class="header-container">
+        <div class="company-name">
+            <div class="qualitech">Qualitech</div>
+            <div class="international">International</div>
+        </div>
+        
+        <div class="center-column">
+            <div class="date-time" id="egyptDateTime"></div>
+            <input type="text" class="search-bar" placeholder="Search clients, visits, or reports...">
+        </div>
+        
+        <div class="company-name" style="text-align: right;">
+            <div class="qualitech">MechNova</div>
+            <div class="international">Solutions</div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-button">Prepare Visit</button>
+        <span class="separator">|</span>
+        <button class="nav-button" id="addVisitBtn">Add Visit</button>
+        <span class="separator">|</span>
+        <button class="nav-button">Reports</button>
+        <span class="separator">|</span>
+        <button class="nav-button">Calendar</button>
+    </div>
+
+    <button class="back-button" id="backButton">← Back to Dashboard</button>
+
+    <div class="main-content" id="mainDashboard">
+        <div class="sidebar">
+            <div class="section">
+                <div class="section-title">Clients</div>
+                <ul class="section-content">
+                    <li>ABC Manufacturing</li>
+                    <li>Delta Technologies</li>
+                    <li>Global Innovations</li>
+                    <li>Prime Solutions</li>
+                    <li>Vertex Industries</li>
+                </ul>
+            </div>
+            <div class="section">
+                <div class="section-title">Quick Actions</div>
+                <ul class="section-content">
+                    <li>New Client</li>
+                    <li>Generate Report</li>
+                    <li>Schedule Visit</li>
+                </ul>
+            </div>
+        </div>
+        <div class="activities">
+            <div class="section">
+                <div class="section-title">Recent Activities</div>
+                <p>No recent activities to display</p>
+            </div>
+            <div class="section">
+                <div class="section-title">Trust Status</div>
+                <p>All systems operational</p>
+            </div>
+            <div class="section">
+                <div class="section-title">Notes</div>
+                <p>Add your notes here...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content visit-browser" id="visitBrowser">
+        <div class="activities" style="width: 100%;">
+            <div class="section">
+                <div class="section-title">Client Visits</div>
+                <div id="clientFoldersContainer">
+                    <!-- Client folders will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to update Egypt date and time
+        function updateEgyptDateTime() {
+            const options = {
+                timeZone: 'Africa/Cairo',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            
+            const now = new Date();
+            const egyptDateTime = now.toLocaleString('en-US', options);
+            document.getElementById('egyptDateTime').textContent = egyptDateTime;
+        }
+
+        // Update immediately and then every second
+        updateEgyptDateTime();
+        setInterval(updateEgyptDateTime, 1000);
+
+        // Visit browser functionality
+        document.getElementById('addVisitBtn').addEventListener('click', function() {
+            document.getElementById('mainDashboard').style.display = 'none';
+            document.getElementById('visitBrowser').style.display = 'flex';
+            document.getElementById('backButton').style.display = 'block';
+            
+            // Simulate loading client folders (in a real app, this would come from your server)
+            loadClientFolders();
+        });
+
+        document.getElementById('backButton').addEventListener('click', function() {
+            document.getElementById('mainDashboard').style.display = 'flex';
+            document.getElementById('visitBrowser').style.display = 'none';
+            document.getElementById('backButton').style.display = 'none';
+        });
+
+        function loadClientFolders() {
+            const container = document.getElementById('clientFoldersContainer');
+            container.innerHTML = '';
+            
+            // In a real application, you would fetch this data from your server
+            // For demonstration, we're using mock data
+            const mockClients = [
+                { name: "ABC Manufacturing", visits: ["Visit_2023-05-15.xlsx", "Visit_2023-06-22.xlsx", "Visit_2023-08-10.xlsx"] },
+                { name: "Delta Technologies", visits: ["Visit_2023-04-05.xlsx", "Visit_2023-07-18.xlsx"] },
+                { name: "Global Innovations", visits: ["Visit_2023-03-12.xlsx", "Visit_2023-06-30.xlsx", "Visit_2023-09-05.xlsx"] },
+                { name: "Prime Solutions", visits: ["Visit_2023-02-28.xlsx"] },
+                { name: "Vertex Industries", visits: ["Visit_2023-01-10.xlsx", "Visit_2023-04-25.xlsx", "Visit_2023-08-15.xlsx", "Visit_2023-10-02.xlsx"] }
+            ];
+            
+            mockClients.forEach(client => {
+                const folderDiv = document.createElement('div');
+                folderDiv.className = 'client-folder';
+                
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'folder-header';
+                
+                const arrowSpan = document.createElement('span');
+                arrowSpan.className = 'folder-arrow';
+                arrowSpan.innerHTML = '▶';
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'folder-name';
+                nameSpan.textContent = client.name;
+                
+                headerDiv.appendChild(arrowSpan);
+                headerDiv.appendChild(nameSpan);
+                
+                const filesList = document.createElement('ul');
+                filesList.className = 'excel-files';
+                
+                client.visits.forEach(visit => {
+                    const fileItem = document.createElement('li');
+                    fileItem.className = 'excel-file';
+                    fileItem.textContent = visit;
+                    filesList.appendChild(fileItem);
+                });
+                
+                headerDiv.addEventListener('click', function() {
+                    arrowSpan.classList.toggle('expanded');
+                    if (filesList.style.display === 'block') {
+                        filesList.style.display = 'none';
+                    } else {
+                        filesList.style.display = 'block';
+                    }
+                });
+                
+                folderDiv.appendChild(headerDiv);
+                folderDiv.appendChild(filesList);
+                container.appendChild(folderDiv);
+            });
+        }
+    </script>
+</body>
+</html>
