@@ -350,40 +350,55 @@
             }
         }
 
-        // Function to extract client names from visit files
+// Function to extract client names from visit files (case-insensitive)
         function getClientNamesFromFiles(files) {
-            const clients = new Set();
+            const clients = new Map(); // Using Map to preserve first-seen capitalization
+            
             files.forEach(file => {
                 const match = file.match(/^A_([^_]+)_/i);
                 if (match) {
-                    clients.add(match[1]);
+                    const originalName = match[1];
+                    const lowerName = originalName.toLowerCase();
+                    
+                    // Store only the first seen capitalization
+                    if (!clients.has(lowerName)) {
+                        clients.set(lowerName, originalName);
+                    }
                 }
             });
-            return Array.from(clients).sort();
+            
+            // Return sorted array of client names in uppercase
+            return Array.from(clients.keys()).sort().map(name => 
+                clients.get(name).toUpperCase()
+            );
         }
 
-        // Function to process visits for a specific client
+        // Function to process visits for a specific client (case-insensitive)
         function processVisitsForClient(files, clientName) {
+            // Create case-insensitive regex pattern
+            const pattern = new RegExp(`^A_${clientName}_\\d{2}_\\d{2}_\\d{4}\\.xlsx$`, 'i');
+            
             return files
-                .filter(file => file.match(new RegExp(`^A_${clientName}_\\d{2}_\\d{2}_\\d{4}\\.xlsx$`, 'i')))
+                .filter(file => file.match(pattern))
                 .map(file => {
                     const dateMatch = file.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
                     if (dateMatch) {
                         const [_, month, day, year] = dateMatch;
                         return {
-                            filename: file,
+                            filename: file, // Keep original filename
                             date: new Date(`${year}-${month}-${day}`),
-                            displayName: `Visit ${month}/${day}/${year}`
+                            displayName: `VISIT ${month}/${day}/${year}` // Uppercase
                         };
                     }
                     return {
                         filename: file,
                         date: new Date(0),
-                        displayName: file
+                        displayName: file.toUpperCase()
                     };
                 })
                 .sort((a, b) => b.date - a.date);
         }
+
 
         // Function to populate client list in sidebar
         async function populateClientList() {
