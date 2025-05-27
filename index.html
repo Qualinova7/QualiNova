@@ -456,221 +456,251 @@
                 .sort((a, b) => b.date - a.date);
         }
 
-        // Function to fetch and parse Excel file
-        async function fetchAndParseExcel(fileName) {
-            if (deviceDataCache.has(fileName)) {
-                return deviceDataCache.get(fileName);
-            }
+// Updated fetchAndParseExcel function
+async function fetchAndParseExcel(fileName) {
+    if (deviceDataCache.has(fileName)) {
+        return deviceDataCache.get(fileName);
+    }
 
-            try {
-                debugLog(`Fetching Excel file: ${fileName}`);
-                const url = `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(fileName)}`;
-                const response = await fetch(url);
-                
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch file: ${response.status}`);
+    try {
+        debugLog(`Fetching Excel file: ${fileName}`);
+        const url = `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(fileName)}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch file: ${response.status}`);
+        }
+        
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        
+        // Get the first sheet
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        
+        // Convert to JSON with header: 1 to get array of arrays
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
+        
+        // Parse the data into devices
+        const devices = [];
+        let currentDevice = null;
+        let readingRows = [];
+        
+        // Skip the header row (first row)
+        for (let i = 1; i < jsonData.length; i++) {
+            const row = jsonData[i];
+            
+            // Check for device separator
+            if (row[0] && row[0].toString().trim() === '$#') {
+                if (currentDevice) {
+                    // Save previous device
+                    currentDevice.readings = readingRows;
+                    devices.push(currentDevice);
+                    readingRows = [];
                 }
                 
-                const arrayBuffer = await response.arrayBuffer();
-                const data = new Uint8Array(arrayBuffer);
-                const workbook = XLSX.read(data, { type: 'array' });
-                
-                // Get the first sheet
-                const firstSheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[firstSheetName];
-                
-                // Convert to JSON
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
-                
-                // Parse the data into devices
-                const devices = [];
-                let currentDevice = null;
-                let readingRows = [];
-                
-                for (let i = 0; i < jsonData.length; i++) {
-                    const row = jsonData[i];
-                    
-                    // Check for device separator
-                    if (row[0] && row[0].toString().trim() === '$#') {
-                        if (currentDevice) {
-                            // Save previous device
-                            currentDevice.readings = readingRows;
-                            devices.push(currentDevice);
-                            readingRows = [];
-                        }
-                        
-                        // Create new device
-                        currentDevice = {
-                            line: row[1] || '',
-                            location: row[2] || '',
-                            description: row[3] || '',
-                            snCode: row[4] || '',
-                            workingRangeMin: row[5] || '',
-                            workingRangeMax: row[6] || '',
-                            equipmentRange: row[7] || '',
-                            maxDeviation: row[8] || '',
-                            calibrationDate: row[9] || '',
-                            calibrationExpiry: row[10] || '',
-                            model: row[11] || '',
-                            unit: row[12] || '',
-                            resolution: row[13] || '',
-                            environmentTemp: row[14] || '',
-                            environmentHumidity: row[15] || '',
-                            pass: row[row.length - 4] || '',
-                            fail: row[row.length - 3] || '',
-                            internalCalibration: row[row.length - 2] || '',
-                            externalCalibration: row[row.length - 1] || '',
-                            readings: []
-                        };
-                    } else if (currentDevice) {
-                        // Check if this is a reading row (has data in column B)
-                        if (row[1] && row[1].toString().trim() !== '') {
+                // Create new device - adjust indexes according to your Excel structure
+                currentDevice = {
+                    line: row[1] || '',
+                    location: row[2] || '',
+                    description: row[3] || '',
+                    snCode: row[4] || '',
+                    workingRangeMin: row[5] || '',
+                    workingRangeMax: row[6] || '',
+                    equipmentRange: row[7] || '',
+                    maxDeviation: row[8] || '',
+                    calibrationDate: formatExcelDate(row[9]),
+                    calibrationExpiry: formatExcelDate(row[10]),
+                    model: row[11] || '',
+                    unit: row[12] || '',
+                    resolution: row[13] || '',
+                    environmentTemp: row[14] || '',
+                    environmentHumidity: row[15] || '',
+                    pass: row[row.length - 4] || '',
+                    fail: row[row.length - 3] || '',
+                    internalCalibration: row[row.length - 2] || '',
+                    externalCalibration: row[row.length - 1] || '',
+                    readings: []
+                };
+            } else if (currentDevice) {
+                // Check if this is a reading row (has data in column B)
+                if (row[1] && row[1].toString().trim() !== '') {
+                    // Process all ref/read pairs in the row
+                    for (let j = 1; j < row.length; j += 2) {
+                        if (row[j] && row[j].toString().trim() !== '') {
                             const reading = {
-                                ref: row[1] || '',
-                                read: row[2] || ''
+                                ref: row[j] || '',
+                                read: row[j+1] || ''
                             };
                             readingRows.push(reading);
+                        } else {
+                            break; // Stop if we find an empty ref cell
                         }
                     }
                 }
-                
-                // Add the last device if exists
-                if (currentDevice) {
-                    currentDevice.readings = readingRows;
-                    devices.push(currentDevice);
-                }
-                
-                // Extract client name and visit date from filename
-                const clientMatch = fileName.match(/^A_([^_]+)_/i);
-                const dateMatch = fileName.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
-                
-                const result = {
-                    client: clientMatch ? clientMatch[1] : 'Unknown',
-                    date: dateMatch ? new Date(`${dateMatch[3]}-${dateMatch[1]}-${dateMatch[2]}`) : new Date(0),
-                    devices: devices
-                };
-                
-                // Cache the result
-                deviceDataCache.set(fileName, result);
-                
-                return result;
-                
-            } catch (error) {
-                debugLog(`Error parsing Excel file: ${error.message}`);
-                return {
-                    client: 'Unknown',
-                    date: new Date(0),
-                    devices: []
-                };
             }
         }
-
-        // Function to create device table
-        function createDeviceTable(device, clientName, visitDate) {
-            const container = document.createElement('div');
-            container.className = 'device-table-container';
-            
-            // Create header with client name and visit date
-            const header = document.createElement('div');
-            header.className = 'device-table-header';
-            
-            const clientSpan = document.createElement('span');
-            clientSpan.textContent = clientName;
-            
-            const dateSpan = document.createElement('span');
-            dateSpan.textContent = visitDate.toLocaleDateString();
-            
-            header.appendChild(clientSpan);
-            header.appendChild(dateSpan);
-            container.appendChild(header);
-            
-            // Create table
-            const table = document.createElement('table');
-            table.className = 'device-table';
-            
-            // Create table rows for device data
-            const addRow = (label, value) => {
-                const row = document.createElement('tr');
-                
-                const labelCell = document.createElement('td');
-                labelCell.textContent = label;
-                labelCell.style.width = '30%';
-                
-                const valueCell = document.createElement('td');
-                valueCell.textContent = value;
-                valueCell.style.width = '70%';
-                
-                row.appendChild(labelCell);
-                row.appendChild(valueCell);
-                table.appendChild(row);
-            };
-            
-            addRow('Line', device.line);
-            addRow('Location', device.location);
-            addRow('Description Of Equipment', device.description);
-            addRow('S/N Code', device.snCode);
-            addRow('Working Range min', device.workingRangeMin);
-            addRow('Working Range max', device.workingRangeMax);
-            addRow('Equipment Range', device.equipmentRange);
-            addRow('Max Accepted Deviation', device.maxDeviation);
-            addRow('Calibration Date', device.calibrationDate);
-            addRow('Calibration Expiry Date', device.calibrationExpiry);
-            addRow('Model', device.model);
-            addRow('Unit', device.unit);
-            addRow('Resolution', device.resolution);
-            addRow('Environment ºC', device.environmentTemp);
-            addRow('Environment % rH', device.environmentHumidity);
-            
-            // Add readings header
-            const readingsHeader = document.createElement('tr');
-            readingsHeader.className = 'results-header';
-            
-            const readingsLabelCell = document.createElement('td');
-            readingsLabelCell.textContent = 'Results';
-            readingsLabelCell.colSpan = 1;
-            
-            const readingsHeaderCell = document.createElement('td');
-            readingsHeaderCell.colSpan = 2;
-            
-            readingsHeader.appendChild(readingsLabelCell);
-            readingsHeader.appendChild(readingsHeaderCell);
-            table.appendChild(readingsHeader);
-            
-            // Add readings rows
-            device.readings.forEach(reading => {
-                const row = document.createElement('tr');
-                row.className = 'results-row';
-                
-                const emptyCell = document.createElement('td');
-                
-                const refCell = document.createElement('td');
-                refCell.textContent = reading.ref;
-                
-                const readCell = document.createElement('td');
-                readCell.textContent = reading.read;
-                
-                row.appendChild(emptyCell);
-                row.appendChild(refCell);
-                row.appendChild(readCell);
-                table.appendChild(row);
-            });
-            
-            // Add status row
-            const statusRow = document.createElement('tr');
-            
-            const statusLabelCell = document.createElement('td');
-            statusLabelCell.textContent = 'Status';
-            
-            const statusValueCell = document.createElement('td');
-            statusValueCell.textContent = device.pass ? 'Pass' : device.fail ? 'Fail' : '';
-            
-            statusRow.appendChild(statusLabelCell);
-            statusRow.appendChild(statusValueCell);
-            table.appendChild(statusRow);
-            
-            container.appendChild(table);
-            return container;
+        
+        // Add the last device if exists
+        if (currentDevice) {
+            currentDevice.readings = readingRows;
+            devices.push(currentDevice);
         }
+        
+        // Extract client name and visit date from filename
+        const clientMatch = fileName.match(/^A_([^_]+)_/i);
+        const dateMatch = fileName.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
+        
+        const result = {
+            client: clientMatch ? clientMatch[1] : 'Unknown',
+            date: dateMatch ? new Date(`${dateMatch[3]}-${dateMatch[1]}-${dateMatch[2]}`) : new Date(0),
+            devices: devices
+        };
+        
+        // Cache the result
+        deviceDataCache.set(fileName, result);
+        
+        return result;
+        
+    } catch (error) {
+        debugLog(`Error parsing Excel file: ${error.message}`);
+        return {
+            client: 'Unknown',
+            date: new Date(0),
+            devices: []
+        };
+    }
+}
+
+        // Add this helper function to format Excel dates
+function formatExcelDate(excelDate) {
+    if (!excelDate) return '';
+    if (typeof excelDate === 'string') return excelDate;
+    if (excelDate instanceof Date) return excelDate.toISOString().split('T')[0];
+    
+    // Handle Excel serial date numbers
+    try {
+        const date = new Date((excelDate - (25567 + 2)) * 86400 * 1000);
+        return date.toISOString().split('T')[0];
+    } catch (e) {
+        return '';
+    }
+}
+        
+// Updated createDeviceTable function
+function createDeviceTable(device, clientName, visitDate) {
+    const container = document.createElement('div');
+    container.className = 'device-table-container';
+    
+    // Create header with client name and visit date
+    const header = document.createElement('div');
+    header.className = 'device-table-header';
+    
+    const clientSpan = document.createElement('span');
+    clientSpan.textContent = clientName;
+    
+    const dateSpan = document.createElement('span');
+    dateSpan.textContent = visitDate.toLocaleDateString();
+    
+    header.appendChild(clientSpan);
+    header.appendChild(dateSpan);
+    container.appendChild(header);
+    
+    // Create table
+    const table = document.createElement('table');
+    table.className = 'device-table';
+    
+    // Create table rows for device data
+    const addRow = (label, value) => {
+        const row = document.createElement('tr');
+        
+        const labelCell = document.createElement('td');
+        labelCell.textContent = label;
+        labelCell.style.width = '30%';
+        
+        const valueCell = document.createElement('td');
+        valueCell.textContent = value;
+        valueCell.style.width = '70%';
+        
+        row.appendChild(labelCell);
+        row.appendChild(valueCell);
+        table.appendChild(row);
+    };
+    
+    addRow('Line', device.line);
+    addRow('Location', device.location);
+    addRow('Description Of Equipment', device.description);
+    addRow('S/N Code', device.snCode);
+    addRow('Working Range min', device.workingRangeMin);
+    addRow('Working Range max', device.workingRangeMax);
+    addRow('Equipment Range', device.equipmentRange);
+    addRow('Max Accepted Deviation', device.maxDeviation);
+    addRow('Calibration Date', device.calibrationDate);
+    addRow('Calibration Expiry Date', device.calibrationExpiry);
+    addRow('Model', device.model);
+    addRow('Unit', device.unit);
+    addRow('Resolution', device.resolution);
+    addRow('Environment ºC', device.environmentTemp);
+    addRow('Environment % rH', device.environmentHumidity);
+    
+    // Add readings header
+    if (device.readings && device.readings.length > 0) {
+        const readingsHeader = document.createElement('tr');
+        readingsHeader.className = 'results-header';
+        
+        const readingsLabelCell = document.createElement('td');
+        readingsLabelCell.textContent = 'Results';
+        readingsLabelCell.colSpan = 1;
+        
+        const readingsHeaderCell = document.createElement('td');
+        readingsHeaderCell.colSpan = 2;
+        
+        readingsHeader.appendChild(readingsLabelCell);
+        readingsHeader.appendChild(readingsHeaderCell);
+        table.appendChild(readingsHeader);
+        
+        // Add readings rows
+        device.readings.forEach(reading => {
+            const row = document.createElement('tr');
+            row.className = 'results-row';
+            
+            const emptyCell = document.createElement('td');
+            
+            const refCell = document.createElement('td');
+            refCell.textContent = reading.ref;
+            
+            const readCell = document.createElement('td');
+            readCell.textContent = reading.read;
+            
+            row.appendChild(emptyCell);
+            row.appendChild(refCell);
+            row.appendChild(readCell);
+            table.appendChild(row);
+        });
+    }
+    
+    // Add status row
+    const statusRow = document.createElement('tr');
+    
+    const statusLabelCell = document.createElement('td');
+    statusLabelCell.textContent = 'Status';
+    
+    let statusText = '';
+    if (device.pass && device.pass.toString().trim() !== '') statusText = 'Pass';
+    if (device.fail && device.fail.toString().trim() !== '') statusText = 'Fail';
+    
+    const statusValueCell = document.createElement('td');
+    statusValueCell.textContent = statusText;
+    
+    statusRow.appendChild(statusLabelCell);
+    statusRow.appendChild(statusValueCell);
+    table.appendChild(statusRow);
+    
+    container.appendChild(table);
+    return container;
+}
+        
 
         // Function to populate client list in sidebar
         async function populateClientList() {
