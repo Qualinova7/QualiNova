@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualitech International - MechNova</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .page-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .company-name {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 180px;
+        }
+        .qualitech {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: 0.5px;
+        }
+        .international {
+            font-size: 16px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+        .center-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 30px;
+            max-width: 600px;
+        }
+        .date-time {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-align: center;
+            width: 100%;
+            color: #555;
+        }
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.2);
+        }
+        .nav-bar {
+            background-color: #2c3e50;
+            padding: 12px 0;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            padding: 0 20px;
+            font-size: 15px;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-button:hover {
+            color: #3498db;
+        }
+        .separator {
+            color: rgba(255,255,255,0.3);
+        }
+        .main-content {
+            display: flex;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 220px;
+            border-right: 1px solid #eee;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .section-content {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .section-content li {
+            padding: 8px 0;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .section-content li:hover {
+            color: #3498db;
+            padding-left: 5px;
+        }
+        .activities {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .activities .section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">QualiNova</div>
+    
+    <div class="header-container">
+        <div class="company-name">
+            <div class="qualitech">Qualitech</div>
+            <div class="international">International</div>
+        </div>
+        
+        <div class="center-column">
+            <div class="date-time" id="egyptDateTime"></div>
+            <input type="text" class="search-bar" placeholder="Search clients, visits, or reports...">
+        </div>
+        
+        <div class="company-name" style="text-align: right;">
+            <div class="qualitech">MechNova</div>
+            <div class="international">Solutions</div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-button">Prepare Visit</button>
+        <span class="separator">|</span>
+        <button class="nav-button">Add Visit</button>
+        <span class="separator">|</span>
+        <button class="nav-button">Reports</button>
+        <span class="separator">|</span>
+        <button class="nav-button">Calendar</button>
+    </div>
+
+    <div class="main-content">
+        <div class="sidebar">
+            <div class="section">
+                <div class="section-title">Clients</div>
+                <ul class="section-content">
+                    <li>ABC Manufacturing</li>
+                    <li>Delta Technologies</li>
+                    <li>Global Innovations</li>
+                    <li>Prime Solutions</li>
+                    <li>Vertex Industries</li>
+                </ul>
+            </div>
+            <div class="section">
+                <div class="section-title">Quick Actions</div>
+                <ul class="section-content">
+                    <li>New Client</li>
+                    <li>Generate Report</li>
+                    <li>Schedule Visit</li>
+                </ul>
+            </div>
+        </div>
+        <div class="activities">
+            <div class="section">
+                <div class="section-title">Recent Activities</div>
+                <p>No recent activities to display</p>
+            </div>
+            <div class="section">
+                <div class="section-title">Trust Status</div>
+                <p>All systems operational</p>
+            </div>
+            <div class="section">
+                <div class="section-title">Notes</div>
+                <p>Add your notes here...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to update Egypt date and time
+        function updateEgyptDateTime() {
+            const options = {
+                timeZone: 'Africa/Cairo',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            
+            const now = new Date();
+            const egyptDateTime = now.toLocaleString('en-US', options);
+            document.getElementById('egyptDateTime').textContent = egyptDateTime;
+        }
+
+        // Update immediately and then every second
+        updateEgyptDateTime();
+        setInterval(updateEgyptDateTime, 1000);
+    </script>
+</body>
+</html>
