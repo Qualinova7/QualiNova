@@ -5,556 +5,450 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qualitech International - MechNova</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
+        /* [Previous CSS styles remain the same...] */
+
+        /* New styles for device data display */
+        .device-container {
+            display: none;
             padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
         }
-        .page-title {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 600;
-            color: #2c3e50;
+        .device-table-container {
             margin-bottom: 30px;
-            letter-spacing: 1px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
         }
-        .header-container {
+        .device-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .company-name {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-width: 180px;
-        }
-        .qualitech {
-            font-size: 24px;
-            font-weight: 600;
-            color: #2c3e50;
-            letter-spacing: 0.5px;
-        }
-        .international {
-            font-size: 16px;
-            text-transform: uppercase;
-            color: #7f8c8d;
-            letter-spacing: 1px;
-            margin-top: 2px;
-        }
-        .center-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            margin: 0 30px;
-            max-width: 600px;
-        }
-        .date-time {
-            font-size: 14px;
-            margin-bottom: 8px;
-            text-align: center;
-            width: 100%;
-            color: #555;
-        }
-        .search-bar {
-            width: 100%;
-            max-width: 500px;
-            padding: 10px 15px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-        .search-bar:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 2px 8px rgba(52,152,219,0.2);
-        }
-        .nav-bar {
-            background-color: #2c3e50;
-            padding: 12px 0;
-            margin-bottom: 30px;
-            border-radius: 4px;
-        }
-        .nav-button {
-            background: none;
-            border: none;
-            padding: 0 20px;
-            font-size: 15px;
-            color: white;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            font-weight: 500;
-        }
-        .nav-button:hover {
-            color: #3498db;
-        }
-        .separator {
-            color: rgba(255,255,255,0.3);
-        }
-        .main-content {
-            display: flex;
-            background-color: white;
-            border-radius: 6px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-        .sidebar {
-            width: 220px;
-            border-right: 1px solid #eee;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        .section {
-            margin-bottom: 25px;
-        }
-        .section-title {
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #2c3e50;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding-bottom: 5px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
-        .section-content {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
+        .device-title {
+            font-weight: bold;
+            font-size: 18px;
         }
-        .section-content li {
-            padding: 8px 0;
-            cursor: pointer;
-            color: #555;
-            transition: all 0.2s ease;
-            border-bottom: 1px solid #f0f0f0;
+        .device-date {
+            color: #666;
         }
-        .section-content li:hover {
-            color: #3498db;
-            padding-left: 5px;
+        .device-table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .activities {
-            flex-grow: 1;
-            padding: 20px;
-        }
-        .activities .section {
-            background-color: white;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        /* Visits Page Styles */
-        .visits-container {
-            display: none;
-            padding: 20px;
-        }
-        .client-arrow {
-            cursor: pointer;
-            padding: 10px;
-            margin: 5px 0;
-            background-color: #f0f0f0;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .client-arrow:hover {
-            background-color: #e0e0e0;
-        }
-        .visit-files {
-            display: none;
-            padding-left: 20px;
-            margin-top: 5px;
-        }
-        .visit-file {
+        .device-table th, .device-table td {
+            border: 1px solid #ddd;
             padding: 8px;
-            margin: 3px 0;
-            background-color: #f8f9fa;
-            border-radius: 3px;
-            cursor: pointer;
+            text-align: left;
         }
-        .visit-file:hover {
-            background-color: #e9ecef;
+        .device-table th {
+            background-color: #f2f2f2;
+            width: 30%;
         }
-        .back-button {
-            margin-bottom: 20px;
-            padding: 8px 15px;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
+        .device-table td {
+            width: 70%;
+        }
+        .readings-table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+        .readings-table th, .readings-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .readings-table th {
+            background-color: #f2f2f2;
+        }
+        .status-cell {
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
             border-radius: 4px;
-            cursor: pointer;
         }
-        .back-button:hover {
-            background-color: #1a252f;
+        .status-pass {
+            background-color: #d4edda;
+            color: #155724;
         }
-        .loading {
-            color: #7f8c8d;
-            font-style: italic;
+        .status-fail {
+            background-color: #f8d7da;
+            color: #721c24;
         }
-        .error-message {
-            color: #e74c3c;
-            font-weight: 500;
+        .search-highlight {
+            background-color: yellow;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="page-title">QualiNova</div>
-    
-    <div class="header-container">
-        <div class="company-name">
-            <div class="qualitech">Qualitech</div>
-            <div class="international">International</div>
-        </div>
-        
-        <div class="center-column">
-            <div class="date-time" id="egyptDateTime"></div>
-            <input type="text" class="search-bar" placeholder="Search clients, visits, or reports...">
-        </div>
-        
-        <div class="company-name" style="text-align: right;">
-            <div class="qualitech">MechNova</div>
-            <div class="international">Solutions</div>
-        </div>
-    </div>
+    <!-- [Previous HTML structure remains the same until nav-bar...] -->
 
     <div class="nav-bar">
         <button class="nav-button">Prepare Visit</button>
         <span class="separator">|</span>
         <button class="nav-button" id="visitsButton">Visits</button>
         <span class="separator">|</span>
+        <button class="nav-button" id="devicesButton">Devices</button>
+        <span class="separator">|</span>
         <button class="nav-button">Reports</button>
         <span class="separator">|</span>
         <button class="nav-button">Calendar</button>
     </div>
 
-    <div class="main-content" id="mainContent">
-        <div class="sidebar">
-            <div class="section">
-                <div class="section-title">Clients</div>
-                <ul class="section-content" id="clientList">
-                    <li class="loading">Loading clients...</li>
-                </ul>
-            </div>
-            <div class="section">
-                <div class="section-title">Quick Actions</div>
-                <ul class="section-content">
-                    <li>New Client</li>
-                    <li>Generate Report</li>
-                    <li>Schedule Visit</li>
-                </ul>
-            </div>
-        </div>
-        <div class="activities">
-            <div class="section">
-                <div class="section-title">Recent Activities</div>
-                <p>No recent activities to display</p>
-            </div>
-            <div class="section">
-                <div class="section-title">Trust Status</div>
-                <p>All systems operational</p>
-            </div>
-            <div class="section">
-                <div class="section-title">Notes</div>
-                <p>Add your notes here...</p>
-            </div>
-        </div>
-    </div>
+    <!-- [Previous main-content and visits-container remain the same...] -->
 
-    <div class="visits-container" id="visitsContainer">
-        <button class="back-button" id="backButton">← Back to Dashboard</button>
-        <h2>Client Visits</h2>
-        <div id="clientVisitsList" class="loading">Loading visits...</div>
+    <div class="device-container" id="deviceContainer">
+        <button class="back-button" id="backButtonDevices">← Back to Dashboard</button>
+        <h2>Device Calibration Data</h2>
+        <input type="text" class="search-bar" id="deviceSearch" placeholder="Search by S/N Code...">
+        <div id="deviceDataList"></div>
     </div>
 
     <script>
-        // Debugging flag - set to true to see console logs
-        const DEBUG = true;
-        
-        // Your GitHub repository details
-        const repoOwner = 'Qualinova7';
-        const repoName = 'QualiNova';
-        const folderPath = ''; // Root directory, or specify if files are in a subfolder
+        // [Previous constants and helper functions remain the same until...]
 
-        // Mock data for fallback
-        const mockVisitFiles = [
-            "A_CTOR_05_25_2025.xlsx",
-            "A_ABC_05_20_2025.xlsx",
-            "A_ABC_04_15_2025.xlsx",
-            "A_DELTA_03_10_2025.xlsx",
-            "A_GLOBAL_02_05_2025.xlsx"
-        ];
-
-        // Function to log debug messages
-        function debugLog(message) {
-            if (DEBUG) {
-                console.log(`[DEBUG] ${message}`);
-            }
-        }
-
-        // Function to update Egypt date and time
-        function updateEgyptDateTime() {
-            const options = {
-                timeZone: 'Africa/Cairo',
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            };
-            
-            const now = new Date();
-            const egyptDateTime = now.toLocaleString('en-US', options);
-            document.getElementById('egyptDateTime').textContent = egyptDateTime;
-        }
-
-        // Function to fetch visit files from GitHub
-        async function fetchVisitFiles() {
+        // New function to parse Excel file and extract device data
+        async function parseExcelFile(fileUrl) {
             try {
-                debugLog("Attempting to fetch files from GitHub...");
-                const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`;
-                const response = await fetch(apiUrl);
+                debugLog(`Fetching Excel file: ${fileUrl}`);
+                const response = await fetch(fileUrl);
+                if (!response.ok) throw new Error('Failed to fetch Excel file');
                 
-                if (!response.ok) {
-                    throw new Error(`GitHub API responded with status ${response.status}`);
-                }
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, { type: 'array' });
                 
-                const files = await response.json();
-                debugLog("Successfully fetched files from GitHub");
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: "" });
                 
-                // Filter for Excel files with the correct naming pattern
-                const visitFiles = files
-                    .filter(file => file.type === 'file')
-                    .map(file => file.name)
-                    .filter(name => name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i));
-                
-                debugLog(`Found ${visitFiles.length} valid visit files`);
-                return visitFiles.length > 0 ? visitFiles : mockVisitFiles;
-                
+                return parseDeviceData(jsonData);
             } catch (error) {
-                debugLog(`Error fetching files: ${error.message}. Using mock data as fallback.`);
-                return mockVisitFiles;
+                debugLog(`Error parsing Excel file: ${error.message}`);
+                throw error;
             }
         }
 
-// Function to extract client names from visit files (case-insensitive)
-        function getClientNamesFromFiles(files) {
-            const clients = new Map(); // Using Map to preserve first-seen capitalization
+        // Function to parse raw Excel data into device objects
+        function parseDeviceData(data) {
+            const devices = [];
+            let currentDevice = null;
             
-            files.forEach(file => {
-                const match = file.match(/^A_([^_]+)_/i);
-                if (match) {
-                    const originalName = match[1];
-                    const lowerName = originalName.toLowerCase();
+            for (let i = 0; i < data.length; i++) {
+                const row = data[i];
+                
+                // Check for new device marker
+                if (row[0] && row[0].toString().trim() === '$#') {
+                    // Save previous device if exists
+                    if (currentDevice) {
+                        devices.push(currentDevice);
+                    }
                     
-                    // Store only the first seen capitalization
-                    if (!clients.has(lowerName)) {
-                        clients.set(lowerName, originalName);
-                    }
-                }
-            });
-            
-            // Return sorted array of client names in uppercase
-            return Array.from(clients.keys()).sort().map(name => 
-                clients.get(name).toUpperCase()
-            );
-        }
-
-        // Function to process visits for a specific client (case-insensitive)
-        function processVisitsForClient(files, clientName) {
-            // Create case-insensitive regex pattern
-            const pattern = new RegExp(`^A_${clientName}_\\d{2}_\\d{2}_\\d{4}\\.xlsx$`, 'i');
-            
-            return files
-                .filter(file => file.match(pattern))
-                .map(file => {
-                    const dateMatch = file.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
-                    if (dateMatch) {
-                        const [_, month, day, year] = dateMatch;
-                        return {
-                            filename: file, // Keep original filename
-                            date: new Date(`${year}-${month}-${day}`),
-                            displayName: `VISIT ${month}/${day}/${year}` // Uppercase
-                        };
-                    }
-                    return {
-                        filename: file,
-                        date: new Date(0),
-                        displayName: file.toUpperCase()
+                    // Create new device
+                    currentDevice = {
+                        line: row[1] || '',
+                        location: row[2] || '',
+                        description: row[3] || '',
+                        snCode: row[4] || '',
+                        workingRangeMin: row[5] || '',
+                        workingRangeMax: row[6] || '',
+                        equipmentRange: row[7] || '',
+                        maxDeviation: row[8] || '',
+                        calibrationDate: row[9] || '',
+                        expiryDate: row[10] || '',
+                        model: row[11] || '',
+                        unit: row[12] || '',
+                        resolution: row[13] || '',
+                        environmentTemp: row[14] || '',
+                        environmentHumidity: row[15] || '',
+                        readings: [],
+                        status: ''
                     };
-                })
-                .sort((a, b) => b.date - a.date);
+                    
+                    // Check for status in last 4 columns
+                    for (let j = row.length - 4; j < row.length; j++) {
+                        if (row[j] && row[j].toString().toUpperCase().includes('C')) {
+                            currentDevice.status = row[j];
+                            break;
+                        }
+                    }
+                } 
+                // If we're processing readings for current device
+                else if (currentDevice && row[1]) {
+                    const readingsRow = [];
+                    for (let j = 1; j < row.length; j += 2) {
+                        if (row[j] || row[j+1]) {
+                            readingsRow.push({
+                                ref: row[j] || '',
+                                read: row[j+1] || ''
+                            });
+                        } else {
+                            break;
+                        }
+                    }
+                    if (readingsRow.length > 0) {
+                        currentDevice.readings.push(...readingsRow);
+                    }
+                }
+            }
+            
+            // Add the last device if exists
+            if (currentDevice) {
+                devices.push(currentDevice);
+            }
+            
+            return devices;
         }
 
-
-        // Function to populate client list in sidebar
-        async function populateClientList() {
-            const clientList = document.getElementById('clientList');
-            
+        // Function to display device data for a visit
+        async function displayDeviceData(visitFilename, clientName, visitDate) {
             try {
-                clientList.innerHTML = '<li class="loading">Loading clients...</li>';
-                const visitFiles = await fetchVisitFiles();
-                const clients = getClientNamesFromFiles(visitFiles);
+                const fileUrl = `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visitFilename)}`;
+                const devices = await parseExcelFile(fileUrl);
                 
-                if (clients.length === 0) {
-                    clientList.innerHTML = '<li>No clients found</li>';
-                    return;
-                }
+                const container = document.createElement('div');
+                container.className = 'visit-devices-container';
                 
-                clientList.innerHTML = '';
-                clients.forEach(client => {
-                    const li = document.createElement('li');
-                    li.textContent = client;
-                    li.addEventListener('click', () => showClientVisits(client));
-                    clientList.appendChild(li);
+                const visitHeader = document.createElement('h3');
+                visitHeader.textContent = `${clientName} - ${visitDate}`;
+                container.appendChild(visitHeader);
+                
+                devices.forEach(device => {
+                    const deviceDiv = document.createElement('div');
+                    deviceDiv.className = 'device-table-container';
+                    deviceDiv.dataset.snCode = device.snCode.toLowerCase();
+                    deviceDiv.dataset.visitDate = visitDate;
+                    
+                    // Device header with client name and date
+                    const headerDiv = document.createElement('div');
+                    headerDiv.className = 'device-header';
+                    headerDiv.innerHTML = `
+                        <div class="device-title">${device.description}</div>
+                        <div class="device-date">${visitDate}</div>
+                    `;
+                    deviceDiv.appendChild(headerDiv);
+                    
+                    // Main device table
+                    const table = document.createElement('table');
+                    table.className = 'device-table';
+                    table.innerHTML = `
+                        <tr><th>Line</th><td>${device.line}</td></tr>
+                        <tr><th>Location</th><td>${device.location}</td></tr>
+                        <tr><th>Description</th><td>${device.description}</td></tr>
+                        <tr><th>S/N Code</th><td>${device.snCode}</td></tr>
+                        <tr><th>Working Range Min</th><td>${device.workingRangeMin}</td></tr>
+                        <tr><th>Working Range Max</th><td>${device.workingRangeMax}</td></tr>
+                        <tr><th>Equipment Range</th><td>${device.equipmentRange}</td></tr>
+                        <tr><th>Max Accepted Deviation</th><td>${device.maxDeviation}</td></tr>
+                        <tr><th>Calibration Date</th><td>${device.calibrationDate}</td></tr>
+                        <tr><th>Calibration Expiry</th><td>${device.expiryDate}</td></tr>
+                        <tr><th>Model</th><td>${device.model}</td></tr>
+                        <tr><th>Unit</th><td>${device.unit}</td></tr>
+                        <tr><th>Resolution</th><td>${device.resolution}</td></tr>
+                        <tr><th>Environment Temp</th><td>${device.environmentTemp}</td></tr>
+                        <tr><th>Environment Humidity</th><td>${device.environmentHumidity}</td></tr>
+                    `;
+                    deviceDiv.appendChild(table);
+                    
+                    // Readings table if exists
+                    if (device.readings.length > 0) {
+                        const readingsHeader = document.createElement('h4');
+                        readingsHeader.textContent = 'Readings';
+                        deviceDiv.appendChild(readingsHeader);
+                        
+                        const readingsTable = document.createElement('table');
+                        readingsTable.className = 'readings-table';
+                        
+                        // Create header row
+                        const headerRow = document.createElement('tr');
+                        for (let i = 0; i < device.readings.length; i++) {
+                            const th = document.createElement('th');
+                            th.textContent = `Ref${i+1}`;
+                            headerRow.appendChild(th);
+                            
+                            const th2 = document.createElement('th');
+                            th2.textContent = `Read${i+1}`;
+                            headerRow.appendChild(th2);
+                        }
+                        readingsTable.appendChild(headerRow);
+                        
+                        // Create data row
+                        const dataRow = document.createElement('tr');
+                        device.readings.forEach(reading => {
+                            const td = document.createElement('td');
+                            td.textContent = reading.ref;
+                            dataRow.appendChild(td);
+                            
+                            const td2 = document.createElement('td');
+                            td2.textContent = reading.read;
+                            dataRow.appendChild(td2);
+                        });
+                        readingsTable.appendChild(dataRow);
+                        
+                        deviceDiv.appendChild(readingsTable);
+                    }
+                    
+                    // Status
+                    const statusDiv = document.createElement('div');
+                    statusDiv.className = `status-cell ${device.status.includes('P') ? 'status-pass' : 'status-fail'}`;
+                    statusDiv.textContent = device.status || 'Status not available';
+                    deviceDiv.appendChild(statusDiv);
+                    
+                    container.appendChild(deviceDiv);
                 });
                 
+                return container;
             } catch (error) {
-                debugLog(`Error populating client list: ${error.message}`);
-                clientList.innerHTML = '<li class="error-message">Error loading clients</li>';
+                debugLog(`Error displaying device data: ${error.message}`);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = 'Error loading device data';
+                return errorDiv;
             }
         }
 
-        // Function to show all visits
-        async function showAllVisits() {
-            const mainContent = document.getElementById('mainContent');
-            const visitsContainer = document.getElementById('visitsContainer');
-            const visitsList = document.getElementById('clientVisitsList');
+        // Function to show all devices grouped by client
+        async function showAllDevices() {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('visitsContainer').style.display = 'none';
+            const deviceContainer = document.getElementById('deviceContainer');
+            deviceContainer.style.display = 'block';
             
-            mainContent.style.display = 'none';
-            visitsContainer.style.display = 'block';
-            visitsList.innerHTML = '<div class="loading">Loading visits...</div>';
+            const deviceList = document.getElementById('deviceDataList');
+            deviceList.innerHTML = '<div class="loading">Loading device data...</div>';
             
             try {
                 const visitFiles = await fetchVisitFiles();
                 const clients = getClientNamesFromFiles(visitFiles);
-                
-                if (clients.length === 0) {
-                    visitsList.innerHTML = '<div>No visits found</div>';
-                    return;
-                }
-                
-                visitsList.innerHTML = '';
+                deviceList.innerHTML = '';
                 
                 for (const client of clients) {
-                    const visits = processVisitsForClient(visitFiles, client);
+                    const clientHeader = document.createElement('h3');
+                    clientHeader.textContent = client;
+                    deviceList.appendChild(clientHeader);
                     
-                    const clientArrow = document.createElement('div');
-                    clientArrow.className = 'client-arrow';
-                    clientArrow.innerHTML = `<span>${client}</span><span>▼</span>`;
+                    const clientDevicesContainer = document.createElement('div');
+                    clientDevicesContainer.className = 'client-devices-container';
                     
-                    const visitsContainer = document.createElement('div');
-                    visitsContainer.className = 'visit-files';
-                    visitsContainer.style.display = 'none';
+                    // Get visits for this client (newest first)
+                    const visits = await getVisitsForClient(client.replace(/\s+/g, '').toLowerCase());
                     
-                    visits.forEach(visit => {
-                        const visitElement = document.createElement('div');
-                        visitElement.className = 'visit-file';
-                        visitElement.textContent = visit.displayName;
-                        visitElement.addEventListener('click', () => {
-                            window.open(
-                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
-                                '_blank'
-                            );
-                        });
-                        visitsContainer.appendChild(visitElement);
-                    });
+                    for (const visit of visits) {
+                        const dateMatch = visit.filename.match(/_(\d{2})_(\d{2})_(\d{4})\./);
+                        const visitDate = dateMatch ? `${dateMatch[1]}/${dateMatch[2]}/${dateMatch[3]}` : '';
+                        
+                        const visitDevices = await displayDeviceData(visit.filename, client, visitDate);
+                        clientDevicesContainer.appendChild(visitDevices);
+                    }
                     
-                    clientArrow.addEventListener('click', () => {
-                        visitsContainer.style.display = 
-                            visitsContainer.style.display === 'none' ? 'block' : 'none';
-                    });
-                    
-                    visitsList.appendChild(clientArrow);
-                    visitsList.appendChild(visitsContainer);
+                    deviceList.appendChild(clientDevicesContainer);
                 }
                 
-            } catch (error) {
-                debugLog(`Error showing visits: ${error.message}`);
-                visitsList.innerHTML = '<div class="error-message">Error loading visits</div>';
-            }
-        }
-
-        // Function to show visits for a specific client
-        async function showClientVisits(clientName) {
-            const mainContent = document.getElementById('mainContent');
-            const visitsContainer = document.getElementById('visitsContainer');
-            const visitsList = document.getElementById('clientVisitsList');
-            
-            mainContent.style.display = 'none';
-            visitsContainer.style.display = 'block';
-            visitsList.innerHTML = '<div class="loading">Loading visits...</div>';
-            
-            try {
-                const visitFiles = await fetchVisitFiles();
-                const visits = processVisitsForClient(visitFiles, clientName);
-                
-                visitsList.innerHTML = '';
-                
-                const clientHeader = document.createElement('div');
-                clientHeader.className = 'client-arrow';
-                clientHeader.innerHTML = `<span>${clientName}</span><span>▼</span>`;
-                
-                const visitsContainerDiv = document.createElement('div');
-                visitsContainerDiv.className = 'visit-files';
-                
-                if (visits.length === 0) {
-                    visitsContainerDiv.innerHTML = '<div>No visits found for this client</div>';
-                } else {
-                    visits.forEach(visit => {
-                        const visitElement = document.createElement('div');
-                        visitElement.className = 'visit-file';
-                        visitElement.textContent = visit.displayName;
-                        visitElement.addEventListener('click', () => {
-                            window.open(
-                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
-                                '_blank'
-                            );
-                        });
-                        visitsContainerDiv.appendChild(visitElement);
+                // Setup search functionality
+                document.getElementById('deviceSearch').addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const allDevices = document.querySelectorAll('.device-table-container');
+                    
+                    allDevices.forEach(device => {
+                        const snCode = device.dataset.snCode;
+                        const matches = snCode.includes(searchTerm);
+                        device.style.display = matches ? 'block' : 'none';
+                        
+                        // Highlight matching text
+                        if (matches && searchTerm) {
+                            const snCells = device.querySelectorAll('td');
+                            snCells.forEach(cell => {
+                                const text = cell.textContent.toLowerCase();
+                                if (text.includes(searchTerm)) {
+                                    cell.innerHTML = cell.textContent.replace(
+                                        new RegExp(searchTerm, 'gi'),
+                                        match => `<span class="search-highlight">${match}</span>`
+                                    );
+                                }
+                            });
+                        }
                     });
-                }
-                
-                clientHeader.addEventListener('click', () => {
-                    visitsContainerDiv.style.display = 
-                        visitsContainerDiv.style.display === 'none' ? 'block' : 'none';
                 });
                 
-                visitsList.appendChild(clientHeader);
-                visitsList.appendChild(visitsContainerDiv);
-                visitsContainerDiv.style.display = 'block';
-                
             } catch (error) {
-                debugLog(`Error showing client visits: ${error.message}`);
-                visitsList.innerHTML = '<div class="error-message">Error loading visits</div>';
+                debugLog(`Error showing all devices: ${error.message}`);
+                deviceList.innerHTML = '<div class="error-message">Error loading device data</div>';
             }
         }
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            updateEgyptDateTime();
-            setInterval(updateEgyptDateTime, 1000);
-            
-            document.getElementById('visitsButton').addEventListener('click', showAllVisits);
-            document.getElementById('backButton').addEventListener('click', () => {
-                document.getElementById('mainContent').style.display = 'flex';
+        // [Previous event listeners...]
+
+        // Add new event listeners
+        document.getElementById('devicesButton').addEventListener('click', showAllDevices);
+        document.getElementById('backButtonDevices').addEventListener('click', () => {
+            document.getElementById('mainContent').style.display = 'flex';
+            document.getElementById('deviceContainer').style.display = 'none';
+        });
+
+        // Modify visit click handler to show device data
+        document.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('visit-file')) {
+                e.preventDefault();
+                const visitItem = e.target.closest('.visit-file');
+                const visitFilename = visitItem.dataset.filename;
+                const clientName = visitItem.closest('.client-arrow').querySelector('span').textContent;
+                const visitDate = visitItem.textContent.replace('VISIT ', '');
+                
+                document.getElementById('mainContent').style.display = 'none';
                 document.getElementById('visitsContainer').style.display = 'none';
+                const deviceContainer = document.getElementById('deviceContainer');
+                deviceContainer.style.display = 'block';
+                
+                const deviceList = document.getElementById('deviceDataList');
+                deviceList.innerHTML = '<div class="loading">Loading device data...</div>';
+                
+                try {
+                    const devices = await displayDeviceData(visitFilename, clientName, visitDate);
+                    deviceList.innerHTML = '';
+                    deviceList.appendChild(devices);
+                } catch (error) {
+                    deviceList.innerHTML = '<div class="error-message">Error loading device data</div>';
+                }
+            }
+        });
+
+        // [Rest of your initialization code...]
+
+        // Load XLSX library dynamically
+        function loadXLSX() {
+            return new Promise((resolve, reject) => {
+                if (typeof XLSX !== 'undefined') {
+                    resolve();
+                    return;
+                }
+                
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
             });
-            
-            populateClientList();
+        }
+
+        // Initialize the page with XLSX loading
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await loadXLSX();
+                updateEgyptDateTime();
+                setInterval(updateEgyptDateTime, 1000);
+                
+                document.getElementById('visitsButton').addEventListener('click', showAllVisits);
+                document.getElementById('backButton').addEventListener('click', () => {
+                    document.getElementById('mainContent').style.display = 'flex';
+                    document.getElementById('visitsContainer').style.display = 'none';
+                });
+                
+                populateClientList();
+            } catch (error) {
+                console.error('Failed to load XLSX library:', error);
+            }
         });
     </script>
 </body>
