@@ -825,6 +825,12 @@
                     // Check if it's a device row (starts with "$#")
                     if (headerRow[0] !== "$#") continue;
                     
+                    // Check if this row has meaningful data - stop when we find empty equipment description
+                    if (!headerRow[3] || headerRow[3].trim() === "") {
+                        debugLog("Stopping device processing - empty equipment description found");
+                        break;
+                    }
+                    
                     // Extract status
                     let status = "Pass";
                     if (headerRow[20] === "c") status = "Warning";
