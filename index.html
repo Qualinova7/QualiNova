@@ -693,7 +693,7 @@ async function displayExcelDataFromUrl(url, clientName, visitDate) {
 
     try {
         // Fixed raw URL format
-        const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${url}`;
+       const fileUrl = `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(url)}`;
         debugLog(`Constructed file URL: ${fileUrl}`);
 
         const response = await fetch(fileUrl);
