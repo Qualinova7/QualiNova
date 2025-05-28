@@ -422,59 +422,31 @@ const branch = 'main'; // or 'master' depending on your repo
         }
 
         // Function to fetch visit files from GitHub recursively
-        async function fetchVisitFiles() {
+       async function fetchVisitFiles() {
             try {
                 debugLog("Attempting to fetch files from GitHub...");
-                const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+                const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`;
                 const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
                     throw new Error(`GitHub API responded with status ${response.status}`);
                 }
                 
-                const contents = await response.json();
-                debugLog("Successfully fetched initial contents from GitHub");
-                
-                // Get all folders (directories) in the root
-                const folders = contents.filter(item => item.type === 'dir');
-                
-                // Fetch files from each folder
-                let allFiles = [];
-                for (const folder of folders) {
-                    try {
-                        const folderResponse = await fetch(folder.url);
-                        if (!folderResponse.ok) continue;
-                        
-                        const folderContents = await folderResponse.json();
-                        const folderFiles = folderContents
-                            .filter(item => item.type === 'file')
-                            .map(item => ({
-                                name: item.name,
-                                path: `${folder.name}/${item.name}`,
-                                client: folder.name.toUpperCase()
-                            }));
-                        
-                        allFiles = [...allFiles, ...folderFiles];
-                    } catch (error) {
-                        debugLog(`Error fetching folder ${folder.name}: ${error.message}`);
-                        continue;
-                    }
-                }
+                const files = await response.json();
+                debugLog("Successfully fetched files from GitHub");
                 
                 // Filter for Excel files with the correct naming pattern
-                const visitFiles = allFiles
-                    .filter(file => file.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
-                    .map(file => ({
-                        filename: file.path,
-                        client: file.client
-                    }));
+                const visitFiles = files
+                    .filter(file => file.type === 'file')
+                    .map(file => file.name)
+                    .filter(name => name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i));
                 
                 debugLog(`Found ${visitFiles.length} valid visit files`);
-                return visitFiles.length > 0 ? visitFiles : mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
+                return visitFiles.length > 0 ? visitFiles : mockVisitFiles;
                 
             } catch (error) {
                 debugLog(`Error fetching files: ${error.message}. Using mock data as fallback.`);
-                return mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
+                return mockVisitFiles;
             }
         }
 
