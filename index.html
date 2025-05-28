@@ -659,201 +659,181 @@
 
         // Function to display device data instead of downloading
         async function displayDeviceData(clientName, visitDisplayName, filename) {
-            const visitsContainer = document.getElementById('visitsContainer');
-            const deviceDataContainer = document.getElementById('deviceDataContainer');
-            const deviceDataContent = document.getElementById('deviceDataContent');
-            
-            visitsContainer.style.display = 'none';
-            deviceDataContainer.style.display = 'block';
-            deviceDataContent.innerHTML = '<div class="loading">Loading device data...</div>';
-            
-            try {
-                // Mock device data for demonstration
-                const deviceData = [
-                    {
-                        client: clientName,
-                        date: visitDisplayName,
-                        line: "Production Line A",
-                        location: "Section 1",
-                        equipment: "Temperature Sensor",
-                        snCode: "TS-001",
-                        workingRangeMin: "0°C",
-                        workingRangeMax: "100°C",
-                        equipmentRange: "0-150°C",
-                        maxDeviation: "±0.5°C",
-                        calDate: "2024-05-15",
-                        calExpiry: "2025-05-15",
-                        model: "TS-1000",
-                        unit: "°C",
-                        resolution: "0.1°C",
-                        environmentTemp: "25°C",
-                        environmentHumidity: "45%",
-                        readings: [
-                            { ref: "20.0", read: "20.1" },
-                            { ref: "40.0", read: "40.2" },
-                            { ref: "60.0", read: "60.0" },
-                            { ref: "80.0", read: "80.3" },
-                            { ref: "100.0", read: "100.1" }
-                        ],
-                        status: "Pass"
-                    },
-                    {
-                        client: clientName,
-                        date: visitDisplayName,
-                        line: "Production Line B",
-                        location: "Section 3",
-                        equipment: "Pressure Gauge",
-                        snCode: "PG-045",
-                        workingRangeMin: "0 bar",
-                        workingRangeMax: "10 bar",
-                        equipmentRange: "0-15 bar",
-                        maxDeviation: "±0.1 bar",
-                        calDate: "2024-04-20",
-                        calExpiry: "2025-04-20",
-                        model: "PG-2000",
-                        unit: "bar",
-                        resolution: "0.01 bar",
-                        environmentTemp: "24°C",
-                        environmentHumidity: "50%",
-                        readings: [
-                            { ref: "2.0", read: "2.01" },
-                            { ref: "4.0", read: "4.05" },
-                            { ref: "6.0", read: "6.02" },
-                            { ref: "8.0", read: "8.07" },
-                            { ref: "10.0", read: "10.03" }
-                        ],
-                        status: "Pass"
-                    },
-                    {
-                        client: clientName,
-                        date: visitDisplayName,
-                        line: "Quality Control",
-                        location: "Lab 2",
-                        equipment: "Digital Scale",
-                        snCode: "DS-112",
-                        workingRangeMin: "0 g",
-                        workingRangeMax: "5000 g",
-                        equipmentRange: "0-6000 g",
-                        maxDeviation: "±0.5 g",
-                        calDate: "2024-03-10",
-                        calExpiry: "2025-03-10",
-                        model: "DS-5000",
-                        unit: "g",
-                        resolution: "0.1 g",
-                        environmentTemp: "23°C",
-                        environmentHumidity: "48%",
-                        readings: [
-                            { ref: "500", read: "500.2" },
-                            { ref: "1000", read: "1000.1" },
-                            { ref: "2000", read: "2000.3" },
-                            { ref: "3000", read: "3000.4" },
-                            { ref: "4000", read: "4000.1" },
-                            { ref: "5000", read: "5000.5" }
-                        ],
-                        status: "Warning"
-                    }
-                ];
-                
-                // Render device data
-                deviceDataContent.innerHTML = `
-                    <div class="device-header">
-                        <h2>${clientName} - Device Calibration Data</h2>
-                        <div class="device-info">${visitDisplayName}</div>
-                    </div>
-                `;
-                
-                deviceData.forEach((device, index) => {
-                    const deviceCard = document.createElement('div');
-                    deviceCard.className = 'device-card';
-                    deviceCard.innerHTML = `
-                        <div class="device-card-header">
-                            <div>
-                                <div class="device-card-title">${device.equipment} (${device.snCode})</div>
-                                <div class="device-card-subtitle">${device.line} - ${device.location}</div>
-                            </div>
-                            <span class="status-indicator ${getStatusClass(device.status)}">${device.status}</span>
-                        </div>
-                        
-                        <div class="device-card-content">
-                            <div class="device-section">
-                                <div class="device-section-title">General Information</div>
-                                <table class="device-table">
-                                    <tr>
-                                        <th>Description Of Equipment</th>
-                                        <td>${device.equipment}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>S/N Code</th>
-                                        <td>${device.snCode}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Working Range</th>
-                                        <td>${device.workingRangeMin} to ${device.workingRangeMax}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Equipment Range</th>
-                                        <td>${device.equipmentRange}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Max Accepted Deviation</th>
-                                        <td>${device.maxDeviation}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Calibration Date</th>
-                                        <td>${device.calDate}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Calibration Expiry Date</th>
-                                        <td>${device.calExpiry}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Model</th>
-                                        <td>${device.model}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Unit</th>
-                                        <td>${device.unit}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Resolution</th>
-                                        <td>${device.resolution}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Environment</th>
-                                        <td>${device.environmentTemp}, ${device.environmentHumidity} rH</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            
-                            <div class="device-section">
-                                <div class="device-section-title">Calibration Readings</div>
-                                <table class="readings-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Ref</th>
-                                            <th>Read</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${device.readings.map(reading => `
-                                            <tr>
-                                                <td>${reading.ref}</td>
-                                                <td>${reading.read}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    `;
-                    deviceDataContent.appendChild(deviceCard);
-                });
-                
-            } catch (error) {
-                debugLog(`Error displaying device data: ${error.message}`);
-                deviceDataContent.innerHTML = '<div class="error-message">Error loading device data</div>';
-            }
+    const visitsContainer = document.getElementById('visitsContainer');
+    const deviceDataContainer = document.getElementById('deviceDataContainer');
+    const deviceDataContent = document.getElementById('deviceDataContent');
+    
+    visitsContainer.style.display = 'none';
+    deviceDataContainer.style.display = 'block';
+    deviceDataContent.innerHTML = '<div class="loading">Loading device data...</div>';
+    
+    try {
+        // Fetch the Excel file from GitHub
+        const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${filename}`;
+        const response = await fetch(fileUrl);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch file: ${response.status}`);
         }
+        
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        
+        // Process the workbook
+        const deviceData = [];
+        
+        // Get the first sheet
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        
+        // Convert to JSON
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        
+        // Process each row of data
+        jsonData.forEach(row => {
+            // Skip empty rows
+            if (!row['Equipment']) return;
+            
+            // Extract readings (assuming they're in columns with 'Ref' and 'Read' in headers)
+            const readings = [];
+            Object.keys(row).forEach(key => {
+                if (key.includes('Ref') && row[key] !== undefined) {
+                    const refValue = row[key];
+                    const readKey = key.replace('Ref', 'Read');
+                    const readValue = row[readKey] || '';
+                    readings.push({ ref: refValue, read: readValue });
+                }
+            });
+            
+            deviceData.push({
+                client: clientName,
+                date: visitDisplayName,
+                line: row['Line'] || '',
+                location: row['Location'] || '',
+                equipment: row['Equipment'] || '',
+                snCode: row['S/N Code'] || row['SN Code'] || '',
+                workingRangeMin: row['Working Range Min'] || '',
+                workingRangeMax: row['Working Range Max'] || '',
+                equipmentRange: row['Equipment Range'] || '',
+                maxDeviation: row['Max Deviation'] || '',
+                calDate: row['Calibration Date'] || '',
+                calExpiry: row['Calibration Expiry'] || '',
+                model: row['Model'] || '',
+                unit: row['Unit'] || '',
+                resolution: row['Resolution'] || '',
+                environmentTemp: row['Environment Temp'] || '',
+                environmentHumidity: row['Environment Humidity'] || '',
+                readings: readings,
+                status: row['Status'] || 'Pass'
+            });
+        });
+        
+        // Render device data
+        deviceDataContent.innerHTML = `
+            <div class="device-header">
+                <h2>${clientName} - Device Calibration Data</h2>
+                <div class="device-info">${visitDisplayName}</div>
+            </div>
+        `;
+        
+        if (deviceData.length === 0) {
+            deviceDataContent.innerHTML += '<div class="error-message">No device data found in this file</div>';
+            return;
+        }
+        
+        deviceData.forEach((device, index) => {
+            const deviceCard = document.createElement('div');
+            deviceCard.className = 'device-card';
+            deviceCard.innerHTML = `
+                <div class="device-card-header">
+                    <div>
+                        <div class="device-card-title">${device.equipment} (${device.snCode})</div>
+                        <div class="device-card-subtitle">${device.line} - ${device.location}</div>
+                    </div>
+                    <span class="status-indicator ${getStatusClass(device.status)}">${device.status}</span>
+                </div>
+                
+                <div class="device-card-content">
+                    <div class="device-section">
+                        <div class="device-section-title">General Information</div>
+                        <table class="device-table">
+                            <tr>
+                                <th>Description Of Equipment</th>
+                                <td>${device.equipment}</td>
+                            </tr>
+                            <tr>
+                                <th>S/N Code</th>
+                                <td>${device.snCode}</td>
+                            </tr>
+                            <tr>
+                                <th>Working Range</th>
+                                <td>${device.workingRangeMin} to ${device.workingRangeMax}</td>
+                            </tr>
+                            <tr>
+                                <th>Equipment Range</th>
+                                <td>${device.equipmentRange}</td>
+                            </tr>
+                            <tr>
+                                <th>Max Accepted Deviation</th>
+                                <td>${device.maxDeviation}</td>
+                            </tr>
+                            <tr>
+                                <th>Calibration Date</th>
+                                <td>${device.calDate}</td>
+                            </tr>
+                            <tr>
+                                <th>Calibration Expiry Date</th>
+                                <td>${device.calExpiry}</td>
+                            </tr>
+                            <tr>
+                                <th>Model</th>
+                                <td>${device.model}</td>
+                            </tr>
+                            <tr>
+                                <th>Unit</th>
+                                <td>${device.unit}</td>
+                            </tr>
+                            <tr>
+                                <th>Resolution</th>
+                                <td>${device.resolution}</td>
+                            </tr>
+                            <tr>
+                                <th>Environment</th>
+                                <td>${device.environmentTemp}, ${device.environmentHumidity} rH</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="device-section">
+                        <div class="device-section-title">Calibration Readings</div>
+                        <table class="readings-table">
+                            <thead>
+                                <tr>
+                                    <th>Ref</th>
+                                    <th>Read</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${device.readings.map(reading => `
+                                    <tr>
+                                        <td>${reading.ref}</td>
+                                        <td>${reading.read}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            deviceDataContent.appendChild(deviceCard);
+        });
+        
+    } catch (error) {
+        debugLog(`Error displaying device data: ${error.message}`);
+        deviceDataContent.innerHTML = '<div class="error-message">Error loading device data</div>';
+    }
+}
 
         // Helper function to get status class
         function getStatusClass(status) {
