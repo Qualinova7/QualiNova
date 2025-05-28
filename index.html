@@ -422,7 +422,7 @@ const branch = 'main'; // or 'master' depending on your repo
         }
 
         // Function to fetch visit files from GitHub recursively
-       async function fetchVisitFiles() {
+      async function fetchVisitFiles() {
             try {
                 debugLog("Attempting to fetch files from GitHub...");
                 const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}`;
@@ -454,35 +454,38 @@ const branch = 'main'; // or 'master' depending on your repo
         function getClientNamesFromFiles(files) {
             const clients = new Set();
             files.forEach(file => {
-                clients.add(file.client);
+                const match = file.match(/^A_([^_]+)_/i);
+                if (match) {
+                    clients.add(match[1]);
+                }
             });
             return Array.from(clients).sort();
         }
 
         // Function to process visits for a specific client
         function processVisitsForClient(files, clientName) {
-    return files
-        .filter(file => file.client === clientName.toUpperCase())
-        .map(file => {
-            const dateMatch = file.filename.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
-            if (dateMatch) {
-                const [_, month, day, year] = dateMatch;
-                return {
-                    ...file, // include all properties from the file object
-                    date: new Date(`${year}-${month}-${day}`),
-                    displayName: `Visit ${month}/${day}/${year}`
-                };
-            }
-            return {
-                ...file,
-                date: new Date(0),
-                displayName: file.filename
-            };
-        })
-        .sort((a, b) => b.date - a.date);
-}
+            return files
+                .filter(file => file.match(new RegExp(`^A_${clientName}_\\d{2}_\\d{2}_\\d{4}\\.xlsx$`, 'i')))
+                .map(file => {
+                    const dateMatch = file.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
+                    if (dateMatch) {
+                        const [_, month, day, year] = dateMatch;
+                        return {
+                            filename: file,
+                            date: new Date(`${year}-${month}-${day}`),
+                            displayName: `Visit ${month}/${day}/${year}`
+                        };
+                    }
+                    return {
+                        filename: file,
+                        date: new Date(0),
+                        displayName: file
+                    };
+                })
+                .sort((a, b) => b.date - a.date);
+        }
 
-      // Function to populate client list in sidebar
+        // Function to populate client list in sidebar
         async function populateClientList() {
             const clientList = document.getElementById('clientList');
             
@@ -514,14 +517,10 @@ const branch = 'main'; // or 'master' depending on your repo
         async function showAllVisits() {
             const mainContent = document.getElementById('mainContent');
             const visitsContainer = document.getElementById('visitsContainer');
-            const fileUploadContainer = document.getElementById('fileUploadContainer');
-            const dataDisplayContainer = document.getElementById('dataDisplayContainer');
             const visitsList = document.getElementById('clientVisitsList');
             
             mainContent.style.display = 'none';
             visitsContainer.style.display = 'block';
-            fileUploadContainer.style.display = 'block';
-            dataDisplayContainer.style.display = 'none';
             visitsList.innerHTML = '<div class="loading">Loading visits...</div>';
             
             try {
@@ -542,31 +541,30 @@ const branch = 'main'; // or 'master' depending on your repo
                     clientArrow.className = 'client-arrow';
                     clientArrow.innerHTML = `<span>${client}</span><span>▼</span>`;
                     
-                    const visitsContainerDiv = document.createElement('div');
-                    visitsContainerDiv.className = 'visit-files';
-                    visitsContainerDiv.style.display = 'none';
+                    const visitsContainer = document.createElement('div');
+                    visitsContainer.className = 'visit-files';
+                    visitsContainer.style.display = 'none';
                     
                     visits.forEach(visit => {
                         const visitElement = document.createElement('div');
                         visitElement.className = 'visit-file';
                         visitElement.textContent = visit.displayName;
                         visitElement.addEventListener('click', () => {
-    displayExcelDataFromUrl(
-        visit.download_url, // Use the direct download URL from GitHub
-        clientName,
-        visit.displayName.replace('Visit ', '')
-    );
-});
-                        visitsContainerDiv.appendChild(visitElement);
+                            window.open(
+                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
+                                '_blank'
+                            );
+                        });
+                        visitsContainer.appendChild(visitElement);
                     });
                     
                     clientArrow.addEventListener('click', () => {
-                        visitsContainerDiv.style.display = 
-                            visitsContainerDiv.style.display === 'none' ? 'block' : 'none';
+                        visitsContainer.style.display = 
+                            visitsContainer.style.display === 'none' ? 'block' : 'none';
                     });
                     
                     visitsList.appendChild(clientArrow);
-                    visitsList.appendChild(visitsContainerDiv);
+                    visitsList.appendChild(visitsContainer);
                 }
                 
             } catch (error) {
@@ -579,14 +577,10 @@ const branch = 'main'; // or 'master' depending on your repo
         async function showClientVisits(clientName) {
             const mainContent = document.getElementById('mainContent');
             const visitsContainer = document.getElementById('visitsContainer');
-            const fileUploadContainer = document.getElementById('fileUploadContainer');
-            const dataDisplayContainer = document.getElementById('dataDisplayContainer');
             const visitsList = document.getElementById('clientVisitsList');
             
             mainContent.style.display = 'none';
             visitsContainer.style.display = 'block';
-            fileUploadContainer.style.display = 'block';
-            dataDisplayContainer.style.display = 'none';
             visitsList.innerHTML = '<div class="loading">Loading visits...</div>';
             
             try {
@@ -610,12 +604,11 @@ const branch = 'main'; // or 'master' depending on your repo
                         visitElement.className = 'visit-file';
                         visitElement.textContent = visit.displayName;
                         visitElement.addEventListener('click', () => {
-    displayExcelDataFromUrl(
-        visit.download_url, // Use the direct download URL from GitHub
-        clientName,
-        visit.displayName.replace('Visit ', '')
-    );
-});
+                            window.open(
+                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
+                                '_blank'
+                            );
+                        });
                         visitsContainerDiv.appendChild(visitElement);
                     });
                 }
