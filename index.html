@@ -6,11 +6,234 @@
     <title>Qualitech International - MechNova</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* [Previous CSS styles remain exactly the same] */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 5px solid #e74c3c;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-top: 5px;
+        }
+        
+        .date-time {
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 15px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        .card p {
+            color: #7f8c8d;
+        }
+        
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #c0392b;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #visitsContainer, #fileUploadContainer, #dataDisplayContainer {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        #clientList {
+            margin-bottom: 20px;
+        }
+        
+        #visitsList {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        #visitsList li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        #visitsList li:hover {
+            background-color: #f9f9f9;
+        }
+        
+        #calibrationData {
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .back-button {
+            margin-top: 20px;
+        }
+        
+        #excelFileInput {
+            display: none;
+        }
+        
+        .file-input-label {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .file-input-label:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
-    <!-- [Previous HTML structure remains exactly the same] -->
+    <header>
+        <div class="container">
+            <h1>Qualitech International</h1>
+            <p class="subtitle">MechNova Calibration System</p>
+            <div class="date-time" id="egyptDateTime"></div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div id="mainContent" class="main-content">
+            <div class="card">
+                <h2>View Visits</h2>
+                <p>Access historical calibration visit data for all clients</p>
+                <button id="visitsButton">View All Visits</button>
+            </div>
+            
+            <div class="card">
+                <h2>Upload Data</h2>
+                <p>Upload new calibration data from Excel files</p>
+                <button id="uploadButton">Upload Excel File</button>
+                <input type="file" id="excelFileInput" accept=".xlsx, .xls" />
+            </div>
+        </div>
+        
+        <div id="visitsContainer" class="hidden">
+            <h2>Select Client</h2>
+            <select id="clientList"></select>
+            
+            <h2>Available Visits</h2>
+            <ul id="visitsList"></ul>
+            
+            <button class="back-button" id="backButton">Back to Main Menu</button>
+        </div>
+        
+        <div id="fileUploadContainer" class="hidden">
+            <h2>Upload Calibration Data</h2>
+            <label for="excelFileInput" class="file-input-label">Choose Excel File</label>
+            <div id="uploadStatus"></div>
+            
+            <button class="back-button" id="backButton">Back to Main Menu</button>
+        </div>
+        
+        <div id="dataDisplayContainer" class="hidden">
+            <h2 id="dataTitle">Calibration Data</h2>
+            <div id="calibrationData"></div>
+            
+            <button class="back-button" id="backButton">Back to Main Menu</button>
+        </div>
+    </div>
 
     <script>
         // Debugging flag - set to true to see console logs
@@ -85,7 +308,8 @@
                             .map(item => ({
                                 name: item.name,
                                 path: `${folder.name}/${item.name}`,
-                                client: folder.name.toUpperCase()
+                                client: folder.name.toUpperCase(),
+                                download_url: item.download_url // Use the download_url provided by GitHub
                             }));
                         
                         allFiles = [...allFiles, ...folderFiles];
@@ -100,15 +324,24 @@
                     .filter(file => file.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
                     .map(file => ({
                         filename: file.path,
-                        client: file.client
+                        client: file.client,
+                        download_url: file.download_url // Include download_url in the returned object
                     }));
                 
                 debugLog(`Found ${visitFiles.length} valid visit files`);
-                return visitFiles.length > 0 ? visitFiles : mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
+                return visitFiles.length > 0 ? visitFiles : mockVisitFiles.map(f => ({ 
+                    filename: f, 
+                    client: f.split('_')[1].toUpperCase(),
+                    download_url: null // Mock files won't have download URLs
+                }));
                 
             } catch (error) {
                 debugLog(`Error fetching files: ${error.message}. Using mock data as fallback.`);
-                return mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
+                return mockVisitFiles.map(f => ({ 
+                    filename: f, 
+                    client: f.split('_')[1].toUpperCase(),
+                    download_url: null
+                }));
             }
         }
 
@@ -133,20 +366,133 @@
                             filename: file.filename,
                             date: new Date(`${year}-${month}-${day}`),
                             displayName: `Visit ${month}/${day}/${year}`,
-                            client: file.client
+                            client: file.client,
+                            download_url: file.download_url // Pass along the download URL
                         };
                     }
                     return {
                         filename: file.filename,
                         date: new Date(0),
                         displayName: file.filename,
-                        client: file.client
+                        client: file.client,
+                        download_url: file.download_url
                     };
                 })
                 .sort((a, b) => b.date - a.date);
         }
 
-        // [Rest of your existing JavaScript functions remain exactly the same until displayExcelDataFromUrl]
+        // Function to populate the client dropdown
+        async function populateClientList() {
+            const clientList = document.getElementById('clientList');
+            clientList.innerHTML = '<option value="">Loading clients...</option>';
+            
+            try {
+                const files = await fetchVisitFiles();
+                const clients = getClientNamesFromFiles(files);
+                
+                clientList.innerHTML = '';
+                if (clients.length > 0) {
+                    clients.forEach(client => {
+                        const option = document.createElement('option');
+                        option.value = client;
+                        option.textContent = client;
+                        clientList.appendChild(option);
+                    });
+                    
+                    clientList.addEventListener('change', async () => {
+                        const selectedClient = clientList.value;
+                        if (selectedClient) {
+                            await showVisitsForClient(selectedClient);
+                        }
+                    });
+                } else {
+                    clientList.innerHTML = '<option value="">No clients found</option>';
+                }
+            } catch (error) {
+                debugLog(`Error populating client list: ${error.message}`);
+                clientList.innerHTML = '<option value="">Error loading clients</option>';
+            }
+        }
+
+        // Function to show visits for a selected client
+        async function showVisitsForClient(clientName) {
+            const visitsList = document.getElementById('visitsList');
+            visitsList.innerHTML = '<li>Loading visits...</li>';
+            
+            try {
+                const files = await fetchVisitFiles();
+                const visits = processVisitsForClient(files, clientName);
+                
+                visitsList.innerHTML = '';
+                if (visits.length > 0) {
+                    visits.forEach(visit => {
+                        const li = document.createElement('li');
+                        li.textContent = visit.displayName;
+                        li.addEventListener('click', () => {
+                            if (visit.download_url) {
+                                displayExcelDataFromUrl(visit.download_url, visit.client, visit.displayName);
+                            } else {
+                                // For mock files or when download_url is not available
+                                displayExcelDataFromUrl(visit.filename, visit.client, visit.displayName);
+                            }
+                        });
+                        visitsList.appendChild(li);
+                    });
+                } else {
+                    visitsList.innerHTML = '<li>No visits found for this client</li>';
+                }
+            } catch (error) {
+                debugLog(`Error showing visits for client ${clientName}: ${error.message}`);
+                visitsList.innerHTML = '<li>Error loading visits</li>';
+            }
+        }
+
+        // Function to show all visits interface
+        async function showAllVisits() {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('visitsContainer').style.display = 'block';
+            document.getElementById('fileUploadContainer').style.display = 'none';
+            document.getElementById('dataDisplayContainer').style.display = 'none';
+            
+            await populateClientList();
+        }
+
+        // Function to handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('visitsContainer').style.display = 'none';
+            document.getElementById('fileUploadContainer').style.display = 'block';
+            document.getElementById('dataDisplayContainer').style.display = 'none';
+            
+            const uploadStatus = document.getElementById('uploadStatus');
+            uploadStatus.innerHTML = '<div class="loading">Processing uploaded file...</div>';
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Process the uploaded file
+                    processExcelData(workbook, "Uploaded File", new Date().toLocaleDateString());
+                    
+                    document.getElementById('fileUploadContainer').style.display = 'none';
+                    document.getElementById('dataDisplayContainer').style.display = 'block';
+                } catch (error) {
+                    debugLog(`Error processing uploaded file: ${error.message}`);
+                    uploadStatus.innerHTML = `<div class="error-message">Error processing file: ${error.message}</div>`;
+                }
+            };
+            
+            reader.onerror = function() {
+                uploadStatus.innerHTML = '<div class="error-message">Error reading file</div>';
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
 
         // Modified function to display Excel data from a URL with the new path structure
         async function displayExcelDataFromUrl(url, clientName, visitDate) {
@@ -154,14 +500,19 @@
             
             const dataDisplayContainer = document.getElementById('dataDisplayContainer');
             const calibrationData = document.getElementById('calibrationData');
+            const dataTitle = document.getElementById('dataTitle');
             
             dataDisplayContainer.style.display = 'block';
+            dataTitle.textContent = `Calibration Data - ${clientName} (${visitDate})`;
             calibrationData.innerHTML = '<div class="loading">Loading calibration data...</div>';
             
             try {
-                // Modified URL construction to match the repository structure
-                const fileUrl = `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(url)}`;
-                debugLog(`Constructed file URL: ${fileUrl}`);
+                // If the URL is already a direct download URL (from GitHub API), use it directly
+                // Otherwise, construct the URL using the raw.githubusercontent.com format
+                const fileUrl = url.includes('://') ? url : 
+                    `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${url.replace(/ /g, '%20')}`;
+                
+                debugLog(`Final file URL: ${fileUrl}`);
                 
                 const response = await fetch(fileUrl);
                 if (!response.ok) {
@@ -181,7 +532,52 @@
             }
         }
 
-        // [All remaining JavaScript functions stay exactly the same]
+        // Function to process Excel data and display it
+        function processExcelData(workbook, clientName, visitDate) {
+            const calibrationData = document.getElementById('calibrationData');
+            
+            try {
+                // Get the first sheet name
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                // Convert to JSON
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                
+                if (jsonData.length === 0) {
+                    throw new Error("Excel sheet is empty");
+                }
+                
+                // Create HTML table
+                let html = '<table><thead><tr>';
+                
+                // Add headers
+                const headers = jsonData[0];
+                headers.forEach(header => {
+                    html += `<th>${header || ''}</th>`;
+                });
+                html += '</tr></thead><tbody>';
+                
+                // Add rows
+                for (let i = 1; i < jsonData.length; i++) {
+                    const row = jsonData[i];
+                    if (row && row.length > 0) {
+                        html += '<tr>';
+                        headers.forEach((_, index) => {
+                            html += `<td>${row[index] || ''}</td>`;
+                        });
+                        html += '</tr>';
+                    }
+                }
+                
+                html += '</tbody></table>';
+                calibrationData.innerHTML = html;
+                
+            } catch (error) {
+                debugLog(`Error processing Excel data: ${error.message}`);
+                calibrationData.innerHTML = `<div class="error-message">Error processing Excel data: ${error.message}</div>`;
+            }
+        }
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
@@ -189,11 +585,15 @@
             setInterval(updateEgyptDateTime, 1000);
             
             document.getElementById('visitsButton').addEventListener('click', showAllVisits);
-            document.getElementById('backButton').addEventListener('click', () => {
-                document.getElementById('mainContent').style.display = 'flex';
-                document.getElementById('visitsContainer').style.display = 'none';
-                document.getElementById('fileUploadContainer').style.display = 'none';
-                document.getElementById('dataDisplayContainer').style.display = 'none';
+            
+            // Use event delegation for back buttons since there are multiple
+            document.addEventListener('click', (e) => {
+                if (e.target.id === 'backButton') {
+                    document.getElementById('mainContent').style.display = 'flex';
+                    document.getElementById('visitsContainer').style.display = 'none';
+                    document.getElementById('fileUploadContainer').style.display = 'none';
+                    document.getElementById('dataDisplayContainer').style.display = 'none';
+                }
             });
             
             document.getElementById('uploadButton').addEventListener('click', () => {
