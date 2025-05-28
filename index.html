@@ -1,209 +1,313 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qualitech International - MechNova</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <style>
-        /* [Previous CSS styles remain exactly the same] */
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Qualitech International - MechNova</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    #mainContent,
+    #visitsContainer,
+    #fileUploadContainer,
+    #dataDisplayContainer {
+      display: none;
+    }
+
+    #mainContent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    #calibrationData {
+      margin-top: 20px;
+    }
+
+    .loading {
+      color: blue;
+    }
+
+    .error-message {
+      color: red;
+    }
+
+    .visit-entry {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <!-- [Previous HTML structure remains exactly the same] -->
+  <div id="mainContent">
+    <h1>Qualitech International - MechNova</h1>
+    <div id="egyptDateTime"></div>
+    <button id="visitsButton">Show Client Visits</button>
+    <button id="uploadButton">Upload Excel File</button>
+  </div>
 
-    <script>
-        // Debugging flag - set to true to see console logs
-        const DEBUG = true;
-        
-        // Your GitHub repository details
-        const repoOwner = 'Qualinova7';
-        const repoName = 'QualiNova';
-        
-        // Mock data for fallback
-        const mockVisitFiles = [
-            "A_CTOR_05_25_2025.xlsx",
-            "A_ABC_05_20_2025.xlsx",
-            "A_ABC_04_15_2025.xlsx",
-            "A_DELTA_03_10_2025.xlsx",
-            "A_GLOBAL_02_05_2025.xlsx"
-        ];
+  <div id="visitsContainer" style="display: none;"></div>
 
-        // Function to log debug messages
-        function debugLog(message) {
-            if (DEBUG) {
-                console.log(`[DEBUG] ${message}`);
-            }
+  <div id="fileUploadContainer" style="display: none;">
+    <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display: none;">
+  </div>
+
+  <div id="dataDisplayContainer" style="display: none;">
+    <button id="backButton">Back</button>
+    <div id="calibrationData"></div>
+  </div>
+
+  <script>
+    const DEBUG = true;
+
+    const repoOwner = 'Qualinova7';
+    const repoName = 'QualiNova';
+
+    const mockVisitFiles = [
+      "A_CTOR_05_25_2025.xlsx",
+      "A_ABC_05_20_2025.xlsx",
+      "A_ABC_04_15_2025.xlsx",
+      "A_DELTA_03_10_2025.xlsx",
+      "A_GLOBAL_02_05_2025.xlsx"
+    ];
+
+    function debugLog(message) {
+      if (DEBUG) {
+        console.log(`[DEBUG] ${message}`);
+      }
+    }
+
+    function updateEgyptDateTime() {
+      const options = {
+        timeZone: 'Africa/Cairo',
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+
+      const now = new Date();
+      const egyptDateTime = now.toLocaleString('en-US', options);
+      document.getElementById('egyptDateTime').textContent = egyptDateTime;
+    }
+
+    async function fetchVisitFiles() {
+      try {
+        debugLog("Attempting to fetch files from GitHub...");
+        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error(`GitHub API responded with status ${response.status}`);
         }
 
-        // Function to update Egypt date and time
-        function updateEgyptDateTime() {
-            const options = {
-                timeZone: 'Africa/Cairo',
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
+        const contents = await response.json();
+        const folders = contents.filter(item => item.type === 'dir');
+
+        let allFiles = [];
+        for (const folder of folders) {
+          try {
+            const folderResponse = await fetch(folder.url);
+            if (!folderResponse.ok) continue;
+
+            const folderContents = await folderResponse.json();
+            const folderFiles = folderContents
+              .filter(item => item.type === 'file')
+              .map(item => ({
+                name: item.name,
+                path: `${folder.name}/${item.name}`,
+                client: folder.name.toUpperCase()
+              }));
+
+            allFiles = [...allFiles, ...folderFiles];
+          } catch (error) {
+            debugLog(`Error fetching folder ${folder.name}: ${error.message}`);
+          }
+        }
+
+        const visitFiles = allFiles
+          .filter(file => file.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
+          .map(file => ({
+            filename: file.path,
+            client: file.client
+          }));
+
+        debugLog(`Found ${visitFiles.length} valid visit files`);
+        return visitFiles.length > 0 ? visitFiles : mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
+
+      } catch (error) {
+        debugLog(`Error fetching files: ${error.message}. Using mock data as fallback.`);
+        return mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
+      }
+    }
+
+    function getClientNamesFromFiles(files) {
+      const clients = new Set();
+      files.forEach(file => {
+        clients.add(file.client);
+      });
+      return Array.from(clients).sort();
+    }
+
+    function processVisitsForClient(files, clientName) {
+      return files
+        .filter(file => file.client === clientName.toUpperCase())
+        .map(file => {
+          const dateMatch = file.filename.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
+          if (dateMatch) {
+            const [_, month, day, year] = dateMatch;
+            return {
+              filename: file.filename,
+              date: new Date(`${year}-${month}-${day}`),
+              displayName: `Visit ${month}/${day}/${year}`,
+              client: file.client
             };
-            
-            const now = new Date();
-            const egyptDateTime = now.toLocaleString('en-US', options);
-            document.getElementById('egyptDateTime').textContent = egyptDateTime;
-        }
+          }
+          return {
+            filename: file.filename,
+            date: new Date(0),
+            displayName: file.filename,
+            client: file.client
+          };
+        })
+        .sort((a, b) => b.date - a.date);
+    }
 
-        // Function to fetch visit files from GitHub recursively
-        async function fetchVisitFiles() {
-            try {
-                debugLog("Attempting to fetch files from GitHub...");
-                const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`GitHub API responded with status ${response.status}`);
-                }
-                
-                const contents = await response.json();
-                debugLog("Successfully fetched initial contents from GitHub");
-                
-                // Get all folders (directories) in the root
-                const folders = contents.filter(item => item.type === 'dir');
-                
-                // Fetch files from each folder
-                let allFiles = [];
-                for (const folder of folders) {
-                    try {
-                        const folderResponse = await fetch(folder.url);
-                        if (!folderResponse.ok) continue;
-                        
-                        const folderContents = await folderResponse.json();
-                        const folderFiles = folderContents
-                            .filter(item => item.type === 'file')
-                            .map(item => ({
-                                name: item.name,
-                                path: `${folder.name}/${item.name}`,
-                                client: folder.name.toUpperCase()
-                            }));
-                        
-                        allFiles = [...allFiles, ...folderFiles];
-                    } catch (error) {
-                        debugLog(`Error fetching folder ${folder.name}: ${error.message}`);
-                        continue;
-                    }
-                }
-                
-                // Filter for Excel files with the correct naming pattern
-                const visitFiles = allFiles
-                    .filter(file => file.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
-                    .map(file => ({
-                        filename: file.path,
-                        client: file.client
-                    }));
-                
-                debugLog(`Found ${visitFiles.length} valid visit files`);
-                return visitFiles.length > 0 ? visitFiles : mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
-                
-            } catch (error) {
-                debugLog(`Error fetching files: ${error.message}. Using mock data as fallback.`);
-                return mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
-            }
-        }
+    async function displayExcelDataFromUrl(url, clientName, visitDate) {
+      debugLog(`Fetching Excel file from: ${url}`);
 
-        // Function to extract client names from visit files
-        function getClientNamesFromFiles(files) {
-            const clients = new Set();
-            files.forEach(file => {
-                clients.add(file.client);
-            });
-            return Array.from(clients).sort();
-        }
+      const dataDisplayContainer = document.getElementById('dataDisplayContainer');
+      const calibrationData = document.getElementById('calibrationData');
 
-        // Function to process visits for a specific client
-        function processVisitsForClient(files, clientName) {
-            return files
-                .filter(file => file.client === clientName.toUpperCase())
-                .map(file => {
-                    const dateMatch = file.filename.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
-                    if (dateMatch) {
-                        const [_, month, day, year] = dateMatch;
-                        return {
-                            filename: file.filename,
-                            date: new Date(`${year}-${month}-${day}`),
-                            displayName: `Visit ${month}/${day}/${year}`,
-                            client: file.client
-                        };
-                    }
-                    return {
-                        filename: file.filename,
-                        date: new Date(0),
-                        displayName: file.filename,
-                        client: file.client
-                    };
-                })
-                .sort((a, b) => b.date - a.date);
-        }
+      dataDisplayContainer.style.display = 'block';
+      calibrationData.innerHTML = '<div class="loading">Loading calibration data...</div>';
 
-        // [Rest of your existing JavaScript functions remain exactly the same until displayExcelDataFromUrl]
-
-        // Modified function to display Excel data from a URL with the new path structure
-async function displayExcelDataFromUrl(url, clientName, visitDate) {
-    debugLog(`Fetching Excel file from: ${url}`);
-
-    const dataDisplayContainer = document.getElementById('dataDisplayContainer');
-    const calibrationData = document.getElementById('calibrationData');
-
-    dataDisplayContainer.style.display = 'block';
-    calibrationData.innerHTML = '<div class="loading">Loading calibration data...</div>';
-
-    try {
-        // Fixed raw URL format
+      try {
         const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${url}`;
         debugLog(`Constructed file URL: ${fileUrl}`);
 
         const response = await fetch(fileUrl);
         if (!response.ok) {
-            throw new Error(`Failed to fetch Excel file: ${response.status}`);
+          throw new Error(`Failed to fetch Excel file: ${response.status}`);
         }
 
         const arrayBuffer = await response.arrayBuffer();
         const data = new Uint8Array(arrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
 
-        // Process the workbook
         processExcelData(workbook, clientName, visitDate);
 
-    } catch (error) {
+      } catch (error) {
         debugLog(`Error processing Excel file: ${error.message}`);
         calibrationData.innerHTML = `<div class="error-message">Error loading calibration data: ${error.message}</div>`;
+      }
     }
-}
 
-        // [All remaining JavaScript functions stay exactly the same]
+    function processExcelData(workbook, clientName, visitDate) {
+      const calibrationData = document.getElementById('calibrationData');
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            updateEgyptDateTime();
-            setInterval(updateEgyptDateTime, 1000);
-            
-            document.getElementById('visitsButton').addEventListener('click', showAllVisits);
-            document.getElementById('backButton').addEventListener('click', () => {
-                document.getElementById('mainContent').style.display = 'flex';
-                document.getElementById('visitsContainer').style.display = 'none';
-                document.getElementById('fileUploadContainer').style.display = 'none';
-                document.getElementById('dataDisplayContainer').style.display = 'none';
-            });
-            
-            document.getElementById('uploadButton').addEventListener('click', () => {
-                document.getElementById('excelFileInput').click();
-            });
-            
-            document.getElementById('excelFileInput').addEventListener('change', handleFileUpload);
-            
-            populateClientList();
-        });
-    </script>
+      if (json.length === 0) {
+        calibrationData.innerHTML = "<div>No data found in the Excel file.</div>";
+        return;
+      }
+
+      let html = `<h2>${clientName} - ${visitDate}</h2><table border="1" cellpadding="5">`;
+      json.forEach(row => {
+        html += "<tr>" + row.map(cell => `<td>${cell}</td>`).join("") + "</tr>";
+      });
+      html += "</table>";
+
+      calibrationData.innerHTML = html;
+    }
+
+    async function showAllVisits() {
+      const visitsContainer = document.getElementById('visitsContainer');
+      visitsContainer.innerHTML = "<div class='loading'>Loading visits...</div>";
+      visitsContainer.style.display = 'block';
+      document.getElementById('mainContent').style.display = 'none';
+
+      const visitFiles = await fetchVisitFiles();
+      const clients = getClientNamesFromFiles(visitFiles);
+
+      let html = "<h2>Select a Client</h2>";
+      clients.forEach(client => {
+        html += `<button onclick="showClientVisits('${client}')">${client}</button>`;
+      });
+
+      visitsContainer.innerHTML = html;
+    }
+
+    async function showClientVisits(clientName) {
+      const visitsContainer = document.getElementById('visitsContainer');
+      visitsContainer.innerHTML = `<h2>${clientName} Visits</h2>`;
+
+      const visitFiles = await fetchVisitFiles();
+      const visits = processVisitsForClient(visitFiles, clientName);
+
+      visits.forEach(visit => {
+        const div = document.createElement('div');
+        div.className = 'visit-entry';
+        div.textContent = visit.displayName;
+        div.onclick = () => displayExcelDataFromUrl(visit.filename, visit.client, visit.displayName);
+        visitsContainer.appendChild(div);
+      });
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('fileUploadContainer').style.display = 'none';
+        document.getElementById('dataDisplayContainer').style.display = 'block';
+
+        processExcelData(workbook, "Uploaded File", file.name);
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateEgyptDateTime();
+      setInterval(updateEgyptDateTime, 1000);
+
+      document.getElementById('mainContent').style.display = 'flex';
+      document.getElementById('visitsButton').addEventListener('click', showAllVisits);
+      document.getElementById('backButton').addEventListener('click', () => {
+        document.getElementById('mainContent').style.display = 'flex';
+        document.getElementById('visitsContainer').style.display = 'none';
+        document.getElementById('fileUploadContainer').style.display = 'none';
+        document.getElementById('dataDisplayContainer').style.display = 'none';
+      });
+
+      document.getElementById('uploadButton').addEventListener('click', () => {
+        document.getElementById('excelFileInput').click();
+      });
+
+      document.getElementById('excelFileInput').addEventListener('change', handleFileUpload);
+    });
+  </script>
 </body>
 </html>
