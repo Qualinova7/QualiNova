@@ -686,236 +686,167 @@
         }
 
         // Function to display device data from Excel file
-        async function displayDeviceData(clientName, visitDisplayName, filename) {
-            const visitsContainer = document.getElementById('visitsContainer');
-            const deviceDataContainer = document.getElementById('deviceDataContainer');
-            const deviceDataContent = document.getElementById('deviceDataContent');
-            const progressBar = document.getElementById('progressBar');
-            const notification = document.getElementById('notification');
-            
-            visitsContainer.style.display = 'none';
-            deviceDataContainer.style.display = 'block';
-            progressBar.style.width = '0%';
-            deviceDataContent.innerHTML = '<div class="loading">Loading device data...</div>';
-            
-            try {
-                // Update progress
-                progressBar.style.width = '30%';
-                
-                // Fetch the Excel file
-                const rawUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${encodeURIComponent(filename)}`;
-                debugLog(`Fetching Excel file from: ${rawUrl}`);
-                
-                const response = await fetch(rawUrl);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch Excel file: ${response.status}`);
+ async function displayDeviceData(clientName, visitDisplayName, filename) {
+    const visitsContainer = document.getElementById('visitsContainer');
+    const deviceDataContainer = document.getElementById('deviceDataContainer');
+    const deviceDataContent = document.getElementById('deviceDataContent');
+    const progressBar = document.getElementById('progressBar');
+    const notification = document.getElementById('notification');
+
+    visitsContainer.style.display = 'none';
+    deviceDataContainer.style.display = 'block';
+    progressBar.style.width = '0%';
+    deviceDataContent.innerHTML = '<div class="loading">Loading device data...</div>';
+
+    try {
+        progressBar.style.width = '30%';
+
+        const rawUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${encodeURIComponent(filename)}`;
+        debugLog(`Fetching Excel file from: ${rawUrl}`);
+
+        const response = await fetch(rawUrl);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch Excel file: ${response.status}`);
+        }
+
+        progressBar.style.width = '60%';
+
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        progressBar.style.width = '90%';
+
+        const deviceData = [];
+        let i = 0;
+
+        while (i < jsonData.length) {
+            const row = jsonData[i];
+            if (row[0] && row[0].toString().trim() === '$#') {
+                // Extract device metadata
+                const metadata = row;
+                const device = {
+                    client: clientName,
+                    date: visitDisplayName,
+                    line: metadata[1] || "N/A",
+                    location: metadata[2] || "N/A",
+                    equipment: metadata[3] || "Unknown Equipment",
+                    snCode: metadata[4] || "N/A",
+                    workingRangeMin: metadata[5] || "N/A",
+                    workingRangeMax: metadata[6] || "N/A",
+                    equipmentRange: metadata[7] || "N/A",
+                    maxDeviation: metadata[8] || "N/A",
+                    calDate: metadata[9] ? new Date(metadata[9]).toLocaleDateString() : "N/A",
+                    calExpiry: metadata[10] ? new Date(metadata[10]).toLocaleDateString() : "N/A",
+                    model: metadata[11] || "N/A",
+                    unit: metadata[12] || "N/A",
+                    resolution: metadata[13] || "N/A",
+                    environmentTemp: metadata[14] || "N/A",
+                    environmentHumidity: metadata[15] || "N/A",
+                    readings: [],
+                    status: ["Pass", "Warning", "Fail"][Math.floor(Math.random() * 3)]
+                };
+
+                i++; // Move to next row (readings start here)
+                while (i < jsonData.length && !(jsonData[i][0] && jsonData[i][0].toString().trim() === '$#')) {
+                    const readingRow = jsonData[i];
+                    for (let col = 1; col < readingRow.length; col += 2) {
+                        const ref = readingRow[col];
+                        const read = readingRow[col + 1];
+                        if (ref !== undefined && read !== undefined) {
+                            device.readings.push({
+                                ref: ref.toString(),
+                                read: read.toString()
+                            });
+                        }
+                    }
+                    i++;
                 }
-                
-                // Update progress
-                progressBar.style.width = '60%';
-                
-                const arrayBuffer = await response.arrayBuffer();
-                
-                // Parse Excel file
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                
-                // Get the first sheet
-                const firstSheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[firstSheetName];
-                
-                // Convert sheet to JSON
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                
-                // Update progress
-                progressBar.style.width = '90%';
-                
-                // Process the data - this depends on your Excel structure
-                // Here we'll create a simplified version of the device data
-                const deviceData = [];
-                
-                // Skip header row and process each row as a device
-                for (let i = 1; i < jsonData.length; i++) {
-                    const row = jsonData[i];
-                    if (row.length < 15) continue; // Skip incomplete rows
-                    
-                    deviceData.push({
-                        client: clientName,
-                        date: visitDisplayName,
-                        line: row[0] || "N/A",
-                        location: row[1] || "N/A",
-                        equipment: row[2] || "Unknown Equipment",
-                        snCode: row[3] || "N/A",
-                        workingRangeMin: row[4] || "N/A",
-                        workingRangeMax: row[5] || "N/A",
-                        equipmentRange: row[6] || "N/A",
-                        maxDeviation: row[7] || "N/A",
-                        calDate: row[8] ? new Date(row[8]).toLocaleDateString() : "N/A",
-                        calExpiry: row[9] ? new Date(row[9]).toLocaleDateString() : "N/A",
-                        model: row[10] || "N/A",
-                        unit: row[11] || "N/A",
-                        resolution: row[12] || "N/A",
-                        environmentTemp: row[13] || "N/A",
-                        environmentHumidity: row[14] || "N/A",
-                        readings: [
-                            { ref: "20.0", read: (20 + Math.random() * 0.5).toFixed(1) },
-                            { ref: "40.0", read: (40 + Math.random() * 0.5).toFixed(1) },
-                            { ref: "60.0", read: (60 + Math.random() * 0.5).toFixed(1) },
-                            { ref: "80.0", read: (80 + Math.random() * 0.5).toFixed(1) },
-                            { ref: "100.0", read: (100 + Math.random() * 0.5).toFixed(1) }
-                        ],
-                        status: ["Pass", "Warning", "Fail"][Math.floor(Math.random() * 3)]
-                    });
-                }
-                
-                // If no devices found, add a default one
-                if (deviceData.length === 0) {
-                    deviceData.push({
-                        client: clientName,
-                        date: visitDisplayName,
-                        line: "Production Line A",
-                        location: "Section 1",
-                        equipment: "Temperature Sensor",
-                        snCode: "TS-001",
-                        workingRangeMin: "0°C",
-                        workingRangeMax: "100°C",
-                        equipmentRange: "0-150°C",
-                        maxDeviation: "±0.5°C",
-                        calDate: "2024-05-15",
-                        calExpiry: "2025-05-15",
-                        model: "TS-1000",
-                        unit: "°C",
-                        resolution: "0.1°C",
-                        environmentTemp: "25°C",
-                        environmentHumidity: "45%",
-                        readings: [
-                            { ref: "20.0", read: "20.1" },
-                            { ref: "40.0", read: "40.2" },
-                            { ref: "60.0", read: "60.0" },
-                            { ref: "80.0", read: "80.3" },
-                            { ref: "100.0", read: "100.1" }
-                        ],
-                        status: "Pass"
-                    });
-                }
-                
-                // Render device data
-                deviceDataContent.innerHTML = `
-                    <div class="device-header">
-                        <h2>${clientName} - Device Calibration Data</h2>
-                        <div class="device-info">${visitDisplayName} - ${filename}</div>
-                    </div>
-                    <div class="device-info">Found ${deviceData.length} device records</div>
-                `;
-                
-                deviceData.forEach((device, index) => {
-                    const deviceCard = document.createElement('div');
-                    deviceCard.className = 'device-card';
-                    deviceCard.innerHTML = `
-                        <div class="device-card-header">
-                            <div>
-                                <div class="device-card-title">${device.equipment} (${device.snCode})</div>
-                                <div class="device-card-subtitle">${device.line} - ${device.location}</div>
-                            </div>
-                            <span class="status-indicator ${getStatusClass(device.status)}">${device.status}</span>
-                        </div>
-                        
-                        <div class="device-card-content">
-                            <div class="device-section">
-                                <div class="device-section-title">General Information</div>
-                                <table class="device-table">
-                                    <tr>
-                                        <th>Description Of Equipment</th>
-                                        <td>${device.equipment}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>S/N Code</th>
-                                        <td>${device.snCode}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Working Range</th>
-                                        <td>${device.workingRangeMin} to ${device.workingRangeMax}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Equipment Range</th>
-                                        <td>${device.equipmentRange}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Max Accepted Deviation</th>
-                                        <td>${device.maxDeviation}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Calibration Date</th>
-                                        <td>${device.calDate}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Calibration Expiry Date</th>
-                                        <td>${device.calExpiry}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Model</th>
-                                        <td>${device.model}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Unit</th>
-                                        <td>${device.unit}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Resolution</th>
-                                        <td>${device.resolution}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Environment</th>
-                                        <td>${device.environmentTemp}, ${device.environmentHumidity} rH</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            
-                            <div class="device-section">
-                                <div class="device-section-title">Calibration Readings</div>
-                                <table class="readings-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Ref</th>
-                                            <th>Read</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${device.readings.map(reading => `
-                                            <tr>
-                                                <td>${reading.ref}</td>
-                                                <td>${reading.read}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    `;
-                    deviceDataContent.appendChild(deviceCard);
-                });
-                
-                // Update progress to complete
-                progressBar.style.width = '100%';
-                
-                // Show notification
-                notification.classList.add('show');
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-                
-            } catch (error) {
-                debugLog(`Error displaying device data: ${error.message}`);
-                deviceDataContent.innerHTML = `
-                    <div class="error-message">
-                        Error loading device data: ${error.message}
-                        <p>Filename: ${filename}</p>
-                        <p>Please check the file format and try again.</p>
-                    </div>
-                `;
-                progressBar.style.width = '100%';
-                progressBar.style.backgroundColor = '#e74c3c';
+
+                deviceData.push(device);
+            } else {
+                i++;
             }
         }
+
+        if (deviceData.length === 0) {
+            deviceDataContent.innerHTML = `<div class="error-message">No device records found.</div>`;
+            progressBar.style.width = '100%';
+            return;
+        }
+
+        deviceDataContent.innerHTML = `
+            <div class="device-header">
+                <h2>${clientName} - Device Calibration Data</h2>
+                <div class="device-info">${visitDisplayName} - ${filename}</div>
+                <div class="device-info">Found ${deviceData.length} device records</div>
+            </div>
+        `;
+
+        deviceData.forEach(device => {
+            const deviceCard = document.createElement('div');
+            deviceCard.className = 'device-card';
+            deviceCard.innerHTML = `
+                <div class="device-card-header">
+                    <div>
+                        <div class="device-card-title">${device.equipment} (${device.snCode})</div>
+                        <div class="device-card-subtitle">${device.line} - ${device.location}</div>
+                    </div>
+                    <span class="status-indicator ${getStatusClass(device.status)}">${device.status}</span>
+                </div>
+                <div class="device-card-content">
+                    <div class="device-section">
+                        <div class="device-section-title">General Information</div>
+                        <table class="device-table">
+                            <tr><th>Description Of Equipment</th><td>${device.equipment}</td></tr>
+                            <tr><th>S/N Code</th><td>${device.snCode}</td></tr>
+                            <tr><th>Working Range</th><td>${device.workingRangeMin} to ${device.workingRangeMax}</td></tr>
+                            <tr><th>Equipment Range</th><td>${device.equipmentRange}</td></tr>
+                            <tr><th>Max Accepted Deviation</th><td>${device.maxDeviation}</td></tr>
+                            <tr><th>Calibration Date</th><td>${device.calDate}</td></tr>
+                            <tr><th>Calibration Expiry Date</th><td>${device.calExpiry}</td></tr>
+                            <tr><th>Model</th><td>${device.model}</td></tr>
+                            <tr><th>Unit</th><td>${device.unit}</td></tr>
+                            <tr><th>Resolution</th><td>${device.resolution}</td></tr>
+                            <tr><th>Environment</th><td>${device.environmentTemp}, ${device.environmentHumidity} rH</td></tr>
+                        </table>
+                    </div>
+                    <div class="device-section">
+                        <div class="device-section-title">Calibration Readings</div>
+                        <table class="readings-table">
+                            <thead>
+                                <tr><th>Ref</th><th>Read</th></tr>
+                            </thead>
+                            <tbody>
+                                ${device.readings.map(r => `<tr><td>${r.ref}</td><td>${r.read}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            deviceDataContent.appendChild(deviceCard);
+        });
+
+        progressBar.style.width = '100%';
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), 3000);
+
+    } catch (error) {
+        debugLog(`Error displaying device data: ${error.message}`);
+        deviceDataContent.innerHTML = `
+            <div class="error-message">
+                Error loading device data: ${error.message}
+                <p>Filename: ${filename}</p>
+                <p>Please check the file format and try again.</p>
+            </div>
+        `;
+        progressBar.style.width = '100%';
+        progressBar.style.backgroundColor = '#e74c3c';
+    }
+}
+
 
         // Helper function to get status class
         function getStatusClass(status) {
