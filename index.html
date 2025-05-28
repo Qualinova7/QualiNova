@@ -1,313 +1,962 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Qualitech International - MechNova</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-
-    #mainContent,
-    #visitsContainer,
-    #fileUploadContainer,
-    #dataDisplayContainer {
-      display: none;
-    }
-
-    #mainContent {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-
-    #calibrationData {
-      margin-top: 20px;
-    }
-
-    .loading {
-      color: blue;
-    }
-
-    .error-message {
-      color: red;
-    }
-
-    .visit-entry {
-      margin: 10px 0;
-      padding: 10px;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualitech International - MechNova</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+       body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .page-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .company-name {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 180px;
+        }
+        .qualitech {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: 0.5px;
+        }
+        .international {
+            font-size: 16px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+        .center-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            margin: 0 30px;
+            max-width: 600px;
+        }
+        .date-time {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-align: center;
+            width: 100%;
+            color: #555;
+        }
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.2);
+        }
+        .nav-bar {
+            background-color: #2c3e50;
+            padding: 12px 0;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            padding: 0 20px;
+            font-size: 15px;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-button:hover {
+            color: #3498db;
+        }
+        .separator {
+            color: rgba(255,255,255,0.3);
+        }
+        .main-content {
+            display: flex;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 220px;
+            border-right: 1px solid #eee;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .section-content {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .section-content li {
+            padding: 8px 0;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .section-content li:hover {
+            color: #3498db;
+            padding-left: 5px;
+        }
+        .activities {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .activities .section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        /* Visits Page Styles */
+        .visits-container {
+            display: none;
+            padding: 20px;
+        }
+        .client-arrow {
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .client-arrow:hover {
+            background-color: #e0e0e0;
+        }
+        .visit-files {
+            display: none;
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        .visit-file {
+            padding: 8px;
+            margin: 3px 0;
+            background-color: #f8f9fa;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .visit-file:hover {
+            background-color: #e9ecef;
+        }
+        .back-button {
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background-color: #1a252f;
+        }
+        .loading {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .error-message {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+        
+        /* Calibration Data Table Styles */
+        .device-container {
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        .device-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+        .device-data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .device-data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .device-data-table td {
+            padding: 10px 15px;
+            border: 1px solid #eee;
+        }
+        .device-data-table td:first-child {
+            font-weight: 600;
+            width: 200px;
+            background-color: #f5f5f5;
+        }
+        .results-header {
+            font-weight: 600;
+            text-align: center;
+            background-color: #e0e0e0;
+        }
+        .results-row {
+            text-align: center;
+        }
+        .status-cell {
+            font-weight: 600;
+            text-align: center;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-top: 2px solid #ddd;
+        }
+        .pass {
+            color: #27ae60;
+        }
+        .fail {
+            color: #e74c3c;
+        }
+        .file-upload-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .file-upload-container:hover {
+            border-color: #3498db;
+            background-color: #f0f7fd;
+        }
+        .file-upload-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .file-upload-input {
+            display: none;
+        }
+        .file-upload-button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .file-upload-button:hover {
+            background-color: #2980b9;
+        }
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .data-display-container {
+            margin-top: 30px;
+        }
+        .no-data-message {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-  <div id="mainContent">
-    <h1>Qualitech International - MechNova</h1>
-    <div id="egyptDateTime"></div>
-    <button id="visitsButton">Show Client Visits</button>
-    <button id="uploadButton">Upload Excel File</button>
-  </div>
+    <div class="page-title">QualiNova</div>
+    
+    <div class="header-container">
+        <div class="company-name">
+            <div class="qualitech">Qualitech</div>
+            <div class="international">International</div>
+        </div>
+        
+        <div class="center-column">
+            <div class="date-time" id="egyptDateTime"></div>
+            <input type="text" class="search-bar" placeholder="Search clients, visits, or reports...">
+        </div>
+        
+        <div class="company-name" style="text-align: right;">
+            <div class="qualitech">MechNova</div>
+            <div class="international">Solutions</div>
+        </div>
+    </div>
 
-  <div id="visitsContainer" style="display: none;"></div>
+    <div class="nav-bar">
+        <button class="nav-button">Prepare Visit</button>
+        <span class="separator">|</span>
+        <button class="nav-button" id="visitsButton">Visits</button>
+        <span class="separator">|</span>
+        <button class="nav-button">Reports</button>
+        <span class="separator">|</span>
+        <button class="nav-button">Calendar</button>
+    </div>
 
-  <div id="fileUploadContainer" style="display: none;">
-    <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display: none;">
-  </div>
+    <div class="main-content" id="mainContent">
+        <div class="sidebar">
+            <div class="section">
+                <div class="section-title">Clients</div>
+                <ul class="section-content" id="clientList">
+                    <li class="loading">Loading clients...</li>
+                </ul>
+            </div>
+            <div class="section">
+                <div class="section-title">Quick Actions</div>
+                <ul class="section-content">
+                    <li>New Client</li>
+                    <li>Generate Report</li>
+                    <li>Schedule Visit</li>
+                </ul>
+            </div>
+        </div>
+        <div class="activities">
+            <div class="section">
+                <div class="section-title">Recent Activities</div>
+                <p>No recent activities to display</p>
+            </div>
+            <div class="section">
+                <div class="section-title">Trust Status</div>
+                <p>All systems operational</p>
+            </div>
+            <div class="section">
+                <div class="section-title">Notes</div>
+                <p>Add your notes here...</p>
+            </div>
+        </div>
+    </div>
 
-  <div id="dataDisplayContainer" style="display: none;">
-    <button id="backButton">Back</button>
-    <div id="calibrationData"></div>
-  </div>
+    <div class="visits-container" id="visitsContainer">
+        <button class="back-button" id="backButton">← Back to Dashboard</button>
+        <h2>Client Visits</h2>
+        <div id="clientVisitsList" class="loading">Loading visits...</div>
+    </div>
 
-  <script>
-    const DEBUG = true;
+    <div class="file-upload-container" id="fileUploadContainer" style="display: none;">
+        <label for="excelFileInput" class="file-upload-label">Upload Visit Excel File</label>
+        <input type="file" id="excelFileInput" class="file-upload-input" accept=".xlsx, .xls">
+        <button class="file-upload-button" id="uploadButton">Choose File</button>
+        <div id="fileName" class="file-name">No file selected</div>
+    </div>
 
-    const repoOwner = 'Qualinova7';
-    const repoName = 'QualiNova';
+    <div class="data-display-container" id="dataDisplayContainer" style="display: none;">
+        <h2>Calibration Data</h2>
+        <div id="calibrationData"></div>
+    </div>
 
-    const mockVisitFiles = [
-      "A_CTOR_05_25_2025.xlsx",
-      "A_ABC_05_20_2025.xlsx",
-      "A_ABC_04_15_2025.xlsx",
-      "A_DELTA_03_10_2025.xlsx",
-      "A_GLOBAL_02_05_2025.xlsx"
-    ];
 
-    function debugLog(message) {
-      if (DEBUG) {
-        console.log(`[DEBUG] ${message}`);
-      }
-    }
+    <script>
+        // Debugging flag - set to true to see console logs
+        const DEBUG = true;
+        
+        // Your GitHub repository details
+        const repoOwner = 'Qualinova7';
+        const repoName = 'QualiNova';
+        
+        // Mock data for fallback
+        const mockVisitFiles = [
+            "A_CTOR_05_25_2025.xlsx",
+            "A_ABC_05_20_2025.xlsx",
+            "A_ABC_04_15_2025.xlsx",
+            "A_DELTA_03_10_2025.xlsx",
+            "A_GLOBAL_02_05_2025.xlsx"
+        ];
 
-    function updateEgyptDateTime() {
-      const options = {
-        timeZone: 'Africa/Cairo',
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      };
-
-      const now = new Date();
-      const egyptDateTime = now.toLocaleString('en-US', options);
-      document.getElementById('egyptDateTime').textContent = egyptDateTime;
-    }
-
-    async function fetchVisitFiles() {
-      try {
-        debugLog("Attempting to fetch files from GitHub...");
-        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
-        const response = await fetch(apiUrl);
-
-        if (!response.ok) {
-          throw new Error(`GitHub API responded with status ${response.status}`);
+        // Function to log debug messages
+        function debugLog(message) {
+            if (DEBUG) {
+                console.log(`[DEBUG] ${message}`);
+            }
         }
 
-        const contents = await response.json();
-        const folders = contents.filter(item => item.type === 'dir');
-
-        let allFiles = [];
-        for (const folder of folders) {
-          try {
-            const folderResponse = await fetch(folder.url);
-            if (!folderResponse.ok) continue;
-
-            const folderContents = await folderResponse.json();
-            const folderFiles = folderContents
-              .filter(item => item.type === 'file')
-              .map(item => ({
-                name: item.name,
-                path: `${folder.name}/${item.name}`,
-                client: folder.name.toUpperCase()
-              }));
-
-            allFiles = [...allFiles, ...folderFiles];
-          } catch (error) {
-            debugLog(`Error fetching folder ${folder.name}: ${error.message}`);
-          }
-        }
-
-        const visitFiles = allFiles
-          .filter(file => file.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
-          .map(file => ({
-            filename: file.path,
-            client: file.client
-          }));
-
-        debugLog(`Found ${visitFiles.length} valid visit files`);
-        return visitFiles.length > 0 ? visitFiles : mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
-
-      } catch (error) {
-        debugLog(`Error fetching files: ${error.message}. Using mock data as fallback.`);
-        return mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
-      }
-    }
-
-    function getClientNamesFromFiles(files) {
-      const clients = new Set();
-      files.forEach(file => {
-        clients.add(file.client);
-      });
-      return Array.from(clients).sort();
-    }
-
-    function processVisitsForClient(files, clientName) {
-      return files
-        .filter(file => file.client === clientName.toUpperCase())
-        .map(file => {
-          const dateMatch = file.filename.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
-          if (dateMatch) {
-            const [_, month, day, year] = dateMatch;
-            return {
-              filename: file.filename,
-              date: new Date(`${year}-${month}-${day}`),
-              displayName: `Visit ${month}/${day}/${year}`,
-              client: file.client
+        // Function to update Egypt date and time
+        function updateEgyptDateTime() {
+            const options = {
+                timeZone: 'Africa/Cairo',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
             };
-          }
-          return {
-            filename: file.filename,
-            date: new Date(0),
-            displayName: file.filename,
-            client: file.client
-          };
-        })
-        .sort((a, b) => b.date - a.date);
-    }
+            
+            const now = new Date();
+            const egyptDateTime = now.toLocaleString('en-US', options);
+            document.getElementById('egyptDateTime').textContent = egyptDateTime;
+        }
 
-    async function displayExcelDataFromUrl(url, clientName, visitDate) {
-      debugLog(`Fetching Excel file from: ${url}`);
+        // Function to fetch visit files from GitHub recursively
+        async function fetchVisitFiles() {
+            try {
+                debugLog("Attempting to fetch files from GitHub...");
+                const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API responded with status ${response.status}`);
+                }
+                
+                const contents = await response.json();
+                debugLog("Successfully fetched initial contents from GitHub");
+                
+                // Get all folders (directories) in the root
+                const folders = contents.filter(item => item.type === 'dir');
+                
+                // Fetch files from each folder
+                let allFiles = [];
+                for (const folder of folders) {
+                    try {
+                        const folderResponse = await fetch(folder.url);
+                        if (!folderResponse.ok) continue;
+                        
+                        const folderContents = await folderResponse.json();
+                        const folderFiles = folderContents
+                            .filter(item => item.type === 'file')
+                            .map(item => ({
+                                name: item.name,
+                                path: `${folder.name}/${item.name}`,
+                                client: folder.name.toUpperCase()
+                            }));
+                        
+                        allFiles = [...allFiles, ...folderFiles];
+                    } catch (error) {
+                        debugLog(`Error fetching folder ${folder.name}: ${error.message}`);
+                        continue;
+                    }
+                }
+                
+                // Filter for Excel files with the correct naming pattern
+                const visitFiles = allFiles
+                    .filter(file => file.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
+                    .map(file => ({
+                        filename: file.path,
+                        client: file.client
+                    }));
+                
+                debugLog(`Found ${visitFiles.length} valid visit files`);
+                return visitFiles.length > 0 ? visitFiles : mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
+                
+            } catch (error) {
+                debugLog(`Error fetching files: ${error.message}. Using mock data as fallback.`);
+                return mockVisitFiles.map(f => ({ filename: f, client: f.split('_')[1].toUpperCase() }));
+            }
+        }
 
-      const dataDisplayContainer = document.getElementById('dataDisplayContainer');
-      const calibrationData = document.getElementById('calibrationData');
+        // Function to extract client names from visit files
+        function getClientNamesFromFiles(files) {
+            const clients = new Set();
+            files.forEach(file => {
+                clients.add(file.client);
+            });
+            return Array.from(clients).sort();
+        }
 
-      dataDisplayContainer.style.display = 'block';
-      calibrationData.innerHTML = '<div class="loading">Loading calibration data...</div>';
+        // Function to process visits for a specific client
+        function processVisitsForClient(files, clientName) {
+            return files
+                .filter(file => file.client === clientName.toUpperCase())
+                .map(file => {
+                    const dateMatch = file.filename.match(/_(\d{2})_(\d{2})_(\d{4})\./i);
+                    if (dateMatch) {
+                        const [_, month, day, year] = dateMatch;
+                        return {
+                            filename: file.filename,
+                            date: new Date(`${year}-${month}-${day}`),
+                            displayName: `Visit ${month}/${day}/${year}`,
+                            client: file.client
+                        };
+                    }
+                    return {
+                        filename: file.filename,
+                        date: new Date(0),
+                        displayName: file.filename,
+                        client: file.client
+                    };
+                })
+                .sort((a, b) => b.date - a.date);
+        }
 
-      try {
+      // Function to populate client list in sidebar
+        async function populateClientList() {
+            const clientList = document.getElementById('clientList');
+            
+            try {
+                clientList.innerHTML = '<li class="loading">Loading clients...</li>';
+                const visitFiles = await fetchVisitFiles();
+                const clients = getClientNamesFromFiles(visitFiles);
+                
+                if (clients.length === 0) {
+                    clientList.innerHTML = '<li>No clients found</li>';
+                    return;
+                }
+                
+                clientList.innerHTML = '';
+                clients.forEach(client => {
+                    const li = document.createElement('li');
+                    li.textContent = client;
+                    li.addEventListener('click', () => showClientVisits(client));
+                    clientList.appendChild(li);
+                });
+                
+            } catch (error) {
+                debugLog(`Error populating client list: ${error.message}`);
+                clientList.innerHTML = '<li class="error-message">Error loading clients</li>';
+            }
+        }
+
+        // Function to show all visits
+        async function showAllVisits() {
+            const mainContent = document.getElementById('mainContent');
+            const visitsContainer = document.getElementById('visitsContainer');
+            const fileUploadContainer = document.getElementById('fileUploadContainer');
+            const dataDisplayContainer = document.getElementById('dataDisplayContainer');
+            const visitsList = document.getElementById('clientVisitsList');
+            
+            mainContent.style.display = 'none';
+            visitsContainer.style.display = 'block';
+            fileUploadContainer.style.display = 'block';
+            dataDisplayContainer.style.display = 'none';
+            visitsList.innerHTML = '<div class="loading">Loading visits...</div>';
+            
+            try {
+                const visitFiles = await fetchVisitFiles();
+                const clients = getClientNamesFromFiles(visitFiles);
+                
+                if (clients.length === 0) {
+                    visitsList.innerHTML = '<div>No visits found</div>';
+                    return;
+                }
+                
+                visitsList.innerHTML = '';
+                
+                for (const client of clients) {
+                    const visits = processVisitsForClient(visitFiles, client);
+                    
+                    const clientArrow = document.createElement('div');
+                    clientArrow.className = 'client-arrow';
+                    clientArrow.innerHTML = `<span>${client}</span><span>▼</span>`;
+                    
+                    const visitsContainerDiv = document.createElement('div');
+                    visitsContainerDiv.className = 'visit-files';
+                    visitsContainerDiv.style.display = 'none';
+                    
+                    visits.forEach(visit => {
+                        const visitElement = document.createElement('div');
+                        visitElement.className = 'visit-file';
+                        visitElement.textContent = visit.displayName;
+                        visitElement.addEventListener('click', () => {
+                            displayExcelDataFromUrl(
+                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
+                                client,
+                                visit.displayName.replace('Visit ', '')
+                            );
+                        });
+                        visitsContainerDiv.appendChild(visitElement);
+                    });
+                    
+                    clientArrow.addEventListener('click', () => {
+                        visitsContainerDiv.style.display = 
+                            visitsContainerDiv.style.display === 'none' ? 'block' : 'none';
+                    });
+                    
+                    visitsList.appendChild(clientArrow);
+                    visitsList.appendChild(visitsContainerDiv);
+                }
+                
+            } catch (error) {
+                debugLog(`Error showing visits: ${error.message}`);
+                visitsList.innerHTML = '<div class="error-message">Error loading visits</div>';
+            }
+        }
+
+        // Function to show visits for a specific client
+        async function showClientVisits(clientName) {
+            const mainContent = document.getElementById('mainContent');
+            const visitsContainer = document.getElementById('visitsContainer');
+            const fileUploadContainer = document.getElementById('fileUploadContainer');
+            const dataDisplayContainer = document.getElementById('dataDisplayContainer');
+            const visitsList = document.getElementById('clientVisitsList');
+            
+            mainContent.style.display = 'none';
+            visitsContainer.style.display = 'block';
+            fileUploadContainer.style.display = 'block';
+            dataDisplayContainer.style.display = 'none';
+            visitsList.innerHTML = '<div class="loading">Loading visits...</div>';
+            
+            try {
+                const visitFiles = await fetchVisitFiles();
+                const visits = processVisitsForClient(visitFiles, clientName);
+                
+                visitsList.innerHTML = '';
+                
+                const clientHeader = document.createElement('div');
+                clientHeader.className = 'client-arrow';
+                clientHeader.innerHTML = `<span>${clientName}</span><span>▼</span>`;
+                
+                const visitsContainerDiv = document.createElement('div');
+                visitsContainerDiv.className = 'visit-files';
+                
+                if (visits.length === 0) {
+                    visitsContainerDiv.innerHTML = '<div>No visits found for this client</div>';
+                } else {
+                    visits.forEach(visit => {
+                        const visitElement = document.createElement('div');
+                        visitElement.className = 'visit-file';
+                        visitElement.textContent = visit.displayName;
+                        visitElement.addEventListener('click', () => {
+                            displayExcelDataFromUrl(
+                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
+                                clientName,
+                                visit.displayName.replace('Visit ', '')
+                            );
+                        });
+                        visitsContainerDiv.appendChild(visitElement);
+                    });
+                }
+                
+                clientHeader.addEventListener('click', () => {
+                    visitsContainerDiv.style.display = 
+                        visitsContainerDiv.style.display === 'none' ? 'block' : 'none';
+                });
+                
+                visitsList.appendChild(clientHeader);
+                visitsList.appendChild(visitsContainerDiv);
+                visitsContainerDiv.style.display = 'block';
+                
+            } catch (error) {
+                debugLog(`Error showing client visits: ${error.message}`);
+                visitsList.innerHTML = '<div class="error-message">Error loading visits</div>';
+            }
+        }
+
+
+        // Modified function to display Excel data from a URL with the new path structure
+async function displayExcelDataFromUrl(url, clientName, visitDate) {
+    debugLog(`Fetching Excel file from: ${url}`);
+
+    const dataDisplayContainer = document.getElementById('dataDisplayContainer');
+    const calibrationData = document.getElementById('calibrationData');
+
+    dataDisplayContainer.style.display = 'block';
+    calibrationData.innerHTML = '<div class="loading">Loading calibration data...</div>';
+
+    try {
+        // Fixed raw URL format
         const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${url}`;
         debugLog(`Constructed file URL: ${fileUrl}`);
 
         const response = await fetch(fileUrl);
         if (!response.ok) {
-          throw new Error(`Failed to fetch Excel file: ${response.status}`);
+            throw new Error(`Failed to fetch Excel file: ${response.status}`);
         }
 
         const arrayBuffer = await response.arrayBuffer();
         const data = new Uint8Array(arrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
 
+        // Process the workbook
         processExcelData(workbook, clientName, visitDate);
 
-      } catch (error) {
+    } catch (error) {
         debugLog(`Error processing Excel file: ${error.message}`);
         calibrationData.innerHTML = `<div class="error-message">Error loading calibration data: ${error.message}</div>`;
-      }
     }
+}
 
-    function processExcelData(workbook, clientName, visitDate) {
-      const calibrationData = document.getElementById('calibrationData');
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      // Function to process Excel data and display it
+        function processExcelData(workbook, clientName, visitDate) {
+            const calibrationData = document.getElementById('calibrationData');
+            calibrationData.innerHTML = '';
+            
+            // Get the first worksheet
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Convert to JSON
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            
+            if (!jsonData || jsonData.length === 0) {
+                calibrationData.innerHTML = '<div class="no-data-message">No calibration data found in the file</div>';
+                return;
+            }
+            
+            // Find all device rows (marked with $# in column A)
+            const deviceRows = [];
+            let currentDevice = null;
+            
+            for (let i = 0; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                if (row && row[0] && row[0].toString().trim() === '$#') {
+                    // Found a new device
+                    if (currentDevice) {
+                        deviceRows.push(currentDevice);
+                    }
+                    currentDevice = {
+                        headerRow: row,
+                        dataRows: []
+                    };
+                } else if (currentDevice) {
+                    // Add data rows to current device
+                    currentDevice.dataRows.push(row);
+                }
+            }
+            
+            // Add the last device if it exists
+            if (currentDevice) {
+                deviceRows.push(currentDevice);
+            }
+            
+            if (deviceRows.length === 0) {
+                calibrationData.innerHTML = '<div class="no-data-message">No device data found in the file</div>';
+                return;
+            }
+            
+            // Process each device and create tables
+            deviceRows.forEach(device => {
+                const deviceContainer = document.createElement('div');
+                deviceContainer.className = 'device-container';
+                
+                // Create device header
+                const deviceHeader = document.createElement('div');
+                deviceHeader.className = 'device-header';
+                deviceHeader.innerHTML = `
+                    <span>${clientName}</span>
+                    <span>${visitDate}</span>
+                `;
+                deviceContainer.appendChild(deviceHeader);
+                
+                // Create table
+                const table = document.createElement('table');
+                table.className = 'device-data-table';
+                
+                // Extract device info from header row
+                const deviceInfo = {
+                    line: device.headerRow[1] || '',
+                    location: device.headerRow[2] || '',
+                    description: device.headerRow[3] || '',
+                    snCode: device.headerRow[4] || '',
+                    workingRangeMin: device.headerRow[5] || '',
+                    workingRangeMax: device.headerRow[6] || '',
+                    equipmentRange: device.headerRow[7] || '',
+                    maxAcceptedDeviation: device.headerRow[8] || '',
+                    calibrationDate: device.headerRow[9] || '',
+                    calibrationExpiry: device.headerRow[10] || '',
+                    model: device.headerRow[11] || '',
+                    unit: device.headerRow[12] || '',
+                    resolution: device.headerRow[13] || '',
+                    environmentTemp: device.headerRow[14] || '',
+                    environmentHumidity: device.headerRow[15] || '',
+                    status: device.headerRow[device.headerRow.length - 4] || '',
+                    pass: device.headerRow[device.headerRow.length - 3] || '',
+                    fail: device.headerRow[device.headerRow.length - 2] || '',
+                    internalCalibration: device.headerRow[device.headerRow.length - 1] || ''
+                };
+                
+                // Add device info rows
+                const addInfoRow = (label, value) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${label}</td>
+                        <td>${value}</td>
+                    `;
+                    table.appendChild(row);
+                };
+                
+                addInfoRow('Line', deviceInfo.line);
+                addInfoRow('Location', deviceInfo.location);
+                addInfoRow('Description Of Equipment', deviceInfo.description);
+                addInfoRow('S/N Code', deviceInfo.snCode);
+                addInfoRow('Working Range min', deviceInfo.workingRangeMin);
+                addInfoRow('Working Range max', deviceInfo.workingRangeMax);
+                addInfoRow('Equipment Range', deviceInfo.equipmentRange);
+                addInfoRow('Max Accepted Deviation', deviceInfo.maxAcceptedDeviation);
+                addInfoRow('Calibration Date', deviceInfo.calibrationDate);
+                addInfoRow('Calibration Expiry Date', deviceInfo.calibrationExpiry);
+                addInfoRow('Model', deviceInfo.model);
+                addInfoRow('Unit', deviceInfo.unit);
+                addInfoRow('Resolution', deviceInfo.resolution);
+                addInfoRow('Environment ºC', deviceInfo.environmentTemp);
+                addInfoRow('Environment % rH', deviceInfo.environmentHumidity);
+                
+                // Process reference and reading data
+                const refReadData = [];
+                for (let i = 0; i < device.dataRows.length; i++) {
+                    const row = device.dataRows[i];
+                    if (!row || row.length < 2) continue;
+                    
+                    // Check if we've reached the next device (marked with $# in column A)
+                    if (row[0] && row[0].toString().trim() === '$#') {
+                        break;
+                    }
+                    
+                    // Process reference and reading pairs
+                    for (let j = 1; j < row.length; j += 2) {
+                        const ref = row[j];
+                        const read = row[j + 1];
+                        
+                        if (ref !== undefined && ref !== null && ref !== '') {
+                            if (!refReadData[Math.floor(j / 2)]) {
+                                refReadData[Math.floor(j / 2)] = { refs: [], reads: [] };
+                            }
+                            refReadData[Math.floor(j / 2)].refs.push(ref);
+                            refReadData[Math.floor(j / 2)].reads.push(read);
+                        }
+                    }
+                }
+                
+                // Add results header if there are any results
+                if (refReadData.length > 0) {
+                    const resultsHeader = document.createElement('tr');
+                    resultsHeader.className = 'results-header';
+                    
+                    let headerHtml = '<td>Results</td>';
+                    for (let i = 0; i < refReadData.length; i++) {
+                        headerHtml += `<td>Ref${i + 1}</td><td>Read${i + 1}</td>`;
+                    }
+                    
+                    resultsHeader.innerHTML = headerHtml;
+                    table.appendChild(resultsHeader);
+                    
+                    // Find the maximum number of rows needed
+                    const maxRows = Math.max(...refReadData.map(item => item.refs.length));
+                    
+                    // Add results rows
+                    for (let rowIndex = 0; rowIndex < maxRows; rowIndex++) {
+                        const resultsRow = document.createElement('tr');
+                        resultsRow.className = 'results-row';
+                        
+                        let rowHtml = '<td></td>';
+                        for (let i = 0; i < refReadData.length; i++) {
+                            const ref = refReadData[i].refs[rowIndex] !== undefined ? refReadData[i].refs[rowIndex] : '';
+                            const read = refReadData[i].reads[rowIndex] !== undefined ? refReadData[i].reads[rowIndex] : '';
+                            rowHtml += `<td>${ref}</td><td>${read}</td>`;
+                        }
+                        
+                        resultsRow.innerHTML = rowHtml;
+                        table.appendChild(resultsRow);
+                    }
+                }
+                
+                // Add status row
+                const statusRow = document.createElement('tr');
+                statusRow.innerHTML = `
+                    <td colspan="${1 + (refReadData.length * 2)}" class="status-cell ${deviceInfo.status === 'Pass' ? 'pass' : 'fail'}">
+                        Status: ${deviceInfo.status}
+                    </td>
+                `;
+                table.appendChild(statusRow);
+                
+                deviceContainer.appendChild(table);
+                calibrationData.appendChild(deviceContainer);
+            });
+        }
 
-      if (json.length === 0) {
-        calibrationData.innerHTML = "<div>No data found in the Excel file.</div>";
-        return;
-      }
+        // Function to handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const fileName = document.getElementById('fileName');
+            fileName.textContent = file.name;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // Extract client name and date from filename if possible
+                let clientName = 'Client';
+                let visitDate = 'Visit Date';
+                
+                const filenameMatch = file.name.match(/^A_([^_]+)_(\d{2})_(\d{2})_(\d{4})\.xlsx$/i);
+                if (filenameMatch) {
+                    clientName = filenameMatch[1];
+                    visitDate = `${filenameMatch[2]}/${filenameMatch[3]}/${filenameMatch[4]}`;
+                }
+                
+                // Process and display the data
+                const dataDisplayContainer = document.getElementById('dataDisplayContainer');
+                dataDisplayContainer.style.display = 'block';
+                
+                processExcelData(workbook, clientName, visitDate);
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
 
-      let html = `<h2>${clientName} - ${visitDate}</h2><table border="1" cellpadding="5">`;
-      json.forEach(row => {
-        html += "<tr>" + row.map(cell => `<td>${cell}</td>`).join("") + "</tr>";
-      });
-      html += "</table>";
 
-      calibrationData.innerHTML = html;
-    }
-
-    async function showAllVisits() {
-      const visitsContainer = document.getElementById('visitsContainer');
-      visitsContainer.innerHTML = "<div class='loading'>Loading visits...</div>";
-      visitsContainer.style.display = 'block';
-      document.getElementById('mainContent').style.display = 'none';
-
-      const visitFiles = await fetchVisitFiles();
-      const clients = getClientNamesFromFiles(visitFiles);
-
-      let html = "<h2>Select a Client</h2>";
-      clients.forEach(client => {
-        html += `<button onclick="showClientVisits('${client}')">${client}</button>`;
-      });
-
-      visitsContainer.innerHTML = html;
-    }
-
-    async function showClientVisits(clientName) {
-      const visitsContainer = document.getElementById('visitsContainer');
-      visitsContainer.innerHTML = `<h2>${clientName} Visits</h2>`;
-
-      const visitFiles = await fetchVisitFiles();
-      const visits = processVisitsForClient(visitFiles, clientName);
-
-      visits.forEach(visit => {
-        const div = document.createElement('div');
-        div.className = 'visit-entry';
-        div.textContent = visit.displayName;
-        div.onclick = () => displayExcelDataFromUrl(visit.filename, visit.client, visit.displayName);
-        visitsContainer.appendChild(div);
-      });
-    }
-
-    function handleFileUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-
-        document.getElementById('mainContent').style.display = 'none';
-        document.getElementById('fileUploadContainer').style.display = 'none';
-        document.getElementById('dataDisplayContainer').style.display = 'block';
-
-        processExcelData(workbook, "Uploaded File", file.name);
-      };
-      reader.readAsArrayBuffer(file);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      updateEgyptDateTime();
-      setInterval(updateEgyptDateTime, 1000);
-
-      document.getElementById('mainContent').style.display = 'flex';
-      document.getElementById('visitsButton').addEventListener('click', showAllVisits);
-      document.getElementById('backButton').addEventListener('click', () => {
-        document.getElementById('mainContent').style.display = 'flex';
-        document.getElementById('visitsContainer').style.display = 'none';
-        document.getElementById('fileUploadContainer').style.display = 'none';
-        document.getElementById('dataDisplayContainer').style.display = 'none';
-      });
-
-      document.getElementById('uploadButton').addEventListener('click', () => {
-        document.getElementById('excelFileInput').click();
-      });
-
-      document.getElementById('excelFileInput').addEventListener('change', handleFileUpload);
-    });
-  </script>
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateEgyptDateTime();
+            setInterval(updateEgyptDateTime, 1000);
+            
+            document.getElementById('visitsButton').addEventListener('click', showAllVisits);
+            document.getElementById('backButton').addEventListener('click', () => {
+                document.getElementById('mainContent').style.display = 'flex';
+                document.getElementById('visitsContainer').style.display = 'none';
+                document.getElementById('fileUploadContainer').style.display = 'none';
+                document.getElementById('dataDisplayContainer').style.display = 'none';
+            });
+            
+            document.getElementById('uploadButton').addEventListener('click', () => {
+                document.getElementById('excelFileInput').click();
+            });
+            
+            document.getElementById('excelFileInput').addEventListener('change', handleFileUpload);
+            
+            populateClientList();
+        });
+    </script>
 </body>
 </html>
