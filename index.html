@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qualitech International - MechNova</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -206,6 +207,135 @@
             color: #e74c3c;
             font-weight: 500;
         }
+        
+        /* Device Data Display Styles */
+        .device-data-container {
+            display: none;
+            padding: 20px;
+        }
+        .device-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .device-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .device-info {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .device-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .device-table th, .device-table td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            text-align: left;
+        }
+        .device-table th {
+            background-color: #f5f7fa;
+            font-weight: 600;
+            color: #2c3e50;
+            width: 30%;
+        }
+        .device-table td {
+            background-color: white;
+        }
+        .readings-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .readings-table th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .readings-table td {
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: center;
+        }
+        .readings-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .status-pass {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status-fail {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .status-warning {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+        .device-card {
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .device-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .device-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .device-card-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .device-card-content {
+            margin-top: 15px;
+        }
+        .collapse-toggle {
+            background: none;
+            border: none;
+            color: #3498db;
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .collapse-toggle:hover {
+            text-decoration: underline;
+        }
+        .device-section {
+            margin-bottom: 15px;
+        }
+        .device-section-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
     </style>
 </head>
 <body>
@@ -275,6 +405,11 @@
         <button class="back-button" id="backButton">← Back to Dashboard</button>
         <h2>Client Visits</h2>
         <div id="clientVisitsList" class="loading">Loading visits...</div>
+    </div>
+
+    <div class="device-data-container" id="deviceDataContainer">
+        <button class="back-button" id="backToVisitsButton">← Back to Visits</button>
+        <div id="deviceDataContent"></div>
     </div>
 
     <script>
@@ -450,10 +585,7 @@
                         visitElement.className = 'visit-file';
                         visitElement.textContent = visit.displayName;
                         visitElement.addEventListener('click', () => {
-                            window.open(
-                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
-                                '_blank'
-                            );
+                            displayDeviceData(client, visit.displayName, visit.filename);
                         });
                         visitsContainer.appendChild(visitElement);
                     });
@@ -504,10 +636,7 @@
                         visitElement.className = 'visit-file';
                         visitElement.textContent = visit.displayName;
                         visitElement.addEventListener('click', () => {
-                            window.open(
-                                `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(visit.filename)}`,
-                                '_blank'
-                            );
+                            displayDeviceData(clientName, visit.displayName, visit.filename);
                         });
                         visitsContainerDiv.appendChild(visitElement);
                     });
@@ -528,15 +657,229 @@
             }
         }
 
+        // Function to display device data instead of downloading
+        async function displayDeviceData(clientName, visitDisplayName, filename) {
+            const visitsContainer = document.getElementById('visitsContainer');
+            const deviceDataContainer = document.getElementById('deviceDataContainer');
+            const deviceDataContent = document.getElementById('deviceDataContent');
+            
+            visitsContainer.style.display = 'none';
+            deviceDataContainer.style.display = 'block';
+            deviceDataContent.innerHTML = '<div class="loading">Loading device data...</div>';
+            
+            try {
+                // Mock device data for demonstration
+                const deviceData = [
+                    {
+                        client: clientName,
+                        date: visitDisplayName,
+                        line: "Production Line A",
+                        location: "Section 1",
+                        equipment: "Temperature Sensor",
+                        snCode: "TS-001",
+                        workingRangeMin: "0°C",
+                        workingRangeMax: "100°C",
+                        equipmentRange: "0-150°C",
+                        maxDeviation: "±0.5°C",
+                        calDate: "2024-05-15",
+                        calExpiry: "2025-05-15",
+                        model: "TS-1000",
+                        unit: "°C",
+                        resolution: "0.1°C",
+                        environmentTemp: "25°C",
+                        environmentHumidity: "45%",
+                        readings: [
+                            { ref: "20.0", read: "20.1" },
+                            { ref: "40.0", read: "40.2" },
+                            { ref: "60.0", read: "60.0" },
+                            { ref: "80.0", read: "80.3" },
+                            { ref: "100.0", read: "100.1" }
+                        ],
+                        status: "Pass"
+                    },
+                    {
+                        client: clientName,
+                        date: visitDisplayName,
+                        line: "Production Line B",
+                        location: "Section 3",
+                        equipment: "Pressure Gauge",
+                        snCode: "PG-045",
+                        workingRangeMin: "0 bar",
+                        workingRangeMax: "10 bar",
+                        equipmentRange: "0-15 bar",
+                        maxDeviation: "±0.1 bar",
+                        calDate: "2024-04-20",
+                        calExpiry: "2025-04-20",
+                        model: "PG-2000",
+                        unit: "bar",
+                        resolution: "0.01 bar",
+                        environmentTemp: "24°C",
+                        environmentHumidity: "50%",
+                        readings: [
+                            { ref: "2.0", read: "2.01" },
+                            { ref: "4.0", read: "4.05" },
+                            { ref: "6.0", read: "6.02" },
+                            { ref: "8.0", read: "8.07" },
+                            { ref: "10.0", read: "10.03" }
+                        ],
+                        status: "Pass"
+                    },
+                    {
+                        client: clientName,
+                        date: visitDisplayName,
+                        line: "Quality Control",
+                        location: "Lab 2",
+                        equipment: "Digital Scale",
+                        snCode: "DS-112",
+                        workingRangeMin: "0 g",
+                        workingRangeMax: "5000 g",
+                        equipmentRange: "0-6000 g",
+                        maxDeviation: "±0.5 g",
+                        calDate: "2024-03-10",
+                        calExpiry: "2025-03-10",
+                        model: "DS-5000",
+                        unit: "g",
+                        resolution: "0.1 g",
+                        environmentTemp: "23°C",
+                        environmentHumidity: "48%",
+                        readings: [
+                            { ref: "500", read: "500.2" },
+                            { ref: "1000", read: "1000.1" },
+                            { ref: "2000", read: "2000.3" },
+                            { ref: "3000", read: "3000.4" },
+                            { ref: "4000", read: "4000.1" },
+                            { ref: "5000", read: "5000.5" }
+                        ],
+                        status: "Warning"
+                    }
+                ];
+                
+                // Render device data
+                deviceDataContent.innerHTML = `
+                    <div class="device-header">
+                        <h2>${clientName} - Device Calibration Data</h2>
+                        <div class="device-info">${visitDisplayName}</div>
+                    </div>
+                `;
+                
+                deviceData.forEach((device, index) => {
+                    const deviceCard = document.createElement('div');
+                    deviceCard.className = 'device-card';
+                    deviceCard.innerHTML = `
+                        <div class="device-card-header">
+                            <div>
+                                <div class="device-card-title">${device.equipment} (${device.snCode})</div>
+                                <div class="device-card-subtitle">${device.line} - ${device.location}</div>
+                            </div>
+                            <span class="status-indicator ${getStatusClass(device.status)}">${device.status}</span>
+                        </div>
+                        
+                        <div class="device-card-content">
+                            <div class="device-section">
+                                <div class="device-section-title">General Information</div>
+                                <table class="device-table">
+                                    <tr>
+                                        <th>Description Of Equipment</th>
+                                        <td>${device.equipment}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>S/N Code</th>
+                                        <td>${device.snCode}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Working Range</th>
+                                        <td>${device.workingRangeMin} to ${device.workingRangeMax}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Equipment Range</th>
+                                        <td>${device.equipmentRange}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Max Accepted Deviation</th>
+                                        <td>${device.maxDeviation}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Calibration Date</th>
+                                        <td>${device.calDate}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Calibration Expiry Date</th>
+                                        <td>${device.calExpiry}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Model</th>
+                                        <td>${device.model}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Unit</th>
+                                        <td>${device.unit}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Resolution</th>
+                                        <td>${device.resolution}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Environment</th>
+                                        <td>${device.environmentTemp}, ${device.environmentHumidity} rH</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="device-section">
+                                <div class="device-section-title">Calibration Readings</div>
+                                <table class="readings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ref</th>
+                                            <th>Read</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${device.readings.map(reading => `
+                                            <tr>
+                                                <td>${reading.ref}</td>
+                                                <td>${reading.read}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                    deviceDataContent.appendChild(deviceCard);
+                });
+                
+            } catch (error) {
+                debugLog(`Error displaying device data: ${error.message}`);
+                deviceDataContent.innerHTML = '<div class="error-message">Error loading device data</div>';
+            }
+        }
+
+        // Helper function to get status class
+        function getStatusClass(status) {
+            switch(status.toLowerCase()) {
+                case 'pass': return 'status-pass';
+                case 'fail': return 'status-fail';
+                case 'warning': return 'status-warning';
+                default: return 'status-pass';
+            }
+        }
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             updateEgyptDateTime();
             setInterval(updateEgyptDateTime, 1000);
             
             document.getElementById('visitsButton').addEventListener('click', showAllVisits);
+            
             document.getElementById('backButton').addEventListener('click', () => {
                 document.getElementById('mainContent').style.display = 'flex';
                 document.getElementById('visitsContainer').style.display = 'none';
+            });
+            
+            document.getElementById('backToVisitsButton').addEventListener('click', () => {
+                document.getElementById('deviceDataContainer').style.display = 'none';
+                document.getElementById('visitsContainer').style.display = 'block';
             });
             
             populateClientList();
