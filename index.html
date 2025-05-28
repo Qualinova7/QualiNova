@@ -397,25 +397,68 @@
         // Debugging flag - set to true to see console logs
         const DEBUG = true;
         
-        // Your GitHub repository details
-        const repoOwner = 'Qualinova7';
-        const repoName = 'QualiNova';
-        
-        // Mock data for fallback
-        const mockVisitFiles = [
-            "A_CTOR_05_25_2025.xlsx",
-            "A_ABC_05_20_2025.xlsx",
-            "A_ABC_04_15_2025.xlsx",
-            "A_DELTA_03_10_2025.xlsx",
-            "A_GLOBAL_02_05_2025.xlsx"
-        ];
+// Your GitHub repository details
+const repoOwner = 'Qualinova7';
+const repoName = 'QualiNova';
+const branch = 'main'; // or 'master' depending on your repo
 
-        // Function to log debug messages
-        function debugLog(message) {
-            if (DEBUG) {
-                console.log(`[DEBUG] ${message}`);
+// Function to fetch visit files from GitHub
+async function fetchVisitFiles() {
+    try {
+        debugLog("Attempting to fetch files from GitHub...");
+        
+        // First, get the list of folders (directories) in the root
+        const foldersApiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+        const foldersResponse = await fetch(foldersApiUrl);
+        
+        if (!foldersResponse.ok) {
+            throw new Error(`GitHub API responded with status ${foldersResponse.status}`);
+        }
+        
+        const foldersContents = await foldersResponse.json();
+        debugLog("Successfully fetched initial contents from GitHub");
+        
+        // Filter for directories only
+        const folders = foldersContents.filter(item => item.type === 'dir');
+        
+        // Get all Excel files from each folder
+        let allFiles = [];
+        
+        for (const folder of folders) {
+            try {
+                const folderApiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folder.path}`;
+                const folderResponse = await fetch(folderApiUrl);
+                
+                if (!folderResponse.ok) continue;
+                
+                const folderContents = await folderResponse.json();
+                
+                // Filter for Excel files with the correct naming pattern
+                const excelFiles = folderContents
+                    .filter(item => item.type === 'file' && 
+                           item.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
+                    .map(item => ({
+                        filename: item.path,
+                        client: folder.name.toUpperCase(),
+                        download_url: item.download_url
+                    }));
+                
+                allFiles = [...allFiles, ...excelFiles];
+            } catch (error) {
+                debugLog(`Error fetching folder ${folder.name}: ${error.message}`);
+                continue;
             }
         }
+        
+        debugLog(`Found ${allFiles.length} valid visit files`);
+        return allFiles;
+        
+    } catch (error) {
+        debugLog(`Error fetching files: ${error.message}`);
+        throw error; // Re-throw to handle in calling function
+    }
+}
+
 
         // Function to update Egypt date and time
         function updateEgyptDateTime() {
@@ -682,32 +725,27 @@
 
 
         // Modified function to display Excel data from a URL with the new path structure
-async function displayExcelDataFromUrl(url, clientName, visitDate) {
-    debugLog(`Fetching Excel file from: ${url}`);
-
+// Modified function to display Excel data using the direct download URL
+async function displayExcelDataFromUrl(downloadUrl, clientName, visitDate) {
+    debugLog(`Fetching Excel file from: ${downloadUrl}`);
+    
     const dataDisplayContainer = document.getElementById('dataDisplayContainer');
     const calibrationData = document.getElementById('calibrationData');
-
+    
     dataDisplayContainer.style.display = 'block';
     calibrationData.innerHTML = '<div class="loading">Loading calibration data...</div>';
-
+    
     try {
-        // Fixed raw URL format
-       const fileUrl = `https://github.com/${repoOwner}/${repoName}/raw/main/${encodeURIComponent(url)}`;
-        debugLog(`Constructed file URL: ${fileUrl}`);
-
-        const response = await fetch(fileUrl);
+        const response = await fetch(downloadUrl);
         if (!response.ok) {
             throw new Error(`Failed to fetch Excel file: ${response.status}`);
         }
-
+        
         const arrayBuffer = await response.arrayBuffer();
         const data = new Uint8Array(arrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
-
-        // Process the workbook
+        
         processExcelData(workbook, clientName, visitDate);
-
     } catch (error) {
         debugLog(`Error processing Excel file: ${error.message}`);
         calibrationData.innerHTML = `<div class="error-message">Error loading calibration data: ${error.message}</div>`;
