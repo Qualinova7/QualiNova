@@ -397,11 +397,11 @@
             margin-bottom: 20px;
             border-radius: 0 4px 4px 0;
         }
-        .excel-debug {
-            margin-top: 20px;
-            padding: 15px;
+        .debug-info {
             background-color: #f9f9f9;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
             border-radius: 4px;
             font-family: monospace;
             font-size: 13px;
@@ -489,7 +489,7 @@
         <div class="progress-bar" id="progressBarContainer">
             <div class="progress" id="progressBar"></div>
         </div>
-        <div class="excel-debug" id="excelDebug" style="display: none;"></div>
+        <div class="debug-info" id="debugInfo" style="display: none;"></div>
     </div>
     
     <div class="notification" id="notification">Device data loaded successfully!</div>
@@ -763,11 +763,13 @@
             const deviceDataContent = document.getElementById('deviceDataContent');
             const progressBar = document.getElementById('progressBar');
             const notification = document.getElementById('notification');
+            const debugInfo = document.getElementById('debugInfo');
             
             visitsContainer.style.display = 'none';
             deviceDataContainer.style.display = 'block';
             progressBar.style.width = '0%';
             deviceDataContent.innerHTML = '<div class="loading">Loading device data...</div>';
+            debugInfo.style.display = 'none';
             
             try {
                 // Update progress
@@ -804,21 +806,29 @@
                 // Process the data - correctly map to device properties
                 const deviceData = [];
                 
-                // Process each device entry (every two rows)
-                for (let i = 1; i < jsonData.length; i += 2) {
+                // Find the starting row for device data
+                let deviceStartRow = 0;
+                for (let i = 0; i < jsonData.length; i++) {
+                    if (jsonData[i][0] === "$#") {
+                        deviceStartRow = i;
+                        break;
+                    }
+                }
+                
+                // Process each device entry
+                for (let i = deviceStartRow; i < jsonData.length; i += 2) {
                     const headerRow = jsonData[i];
-                    const dataRow = jsonData[i + 1] || [];
+                    const dataRow = i + 1 < jsonData.length ? jsonData[i + 1] : [];
                     
-                    // Skip if it's not a device row
-                    if (!headerRow || headerRow[0] !== "$#") continue;
+                    if (!headerRow || headerRow.length === 0) continue;
                     
-                    // Skip empty device rows
-                    if (!headerRow[3] || headerRow[3].trim() === "") continue;
+                    // Check if it's a device row (starts with "$#")
+                    if (headerRow[0] !== "$#") continue;
                     
                     // Extract status
                     let status = "Pass";
-                    if (headerRow[19] === "c" || headerRow[19] === "C") status = "Warning";
-                    if (headerRow[20] === "c" || headerRow[20] === "C" || headerRow[21] === "c" || headerRow[21] === "C") status = "Fail";
+                    if (headerRow[20] === "c") status = "Warning";
+                    if (headerRow[21] === "c") status = "Fail";
                     
                     // Get the readings from the data row
                     const readings = [
@@ -828,7 +838,7 @@
                         { ref: "30 kg", read: dataRow[8] || "N/A" }
                     ];
                     
-                    // Create device object
+                    // Create device object with proper column indices
                     const device = {
                         client: clientName,
                         date: visitDisplayName,
@@ -852,36 +862,6 @@
                     };
                     
                     deviceData.push(device);
-                }
-                
-                // If no devices found, add a default one
-                if (deviceData.length === 0) {
-                    deviceData.push({
-                        client: clientName,
-                        date: visitDisplayName,
-                        line: "Production Line A",
-                        location: "Section 1",
-                        equipment: "Temperature Sensor",
-                        snCode: "TS-001",
-                        workingRangeMin: "0°C",
-                        workingRangeMax: "100°C",
-                        equipmentRange: "0-150°C",
-                        maxDeviation: "±0.5°C",
-                        calDate: "2024-05-15",
-                        calExpiry: "2025-05-15",
-                        model: "TS-1000",
-                        unit: "°C",
-                        resolution: "0.1°C",
-                        environmentTemp: "25°C",
-                        environmentHumidity: "45%",
-                        readings: [
-                            { ref: "1 kg", read: "1.000" },
-                            { ref: "5 kg", read: "5.001" },
-                            { ref: "10 kg", read: "10.003" },
-                            { ref: "30 kg", read: "30.005" }
-                        ],
-                        status: "Pass"
-                    });
                 }
                 
                 // Render device data
@@ -1022,7 +1002,7 @@
                 default: return 'status-pass';
             }
         }
-        
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             updateEgyptDateTime();
