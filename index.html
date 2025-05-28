@@ -405,54 +405,26 @@ const branch = 'main'; // or 'master' depending on your repo
 // Function to fetch visit files from GitHub
 async function fetchVisitFiles() {
     try {
-        debugLog("Attempting to fetch files from GitHub...");
+        debugLog("Fetching visit files from GitHub...");
+        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/trees/${branch}?recursive=1`;
+        const response = await fetch(apiUrl);
         
-        // First, get the list of folders (directories) in the root
-        const foldersApiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
-        const foldersResponse = await fetch(foldersApiUrl);
+        if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
         
-        if (!foldersResponse.ok) {
-            throw new Error(`GitHub API responded with status ${foldersResponse.status}`);
-        }
+        const data = await response.json();
+        const excelFiles = data.tree
+            .filter(item => item.path.match(/.*\/A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
+            .map(item => {
+                const pathParts = item.path.split('/');
+                return {
+                    filename: item.path,
+                    client: pathParts[0].toUpperCase(),
+                    download_url: `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${item.path}`
+                };
+            });
         
-        const foldersContents = await foldersResponse.json();
-        debugLog("Successfully fetched initial contents from GitHub");
-        
-        // Filter for directories only
-        const folders = foldersContents.filter(item => item.type === 'dir');
-        
-        // Get all Excel files from each folder
-        let allFiles = [];
-        
-        for (const folder of folders) {
-            try {
-                const folderApiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folder.path}`;
-                const folderResponse = await fetch(folderApiUrl);
-                
-                if (!folderResponse.ok) continue;
-                
-                const folderContents = await folderResponse.json();
-                
-                // Filter for Excel files with the correct naming pattern
-                const excelFiles = folderContents
-                    .filter(item => item.type === 'file' && 
-                           item.name.match(/^A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
-                    .map(item => ({
-                        filename: item.path,
-                        client: folder.name.toUpperCase(),
-                        download_url: item.download_url
-                    }));
-                
-                allFiles = [...allFiles, ...excelFiles];
-            } catch (error) {
-                debugLog(`Error fetching folder ${folder.name}: ${error.message}`);
-                continue;
-            }
-        }
-        
-        debugLog(`Found ${allFiles.length} valid visit files`);
-        return allFiles;
-        
+        debugLog(`Found ${excelFiles.length} visit files`);
+        return excelFiles;
     } catch (error) {
         debugLog(`Error fetching files: ${error.message}`);
         throw error;
