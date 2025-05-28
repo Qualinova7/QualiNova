@@ -402,35 +402,6 @@ const repoOwner = 'Qualinova7';
 const repoName = 'QualiNova';
 const branch = 'main'; // or 'master' depending on your repo
 
-// Function to fetch visit files from GitHub
-async function fetchVisitFiles() {
-    try {
-        debugLog("Fetching visit files from GitHub...");
-        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/trees/${branch}?recursive=1`;
-        const response = await fetch(apiUrl);
-        
-        if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
-        
-        const data = await response.json();
-        const excelFiles = data.tree
-            .filter(item => item.path.match(/.*\/A_[^_]+_\d{2}_\d{2}_\d{4}\.xlsx$/i))
-            .map(item => {
-                const pathParts = item.path.split('/');
-                return {
-                    filename: item.path,
-                    client: pathParts[0].toUpperCase(),
-                    download_url: `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${item.path}`
-                };
-            });
-        
-        debugLog(`Found ${excelFiles.length} visit files`);
-        return excelFiles;
-    } catch (error) {
-        debugLog(`Error fetching files: ${error.message}`);
-        throw error;
-    }
-}
-
         // Function to update Egypt date and time
         function updateEgyptDateTime() {
             const options = {
