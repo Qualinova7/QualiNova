@@ -29,6 +29,7 @@
             --fmea-color: #7d3c98;
             --corrective-color: #c0392b;
             --environmental-color: #16a085;
+            --training-color: #8e44ad;
         }
         
         * {
@@ -140,6 +141,10 @@
             background: linear-gradient(135deg, var(--environmental-color), #16a085);
         }
         
+        .card-header-training {
+            background: linear-gradient(135deg, var(--training-color), #8e44ad);
+        }
+        
         /* Tabs Navigation */
         .nav-tabs-custom {
             border-bottom: 3px solid #e0e0e0;
@@ -195,6 +200,21 @@
             color: var(--dark-color);
             margin-bottom: 6px;
             font-size: 0.9rem;
+        }
+        
+        /* Custom Date Input */
+        .date-input-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .date-input-group input {
+            text-align: center;
+        }
+        
+        .date-separator {
+            padding: 0 5px;
+            font-weight: bold;
         }
         
         /* Table Styles */
@@ -464,6 +484,45 @@
             background: var(--secondary-color);
             border-radius: 10px;
         }
+		
+		/* تنسيق مجموعة حقول التاريخ */
+.date-input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.date-input-group .form-control-custom {
+    text-align: center;
+    padding: 0.375rem 0.25rem;
+    flex: 1;
+}
+
+.date-input-group .date-day {
+    max-width: 60px;
+}
+
+.date-input-group .date-month {
+    max-width: 60px;
+}
+
+.date-input-group .date-year {
+    max-width: 80px;
+}
+
+.date-input-group .date-separator {
+    font-size: 1.2rem;
+    color: #6c757d;
+    font-weight: bold;
+    min-width: 10px;
+}
+
+/* تنسيق placeholders داخل حقول التاريخ */
+.date-input-group input::placeholder {
+    color: #adb5bd;
+    text-align: center;
+    font-size: 0.9rem;
+}
     </style>
 </head>
 <body>
@@ -487,7 +546,7 @@
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h1><i class="fas fa-tasks me-2"></i> نظام إدارة سجلات معمل كواليتك إنترناشيونال</h1>
-                    <p class="lead mb-0">إدارة 10 أنظمة متكاملة: السرية + إفصاحات الحيادية + العقود + الموردين + المعايرة والصيانة + أجهزة المعايرة + تحليل المخاطر (FMEA) + السجلات التصحيحية + الظروف البيئية</p>
+                    <p class="lead mb-0">إدارة 11 نظام متكاملة: السرية + إفصاحات الحيادية + العقود + الموردين + المعايرة والصيانة + أجهزة المعايرة + تحليل المخاطر (FMEA) + السجلات التصحيحية + الظروف البيئية + التدريب</p>
                 </div>
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
                     <div class="header-badge d-inline-block me-3">
@@ -556,6 +615,11 @@
                             <i class="fas fa-temperature-high me-2"></i> الظروف البيئية
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="training-tab" data-bs-toggle="tab" data-bs-target="#training" type="button" role="tab">
+                            <i class="fas fa-graduation-cap me-2"></i> إدارة التدريب
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -608,11 +672,23 @@
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ بدء العمل</label>
-                                            <input type="date" class="form-control form-control-custom" id="calibration_startDate">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="calibration_startDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="calibration_startDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="calibration_startDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ التوقيع</label>
-                                            <input type="date" class="form-control form-control-custom" id="calibration_signDate">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="calibration_signDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="calibration_signDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="calibration_signDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                     </div>
                                     
@@ -719,7 +795,13 @@
                                     <div class="row">
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ التوقيع *</label>
-                                            <input type="date" class="form-control form-control-custom" id="impartiality_signDate" required>
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="impartiality_signDate_day" placeholder="يوم" min="1" max="31" required>
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="impartiality_signDate_month" placeholder="شهر" min="1" max="12" required>
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="impartiality_signDate_year" placeholder="سنة" min="1900" max="2100" required>
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">اسم المراجع</label>
@@ -741,7 +823,50 @@
                                             <textarea class="form-control form-textarea-custom" id="impartiality_personalRelationsDetails" placeholder="تفاصيل العلاقات الشخصية"></textarea>
                                         </div>
                                     </div>
-                                    
+                                    <!-- Add after the existing personalRelationsDetails field -->
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <label class="form-label-custom">العلاقات الشخصية</label>
+        <input type="text" class="form-control form-control-custom" id="impartiality_personalRelations" placeholder="العلاقات الشخصية (أقارب، أصدقاء، معارف)">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <label class="form-label-custom">الأنشطة الخارجية</label>
+        <input type="text" class="form-control form-control-custom" id="impartiality_externalActivities" placeholder="الأنشطة الخارجية (عمل آخر، عضوية في مجالس)">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <label class="form-label-custom">تفاصيل الأنشطة الخارجية</label>
+        <textarea class="form-control form-textarea-custom" id="impartiality_externalActivitiesDetails" placeholder="تفاصيل الأنشطة الخارجية"></textarea>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <label class="form-label-custom">الهدايا والضيافة</label>
+        <input type="text" class="form-control form-control-custom" id="impartiality_gifts" placeholder="الهدايا والضيافة (هدايا، تذاكر، دعوات)">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <label class="form-label-custom">تفاصيل الهدايا والضيافة</label>
+        <textarea class="form-control form-textarea-custom" id="impartiality_giftsDetails" placeholder="تفاصيل الهدايا والضيافة"></textarea>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <label class="form-label-custom">أي إفصاح آخر</label>
+        <textarea class="form-control form-textarea-custom" id="impartiality_otherDisclosure" placeholder="أي إفصاح آخر"></textarea>
+    </div>
+</div>
+
                                     <div class="row mt-3">
                                         <div class="col-12 d-flex justify-content-between">
                                             <button type="button" onclick="resetImpartialityForm()" class="btn btn-outline-secondary">
@@ -838,11 +963,23 @@
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ العقد</label>
-                                            <input type="date" class="form-control form-control-custom" id="contract_contractDate">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="contract_contractDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="contract_contractDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="contract_contractDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ التوقيع</label>
-                                            <input type="date" class="form-control form-control-custom" id="contract_signDate">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="contract_signDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="contract_signDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="contract_signDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">نوع الخدمة</label>
@@ -864,7 +1001,24 @@
                                             <label class="form-label-custom">قيمة العقد</label>
                                             <input type="text" class="form-control form-control-custom" id="contract_contractValue" placeholder="القيمة بالعملة المحلية">
                                         </div>
-                                        <div class="col-md-6 mb-2">
+                                        <div class="row">
+    <div class="col-md-12 mb-3">
+        <label class="form-label-custom">نطاق العمل</label>
+        <textarea class="form-control form-textarea-custom" id="contract_scopeOfWork" placeholder="وصف تفصيلي لنطاق العمل"></textarea>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label class="form-label-custom">اسم الموقع</label>
+        <input type="text" class="form-control form-control-custom" id="contract_siteName" placeholder="اسم موقع التنفيذ">
+    </div>
+    <div class="col-md-6 mb-3">
+        <label class="form-label-custom">منصب الموقع</label>
+        <input type="text" class="form-control form-control-custom" id="contract_sitePosition" placeholder="منصب موقع التنفيذ">
+    </div>
+</div>
+										<div class="col-md-6 mb-2">
                                             <label class="form-label-custom">ملاحظات</label>
                                             <textarea class="form-control form-textarea-custom" id="contract_notes" placeholder="ملاحظات إضافية"></textarea>
                                         </div>
@@ -939,85 +1093,317 @@
                                 <i class="fas fa-truck me-2"></i> نظام إدارة وتقييم الموردين
                             </div>
                             <div class="card-body">
-                                <form id="supplierForm">
-                                    <div class="row">
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">رقم المورد</label>
-                                            <input type="text" class="form-control form-control-custom" id="supplier_supplierId" placeholder="رقم المورد">
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">اسم المورد *</label>
-                                            <input type="text" class="form-control form-control-custom" id="supplier_supplierName" placeholder="اسم المورد" required>
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">الهاتف</label>
-                                            <input type="text" class="form-control form-control-custom" id="supplier_phone" placeholder="الهاتف">
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">البريد الإلكتروني</label>
-                                            <input type="email" class="form-control form-control-custom" id="supplier_email" placeholder="البريد الإلكتروني">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">جهة الاتصال</label>
-                                            <input type="text" class="form-control form-control-custom" id="supplier_contactPerson" placeholder="جهة الاتصال">
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">الموقع الإلكتروني</label>
-                                            <input type="text" class="form-control form-control-custom" id="supplier_website" placeholder="الموقع الإلكتروني">
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">تاريخ آخر معاملة</label>
-                                            <input type="date" class="form-control form-control-custom" id="supplier_lastTransactionDate" placeholder="تاريخ آخر معاملة">
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">الفئة</label>
-                                            <select class="form-select form-select-custom" id="supplier_category">
-                                                <option value="">-- اختر الفئة --</option>
-                                                <option value="حرج">حرج</option>
-                                                <option value="غير حرج">غير حرج</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">الخدمة / المنتج</label>
-                                            <input type="text" class="form-control form-control-custom" id="supplier_serviceProduct" placeholder="الخدمة / المنتج">
-                                        </div>
-                                        <div class="col-md-3 mb-2">
-                                            <label class="form-label-custom">قرار الاعتماد</label>
-                                            <select class="form-select form-select-custom" id="supplier_approvalDecision">
-                                                <option value="">-- قرار الاعتماد --</option>
-                                                <option value="معتمد">معتمد</option>
-                                                <option value="غير معتمد">غير معتمد</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6 mb-2">
-                                            <label class="form-label-custom">ملاحظات</label>
-                                            <textarea class="form-control form-textarea-custom" id="supplier_notes" placeholder="ملاحظات عامة"></textarea>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row mt-3">
-                                        <div class="col-12 d-flex justify-content-between">
-                                            <button type="button" onclick="resetSupplierForm()" class="btn btn-outline-secondary">
-                                                <i class="fas fa-redo me-1"></i> مسح النموذج
-                                            </button>
-                                            <div>
-                                                <button type="button" onclick="addSupplierRecord()" class="btn btn-success me-2" id="supplier_addBtn">
-                                                    <i class="fas fa-plus me-1"></i> إضافة جديد
-                                                </button>
-                                                <button type="button" onclick="updateSupplierRecord()" class="btn btn-primary" id="supplier_updateBtn" style="display: none;">
-                                                    <i class="fas fa-save me-1"></i> تحديث السجل
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="supplier_editingId">
-                                </form>
+                              <form id="supplierForm">
+    <!-- ================== Supplier Basic Info ================== -->
+    <div class="form-section">
+        <div class="form-section-title">
+            <i class="fas fa-user-tie"></i> بيانات المورد
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">رقم المورد</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_supplierId" placeholder="رقم المورد">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">اسم المورد *</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_supplierName" placeholder="اسم المورد" required>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">العنوان</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_address" placeholder="العنوان">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الهاتف</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_phone" placeholder="الهاتف">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">البريد الإلكتروني</label>
+                <input type="email" class="form-control form-control-custom" id="supplier_email" placeholder="البريد الإلكتروني">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">جهة الاتصال</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_contactPerson" placeholder="جهة الاتصال">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الموقع الإلكتروني</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_website" placeholder="الموقع الإلكتروني">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">تم التعرف عليه من خلال</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_knownThrough" placeholder="تم التعرف عليه من خلال">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">تاريخ آخر معاملة</label>
+                <input type="date" class="form-control form-control-custom" id="supplier_lastTransactionDate">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الفئة</label>
+                <select class="form-select form-select-custom" id="supplier_category">
+                    <option value="">-- اختر الفئة --</option>
+                    <option value="حرج">حرج</option>
+                    <option value="غير حرج">غير حرج</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الخدمة / المنتج</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_serviceProduct" placeholder="الخدمة / المنتج">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الأهمية</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_importance" placeholder="الأهمية">
+            </div>
+        </div>
+    </div>
+    
+    <!-- ================== Accreditation ================== -->
+    <div class="form-section">
+        <div class="form-section-title">
+            <i class="fas fa-certificate"></i> الاعتمادات والوثائق
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">اعتماد ISO/IEC 17025</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_iso17025" placeholder="اعتماد ISO/IEC 17025">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">نطاق الاعتماد</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_scope" placeholder="نطاق الاعتماد">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">شهادة الاعتماد</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_certificate" placeholder="شهادة الاعتماد">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">تقرير معايرة نموذجي</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_sampleReport" placeholder="تقرير معايرة نموذجي">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <label class="form-label-custom">دليل الجودة</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_qualityManual" placeholder="دليل الجودة">
+            </div>
+            <div class="col-md-6 mb-2">
+                <label class="form-label-custom">وثائق أخرى</label>
+                <textarea class="form-control form-textarea-custom" id="supplier_otherDocs" placeholder="وثائق أخرى" rows="2"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ================== Evaluation ================== -->
+    <div class="form-section">
+        <div class="form-section-title">
+            <i class="fas fa-chart-line"></i> التقييم الفني والإداري
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الكفاءة الفنية (30%)</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_techCompetence" placeholder="الكفاءة الفنية (30%)">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">نظام الجودة (25%)</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_qualitySystem" placeholder="نظام الجودة (25%)">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الأداء السابق (20%)</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_pastPerformance" placeholder="الأداء السابق (20%)">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الاستقرار المالي (15%)</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_financialStability" placeholder="الاستقرار المالي (15%)">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">السعر والتسليم (10%)</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_priceDelivery" placeholder="السعر والتسليم (10%)">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">النتيجة الكلية %</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_totalScore" placeholder="النتيجة الكلية %">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">قرار الاعتماد</label>
+                <select class="form-select form-select-custom" id="supplier_approvalDecision">
+                    <option value="">-- قرار الاعتماد --</option>
+                    <option value="معتمد">معتمد</option>
+                    <option value="غير معتمد">غير معتمد</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">الالتزام بمواعيد التسليم</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_deliveryCommitment" placeholder="الالتزام بمواعيد التسليم">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">مطابقة المواصفات</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_specCompliance" placeholder="مطابقة المواصفات">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">سرعة معالجة الشكاوى</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_complaintsHandling" placeholder="سرعة معالجة الشكاوى">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">جودة الوثائق</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_docsQuality" placeholder="جودة الوثائق">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">رضا المستخدمين</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_userSatisfaction" placeholder="رضا المستخدمين">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <label class="form-label-custom">التقييم الكلي للأداء</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_performanceEvaluation" placeholder="التقييم الكلي للأداء">
+            </div>
+        </div>
+    </div>
+    
+    <!-- ================== Approvals ================== -->
+    <div class="form-section">
+        <div class="form-section-title">
+            <i class="fas fa-check-circle"></i> المراجعة والاعتماد
+        </div>
+        
+        <h6 class="mb-3">إعداد</h6>
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">أعد بواسطة</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_preparedBy" placeholder="أعد بواسطة">
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">تاريخ الإعداد</label>
+                <div class="date-input-group">
+                    <input type="number" class="form-control form-control-custom date-day" id="supplier_prepareDay" placeholder="يوم" min="1" max="31">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-month" id="supplier_prepareMonth" placeholder="شهر" min="1" max="12">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-year" id="supplier_prepareYear" placeholder="سنة" min="1900" max="2100">
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">توقيع الإعداد</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_prepareSign" placeholder="توقيع الإعداد">
+            </div>
+        </div>
+        
+        <h6 class="mb-3">مراجعة</h6>
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">راجع بواسطة</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_reviewedBy" placeholder="راجع بواسطة">
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">تاريخ المراجعة</label>
+                <div class="date-input-group">
+                    <input type="number" class="form-control form-control-custom date-day" id="supplier_reviewDay" placeholder="يوم" min="1" max="31">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-month" id="supplier_reviewMonth" placeholder="شهر" min="1" max="12">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-year" id="supplier_reviewYear" placeholder="سنة" min="1900" max="2100">
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">توقيع المراجعة</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_reviewSign" placeholder="توقيع المراجعة">
+            </div>
+        </div>
+        
+        <h6 class="mb-3">اعتماد</h6>
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">اعتمد بواسطة</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_approvedBy" placeholder="اعتمد بواسطة">
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">تاريخ الاعتماد</label>
+                <div class="date-input-group">
+                    <input type="number" class="form-control form-control-custom date-day" id="supplier_approvalDay" placeholder="يوم" min="1" max="31">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-month" id="supplier_approvalMonth" placeholder="شهر" min="1" max="12">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-year" id="supplier_approvalYear" placeholder="سنة" min="1900" max="2100">
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="form-label-custom">توقيع الاعتماد</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_approvalSign" placeholder="توقيع الاعتماد">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">رقم الإصدار</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_versionNo" placeholder="رقم الإصدار">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">تاريخ الإصدار</label>
+                <div class="date-input-group">
+                    <input type="number" class="form-control form-control-custom date-day" id="supplier_releaseDay" placeholder="يوم" min="1" max="31">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-month" id="supplier_releaseMonth" placeholder="شهر" min="1" max="12">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-year" id="supplier_releaseYear" placeholder="سنة" min="1900" max="2100">
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">تاريخ بدء العمل</label>
+                <div class="date-input-group">
+                    <input type="number" class="form-control form-control-custom date-day" id="supplier_startWorkDay" placeholder="يوم" min="1" max="31">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-month" id="supplier_startWorkMonth" placeholder="شهر" min="1" max="12">
+                    <span class="date-separator">/</span>
+                    <input type="number" class="form-control form-control-custom date-year" id="supplier_startWorkYear" placeholder="سنة" min="1900" max="2100">
+                </div>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label-custom">اسم المراجع</label>
+                <input type="text" class="form-control form-control-custom" id="supplier_reviewerName" placeholder="اسم المراجع">
+            </div>
+        </div>
+    </div>
+    
+    <!-- ================== Notes ================== -->
+    <div class="form-section">
+        <div class="form-section-title">
+            <i class="fas fa-sticky-note"></i> ملاحظات عامة
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-2">
+                <textarea class="form-control form-textarea-custom" id="supplier_notes" placeholder="ملاحظات عامة" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-between">
+            <button type="button" onclick="resetSupplierForm()" class="btn btn-outline-secondary">
+                <i class="fas fa-redo me-1"></i> مسح النموذج
+            </button>
+            <div>
+                <button type="button" onclick="addSupplierRecord()" class="btn btn-success me-2" id="supplier_addBtn">
+                    <i class="fas fa-plus me-1"></i> إضافة جديد
+                </button>
+                <button type="button" onclick="updateSupplierRecord()" class="btn btn-primary" id="supplier_updateBtn" style="display: none;">
+                    <i class="fas fa-save me-1"></i> تحديث السجل
+                </button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="supplier_editingId">
+</form>
                             </div>
                         </div>
                     </div>
@@ -1089,11 +1475,23 @@
                                     <div class="row">
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ المعايرة</label>
-                                            <input type="date" class="form-control form-control-custom" id="calMgmt_calibrationDate">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="calMgmt_calibrationDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="calMgmt_calibrationDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="calMgmt_calibrationDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ الاستحقاق</label>
-                                            <input type="date" class="form-control form-control-custom" id="calMgmt_dueDate">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="calMgmt_dueDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="calMgmt_dueDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="calMgmt_dueDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">مختبر المعايرة</label>
@@ -1273,7 +1671,13 @@
                                     <div class="row">
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">التاريخ</label>
-                                            <input type="date" class="form-control form-control-custom" id="maintenance_date">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="maintenance_date_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="maintenance_date_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="maintenance_date_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">الفني المسؤول</label>
@@ -1438,7 +1842,13 @@
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ الاستحقاق للمعايرة</label>
-                                            <input type="date" class="form-control form-control-custom" id="devices_dueDate">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="devices_dueDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="devices_dueDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="devices_dueDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                     </div>
                                     
@@ -1449,7 +1859,13 @@
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">تاريخ آخر معايرة</label>
-                                            <input type="date" class="form-control form-control-custom" id="devices_lastCalibrationDate">
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="devices_lastCalibrationDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="devices_lastCalibrationDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="devices_lastCalibrationDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">الحالة</label>
@@ -1659,7 +2075,13 @@
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <label class="form-label-custom">التاريخ *</label>
-                                            <input type="date" class="form-control form-control-custom" id="corrective_date" required>
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="corrective_date_day" placeholder="يوم" min="1" max="31" required>
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="corrective_date_month" placeholder="شهر" min="1" max="12" required>
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="corrective_date_year" placeholder="سنة" min="1900" max="2100" required>
+                                            </div>
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <label class="form-label-custom">الجهاز / العينة *</label>
@@ -1790,7 +2212,13 @@
                                     <div class="row">
                                         <div class="col-md-4 mb-2">
                                             <label class="form-label-custom">التاريخ *</label>
-                                            <input type="date" class="form-control form-control-custom" id="environmental_date" required>
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="environmental_date_day" placeholder="يوم" min="1" max="31" required>
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="environmental_date_month" placeholder="شهر" min="1" max="12" required>
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="environmental_date_year" placeholder="سنة" min="1900" max="2100" required>
+                                            </div>
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <label class="form-label-custom">الوقت</label>
@@ -1894,6 +2322,141 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Training Management Tab -->
+            <div class="tab-pane fade" id="training" role="tabpanel">
+                <!-- Form Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="custom-card">
+                            <div class="card-header-custom card-header-training">
+                                <i class="fas fa-graduation-cap me-2"></i> نظام إدارة التدريب
+                            </div>
+                            <div class="card-body">
+                                <form id="trainingForm">
+                                    <div class="row">
+                                        <div class="col-md-2 mb-2">
+                                            <label class="form-label-custom">م (رقم السجل) *</label>
+                                            <input type="text" class="form-control form-control-custom" id="training_id" placeholder="م" required>
+                                        </div>
+                                        <div class="col-md-2 mb-2">
+                                            <label class="form-label-custom">العام *</label>
+                                            <input type="number" class="form-control form-control-custom" id="training_year" placeholder="العام" min="2000" max="2100" required>
+                                        </div>
+                                        <div class="col-md-2 mb-2">
+                                            <label class="form-label-custom">الرقم الوظيفي *</label>
+                                            <input type="text" class="form-control form-control-custom" id="training_employeeNumber" placeholder="الرقم الوظيفي" required>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">الاسم *</label>
+                                            <input type="text" class="form-control form-control-custom" id="training_name" placeholder="الاسم" required>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">الوظيفة *</label>
+                                            <input type="text" class="form-control form-control-custom" id="training_jobTitle" placeholder="الوظيفة" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label-custom">الاحتياج التدريبي / الهدف من التدريب</label>
+                                            <textarea class="form-control form-textarea-custom" id="training_trainingNeed" placeholder="الاحتياج التدريبي / الهدف من التدريب"></textarea>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label-custom">مسمى التدريب *</label>
+                                            <input type="text" class="form-control form-control-custom" id="training_trainingTitle" placeholder="مسمى التدريب" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">مكان الانعقاد</label>
+                                            <input type="text" class="form-control form-control-custom" id="training_location" placeholder="مكان الانعقاد">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">الجهة</label>
+                                            <input type="text" class="form-control form-control-custom" id="training_organization" placeholder="الجهة">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">تاريخ البداية</label>
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="training_startDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="training_startDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="training_startDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">تاريخ الانتهاء</label>
+                                            <div class="date-input-group">
+                                                <input type="number" class="form-control form-control-custom text-center" id="training_endDate_day" placeholder="يوم" min="1" max="31">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="training_endDate_month" placeholder="شهر" min="1" max="12">
+                                                <span class="date-separator">/</span>
+                                                <input type="number" class="form-control form-control-custom text-center" id="training_endDate_year" placeholder="سنة" min="1900" max="2100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mt-3">
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <button type="button" onclick="resetTrainingForm()" class="btn btn-outline-secondary">
+                                                <i class="fas fa-redo me-1"></i> مسح النموذج
+                                            </button>
+                                            <div>
+                                                <button type="button" onclick="addTrainingRecord()" class="btn btn-success me-2" id="training_addBtn">
+                                                    <i class="fas fa-plus me-1"></i> إضافة جديد
+                                                </button>
+                                                <button type="button" onclick="updateTrainingRecord()" class="btn btn-primary" id="training_updateBtn" style="display: none;">
+                                                    <i class="fas fa-save me-1"></i> تحديث السجل
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="training_editingId">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Records Table Section -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="custom-card">
+                            <div class="card-header-custom card-header-training d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-list me-2"></i> قائمة سجلات التدريب</span>
+                                <div>
+                                    <button onclick="loadTrainingData()" class="btn btn-light btn-sm me-2">
+                                        <i class="fas fa-sync-alt"></i> تحديث
+                                    </button>
+                                    <button onclick="exportTrainingCSV()" class="btn btn-light btn-sm">
+                                        <i class="fas fa-download"></i> تصدير
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="loading-spinner" id="trainingLoadingSpinner">
+                                    <div class="spinner-border text-primary spinner-border-custom" role="status">
+                                        <span class="visually-hidden">جاري التحميل...</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive" id="trainingTableContainer" style="display: none;">
+                                    <table class="table table-custom table-hover" id="trainingDataTable">
+                                    </table>
+                                </div>
+                                
+                                <div id="trainingNoRecords" class="text-center py-5" style="display: none;">
+                                    <i class="fas fa-graduation-cap fa-4x text-muted mb-4"></i>
+                                    <h4 class="text-muted">لا توجد سجلات تدريب لعرضها</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Footer -->
@@ -1902,7 +2465,7 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة السجلات المتكامل 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 10.0</span>
+                    <span id="appVersion" class="text-info">الإصدار 11.0</span>
                 </p>
             </div>
         </div>
@@ -1958,6 +2521,7 @@
         const FMEA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby314ii-A-5OQrfCpd14wGcEXBIuQh9qlrFccf14QmRKuz9WbwtRp7lzuhERVw67UAzVg/exec";
         const CORRECTIVE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5I5LQAZg_nou7flikY-9qJRN8lmvjXYZlXF42PYID2kXluhnIrDtkFI2ck9Oj_HuZvA/exec";
         const ENVIRONMENTAL_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEKz485uet9gaYlrbqETzvk6xjw64wtKgG3yL6XPmC1VsD15ADFW1mXOfVbA0XGfxd/exec";
+        const TRAINING_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhspPy9B2RGQdv6cCb-6y4VfQQPOkUXPgaT118s6qV9mqvdR9zLy9XknDAJdW7AYcM_g/exec";
         
         // ================ GLOBAL VARIABLES ================
         let calibrationRecords = [];
@@ -1970,6 +2534,7 @@
         let fmeaRecords = [];
         let correctiveRecords = [];
         let environmentalRecords = [];
+        let trainingRecords = [];
         let deleteRecordId = '';
         let deleteSystemType = '';
         let deleteRecordName = '';
@@ -1992,6 +2557,84 @@
             }, 500);
         });
         
+        // ================ DATE FORMAT FUNCTIONS ================
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                // Handle dd/mm/yyyy format
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        const day = parts[0].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[2];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                // Handle yyyy-mm-dd format
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        const day = parts[2].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[0];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                return dateString;
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        function formatDateForInput(dateString) {
+            if (!dateString) return {day: '', month: '', year: ''};
+            try {
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[0],
+                            month: parts[1],
+                            year: parts[2]
+                        };
+                    }
+                }
+                
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[2],
+                            month: parts[1],
+                            year: parts[0]
+                        };
+                    }
+                }
+                
+                return {day: '', month: '', year: ''};
+            } catch (e) {
+                return {day: '', month: '', year: ''};
+            }
+        }
+        
+        function getDateString(day, month, year) {
+            if (!day || !month || !year) return '';
+            const formattedDay = day.toString().padStart(2, '0');
+            const formattedMonth = month.toString().padStart(2, '0');
+            return `${formattedDay}/${formattedMonth}/${year}`;
+        }
+        
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
         // ================ UNIFIED FUNCTIONS ================
         async function loadAllRecords() {
             try {
@@ -2005,7 +2648,8 @@
                     callGoogleScript(DEVICES_SCRIPT_URL, 'getAll'),
                     callGoogleScript(FMEA_SCRIPT_URL, 'getAll'),
                     callGoogleScript(CORRECTIVE_SCRIPT_URL, 'getAll'),
-                    callGoogleScript(ENVIRONMENTAL_SCRIPT_URL, 'getAll')
+                    callGoogleScript(ENVIRONMENTAL_SCRIPT_URL, 'getAll'),
+                    callGoogleScript(TRAINING_SCRIPT_URL, 'getAll')
                 ];
                 
                 const results = await Promise.allSettled(promises);
@@ -2027,6 +2671,7 @@
                             case 7: fmeaRecords = result.value.data; break;
                             case 8: correctiveRecords = result.value.data; break;
                             case 9: environmentalRecords = result.value.data; break;
+                            case 10: trainingRecords = result.value.data; break;
                         }
                     }
                 });
@@ -2037,23 +2682,12 @@
             }
         }
         
-        function setCurrentDate() {
-            const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            const dateString = now.toLocaleDateString('ar-SA', options);
-            document.getElementById('currentDate').textContent = dateString;
-        }
-        
         function setupTabListeners() {
             const tabIds = [
                 'calibration-tab', 'impartiality-tab', 'contract-tab', 
                 'supplier-tab', 'calibration-mgmt-tab', 'maintenance-tab', 
-                'devices-tab', 'fmea-tab', 'corrective-tab', 'environmental-tab'
+                'devices-tab', 'fmea-tab', 'corrective-tab', 'environmental-tab',
+                'training-tab'
             ];
             
             tabIds.forEach(tabId => {
@@ -2071,6 +2705,7 @@
                             case 'fmea-tab': loadFmeaData(); break;
                             case 'corrective-tab': loadCorrectiveData(); break;
                             case 'environmental-tab': loadEnvironmentalData(); break;
+                            case 'training-tab': loadTrainingData(); break;
                         }
                     });
                 }
@@ -2090,6 +2725,7 @@
                 case 'fmea-tab': loadFmeaData(); break;
                 case 'corrective-tab': loadCorrectiveData(); break;
                 case 'environmental-tab': loadEnvironmentalData(); break;
+                case 'training-tab': loadTrainingData(); break;
             }
         }
         
@@ -2147,16 +2783,6 @@
                 .replace(/'/g, "&#039;");
         }
         
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            try {
-                const date = new Date(dateString);
-                return isNaN(date.getTime()) ? dateString : date.toLocaleDateString('ar-SA');
-            } catch (e) {
-                return dateString;
-            }
-        }
-        
         function formatTime(timeString) {
             if (!timeString) return '';
             return timeString;
@@ -2196,6 +2822,9 @@
                     break;
                 case 'environmental-tab':
                     tableContainer = document.querySelector('#environmentalTableContainer .table-responsive');
+                    break;
+                case 'training-tab':
+                    tableContainer = document.querySelector('#trainingTableContainer .table-responsive');
                     break;
             }
             
@@ -2360,14 +2989,26 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const startDate = getDateString(
+                document.getElementById('calibration_startDate_day').value,
+                document.getElementById('calibration_startDate_month').value,
+                document.getElementById('calibration_startDate_year').value
+            );
+            
+            const signDate = getDateString(
+                document.getElementById('calibration_signDate_day').value,
+                document.getElementById('calibration_signDate_month').value,
+                document.getElementById('calibration_signDate_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('calibration_recordId').value || 'CAL-' + Date.now(),
                 employeeName: document.getElementById('calibration_employeeName').value,
                 employeeNumber: document.getElementById('calibration_employeeNumber').value,
                 department: document.getElementById('calibration_department').value,
                 contractType: document.getElementById('calibration_contractType').value,
-                startDate: document.getElementById('calibration_startDate').value,
-                signDate: document.getElementById('calibration_signDate').value,
+                startDate: startDate,
+                signDate: signDate,
                 notes: document.getElementById('calibration_notes').value,
                 reviewerName: document.getElementById('calibration_reviewerName').value,
                 secretRecordNumber: document.getElementById('calibration_secretRecordNumber').value
@@ -2415,8 +3056,17 @@
             document.getElementById('calibration_department').value = record[3] || '';
             document.getElementById('calibration_contractType').value = record[4] || '';
             document.getElementById('calibration_secretRecordNumber').value = record[15] || '';
-            document.getElementById('calibration_startDate').value = record[5] || '';
-            document.getElementById('calibration_signDate').value = record[6] || '';
+            
+            const startDate = formatDateForInput(record[5] || '');
+            document.getElementById('calibration_startDate_day').value = startDate.day;
+            document.getElementById('calibration_startDate_month').value = startDate.month;
+            document.getElementById('calibration_startDate_year').value = startDate.year;
+            
+            const signDate = formatDateForInput(record[6] || '');
+            document.getElementById('calibration_signDate_day').value = signDate.day;
+            document.getElementById('calibration_signDate_month').value = signDate.month;
+            document.getElementById('calibration_signDate_year').value = signDate.year;
+            
             document.getElementById('calibration_notes').value = record[13] || '';
             document.getElementById('calibration_reviewerName').value = record[14] || '';
             document.getElementById('calibration_editingId').value = record[0];
@@ -2435,14 +3085,26 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const startDate = getDateString(
+                document.getElementById('calibration_startDate_day').value,
+                document.getElementById('calibration_startDate_month').value,
+                document.getElementById('calibration_startDate_year').value
+            );
+            
+            const signDate = getDateString(
+                document.getElementById('calibration_signDate_day').value,
+                document.getElementById('calibration_signDate_month').value,
+                document.getElementById('calibration_signDate_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('calibration_recordId').value,
                 employeeName: document.getElementById('calibration_employeeName').value,
                 employeeNumber: document.getElementById('calibration_employeeNumber').value,
                 department: document.getElementById('calibration_department').value,
                 contractType: document.getElementById('calibration_contractType').value,
-                startDate: document.getElementById('calibration_startDate').value,
-                signDate: document.getElementById('calibration_signDate').value,
+                startDate: startDate,
+                signDate: signDate,
                 notes: document.getElementById('calibration_notes').value,
                 reviewerName: document.getElementById('calibration_reviewerName').value,
                 secretRecordNumber: document.getElementById('calibration_secretRecordNumber').value
@@ -2501,8 +3163,8 @@
                         record[2] || '',
                         record[3] || '',
                         record[4] || '',
-                        record[5] || '',
-                        record[6] || '',
+                        formatDate(record[5] || ''),
+                        formatDate(record[6] || ''),
                         record[13] || '',
                         record[14] || '',
                         record[15] || ''
@@ -2608,7 +3270,8 @@
         }
         
         async function addImpartialityRecord() {
-            const requiredFields = ['impartiality_employeeName', 'impartiality_employeeNumber', 'impartiality_signDate'];
+            const requiredFields = ['impartiality_employeeName', 'impartiality_employeeNumber', 
+                                  'impartiality_signDate_day', 'impartiality_signDate_month', 'impartiality_signDate_year'];
             if (!validateForm(requiredFields)) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
                 return;
@@ -2620,11 +3283,23 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const signDate = getDateString(
+                document.getElementById('impartiality_signDate_day').value,
+                document.getElementById('impartiality_signDate_month').value,
+                document.getElementById('impartiality_signDate_year').value
+            );
+            
             const formData = {
+			 personalRelations: document.getElementById('impartiality_personalRelations').value,
+    externalActivities: document.getElementById('impartiality_externalActivities').value,
+    externalActivitiesDetails: document.getElementById('impartiality_externalActivitiesDetails').value,
+    gifts: document.getElementById('impartiality_gifts').value,
+    giftsDetails: document.getElementById('impartiality_giftsDetails').value,
+    otherDisclosure: document.getElementById('impartiality_otherDisclosure').value,
                 recordId: document.getElementById('impartiality_recordId').value || 'DISC-' + Date.now(),
                 employeeName: document.getElementById('impartiality_employeeName').value,
                 employeeNumber: document.getElementById('impartiality_employeeNumber').value,
-                signDate: document.getElementById('impartiality_signDate').value,
+                signDate: signDate,
                 financialSources: document.getElementById('impartiality_financialSources').value,
                 financialDetails: document.getElementById('impartiality_financialDetails').value,
                 personalRelationsDetails: document.getElementById('impartiality_personalRelationsDetails').value,
@@ -2673,7 +3348,12 @@
             document.getElementById('impartiality_employeeNumber').value = record[2] || '';
             document.getElementById('impartiality_impartialityRiskNumber').value = record[13] || '';
             document.getElementById('impartiality_reviewerName').value = record[14] || '';
-            document.getElementById('impartiality_signDate').value = record[3] || '';
+            
+            const signDate = formatDateForInput(record[3] || '');
+            document.getElementById('impartiality_signDate_day').value = signDate.day;
+            document.getElementById('impartiality_signDate_month').value = signDate.month;
+            document.getElementById('impartiality_signDate_year').value = signDate.year;
+            
             document.getElementById('impartiality_financialSources').value = record[4] || '';
             document.getElementById('impartiality_financialDetails').value = record[5] || '';
             document.getElementById('impartiality_personalRelationsDetails').value = record[7] || '';
@@ -2693,11 +3373,23 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const signDate = getDateString(
+                document.getElementById('impartiality_signDate_day').value,
+                document.getElementById('impartiality_signDate_month').value,
+                document.getElementById('impartiality_signDate_year').value
+            );
+            
             const formData = {
+			 personalRelations: document.getElementById('impartiality_personalRelations').value,
+    externalActivities: document.getElementById('impartiality_externalActivities').value,
+    externalActivitiesDetails: document.getElementById('impartiality_externalActivitiesDetails').value,
+    gifts: document.getElementById('impartiality_gifts').value,
+    giftsDetails: document.getElementById('impartiality_giftsDetails').value,
+    otherDisclosure: document.getElementById('impartiality_otherDisclosure').value,
                 recordId: document.getElementById('impartiality_recordId').value,
                 employeeName: document.getElementById('impartiality_employeeName').value,
                 employeeNumber: document.getElementById('impartiality_employeeNumber').value,
-                signDate: document.getElementById('impartiality_signDate').value,
+                signDate: signDate,
                 financialSources: document.getElementById('impartiality_financialSources').value,
                 financialDetails: document.getElementById('impartiality_financialDetails').value,
                 personalRelationsDetails: document.getElementById('impartiality_personalRelationsDetails').value,
@@ -2757,7 +3449,7 @@
                         record[0] || '',
                         record[1] || '',
                         record[2] || '',
-                        record[3] || '',
+                        formatDate(record[3] || ''),
                         record[4] || '',
                         record[5] || '',
                         record[7] || '',
@@ -2879,14 +3571,29 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const contractDate = getDateString(
+                document.getElementById('contract_contractDate_day').value,
+                document.getElementById('contract_contractDate_month').value,
+                document.getElementById('contract_contractDate_year').value
+            );
+            
+            const signDate = getDateString(
+                document.getElementById('contract_signDate_day').value,
+                document.getElementById('contract_signDate_month').value,
+                document.getElementById('contract_signDate_year').value
+            );
+            
             const formData = {
+			scopeOfWork: document.getElementById('contract_scopeOfWork').value,
+    siteName: document.getElementById('contract_siteName').value,
+    sitePosition: document.getElementById('contract_sitePosition').value,
                 recordId: document.getElementById('contract_recordId').value,
                 clientName: document.getElementById('contract_clientName').value,
                 masterContractNumber: document.getElementById('contract_masterContractNumber').value,
                 clientAddress: document.getElementById('contract_clientAddress').value,
                 authorizedPerson: document.getElementById('contract_authorizedPerson').value,
-                contractDate: document.getElementById('contract_contractDate').value,
-                signDate: document.getElementById('contract_signDate').value,
+                contractDate: contractDate,
+                signDate: signDate,
                 serviceType: document.getElementById('contract_serviceType').value,
                 agreementDuration: document.getElementById('contract_agreementDuration').value,
                 contractValue: document.getElementById('contract_contractValue').value,
@@ -2934,8 +3641,17 @@
             document.getElementById('contract_masterContractNumber').value = record[2] || '';
             document.getElementById('contract_clientAddress').value = record[3] || '';
             document.getElementById('contract_authorizedPerson').value = record[4] || '';
-            document.getElementById('contract_contractDate').value = record[5] || '';
-            document.getElementById('contract_signDate').value = record[6] || '';
+            
+            const contractDate = formatDateForInput(record[5] || '');
+            document.getElementById('contract_contractDate_day').value = contractDate.day;
+            document.getElementById('contract_contractDate_month').value = contractDate.month;
+            document.getElementById('contract_contractDate_year').value = contractDate.year;
+            
+            const signDate = formatDateForInput(record[6] || '');
+            document.getElementById('contract_signDate_day').value = signDate.day;
+            document.getElementById('contract_signDate_month').value = signDate.month;
+            document.getElementById('contract_signDate_year').value = signDate.year;
+            
             document.getElementById('contract_serviceType').value = record[7] || '';
             document.getElementById('contract_agreementDuration').value = record[9] || '';
             document.getElementById('contract_contractValue').value = record[10] || '';
@@ -2956,14 +3672,29 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const contractDate = getDateString(
+                document.getElementById('contract_contractDate_day').value,
+                document.getElementById('contract_contractDate_month').value,
+                document.getElementById('contract_contractDate_year').value
+            );
+            
+            const signDate = getDateString(
+                document.getElementById('contract_signDate_day').value,
+                document.getElementById('contract_signDate_month').value,
+                document.getElementById('contract_signDate_year').value
+            );
+            
             const formData = {
+			scopeOfWork: document.getElementById('contract_scopeOfWork').value,
+    siteName: document.getElementById('contract_siteName').value,
+    sitePosition: document.getElementById('contract_sitePosition').value,
                 recordId: document.getElementById('contract_recordId').value,
                 clientName: document.getElementById('contract_clientName').value,
                 masterContractNumber: document.getElementById('contract_masterContractNumber').value,
                 clientAddress: document.getElementById('contract_clientAddress').value,
                 authorizedPerson: document.getElementById('contract_authorizedPerson').value,
-                contractDate: document.getElementById('contract_contractDate').value,
-                signDate: document.getElementById('contract_signDate').value,
+                contractDate: contractDate,
+                signDate: signDate,
                 serviceType: document.getElementById('contract_serviceType').value,
                 agreementDuration: document.getElementById('contract_agreementDuration').value,
                 contractValue: document.getElementById('contract_contractValue').value,
@@ -3023,8 +3754,8 @@
                         record[2] || '',
                         record[3] || '',
                         record[4] || '',
-                        record[5] || '',
-                        record[6] || '',
+                        formatDate(record[5] || ''),
+                        formatDate(record[6] || ''),
                         record[7] || '',
                         record[9] || '',
                         record[10] || '',
@@ -3144,18 +3875,58 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const lastTransactionDate = getDateString(
+                document.getElementById('supplier_lastTransactionDate_day').value,
+                document.getElementById('supplier_lastTransactionDate_month').value,
+                document.getElementById('supplier_lastTransactionDate_year').value
+            );
+            
             const formData = {
-                supplierId: document.getElementById('supplier_supplierId').value,
-                supplierName: document.getElementById('supplier_supplierName').value,
-                phone: document.getElementById('supplier_phone').value,
-                email: document.getElementById('supplier_email').value,
-                contactPerson: document.getElementById('supplier_contactPerson').value,
-                website: document.getElementById('supplier_website').value,
-                lastTransactionDate: document.getElementById('supplier_lastTransactionDate').value,
-                category: document.getElementById('supplier_category').value,
-                serviceProduct: document.getElementById('supplier_serviceProduct').value,
-                approvalDecision: document.getElementById('supplier_approvalDecision').value,
-                notes: document.getElementById('supplier_notes').value
+                 supplierId: document.getElementById('supplier_supplierId').value,
+        supplierName: document.getElementById('supplier_supplierName').value,
+        address: document.getElementById('supplier_address').value,
+        phone: document.getElementById('supplier_phone').value,
+        email: document.getElementById('supplier_email').value,
+        contactPerson: document.getElementById('supplier_contactPerson').value,
+        website: document.getElementById('supplier_website').value,
+        knownThrough: document.getElementById('supplier_knownThrough').value,
+        lastTransactionDate: document.getElementById('supplier_lastTransactionDate').value,
+        category: document.getElementById('supplier_category').value,
+        serviceProduct: document.getElementById('supplier_serviceProduct').value,
+        importance: document.getElementById('supplier_importance').value,
+        iso17025: document.getElementById('supplier_iso17025').value,
+        scope: document.getElementById('supplier_scope').value,
+        certificate: document.getElementById('supplier_certificate').value,
+        sampleReport: document.getElementById('supplier_sampleReport').value,
+        qualityManual: document.getElementById('supplier_qualityManual').value,
+        otherDocs: document.getElementById('supplier_otherDocs').value,
+        techCompetence: document.getElementById('supplier_techCompetence').value,
+        qualitySystem: document.getElementById('supplier_qualitySystem').value,
+        pastPerformance: document.getElementById('supplier_pastPerformance').value,
+        financialStability: document.getElementById('supplier_financialStability').value,
+        priceDelivery: document.getElementById('supplier_priceDelivery').value,
+        totalScore: document.getElementById('supplier_totalScore').value,
+        approvalDecision: document.getElementById('supplier_approvalDecision').value,
+        deliveryCommitment: document.getElementById('supplier_deliveryCommitment').value,
+        specCompliance: document.getElementById('supplier_specCompliance').value,
+        complaintsHandling: document.getElementById('supplier_complaintsHandling').value,
+        docsQuality: document.getElementById('supplier_docsQuality').value,
+        userSatisfaction: document.getElementById('supplier_userSatisfaction').value,
+        performanceEvaluation: document.getElementById('supplier_performanceEvaluation').value,
+        preparedBy: document.getElementById('supplier_preparedBy').value,
+        prepareDate: getDateFromFields('supplier_prepareDay', 'supplier_prepareMonth', 'supplier_prepareYear'),
+        prepareSign: document.getElementById('supplier_prepareSign').value,
+        reviewedBy: document.getElementById('supplier_reviewedBy').value,
+        reviewDate: getDateFromFields('supplier_reviewDay', 'supplier_reviewMonth', 'supplier_reviewYear'),
+        reviewSign: document.getElementById('supplier_reviewSign').value,
+        approvedBy: document.getElementById('supplier_approvedBy').value,
+        approvalDate: getDateFromFields('supplier_approvalDay', 'supplier_approvalMonth', 'supplier_approvalYear'),
+        approvalSign: document.getElementById('supplier_approvalSign').value,
+        versionNo: document.getElementById('supplier_versionNo').value,
+        releaseDate: getDateFromFields('supplier_releaseDay', 'supplier_releaseMonth', 'supplier_releaseYear'),
+        startWorkDate: getDateFromFields('supplier_startWorkDay', 'supplier_startWorkMonth', 'supplier_startWorkYear'),
+        reviewerName: document.getElementById('supplier_reviewerName').value,
+        notes: document.getElementById('supplier_notes').value
             };
             
             try {
@@ -3194,19 +3965,71 @@
         }
         
         function fillSupplierForm(record) {
-            document.getElementById('supplier_supplierId').value = record[0] || '';
-            document.getElementById('supplier_supplierName').value = record[1] || '';
-            document.getElementById('supplier_phone').value = record[3] || '';
-            document.getElementById('supplier_email').value = record[4] || '';
-            document.getElementById('supplier_contactPerson').value = record[5] || '';
-            document.getElementById('supplier_website').value = record[6] || '';
-            document.getElementById('supplier_lastTransactionDate').value = record[8] || '';
-            document.getElementById('supplier_category').value = record[9] || '';
-            document.getElementById('supplier_serviceProduct').value = record[10] || '';
-            document.getElementById('supplier_approvalDecision').value = record[24] || '';
-            document.getElementById('supplier_notes').value = record[42] || '';
-            document.getElementById('supplier_editingId').value = record[0];
+    document.getElementById('supplier_supplierId').value = record[0] || '';
+    document.getElementById('supplier_supplierName').value = record[1] || '';
+    document.getElementById('supplier_address').value = record[2] || '';
+    document.getElementById('supplier_phone').value = record[3] || '';
+    document.getElementById('supplier_email').value = record[4] || '';
+    document.getElementById('supplier_contactPerson').value = record[5] || '';
+    document.getElementById('supplier_website').value = record[6] || '';
+    document.getElementById('supplier_knownThrough').value = record[7] || '';
+    document.getElementById('supplier_lastTransactionDate').value = record[8] || '';
+    document.getElementById('supplier_category').value = record[9] || '';
+    document.getElementById('supplier_serviceProduct').value = record[10] || '';
+    document.getElementById('supplier_importance').value = record[11] || '';
+    document.getElementById('supplier_iso17025').value = record[12] || '';
+    document.getElementById('supplier_scope').value = record[13] || '';
+    document.getElementById('supplier_certificate').value = record[14] || '';
+    document.getElementById('supplier_sampleReport').value = record[15] || '';
+    document.getElementById('supplier_qualityManual').value = record[16] || '';
+    document.getElementById('supplier_otherDocs').value = record[17] || '';
+    document.getElementById('supplier_techCompetence').value = record[18] || '';
+    document.getElementById('supplier_qualitySystem').value = record[19] || '';
+    document.getElementById('supplier_pastPerformance').value = record[20] || '';
+    document.getElementById('supplier_financialStability').value = record[21] || '';
+    document.getElementById('supplier_priceDelivery').value = record[22] || '';
+    document.getElementById('supplier_totalScore').value = record[23] || '';
+    document.getElementById('supplier_approvalDecision').value = record[24] || '';
+    document.getElementById('supplier_deliveryCommitment').value = record[25] || '';
+    document.getElementById('supplier_specCompliance').value = record[26] || '';
+    document.getElementById('supplier_complaintsHandling').value = record[27] || '';
+    document.getElementById('supplier_docsQuality').value = record[28] || '';
+    document.getElementById('supplier_userSatisfaction').value = record[29] || '';
+    document.getElementById('supplier_performanceEvaluation').value = record[30] || '';
+    document.getElementById('supplier_preparedBy').value = record[31] || '';
+    setDateToFields(record[32], 'supplier_prepareDay', 'supplier_prepareMonth', 'supplier_prepareYear');
+    document.getElementById('supplier_prepareSign').value = record[33] || '';
+    document.getElementById('supplier_reviewedBy').value = record[34] || '';
+    setDateToFields(record[35], 'supplier_reviewDay', 'supplier_reviewMonth', 'supplier_reviewYear');
+    document.getElementById('supplier_reviewSign').value = record[36] || '';
+    document.getElementById('supplier_approvedBy').value = record[37] || '';
+    setDateToFields(record[38], 'supplier_approvalDay', 'supplier_approvalMonth', 'supplier_approvalYear');
+    document.getElementById('supplier_approvalSign').value = record[39] || '';
+    document.getElementById('supplier_versionNo').value = record[40] || '';
+    setDateToFields(record[41], 'supplier_releaseDay', 'supplier_releaseMonth', 'supplier_releaseYear');
+    document.getElementById('supplier_startWorkDate').value = record[42] || '';
+    setDateToFields(record[43], 'supplier_startWorkDay', 'supplier_startWorkMonth', 'supplier_startWorkYear');
+    document.getElementById('supplier_reviewerName').value = record[44] || '';
+    document.getElementById('supplier_notes').value = record[45] || '';
+    document.getElementById('supplier_editingId').value = record[0];
+}
+
+// دالة للمساعدة في التنقل بين حقول التاريخ باستخدام Tab
+document.querySelectorAll('.date-day').forEach(input => {
+    input.addEventListener('input', function(e) {
+        if (this.value.length >= 2) {
+            this.nextElementSibling.nextElementSibling.nextElementSibling.focus();
         }
+    });
+});
+
+document.querySelectorAll('.date-month').forEach(input => {
+    input.addEventListener('input', function(e) {
+        if (this.value.length >= 2) {
+            this.nextElementSibling.nextElementSibling.focus();
+        }
+    });
+});
         
         async function updateSupplierRecord() {
             const recordId = document.getElementById('supplier_editingId').value;
@@ -3221,18 +4044,58 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const lastTransactionDate = getDateString(
+                document.getElementById('supplier_lastTransactionDate_day').value,
+                document.getElementById('supplier_lastTransactionDate_month').value,
+                document.getElementById('supplier_lastTransactionDate_year').value
+            );
+            
             const formData = {
                 supplierId: document.getElementById('supplier_supplierId').value,
-                supplierName: document.getElementById('supplier_supplierName').value,
-                phone: document.getElementById('supplier_phone').value,
-                email: document.getElementById('supplier_email').value,
-                contactPerson: document.getElementById('supplier_contactPerson').value,
-                website: document.getElementById('supplier_website').value,
-                lastTransactionDate: document.getElementById('supplier_lastTransactionDate').value,
-                category: document.getElementById('supplier_category').value,
-                serviceProduct: document.getElementById('supplier_serviceProduct').value,
-                approvalDecision: document.getElementById('supplier_approvalDecision').value,
-                notes: document.getElementById('supplier_notes').value
+        supplierName: document.getElementById('supplier_supplierName').value,
+        address: document.getElementById('supplier_address').value,
+        phone: document.getElementById('supplier_phone').value,
+        email: document.getElementById('supplier_email').value,
+        contactPerson: document.getElementById('supplier_contactPerson').value,
+        website: document.getElementById('supplier_website').value,
+        knownThrough: document.getElementById('supplier_knownThrough').value,
+        lastTransactionDate: document.getElementById('supplier_lastTransactionDate').value,
+        category: document.getElementById('supplier_category').value,
+        serviceProduct: document.getElementById('supplier_serviceProduct').value,
+        importance: document.getElementById('supplier_importance').value,
+        iso17025: document.getElementById('supplier_iso17025').value,
+        scope: document.getElementById('supplier_scope').value,
+        certificate: document.getElementById('supplier_certificate').value,
+        sampleReport: document.getElementById('supplier_sampleReport').value,
+        qualityManual: document.getElementById('supplier_qualityManual').value,
+        otherDocs: document.getElementById('supplier_otherDocs').value,
+        techCompetence: document.getElementById('supplier_techCompetence').value,
+        qualitySystem: document.getElementById('supplier_qualitySystem').value,
+        pastPerformance: document.getElementById('supplier_pastPerformance').value,
+        financialStability: document.getElementById('supplier_financialStability').value,
+        priceDelivery: document.getElementById('supplier_priceDelivery').value,
+        totalScore: document.getElementById('supplier_totalScore').value,
+        approvalDecision: document.getElementById('supplier_approvalDecision').value,
+        deliveryCommitment: document.getElementById('supplier_deliveryCommitment').value,
+        specCompliance: document.getElementById('supplier_specCompliance').value,
+        complaintsHandling: document.getElementById('supplier_complaintsHandling').value,
+        docsQuality: document.getElementById('supplier_docsQuality').value,
+        userSatisfaction: document.getElementById('supplier_userSatisfaction').value,
+        performanceEvaluation: document.getElementById('supplier_performanceEvaluation').value,
+        preparedBy: document.getElementById('supplier_preparedBy').value,
+        prepareDate: getDateFromFields('supplier_prepareDay', 'supplier_prepareMonth', 'supplier_prepareYear'),
+        prepareSign: document.getElementById('supplier_prepareSign').value,
+        reviewedBy: document.getElementById('supplier_reviewedBy').value,
+        reviewDate: getDateFromFields('supplier_reviewDay', 'supplier_reviewMonth', 'supplier_reviewYear'),
+        reviewSign: document.getElementById('supplier_reviewSign').value,
+        approvedBy: document.getElementById('supplier_approvedBy').value,
+        approvalDate: getDateFromFields('supplier_approvalDay', 'supplier_approvalMonth', 'supplier_approvalYear'),
+        approvalSign: document.getElementById('supplier_approvalSign').value,
+        versionNo: document.getElementById('supplier_versionNo').value,
+        releaseDate: getDateFromFields('supplier_releaseDay', 'supplier_releaseMonth', 'supplier_releaseYear'),
+        startWorkDate: getDateFromFields('supplier_startWorkDay', 'supplier_startWorkMonth', 'supplier_startWorkYear'),
+        reviewerName: document.getElementById('supplier_reviewerName').value,
+        notes: document.getElementById('supplier_notes').value
             };
             
             try {
@@ -3289,7 +4152,7 @@
                         record[4] || '',
                         record[5] || '',
                         record[6] || '',
-                        record[8] || '',
+                        formatDate(record[8] || ''),
                         record[9] || '',
                         record[10] || '',
                         record[24] || '',
@@ -3410,12 +4273,24 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const calibrationDate = getDateString(
+                document.getElementById('calMgmt_calibrationDate_day').value,
+                document.getElementById('calMgmt_calibrationDate_month').value,
+                document.getElementById('calMgmt_calibrationDate_year').value
+            );
+            
+            const dueDate = getDateString(
+                document.getElementById('calMgmt_dueDate_day').value,
+                document.getElementById('calMgmt_dueDate_month').value,
+                document.getElementById('calMgmt_dueDate_year').value
+            );
+            
             const formData = {
                 certificateNumber: document.getElementById('calMgmt_certificateNumber').value,
                 deviceNumber: document.getElementById('calMgmt_deviceNumber').value,
                 deviceName: document.getElementById('calMgmt_deviceName').value,
-                calibrationDate: document.getElementById('calMgmt_calibrationDate').value,
-                dueDate: document.getElementById('calMgmt_dueDate').value,
+                calibrationDate: calibrationDate,
+                dueDate: dueDate,
                 calibrationLab: document.getElementById('calMgmt_calibrationLab').value,
                 accreditationNumber: document.getElementById('calMgmt_accreditationNumber').value,
                 traceability: document.getElementById('calMgmt_traceability').value,
@@ -3471,8 +4346,17 @@
             document.getElementById('calMgmt_certificateNumber').value = record[0] || '';
             document.getElementById('calMgmt_deviceNumber').value = record[1] || '';
             document.getElementById('calMgmt_deviceName').value = record[2] || '';
-            document.getElementById('calMgmt_calibrationDate').value = record[3] || '';
-            document.getElementById('calMgmt_dueDate').value = record[4] || '';
+            
+            const calibrationDate = formatDateForInput(record[3] || '');
+            document.getElementById('calMgmt_calibrationDate_day').value = calibrationDate.day;
+            document.getElementById('calMgmt_calibrationDate_month').value = calibrationDate.month;
+            document.getElementById('calMgmt_calibrationDate_year').value = calibrationDate.year;
+            
+            const dueDate = formatDateForInput(record[4] || '');
+            document.getElementById('calMgmt_dueDate_day').value = dueDate.day;
+            document.getElementById('calMgmt_dueDate_month').value = dueDate.month;
+            document.getElementById('calMgmt_dueDate_year').value = dueDate.year;
+            
             document.getElementById('calMgmt_calibrationLab').value = record[5] || '';
             document.getElementById('calMgmt_accreditationNumber').value = record[6] || '';
             document.getElementById('calMgmt_traceability').value = record[7] || '';
@@ -3503,12 +4387,24 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const calibrationDate = getDateString(
+                document.getElementById('calMgmt_calibrationDate_day').value,
+                document.getElementById('calMgmt_calibrationDate_month').value,
+                document.getElementById('calMgmt_calibrationDate_year').value
+            );
+            
+            const dueDate = getDateString(
+                document.getElementById('calMgmt_dueDate_day').value,
+                document.getElementById('calMgmt_dueDate_month').value,
+                document.getElementById('calMgmt_dueDate_year').value
+            );
+            
             const formData = {
                 certificateNumber: document.getElementById('calMgmt_certificateNumber').value,
                 deviceNumber: document.getElementById('calMgmt_deviceNumber').value,
                 deviceName: document.getElementById('calMgmt_deviceName').value,
-                calibrationDate: document.getElementById('calMgmt_calibrationDate').value,
-                dueDate: document.getElementById('calMgmt_dueDate').value,
+                calibrationDate: calibrationDate,
+                dueDate: dueDate,
                 calibrationLab: document.getElementById('calMgmt_calibrationLab').value,
                 accreditationNumber: document.getElementById('calMgmt_accreditationNumber').value,
                 traceability: document.getElementById('calMgmt_traceability').value,
@@ -3578,8 +4474,8 @@
                         record[0] || '',
                         record[1] || '',
                         record[2] || '',
-                        record[3] || '',
-                        record[4] || '',
+                        formatDate(record[3] || ''),
+                        formatDate(record[4] || ''),
                         record[5] || '',
                         record[6] || '',
                         record[7] || '',
@@ -3711,6 +4607,12 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const date = getDateString(
+                document.getElementById('maintenance_date_day').value,
+                document.getElementById('maintenance_date_month').value,
+                document.getElementById('maintenance_date_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('maintenance_recordId').value,
                 deviceName: document.getElementById('maintenance_deviceName').value,
@@ -3720,7 +4622,7 @@
                 location: document.getElementById('maintenance_location').value,
                 operationType: document.getElementById('maintenance_operationType').value,
                 problem: document.getElementById('maintenance_problem').value,
-                date: document.getElementById('maintenance_date').value,
+                date: date,
                 technician: document.getElementById('maintenance_technician').value,
                 spareParts: document.getElementById('maintenance_spareParts').value,
                 downtime: document.getElementById('maintenance_downtime').value,
@@ -3775,7 +4677,12 @@
             document.getElementById('maintenance_location').value = record[5] || '';
             document.getElementById('maintenance_operationType').value = record[6] || '';
             document.getElementById('maintenance_problem').value = record[7] || '';
-            document.getElementById('maintenance_date').value = record[8] || '';
+            
+            const date = formatDateForInput(record[8] || '');
+            document.getElementById('maintenance_date_day').value = date.day;
+            document.getElementById('maintenance_date_month').value = date.month;
+            document.getElementById('maintenance_date_year').value = date.year;
+            
             document.getElementById('maintenance_technician').value = record[9] || '';
             document.getElementById('maintenance_spareParts').value = record[10] || '';
             document.getElementById('maintenance_downtime').value = record[11] || '';
@@ -3800,6 +4707,12 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const date = getDateString(
+                document.getElementById('maintenance_date_day').value,
+                document.getElementById('maintenance_date_month').value,
+                document.getElementById('maintenance_date_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('maintenance_recordId').value,
                 deviceName: document.getElementById('maintenance_deviceName').value,
@@ -3809,7 +4722,7 @@
                 location: document.getElementById('maintenance_location').value,
                 operationType: document.getElementById('maintenance_operationType').value,
                 problem: document.getElementById('maintenance_problem').value,
-                date: document.getElementById('maintenance_date').value,
+                date: date,
                 technician: document.getElementById('maintenance_technician').value,
                 spareParts: document.getElementById('maintenance_spareParts').value,
                 downtime: document.getElementById('maintenance_downtime').value,
@@ -3877,7 +4790,7 @@
                         record[5] || '',
                         record[6] || '',
                         record[7] || '',
-                        record[8] || '',
+                        formatDate(record[8] || ''),
                         record[9] || '',
                         record[10] || '',
                         record[11] || '',
@@ -4004,6 +4917,18 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const dueDate = getDateString(
+                document.getElementById('devices_dueDate_day').value,
+                document.getElementById('devices_dueDate_month').value,
+                document.getElementById('devices_dueDate_year').value
+            );
+            
+            const lastCalibrationDate = getDateString(
+                document.getElementById('devices_lastCalibrationDate_day').value,
+                document.getElementById('devices_lastCalibrationDate_month').value,
+                document.getElementById('devices_lastCalibrationDate_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('devices_recordId').value,
                 deviceName: document.getElementById('devices_deviceName').value,
@@ -4016,9 +4941,9 @@
                 measureRange: document.getElementById('devices_measureRange').value,
                 rangeValue: document.getElementById('devices_rangeValue').value,
                 accuracy: document.getElementById('devices_accuracy').value,
-                dueDate: document.getElementById('devices_dueDate').value,
+                dueDate: dueDate,
                 calibrationPeriod: document.getElementById('devices_calibrationPeriod').value,
-                lastCalibrationDate: document.getElementById('devices_lastCalibrationDate').value,
+                lastCalibrationDate: lastCalibrationDate,
                 status: document.getElementById('devices_statusField').value,
                 notes: document.getElementById('devices_notes').value
             };
@@ -4070,9 +4995,19 @@
             document.getElementById('devices_measureRange').value = record[8] || '';
             document.getElementById('devices_rangeValue').value = record[9] || '';
             document.getElementById('devices_accuracy').value = record[10] || '';
-            document.getElementById('devices_dueDate').value = record[11] || '';
+            
+            const dueDate = formatDateForInput(record[11] || '');
+            document.getElementById('devices_dueDate_day').value = dueDate.day;
+            document.getElementById('devices_dueDate_month').value = dueDate.month;
+            document.getElementById('devices_dueDate_year').value = dueDate.year;
+            
             document.getElementById('devices_calibrationPeriod').value = record[12] || '';
-            document.getElementById('devices_lastCalibrationDate').value = record[13] || '';
+            
+            const lastCalibrationDate = formatDateForInput(record[13] || '');
+            document.getElementById('devices_lastCalibrationDate_day').value = lastCalibrationDate.day;
+            document.getElementById('devices_lastCalibrationDate_month').value = lastCalibrationDate.month;
+            document.getElementById('devices_lastCalibrationDate_year').value = lastCalibrationDate.year;
+            
             document.getElementById('devices_statusField').value = record[15] || '';
             document.getElementById('devices_notes').value = record[16] || '';
             document.getElementById('devices_editingId').value = record[0];
@@ -4091,6 +5026,18 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const dueDate = getDateString(
+                document.getElementById('devices_dueDate_day').value,
+                document.getElementById('devices_dueDate_month').value,
+                document.getElementById('devices_dueDate_year').value
+            );
+            
+            const lastCalibrationDate = getDateString(
+                document.getElementById('devices_lastCalibrationDate_day').value,
+                document.getElementById('devices_lastCalibrationDate_month').value,
+                document.getElementById('devices_lastCalibrationDate_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('devices_recordId').value,
                 deviceName: document.getElementById('devices_deviceName').value,
@@ -4103,9 +5050,9 @@
                 measureRange: document.getElementById('devices_measureRange').value,
                 rangeValue: document.getElementById('devices_rangeValue').value,
                 accuracy: document.getElementById('devices_accuracy').value,
-                dueDate: document.getElementById('devices_dueDate').value,
+                dueDate: dueDate,
                 calibrationPeriod: document.getElementById('devices_calibrationPeriod').value,
-                lastCalibrationDate: document.getElementById('devices_lastCalibrationDate').value,
+                lastCalibrationDate: lastCalibrationDate,
                 status: document.getElementById('devices_statusField').value,
                 notes: document.getElementById('devices_notes').value
             };
@@ -4170,9 +5117,9 @@
                         record[8] || '',
                         record[9] || '',
                         record[10] || '',
-                        record[11] || '',
+                        formatDate(record[11] || ''),
                         record[12] || '',
-                        record[13] || '',
+                        formatDate(record[13] || ''),
                         record[15] || '',
                         record[16] || ''
                     ];
@@ -4572,8 +5519,8 @@
         }
         
         async function addCorrectiveRecord() {
-            const requiredFields = ['corrective_recordId', 'corrective_date', 'corrective_deviceSample', 
-                                 'corrective_reason', 'corrective_correctiveAction', 'corrective_technician',
+            const requiredFields = ['corrective_recordId', 'corrective_date_day', 'corrective_date_month', 'corrective_date_year', 
+                                 'corrective_deviceSample', 'corrective_reason', 'corrective_correctiveAction', 'corrective_technician',
                                  'corrective_supervisor', 'corrective_finalStatus'];
             if (!validateForm(requiredFields)) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
@@ -4586,9 +5533,15 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const date = getDateString(
+                document.getElementById('corrective_date_day').value,
+                document.getElementById('corrective_date_month').value,
+                document.getElementById('corrective_date_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('corrective_recordId').value,
-                date: document.getElementById('corrective_date').value,
+                date: date,
                 deviceSample: document.getElementById('corrective_deviceSample').value,
                 reason: document.getElementById('corrective_reason').value,
                 affectedCustomers: document.getElementById('corrective_affectedCustomers').value,
@@ -4635,7 +5588,12 @@
         
         function fillCorrectiveForm(record) {
             document.getElementById('corrective_recordId').value = record[0] || '';
-            document.getElementById('corrective_date').value = record[1] || '';
+            
+            const date = formatDateForInput(record[1] || '');
+            document.getElementById('corrective_date_day').value = date.day;
+            document.getElementById('corrective_date_month').value = date.month;
+            document.getElementById('corrective_date_year').value = date.year;
+            
             document.getElementById('corrective_deviceSample').value = record[2] || '';
             document.getElementById('corrective_reason').value = record[3] || '';
             document.getElementById('corrective_affectedCustomers').value = record[4] || '';
@@ -4659,9 +5617,15 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const date = getDateString(
+                document.getElementById('corrective_date_day').value,
+                document.getElementById('corrective_date_month').value,
+                document.getElementById('corrective_date_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('corrective_recordId').value,
-                date: document.getElementById('corrective_date').value,
+                date: date,
                 deviceSample: document.getElementById('corrective_deviceSample').value,
                 reason: document.getElementById('corrective_reason').value,
                 affectedCustomers: document.getElementById('corrective_affectedCustomers').value,
@@ -4720,7 +5684,7 @@
                 correctiveRecords.forEach(record => {
                     const row = [
                         record[0] || '',
-                        record[1] || '',
+                        formatDate(record[1] || ''),
                         record[2] || '',
                         record[3] || '',
                         record[4] || '',
@@ -4786,7 +5750,7 @@
             } catch (error) {
                 spinner.style.display = 'none';
                 noRecords.style.display = 'block';
-                showNotification(`❌ خطأ في تحميل سجلات الظروف البيئية`, 'error');
+                showNotification(`❌ خطأ في تحميل سجلالظروف البيئية`, 'error');
             }
         }
         
@@ -4843,7 +5807,8 @@
         }
         
         async function addEnvironmentalRecord() {
-            const requiredFields = ['environmental_recordId', 'environmental_room', 'environmental_date'];
+            const requiredFields = ['environmental_recordId', 'environmental_room', 
+                                  'environmental_date_day', 'environmental_date_month', 'environmental_date_year'];
             if (!validateForm(requiredFields)) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
                 return;
@@ -4855,11 +5820,17 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
+            const date = getDateString(
+                document.getElementById('environmental_date_day').value,
+                document.getElementById('environmental_date_month').value,
+                document.getElementById('environmental_date_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('environmental_recordId').value,
                 room: document.getElementById('environmental_room').value,
                 devices: document.getElementById('environmental_devices').value,
-                date: document.getElementById('environmental_date').value,
+                date: date,
                 time: document.getElementById('environmental_time').value,
                 temperature: document.getElementById('environmental_temperature').value,
                 humidity: document.getElementById('environmental_humidity').value,
@@ -4909,7 +5880,12 @@
             document.getElementById('environmental_recordId').value = record[0] || '';
             document.getElementById('environmental_room').value = record[1] || '';
             document.getElementById('environmental_devices').value = record[2] || '';
-            document.getElementById('environmental_date').value = record[3] || '';
+            
+            const date = formatDateForInput(record[3] || '');
+            document.getElementById('environmental_date_day').value = date.day;
+            document.getElementById('environmental_date_month').value = date.month;
+            document.getElementById('environmental_date_year').value = date.year;
+            
             document.getElementById('environmental_time').value = record[4] || '';
             document.getElementById('environmental_temperature').value = record[5] || '';
             document.getElementById('environmental_humidity').value = record[6] || '';
@@ -4934,11 +5910,17 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
+            const date = getDateString(
+                document.getElementById('environmental_date_day').value,
+                document.getElementById('environmental_date_month').value,
+                document.getElementById('environmental_date_year').value
+            );
+            
             const formData = {
                 recordId: document.getElementById('environmental_recordId').value,
                 room: document.getElementById('environmental_room').value,
                 devices: document.getElementById('environmental_devices').value,
-                date: document.getElementById('environmental_date').value,
+                date: date,
                 time: document.getElementById('environmental_time').value,
                 temperature: document.getElementById('environmental_temperature').value,
                 humidity: document.getElementById('environmental_humidity').value,
@@ -4983,7 +5965,7 @@
                 return;
             }
             
-            showNotification('📥 جاري تصدير سجلات الظروف البيئية...', 'info');
+            showNotification('📥 جاري تصدير سجلالظروف البيئية...', 'info');
             
             try {
                 const headers = [
@@ -5000,7 +5982,7 @@
                         record[0] || '',
                         record[1] || '',
                         record[2] || '',
-                        record[3] || '',
+                        formatDate(record[3] || ''),
                         record[4] || '',
                         record[5] || '',
                         record[6] || '',
@@ -5030,6 +6012,308 @@
                 setTimeout(() => URL.revokeObjectURL(url), 100);
                 
                 showNotification(`✅ تم تصدير ${environmentalRecords.length} سجل`, 'success');
+            } catch (error) {
+                showNotification(`❌ خطأ في التصدير`, 'error');
+            }
+        }
+        
+        // ================ TRAINING SYSTEM FUNCTIONS ================
+        async function loadTrainingData() {
+            const spinner = document.getElementById('trainingLoadingSpinner');
+            const tableContainer = document.getElementById('trainingTableContainer');
+            const noRecords = document.getElementById('trainingNoRecords');
+            
+            spinner.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            noRecords.style.display = 'none';
+            
+            try {
+                const result = await callGoogleScript(TRAINING_SCRIPT_URL, 'getAll');
+                
+                spinner.style.display = 'none';
+                
+                if (result.status === 'success') {
+                    trainingRecords = result.data;
+                    
+                    if (trainingRecords.length > 0) {
+                        displayTrainingRecords(trainingRecords);
+                        tableContainer.style.display = 'block';
+                        updateTotalRecordsCount();
+                    } else {
+                        noRecords.style.display = 'block';
+                    }
+                } else {
+                    noRecords.style.display = 'block';
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                spinner.style.display = 'none';
+                noRecords.style.display = 'block';
+                showNotification(`❌ خطأ في تحميل سجلات التدريب`, 'error');
+            }
+        }
+        
+        function displayTrainingRecords(records) {
+            const table = document.getElementById('trainingDataTable');
+            
+            let html = '<thead><tr>';
+            const headers = ['م', 'العام', 'الرقم الوظيفي', 'الاسم', 'الوظيفة', 'مسمى التدريب', 'مكان الانعقاد', 'الجهة', 'تاريخ البداية', 'تاريخ الانتهاء', 'الإجراءات'];
+            headers.forEach(h => {
+                html += `<th>${h}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            records.forEach((record, index) => {
+                html += '<tr>';
+                
+                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
+                html += `<td>${escapeHtml(record[1] || '')}</td>`;
+                html += `<td>${escapeHtml(record[2] || '')}</td>`;
+                html += `<td>${escapeHtml(record[3] || '')}</td>`;
+                html += `<td>${escapeHtml(record[4] || '')}</td>`;
+                html += `<td>${escapeHtml(record[6] || '')}</td>`;
+                html += `<td>${escapeHtml(record[7] || '')}</td>`;
+                html += `<td>${escapeHtml(record[8] || '')}</td>`;
+                html += `<td>${formatDate(record[9] || '')}</td>`;
+                html += `<td>${formatDate(record[10] || '')}</td>`;
+                
+                html += `<td class="action-buttons">
+                    <button onclick="editTrainingRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                        <i class="fas fa-edit"></i> تعديل
+                    </button>
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[3])}', 'training')" class="btn btn-sm btn-danger" title="حذف">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                    <button onclick="viewDetails('${escapeHtml(record[0])}', 'training')" class="btn btn-sm btn-info" title="عرض">
+                        <i class="fas fa-eye"></i> عرض
+                    </button>
+                </td>`;
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+        
+        async function addTrainingRecord() {
+            const requiredFields = ['training_id', 'training_year', 'training_employeeNumber', 
+                                  'training_name', 'training_jobTitle', 'training_trainingTitle'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            const button = document.getElementById('training_addBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
+            
+            const startDate = getDateString(
+                document.getElementById('training_startDate_day').value,
+                document.getElementById('training_startDate_month').value,
+                document.getElementById('training_startDate_year').value
+            );
+            
+            const endDate = getDateString(
+                document.getElementById('training_endDate_day').value,
+                document.getElementById('training_endDate_month').value,
+                document.getElementById('training_endDate_year').value
+            );
+            
+            const formData = {
+                id: document.getElementById('training_id').value,
+                year: document.getElementById('training_year').value,
+                employeeNumber: document.getElementById('training_employeeNumber').value,
+                name: document.getElementById('training_name').value,
+                jobTitle: document.getElementById('training_jobTitle').value,
+                trainingNeed: document.getElementById('training_trainingNeed').value,
+                trainingTitle: document.getElementById('training_trainingTitle').value,
+                location: document.getElementById('training_location').value,
+                organization: document.getElementById('training_organization').value,
+                startDate: startDate,
+                endDate: endDate
+            };
+            
+            try {
+                const result = await callGoogleScript(TRAINING_SCRIPT_URL, 'add', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetTrainingForm();
+                    await loadTrainingData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في الإضافة`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        async function editTrainingRecord(recordId) {
+            showNotification('🔍 جاري تحميل بيانات سجل التدريب...', 'info');
+            
+            const record = trainingRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (record) {
+                fillTrainingForm(record);
+                document.getElementById('training_updateBtn').style.display = 'inline-block';
+                document.getElementById('training_addBtn').style.display = 'none';
+                showNotification('✅ تم تحميل بيانات سجل التدريب', 'success');
+            } else {
+                showNotification('❌ لم يتم العثور على سجل التدريب', 'error');
+            }
+        }
+        
+        function fillTrainingForm(record) {
+            document.getElementById('training_id').value = record[0] || '';
+            document.getElementById('training_year').value = record[1] || '';
+            document.getElementById('training_employeeNumber').value = record[2] || '';
+            document.getElementById('training_name').value = record[3] || '';
+            document.getElementById('training_jobTitle').value = record[4] || '';
+            document.getElementById('training_trainingNeed').value = record[5] || '';
+            document.getElementById('training_trainingTitle').value = record[6] || '';
+            document.getElementById('training_location').value = record[7] || '';
+            document.getElementById('training_organization').value = record[8] || '';
+            
+            const startDate = formatDateForInput(record[9] || '');
+            document.getElementById('training_startDate_day').value = startDate.day;
+            document.getElementById('training_startDate_month').value = startDate.month;
+            document.getElementById('training_startDate_year').value = startDate.year;
+            
+            const endDate = formatDateForInput(record[10] || '');
+            document.getElementById('training_endDate_day').value = endDate.day;
+            document.getElementById('training_endDate_month').value = endDate.month;
+            document.getElementById('training_endDate_year').value = endDate.year;
+            
+            document.getElementById('training_editingId').value = record[0];
+        }
+        
+        async function updateTrainingRecord() {
+            const recordId = document.getElementById('training_editingId').value;
+            if (!recordId) {
+                showNotification('❌ لم يتم تحديد سجل تدريب للتحديث', 'error');
+                return;
+            }
+            
+            const button = document.getElementById('training_updateBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
+            
+            const startDate = getDateString(
+                document.getElementById('training_startDate_day').value,
+                document.getElementById('training_startDate_month').value,
+                document.getElementById('training_startDate_year').value
+            );
+            
+            const endDate = getDateString(
+                document.getElementById('training_endDate_day').value,
+                document.getElementById('training_endDate_month').value,
+                document.getElementById('training_endDate_year').value
+            );
+            
+            const formData = {
+                id: document.getElementById('training_id').value,
+                year: document.getElementById('training_year').value,
+                employeeNumber: document.getElementById('training_employeeNumber').value,
+                name: document.getElementById('training_name').value,
+                jobTitle: document.getElementById('training_jobTitle').value,
+                trainingNeed: document.getElementById('training_trainingNeed').value,
+                trainingTitle: document.getElementById('training_trainingTitle').value,
+                location: document.getElementById('training_location').value,
+                organization: document.getElementById('training_organization').value,
+                startDate: startDate,
+                endDate: endDate
+            };
+            
+            try {
+                const result = await callGoogleScript(TRAINING_SCRIPT_URL, 'update', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetTrainingForm();
+                    await loadTrainingData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في التحديث`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        function resetTrainingForm() {
+            document.getElementById('trainingForm').reset();
+            document.getElementById('training_editingId').value = '';
+            document.getElementById('training_addBtn').style.display = 'inline-block';
+            document.getElementById('training_updateBtn').style.display = 'none';
+            document.querySelectorAll('#trainingForm .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+        }
+        
+        function exportTrainingCSV() {
+            if (trainingRecords.length === 0) {
+                showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
+                return;
+            }
+            
+            showNotification('📥 جاري تصدير سجلات التدريب...', 'info');
+            
+            try {
+                const headers = [
+                    'م', 'العام', 'الرقم الوظيفي', 'الاسم', 'الوظيفة',
+                    'الاحتياج التدريبي / الهدف من التدريب', 'مسمى التدريب',
+                    'مكان الانعقاد', 'الجهة', 'تاريخ البداية', 'تاريخ الانتهاء'
+                ];
+                
+                let csvContent = '\uFEFF';
+                csvContent += headers.join(",") + "\r\n";
+                
+                trainingRecords.forEach(record => {
+                    const row = [
+                        record[0] || '',
+                        record[1] || '',
+                        record[2] || '',
+                        record[3] || '',
+                        record[4] || '',
+                        record[5] || '',
+                        record[6] || '',
+                        record[7] || '',
+                        record[8] || '',
+                        formatDate(record[9] || ''),
+                        formatDate(record[10] || '')
+                    ];
+                    
+                    const escapedRow = row.map(cell => {
+                        return `"${cell.toString().replace(/"/g, '""')}"`;
+                    });
+                    csvContent += escapedRow.join(",") + "\r\n";
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `سجلات_التدريب_${new Date().toISOString().slice(0,10)}.csv`);
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification(`✅ تم تصدير ${trainingRecords.length} سجل`, 'success');
             } catch (error) {
                 showNotification(`❌ خطأ في التصدير`, 'error');
             }
@@ -5084,6 +6368,10 @@
                     record = environmentalRecords.find(r => String(r[0] || '').trim() === String(recordId).trim());
                     title = 'سجل الظروف البيئية';
                     break;
+                case 'training':
+                    record = trainingRecords.find(r => String(r[0] || '').trim() === String(recordId).trim());
+                    title = 'سجل التدريب';
+                    break;
                 default:
                     showNotification('❌ نظام غير معروف', 'error');
                     return;
@@ -5124,6 +6412,9 @@
                     break;
                 case 'environmental':
                     detailsHTML = generateEnvironmentalDetails(record, title);
+                    break;
+                case 'training':
+                    detailsHTML = generateTrainingDetails(record, title);
                     break;
             }
             
@@ -5246,7 +6537,7 @@
             `;
         }
         
-        function generateSupplierDetails(record, title) {
+               function generateSupplierDetails(record, title) {
             return `
                 <div class="modal fade" id="detailsModal" tabindex="-1">
                     <div class="modal-dialog modal-lg">
@@ -5567,6 +6858,43 @@
             `;
         }
         
+        function generateTrainingDetails(record, title) {
+            return `
+                <div class="modal fade" id="detailsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header modal-header-custom">
+                                <h5 class="modal-title">${title}: ${escapeHtml(record[0])}</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>م (رقم السجل):</strong> ${escapeHtml(record[0])}</p>
+                                        <p><strong>العام:</strong> ${escapeHtml(record[1])}</p>
+                                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[2])}</p>
+                                        <p><strong>الاسم:</strong> ${escapeHtml(record[3])}</p>
+                                        <p><strong>الوظيفة:</strong> ${escapeHtml(record[4])}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>مسمى التدريب:</strong> ${escapeHtml(record[6])}</p>
+                                        <p><strong>مكان الانعقاد:</strong> ${escapeHtml(record[7])}</p>
+                                        <p><strong>الجهة:</strong> ${escapeHtml(record[8])}</p>
+                                        <p><strong>تاريخ البداية:</strong> ${formatDate(record[9])}</p>
+                                        <p><strong>تاريخ الانتهاء:</strong> ${formatDate(record[10])}</p>
+                                    </div>
+                                </div>
+                                ${record[5] ? `<p><strong>الاحتياج التدريبي / الهدف من التدريب:</strong> ${escapeHtml(record[5])}</p>` : ''}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
         // ================ DELETE FUNCTIONALITY ================
         function showDeleteModal(recordId, recordName, systemType) {
             deleteRecordId = recordId;
@@ -5588,6 +6916,7 @@
                 case 'fmea': systemName = 'تحليل المخاطر (FMEA)'; break;
                 case 'corrective': systemName = 'السجلات التصحيحية'; break;
                 case 'environmental': systemName = 'الظروف البيئية'; break;
+                case 'training': systemName = 'إدارة التدريب'; break;
                 default: systemName = 'غير معروف';
             }
             
@@ -5652,6 +6981,10 @@
                         scriptUrl = ENVIRONMENTAL_SCRIPT_URL;
                         deleteParam = { recordId: deleteRecordId };
                         break;
+                    case 'training':
+                        scriptUrl = TRAINING_SCRIPT_URL;
+                        deleteParam = { id: deleteRecordId };
+                        break;
                     default:
                         throw new Error('نظام غير معروف');
                 }
@@ -5684,7 +7017,8 @@
         function updateTotalRecordsCount() {
             const total = calibrationRecords.length + impartialityRecords.length + contractRecords.length + 
                          supplierRecords.length + calibrationMgmtRecords.length + maintenanceRecords.length + 
-                         devicesRecords.length + fmeaRecords.length + correctiveRecords.length + environmentalRecords.length;
+                         devicesRecords.length + fmeaRecords.length + correctiveRecords.length + 
+                         environmentalRecords.length + trainingRecords.length;
             document.getElementById('totalRecords').textContent = total.toLocaleString('ar-SA');
         }
     </script>
