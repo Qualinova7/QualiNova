@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تحليل المخاطر (FMEA) - معمل كواليتك إنترناشيونال</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --fmea-color: #7d3c98;
+        }
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, var(--fmea-color), #5e3370);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .main-header .lead {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .header-badge {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Home Button - NEWLY ADDED */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .home-button:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .home-button i {
+            margin-right: 5px;
+        }
+        
+        /* Card Styles */
+        .custom-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card-header-custom {
+            padding: 15px 20px;
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+        }
+        
+        .card-header-fmea {
+            background: linear-gradient(135deg, var(--fmea-color), #7d3c98);
+        }
+        
+        /* Form Styles */
+        .form-control-custom, .form-select-custom, .form-textarea-custom {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
+            border-color: var(--fmea-color);
+            box-shadow: 0 0 0 0.25rem rgba(125, 60, 152, 0.25);
+            background: white;
+        }
+        
+        .form-textarea-custom {
+            min-height: 70px;
+            resize: vertical;
+        }
+        
+        .form-label-custom {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+        
+        .table-custom {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0;
+            min-width: 1200px;
+            width: 100%;
+        }
+        
+        .table-custom thead th {
+            background: linear-gradient(135deg, var(--fmea-color), #5e3370);
+            color: white;
+            border: none;
+            padding: 15px 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        
+        .table-custom tbody tr {
+            transition: all 0.2s;
+        }
+        
+        .table-custom tbody tr:hover {
+            background-color: rgba(125, 60, 152, 0.08);
+        }
+        
+        .table-custom tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+        
+        /* Action Buttons */
+        .action-buttons .btn {
+            margin: 0 2px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            min-width: 70px;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            padding: 15px 20px;
+            color: white;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: #212529;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        .spinner-border-custom {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-width: 0.2rem;
+        }
+        
+        /* RPN Color Coding */
+        .rpn-high {
+            background: #ff4d4d !important;
+            color: white !important;
+            font-weight: bold;
+        }
+        
+        .rpn-medium {
+            background: #ffc107 !important;
+            color: #212529 !important;
+            font-weight: bold;
+        }
+        
+        .rpn-low {
+            background: #28a745 !important;
+            color: white !important;
+            font-weight: bold;
+        }
+        
+        /* Responsive - UPDATED FOR HOME BUTTON */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons .btn {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                margin: 1px;
+                min-width: 60px;
+            }
+            
+            .table-custom {
+                min-width: 1000px;
+            }
+            
+            /* Home button responsive adjustments */
+            .home-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+            
+            .main-header {
+                padding-top: 60px;
+            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--fmea-color);
+            border-radius: 10px;
+        }
+        
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        /* Badge styles */
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        /* Score indicators */
+        .score-indicator {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        
+        .score-low {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .score-medium {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .score-high {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--fmea-color), #5e3370);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        /* Risk Matrix */
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            gap: 1px;
+            background-color: #ddd;
+            border: 2px solid #333;
+            margin: 20px 0;
+        }
+        
+        .risk-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .risk-low { background-color: #28a745; color: white; }
+        .risk-medium { background-color: #ffc107; color: #212529; }
+        .risk-high { background-color: #dc3545; color: white; }
+        
+        .matrix-label {
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+    
+    <!-- Main Container -->
+    <div class="container-fluid main-container">
+        <!-- Main Header - UPDATED WITH HOME BUTTON -->
+        <div class="main-header fade-in">
+            <!-- Return to Home Button - NEWLY ADDED -->
+            <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
+                <i class="fas fa-home"></i> العودة للرئيسية
+            </a>
+            
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-exclamation-triangle me-2"></i> نظام تحليل المخاطر (FMEA) - معمل كواليتك إنترناشيونال</h1>
+                    <p class="lead mb-0">نظام تحليل أنماط الفشل وتأثيراتها (Failure Mode and Effects Analysis)</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="header-badge d-inline-block me-3">
+                        <i class="fas fa-database me-2"></i>
+                        <span id="totalRecords">0</span> سجلات
+                    </div>
+                    <div class="header-badge d-inline-block">
+                        <i class="fas fa-calendar me-2"></i>
+                        <span id="currentDate">--/--/----</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Risk Matrix Info -->
+        <div class="row mb-4 fade-in">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-fmea">
+                        <i class="fas fa-chart-bar me-2"></i> مصفوفة تقييم المخاطر (RPN)
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="risk-matrix">
+                                    <!-- Column headers -->
+                                    <div class="matrix-label"></div>
+                                    <div class="matrix-label">1</div>
+                                    <div class="matrix-label">2</div>
+                                    <div class="matrix-label">3</div>
+                                    <div class="matrix-label">4</div>
+                                    <div class="matrix-label">5</div>
+                                    <div class="matrix-label">6</div>
+                                    <div class="matrix-label">7</div>
+                                    <div class="matrix-label">8</div>
+                                    <div class="matrix-label">9</div>
+                                    <div class="matrix-label">10</div>
+                                    
+                                    <!-- Row 1 -->
+                                    <div class="matrix-label">1</div>
+                                    <div class="risk-cell risk-low">1</div>
+                                    <div class="risk-cell risk-low">2</div>
+                                    <div class="risk-cell risk-low">3</div>
+                                    <div class="risk-cell risk-low">4</div>
+                                    <div class="risk-cell risk-low">5</div>
+                                    <div class="risk-cell risk-low">6</div>
+                                    <div class="risk-cell risk-low">7</div>
+                                    <div class="risk-cell risk-low">8</div>
+                                    <div class="risk-cell risk-low">9</div>
+                                    <div class="risk-cell risk-low">10</div>
+                                    
+                                    <!-- Row 2 -->
+                                    <div class="matrix-label">2</div>
+                                    <div class="risk-cell risk-low">2</div>
+                                    <div class="risk-cell risk-low">4</div>
+                                    <div class="risk-cell risk-low">6</div>
+                                    <div class="risk-cell risk-low">8</div>
+                                    <div class="risk-cell risk-low">10</div>
+                                    <div class="risk-cell risk-low">12</div>
+                                    <div class="risk-cell risk-low">14</div>
+                                    <div class="risk-cell risk-low">16</div>
+                                    <div class="risk-cell risk-low">18</div>
+                                    <div class="risk-cell risk-low">20</div>
+                                    
+                                    <!-- Row 3 -->
+                                    <div class="matrix-label">3</div>
+                                    <div class="risk-cell risk-low">3</div>
+                                    <div class="risk-cell risk-low">6</div>
+                                    <div class="risk-cell risk-low">9</div>
+                                    <div class="risk-cell risk-low">12</div>
+                                    <div class="risk-cell risk-low">15</div>
+                                    <div class="risk-cell risk-low">18</div>
+                                    <div class="risk-cell risk-low">21</div>
+                                    <div class="risk-cell risk-low">24</div>
+                                    <div class="risk-cell risk-low">27</div>
+                                    <div class="risk-cell risk-low">30</div>
+                                    
+                                    <!-- Row 4 -->
+                                    <div class="matrix-label">4</div>
+                                    <div class="risk-cell risk-low">4</div>
+                                    <div class="risk-cell risk-low">8</div>
+                                    <div class="risk-cell risk-low">12</div>
+                                    <div class="risk-cell risk-low">16</div>
+                                    <div class="risk-cell risk-low">20</div>
+                                    <div class="risk-cell risk-low">24</div>
+                                    <div class="risk-cell risk-low">28</div>
+                                    <div class="risk-cell risk-low">32</div>
+                                    <div class="risk-cell risk-low">36</div>
+                                    <div class="risk-cell risk-low">40</div>
+                                    
+                                    <!-- Row 5 -->
+                                    <div class="matrix-label">5</div>
+                                    <div class="risk-cell risk-low">5</div>
+                                    <div class="risk-cell risk-low">10</div>
+                                    <div class="risk-cell risk-low">15</div>
+                                    <div class="risk-cell risk-low">20</div>
+                                    <div class="risk-cell risk-low">25</div>
+                                    <div class="risk-cell risk-low">30</div>
+                                    <div class="risk-cell risk-low">35</div>
+                                    <div class="risk-cell risk-low">40</div>
+                                    <div class="risk-cell risk-low">45</div>
+                                    <div class="risk-cell risk-low">50</div>
+                                    
+                                    <!-- Row 6 -->
+                                    <div class="matrix-label">6</div>
+                                    <div class="risk-cell risk-medium">6</div>
+                                    <div class="risk-cell risk-medium">12</div>
+                                    <div class="risk-cell risk-medium">18</div>
+                                    <div class="risk-cell risk-medium">24</div>
+                                    <div class="risk-cell risk-medium">30</div>
+                                    <div class="risk-cell risk-medium">36</div>
+                                    <div class="risk-cell risk-medium">42</div>
+                                    <div class="risk-cell risk-medium">48</div>
+                                    <div class="risk-cell risk-medium">54</div>
+                                    <div class="risk-cell risk-medium">60</div>
+                                    
+                                    <!-- Row 7 -->
+                                    <div class="matrix-label">7</div>
+                                    <div class="risk-cell risk-medium">7</div>
+                                    <div class="risk-cell risk-medium">14</div>
+                                    <div class="risk-cell risk-medium">21</div>
+                                    <div class="risk-cell risk-medium">28</div>
+                                    <div class="risk-cell risk-medium">35</div>
+                                    <div class="risk-cell risk-medium">42</div>
+                                    <div class="risk-cell risk-medium">49</div>
+                                    <div class="risk-cell risk-medium">56</div>
+                                    <div class="risk-cell risk-medium">63</div>
+                                    <div class="risk-cell risk-medium">70</div>
+                                    
+                                    <!-- Row 8 -->
+                                    <div class="matrix-label">8</div>
+                                    <div class="risk-cell risk-medium">8</div>
+                                    <div class="risk-cell risk-medium">16</div>
+                                    <div class="risk-cell risk-medium">24</div>
+                                    <div class="risk-cell risk-medium">32</div>
+                                    <div class="risk-cell risk-medium">40</div>
+                                    <div class="risk-cell risk-medium">48</div>
+                                    <div class="risk-cell risk-medium">56</div>
+                                    <div class="risk-cell risk-medium">64</div>
+                                    <div class="risk-cell risk-medium">72</div>
+                                    <div class="risk-cell risk-medium">80</div>
+                                    
+                                    <!-- Row 9 -->
+                                    <div class="matrix-label">9</div>
+                                    <div class="risk-cell risk-high">9</div>
+                                    <div class="risk-cell risk-high">18</div>
+                                    <div class="risk-cell risk-high">27</div>
+                                    <div class="risk-cell risk-high">36</div>
+                                    <div class="risk-cell risk-high">45</div>
+                                    <div class="risk-cell risk-high">54</div>
+                                    <div class="risk-cell risk-high">63</div>
+                                    <div class="risk-cell risk-high">72</div>
+                                    <div class="risk-cell risk-high">81</div>
+                                    <div class="risk-cell risk-high">90</div>
+                                    
+                                    <!-- Row 10 -->
+                                    <div class="matrix-label">10</div>
+                                    <div class="risk-cell risk-high">10</div>
+                                    <div class="risk-cell risk-high">20</div>
+                                    <div class="risk-cell risk-high">30</div>
+                                    <div class="risk-cell risk-high">40</div>
+                                    <div class="risk-cell risk-high">50</div>
+                                    <div class="risk-cell risk-high">60</div>
+                                    <div class="risk-cell risk-high">70</div>
+                                    <div class="risk-cell risk-high">80</div>
+                                    <div class="risk-cell risk-high">90</div>
+                                    <div class="risk-cell risk-high">100</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>تفسير درجات RPN:</h5>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">منخفض</span>
+                                    <span>RPN ≤ 50</span>
+                                    <p class="text-muted small mt-1">مخاطرة مقبولة - لا تتطلب إجراءات تصحيحية</p>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning text-dark me-2">متوسط</span>
+                                    <span>50 < RPN < 200</span>
+                                    <p class="text-muted small mt-1">مخاطرة متوسطة - تتطلب مراقبة وتحسين</p>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="badge bg-danger me-2">مرتفع</span>
+                                    <span>RPN ≥ 200</span>
+                                    <p class="text-muted small mt-1">مخاطرة عالية - تتطلب إجراءات تصحيحية فورية</p>
+                                </div>
+                                
+                                <h5 class="mt-4">مقاييس التقييم:</h5>
+                                <p><strong>التكرار (O):</strong> 1 (نادر جداً) إلى 10 (متكرر جداً)</p>
+                                <p><strong>الشدة (S):</strong> 1 (غير خطير) إلى 10 (خطير جداً)</p>
+                                <p><strong>الكشف (D):</strong> 1 (كشف أكيد) إلى 10 (كشف غير مؤكد)</p>
+                                <p class="text-muted small">RPN = O × S × D</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-fmea">
+                        <i class="fas fa-exclamation-triangle me-2"></i> إضافة تحليل مخاطر جديد
+                    </div>
+                    <div class="card-body">
+                        <form id="fmeaForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label-custom">الجهاز / العملية *</label>
+                                    <input type="text" class="form-control form-control-custom" id="fmea_device" placeholder="اسم الجهاز أو العملية" required>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label-custom">نمط الفشل / العطل *</label>
+                                    <input type="text" class="form-control form-control-custom" id="fmea_failure" placeholder="وصف نمط الفشل أو العطل" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label-custom">تأثير الفشل *</label>
+                                    <textarea class="form-control form-textarea-custom" id="fmea_effect" placeholder="تأثير الفشل على المنتج/العميل/العملية" required rows="3"></textarea>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label-custom">سبب الفشل *</label>
+                                    <textarea class="form-control form-textarea-custom" id="fmea_cause" placeholder="الأسباب المحتملة للفشل" required rows="3"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">معدل التكرار (O) *</label>
+                                    <select class="form-select form-select-custom" id="fmea_occurrence" required>
+                                        <option value="">اختر من 1-10</option>
+                                        <option value="1">1 - نادر جداً (أقل من مرة في السنة)</option>
+                                        <option value="2">2 - نادر (مرة في السنة)</option>
+                                        <option value="3">3 - نادر نسبياً (مرة في 6 أشهر)</option>
+                                        <option value="4">4 - ممكن (مرة في 3 أشهر)</option>
+                                        <option value="5">5 - متكرر قليلاً (مرة في الشهر)</option>
+                                        <option value="6">6 - متكرر (مرة في الأسبوع)</option>
+                                        <option value="7">7 - متكرر جداً (عدة مرات أسبوعياً)</option>
+                                        <option value="8">8 - شبه دائم (مرة يومياً)</option>
+                                        <option value="9">9 - دائم (عدة مرات يومياً)</option>
+                                        <option value="10">10 - متكرر جداً ودائم (دائماً)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">درجة الشدة (S) *</label>
+                                    <select class="form-select form-select-custom" id="fmea_severity" required>
+                                        <option value="">اختر من 1-10</option>
+                                        <option value="1">1 - غير ملحوظ (لا تأثير)</option>
+                                        <option value="2">2 - طفيف جداً (تأثير بسيط جداً)</option>
+                                        <option value="3">3 - طفيف (تأثير بسيط)</option>
+                                        <option value="4">4 - طفيف إلى متوسط</option>
+                                        <option value="5">5 - متوسط (تأثير محدد)</option>
+                                        <option value="6">6 - متوسط إلى مرتفع</option>
+                                        <option value="7">7 - مرتفع (تأثير كبير)</option>
+                                        <option value="8">8 - مرتفع جداً (تأثير خطير)</option>
+                                        <option value="9">9 - خطير جداً (توقف العملية)</option>
+                                        <option value="10">10 - كارثي (تأثير على السلامة)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">معدل الكشف (D) *</label>
+                                    <select class="form-select form-select-custom" id="fmea_detection" required>
+                                        <option value="">اختر من 1-10</option>
+                                        <option value="1">1 - أكيد جداً (كشف تلقائي 100%)</option>
+                                        <option value="2">2 - أكيد (كشف آلي)</option>
+                                        <option value="3">3 - مرتفع (كشف بالعين المجردة)</option>
+                                        <option value="4">4 - مرتفع إلى متوسط</option>
+                                        <option value="5">5 - متوسط (فحص روتيني)</option>
+                                        <option value="6">6 - متوسط إلى منخفض</option>
+                                        <option value="7">7 - منخفض (فحص عشوائي)</option>
+                                        <option value="8">8 - منخفض جداً (فحص نادر)</option>
+                                        <option value="9">9 - غير مؤكد (كشف صعب)</option>
+                                        <option value="10">10 - غير ممكن (لا يمكن كشفه)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-8 mb-2">
+                                    <label class="form-label-custom">الإجراءات التصحيحية / الوقائية *</label>
+                                    <textarea class="form-control form-textarea-custom" id="fmea_correctiveAction" placeholder="الإجراءات المطلوبة للتقليل من المخاطر" required rows="3"></textarea>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">المسؤول عن التنفيذ *</label>
+                                    <input type="text" class="form-control form-control-custom" id="fmea_responsible" placeholder="اسم المسؤول" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label-custom">تاريخ الإنجاز المستهدف</label>
+                                    <input type="date" class="form-control form-control-custom" id="fmea_targetDate">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label-custom">الحالة</label>
+                                    <select class="form-select form-select-custom" id="fmea_status">
+                                        <option value="مفتوحة">مفتوحة</option>
+                                        <option value="قيد التنفيذ">قيد التنفيذ</option>
+                                        <option value="مكتملة">مكتملة</option>
+                                        <option value="ملغاة">ملغاة</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <label class="form-label-custom">ملاحظات إضافية</label>
+                                    <textarea class="form-control form-textarea-custom" id="fmea_notes" placeholder="ملاحظات إضافية" rows="2"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button type="button" onclick="resetFmeaForm()" class="btn btn-outline-secondary">
+                                        <i class="fas fa-redo me-1"></i> مسح النموذج
+                                    </button>
+                                    <div>
+                                        <button type="button" onclick="addFmeaRecord()" class="btn btn-success me-2" id="fmea_addBtn">
+                                            <i class="fas fa-plus me-1"></i> إضافة تحليل جديد
+                                        </button>
+                                        <button type="button" onclick="updateFmeaRecord()" class="btn btn-primary" id="fmea_updateBtn" style="display: none;">
+                                            <i class="fas fa-save me-1"></i> تحديث التحليل
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="fmea_rowNumber">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Records Table Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-fmea d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-list me-2"></i> قائمة تحليلات المخاطر</span>
+                        <div>
+                            <button onclick="loadFmeaData()" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-sync-alt"></i> تحديث القائمة
+                            </button>
+                            <button onclick="exportFmeaCSV()" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-download"></i> تصدير CSV
+                            </button>
+                            <button onclick="printReport()" class="btn btn-light btn-sm">
+                                <i class="fas fa-print"></i> طباعة التقرير
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="loading-spinner" id="fmeaLoadingSpinner">
+                            <div class="spinner-border text-primary spinner-border-custom" role="status">
+                                <span class="visually-hidden">جاري التحميل...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive" id="fmeaTableContainer" style="display: none;">
+                            <table class="table table-custom table-hover" id="fmeaDataTable">
+                            </table>
+                        </div>
+                        
+                        <div id="fmeaNoRecords" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-exclamation-triangle fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted">لا توجد تحليلات مخاطر لعرضها</h4>
+                            <p class="text-muted">قم بإضافة تحليل مخاطر جديد باستخدام النموذج أعلاه</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics Section -->
+        <div class="row mt-4">
+            <div class="col-md-3 mb-3">
+                <div class="custom-card">
+                    <div class="card-body text-center">
+                        <h1 class="display-5 text-success" id="lowRiskCount">0</h1>
+                        <p class="text-muted">مخاطر منخفضة</p>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" id="lowRiskBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="custom-card">
+                    <div class="card-body text-center">
+                        <h1 class="display-5 text-warning" id="mediumRiskCount">0</h1>
+                        <p class="text-muted">مخاطر متوسطة</p>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-warning" id="mediumRiskBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="custom-card">
+                    <div class="card-body text-center">
+                        <h1 class="display-5 text-danger" id="highRiskCount">0</h1>
+                        <p class="text-muted">مخاطر مرتفعة</p>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-danger" id="highRiskBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="custom-card">
+                    <div class="card-body text-center">
+                        <h1 class="display-5 text-primary" id="totalRPN">0</h1>
+                        <p class="text-muted">متوسط RPN</p>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-primary" id="avgRPNBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="row mt-4 fade-in">
+            <div class="col-12 text-center">
+                <p class="text-muted">
+                    <i class="fas fa-copyright me-1"></i> نظام تحليل المخاطر (FMEA) 
+                    <span id="currentYear"></span> | 
+                    <span class="text-info">الإصدار 1.0</span> |
+                    <a href="#" onclick="showHelp()" class="text-decoration-none">
+                        <i class="fas fa-question-circle me-1"></i>مساعدة
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تأكيد حذف تحليل المخاطر</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle fa-2x float-start me-3"></i>
+                        <h5 class="alert-heading">تحذير!</h5>
+                        <p>هل أنت متأكد من حذف تحليل المخاطر هذا؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+                        <hr>
+                        <p class="mb-0"><strong>الجهاز:</strong> <span id="deleteDevice">غير معروف</span></p>
+                        <p class="mb-0"><strong>نمط الفشل:</strong> <span id="deleteFailure">غير معروف</span></p>
+                        <p class="mb-0"><strong>رقم السطر:</strong> <span id="deleteRowNumber">غير معروف</span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i> نعم، احذف التحليل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">دليل استخدام نظام تحليل المخاطر (FMEA)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>ما هو تحليل FMEA؟</h5>
+                    <p>تحليل أنماط الفشل وتأثيراتها (Failure Mode and Effects Analysis) هو أسلوب منهجي لتحديد المخاطر المحتملة في العملية وتقييمها ووضع خطط للتقليل منها.</p>
+                    
+                    <h5 class="mt-4">خطوات استخدام النظام:</h5>
+                    <ol>
+                        <li>أدخل بيانات الجهاز أو العملية المراد تحليل مخاطرها</li>
+                        <li>حدد نمط الفشل أو العطل المحتمل</li>
+                        <li>صف تأثير الفشل وسببه</li>
+                        <li>قم بتقييم ثلاثة عوامل:
+                            <ul>
+                                <li><strong>التكرار (O):</strong> كم مرة يحدث الفشل؟</li>
+                                <li><strong>الشدة (S):</strong> ما مدى خطورة الفشل؟</li>
+                                <li><strong>الكشف (D):</strong> ما مدى سهولة كشف الفشل؟</li>
+                            </ul>
+                        </li>
+                        <li>ضع خطط العمل التصحيحية/الوقائية</li>
+                        <li>حدد المسؤول عن التنفيذ والتاريخ المستهدف</li>
+                    </ol>
+                    
+                    <h5 class="mt-4">تفسير نتائج RPN:</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>نطاق RPN</th>
+                                    <th>التصنيف</th>
+                                    <th>الإجراء المطلوب</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1-50</td>
+                                    <td><span class="badge bg-success">منخفض</span></td>
+                                    <td>مقبول - لا يحتاج لإجراء تصحيحي</td>
+                                </tr>
+                                <tr>
+                                    <td>51-100</td>
+                                    <td><span class="badge bg-warning text-dark">متوسط</span></td>
+                                    <td>يتطلب مراقبة وتحسين اختياري</td>
+                                </tr>
+                                <tr>
+                                    <td>101-200</td>
+                                    <td><span class="badge bg-warning text-dark">متوسط إلى مرتفع</span></td>
+                                    <td>يتطلب تحسين في الوقت المناسب</td>
+                                </tr>
+                                <tr>
+                                    <td>201-400</td>
+                                    <td><span class="badge bg-danger">مرتفع</span></td>
+                                    <td>يتطلب إجراء تصحيحي فوري</td>
+                                </tr>
+                                <tr>
+                                    <td>401-1000</td>
+                                    <td><span class="badge bg-danger">مرتفع جداً</span></td>
+                                    <td>يتطلب إجراء تصحيحي فوري وإعادة تصميم</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // ================ CONFIGURATION ================
+        const FMEA_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby314ii-A-5OQrfCpd14wGcEXBIuQh9qlrFccf14QmRKuz9WbwtRp7lzuhERVw67UAzVg/exec";
+        
+        // ================ GLOBAL VARIABLES ================
+        let fmeaRecords = [];
+        let deleteRowNumber = '';
+        let deleteDevice = '';
+        let deleteFailure = '';
+        
+        // ================ INITIALIZATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date and year
+            setCurrentDate();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Load FMEA data
+            loadFmeaData();
+            
+            // Initialize score display
+            updateScoreDisplay();
+            
+            // Set up event listeners for score calculation
+            document.getElementById('fmea_occurrence').addEventListener('change', updateScoreDisplay);
+            document.getElementById('fmea_severity').addEventListener('change', updateScoreDisplay);
+            document.getElementById('fmea_detection').addEventListener('change', updateScoreDisplay);
+        });
+        
+        // ================ DATE FUNCTIONS ================
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        const day = parts[0].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[2];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        const day = parts[2].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[0];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                return dateString;
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        // ================ API COMMUNICATION FUNCTIONS ================
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+                const timeout = 60000;
+                
+                const timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Request timeout'));
+                }, timeout);
+                
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    delete window[callbackName];
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script) script.remove();
+                }
+                
+                window[callbackName] = function(response) {
+                    cleanup();
+                    resolve(response);
+                };
+                
+                const script = document.createElement('script');
+                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+                script.setAttribute('data-callback', callbackName);
+                script.onerror = function() {
+                    cleanup();
+                    reject(new Error('Failed to load script'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        function callGoogleScript(scriptUrl, action, data = {}) {
+            let url = scriptUrl + '?action=' + action;
+            
+            for (const key in data) {
+                if (data[key] !== undefined && data[key] !== null) {
+                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+                }
+            }
+            
+            return jsonp(url);
+        }
+        
+        // ================ NOTIFICATION FUNCTIONS ================
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-${getNotificationIcon(type)} me-3"></i>
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, duration);
+            }
+            
+            return notification;
+        }
+        
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                default: return 'info-circle';
+            }
+        }
+        
+        // ================ HELPER FUNCTIONS ================
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        function updateScoreDisplay() {
+            const occurrence = parseInt(document.getElementById('fmea_occurrence').value) || 0;
+            const severity = parseInt(document.getElementById('fmea_severity').value) || 0;
+            const detection = parseInt(document.getElementById('fmea_detection').value) || 0;
+            const rpn = occurrence * severity * detection;
+            
+            // Update the form with RPN if we want to show it live
+            // This is just for visual feedback
+        }
+        
+        function calculateRPN(occurrence, severity, detection) {
+            return occurrence * severity * detection;
+        }
+        
+        function getRiskLevel(rpn) {
+            if (rpn <= 50) return 'منخفض';
+            if (rpn <= 200) return 'متوسط';
+            return 'مرتفع';
+        }
+        
+        function getRiskClass(rpn) {
+            if (rpn <= 50) return 'rpn-low';
+            if (rpn <= 200) return 'rpn-medium';
+            return 'rpn-high';
+        }
+        
+        // ================ FMEA DATA FUNCTIONS ================
+        async function loadFmeaData() {
+            const spinner = document.getElementById('fmeaLoadingSpinner');
+            const tableContainer = document.getElementById('fmeaTableContainer');
+            const noRecords = document.getElementById('fmeaNoRecords');
+            
+            spinner.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            noRecords.style.display = 'none';
+            
+            try {
+                const result = await callGoogleScript(FMEA_SCRIPT_URL, 'getAll');
+                
+                spinner.style.display = 'none';
+                
+                if (result.status === 'success') {
+                    fmeaRecords = result.data;
+                    
+                    if (fmeaRecords.length > 0) {
+                        displayFmeaRecords(fmeaRecords);
+                        tableContainer.style.display = 'block';
+                        updateStatistics();
+                    } else {
+                        noRecords.style.display = 'block';
+                    }
+                } else {
+                    noRecords.style.display = 'block';
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                spinner.style.display = 'none';
+                noRecords.style.display = 'block';
+                showNotification(`❌ خطأ في تحميل تحليل المخاطر`, 'error');
+            }
+        }
+        
+        function displayFmeaRecords(records) {
+            const table = document.getElementById('fmeaDataTable');
+            
+            let html = '<thead><tr>';
+            const headers = ['#', 'الجهاز', 'نمط الفشل', 'التأثير', 'السبب', 'التكرار (O)', 'الشدة (S)', 'الكشف (D)', 'RPN', 'المستوى', 'الإجراءات', 'المسؤول', 'الحالة', 'الإجراءات'];
+            headers.forEach(h => {
+                html += `<th>${h}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            records.forEach((record, index) => {
+                const occurrence = parseInt(record[4] || 0);
+                const severity = parseInt(record[5] || 0);
+                const detection = parseInt(record[6] || 0);
+                const rpn = calculateRPN(occurrence, severity, detection);
+                const riskLevel = getRiskLevel(rpn);
+                const riskClass = getRiskClass(rpn);
+                
+                html += '<tr>';
+                html += `<td>${index + 1}</td>`;
+                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
+                html += `<td>${escapeHtml(record[1] || '')}</td>`;
+                html += `<td>${escapeHtml(record[2] || '').substring(0, 30)}${escapeHtml(record[2] || '').length > 30 ? '...' : ''}</td>`;
+                html += `<td>${escapeHtml(record[3] || '').substring(0, 30)}${escapeHtml(record[3] || '').length > 30 ? '...' : ''}</td>`;
+                html += `<td class="text-center"><span class="score-indicator ${occurrence >= 7 ? 'score-high' : occurrence >= 4 ? 'score-medium' : 'score-low'}">${occurrence}</span></td>`;
+                html += `<td class="text-center"><span class="score-indicator ${severity >= 7 ? 'score-high' : severity >= 4 ? 'score-medium' : 'score-low'}">${severity}</span></td>`;
+                html += `<td class="text-center"><span class="score-indicator ${detection >= 7 ? 'score-high' : detection >= 4 ? 'score-medium' : 'score-low'}">${detection}</span></td>`;
+                html += `<td class="text-center ${riskClass}">${rpn}</td>`;
+                html += `<td><span class="badge ${riskClass === 'rpn-high' ? 'bg-danger' : riskClass === 'rpn-medium' ? 'bg-warning text-dark' : 'bg-success'}">${riskLevel}</span></td>`;
+                html += `<td>${escapeHtml(record[7] || '').substring(0, 30)}${escapeHtml(record[7] || '').length > 30 ? '...' : ''}</td>`;
+                html += `<td>${escapeHtml(record[8] || '')}</td>`;
+                
+                let statusClass = 'badge bg-secondary';
+                const status = record[9] || 'مفتوحة';
+                if (status === 'مفتوحة') {
+                    statusClass = 'badge bg-danger';
+                } else if (status === 'قيد التنفيذ') {
+                    statusClass = 'badge bg-warning text-dark';
+                } else if (status === 'مكتملة') {
+                    statusClass = 'badge bg-success';
+                } else if (status === 'ملغاة') {
+                    statusClass = 'badge bg-secondary';
+                }
+                html += `<td><span class="${statusClass}">${status}</span></td>`;
+                
+                html += `<td class="action-buttons">
+                    <button onclick="editFmeaRecord(${index + 2})" class="btn btn-sm btn-primary" title="تعديل">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="showDeleteModal(${index + 2}, '${escapeHtml(record[0])}', '${escapeHtml(record[1])}')" class="btn btn-sm btn-danger" title="حذف">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button onclick="viewFmeaDetails(${index})" class="btn btn-sm btn-info" title="عرض التفاصيل">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>`;
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+            
+            // Update total records count
+            document.getElementById('totalRecords').textContent = records.length.toLocaleString('ar-SA');
+        }
+        
+        function updateStatistics() {
+            let lowRisk = 0;
+            let mediumRisk = 0;
+            let highRisk = 0;
+            let totalRPN = 0;
+            
+            fmeaRecords.forEach(record => {
+                const occurrence = parseInt(record[4] || 0);
+                const severity = parseInt(record[5] || 0);
+                const detection = parseInt(record[6] || 0);
+                const rpn = calculateRPN(occurrence, severity, detection);
+                
+                totalRPN += rpn;
+                
+                if (rpn <= 50) {
+                    lowRisk++;
+                } else if (rpn <= 200) {
+                    mediumRisk++;
+                } else {
+                    highRisk++;
+                }
+            });
+            
+            const totalRecords = fmeaRecords.length;
+            const avgRPN = totalRecords > 0 ? Math.round(totalRPN / totalRecords) : 0;
+            
+            // Update counts
+            document.getElementById('lowRiskCount').textContent = lowRisk;
+            document.getElementById('mediumRiskCount').textContent = mediumRisk;
+            document.getElementById('highRiskCount').textContent = highRisk;
+            document.getElementById('totalRPN').textContent = avgRPN;
+            
+            // Update progress bars
+            if (totalRecords > 0) {
+                document.getElementById('lowRiskBar').style.width = `${(lowRisk / totalRecords) * 100}%`;
+                document.getElementById('mediumRiskBar').style.width = `${(mediumRisk / totalRecords) * 100}%`;
+                document.getElementById('highRiskBar').style.width = `${(highRisk / totalRecords) * 100}%`;
+                document.getElementById('avgRPNBar').style.width = `${Math.min(avgRPN / 10, 100)}%`;
+            }
+        }
+        
+        // ================ FMEA FORM FUNCTIONS ================
+        async function addFmeaRecord() {
+            const requiredFields = ['fmea_device', 'fmea_failure', 'fmea_effect', 'fmea_cause', 
+                                 'fmea_occurrence', 'fmea_severity', 'fmea_detection',
+                                 'fmea_correctiveAction', 'fmea_responsible'];
+            
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                showNotification('⚠️ يرجى ملء جميع الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            const button = document.getElementById('fmea_addBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
+            
+            const formData = {
+                device: document.getElementById('fmea_device').value,
+                failure: document.getElementById('fmea_failure').value,
+                effect: document.getElementById('fmea_effect').value,
+                cause: document.getElementById('fmea_cause').value,
+                occurrence: document.getElementById('fmea_occurrence').value,
+                severity: document.getElementById('fmea_severity').value,
+                detection: document.getElementById('fmea_detection').value,
+                correctiveAction: document.getElementById('fmea_correctiveAction').value,
+                responsible: document.getElementById('fmea_responsible').value,
+                targetDate: document.getElementById('fmea_targetDate').value,
+                status: document.getElementById('fmea_status').value,
+                notes: document.getElementById('fmea_notes').value
+            };
+            
+            try {
+                const result = await callGoogleScript(FMEA_SCRIPT_URL, 'add', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetFmeaForm();
+                    await loadFmeaData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في إضافة تحليل المخاطر`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        function editFmeaRecord(rowNumber) {
+            showNotification('🔍 جاري تحميل بيانات تحليل المخاطر...', 'info');
+            
+            document.getElementById('fmea_rowNumber').value = rowNumber;
+            
+            // Find the record (subtract 2 because array is 0-based and header row is row 1)
+            const recordIndex = rowNumber - 2;
+            if (recordIndex >= 0 && recordIndex < fmeaRecords.length) {
+                const record = fmeaRecords[recordIndex];
+                
+                fillFmeaForm(record);
+                document.getElementById('fmea_updateBtn').style.display = 'inline-block';
+                document.getElementById('fmea_addBtn').style.display = 'none';
+                showNotification('✅ تم تحميل بيانات تحليل المخاطر', 'success');
+            } else {
+                showNotification('❌ لم يتم العثور على تحليل المخاطر', 'error');
+            }
+        }
+        
+        function fillFmeaForm(record) {
+            document.getElementById('fmea_device').value = record[0] || '';
+            document.getElementById('fmea_failure').value = record[1] || '';
+            document.getElementById('fmea_effect').value = record[2] || '';
+            document.getElementById('fmea_cause').value = record[3] || '';
+            document.getElementById('fmea_occurrence').value = record[4] || '';
+            document.getElementById('fmea_severity').value = record[5] || '';
+            document.getElementById('fmea_detection').value = record[6] || '';
+            document.getElementById('fmea_correctiveAction').value = record[7] || '';
+            document.getElementById('fmea_responsible').value = record[8] || '';
+            
+            // Note: The original FMEA script might not have these fields
+            // We'll set them if they exist in the record
+            if (record[9]) document.getElementById('fmea_status').value = record[9];
+            if (record[10]) document.getElementById('fmea_targetDate').value = record[10];
+            if (record[11]) document.getElementById('fmea_notes').value = record[11];
+        }
+        
+        async function updateFmeaRecord() {
+            const rowNumber = document.getElementById('fmea_rowNumber').value;
+            if (!rowNumber) {
+                showNotification('❌ لم يتم تحديد تحليل مخاطر للتحديث', 'error');
+                return;
+            }
+            
+            const button = document.getElementById('fmea_updateBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
+            
+            const formData = {
+                id: rowNumber,
+                device: document.getElementById('fmea_device').value,
+                failure: document.getElementById('fmea_failure').value,
+                effect: document.getElementById('fmea_effect').value,
+                cause: document.getElementById('fmea_cause').value,
+                occurrence: document.getElementById('fmea_occurrence').value,
+                severity: document.getElementById('fmea_severity').value,
+                detection: document.getElementById('fmea_detection').value,
+                correctiveAction: document.getElementById('fmea_correctiveAction').value,
+                responsible: document.getElementById('fmea_responsible').value,
+                targetDate: document.getElementById('fmea_targetDate').value,
+                status: document.getElementById('fmea_status').value,
+                notes: document.getElementById('fmea_notes').value
+            };
+            
+            try {
+                const result = await callGoogleScript(FMEA_SCRIPT_URL, 'update', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetFmeaForm();
+                    await loadFmeaData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في تحديث تحليل المخاطر`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        function resetFmeaForm() {
+            document.getElementById('fmeaForm').reset();
+            document.getElementById('fmea_rowNumber').value = '';
+            document.getElementById('fmea_addBtn').style.display = 'inline-block';
+            document.getElementById('fmea_updateBtn').style.display = 'none';
+            document.querySelectorAll('#fmeaForm .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+            
+            // Reset to default status
+            document.getElementById('fmea_status').value = 'مفتوحة';
+        }
+        
+        // ================ EXPORT AND PRINT FUNCTIONS ================
+        function exportFmeaCSV() {
+            if (fmeaRecords.length === 0) {
+                showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
+                return;
+            }
+            
+            showNotification('📥 جاري تصدير تحليل المخاطر...', 'info');
+            
+            try {
+                const headers = [
+                    'الجهاز', 'نمط الفشل', 'التأثير', 'السبب',
+                    'التكرار (O)', 'الشدة (S)', 'الكشف (D)', 'RPN',
+                    'الإجراءات التصحيحية', 'المسؤول', 'الحالة',
+                    'التاريخ المستهدف', 'ملاحظات'
+                ];
+                
+                let csvContent = '\uFEFF';
+                csvContent += headers.join(",") + "\r\n";
+                
+                fmeaRecords.forEach(record => {
+                    const occurrence = parseInt(record[4] || 0);
+                    const severity = parseInt(record[5] || 0);
+                    const detection = parseInt(record[6] || 0);
+                    const rpn = calculateRPN(occurrence, severity, detection);
+                    
+                    const row = [
+                        record[0] || '',
+                        record[1] || '',
+                        record[2] || '',
+                        record[3] || '',
+                        occurrence,
+                        severity,
+                        detection,
+                        rpn,
+                        record[7] || '',
+                        record[8] || '',
+                        record[9] || 'مفتوحة',
+                        record[10] || '',
+                        record[11] || ''
+                    ];
+                    
+                    const escapedRow = row.map(cell => {
+                        return `"${cell.toString().replace(/"/g, '""')}"`;
+                    });
+                    csvContent += escapedRow.join(",") + "\r\n";
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `تحليل_المخاطر_FMEA_${new Date().toISOString().slice(0,10)}.csv`);
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification(`✅ تم تصدير ${fmeaRecords.length} تحليل مخاطر`, 'success');
+            } catch (error) {
+                showNotification(`❌ خطأ في التصدير`, 'error');
+            }
+        }
+        
+        function printReport() {
+            if (fmeaRecords.length === 0) {
+                showNotification('⚠️ لا توجد بيانات للطباعة', 'warning');
+                return;
+            }
+            
+            showNotification('🖨️ جاري إعداد التقرير للطباعة...', 'info');
+            
+            // Create a printable version
+            const printContent = document.createElement('div');
+            printContent.innerHTML = `
+                <!DOCTYPE html>
+                <html dir="rtl">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>تقرير تحليل المخاطر (FMEA)</title>
+                    <style>
+                        body { font-family: 'Cairo', sans-serif; padding: 20px; }
+                        h1 { color: #7d3c98; text-align: center; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .logo { font-size: 24px; font-weight: bold; color: #7d3c98; }
+                        .date { text-align: left; margin-bottom: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th { background-color: #7d3c98; color: white; padding: 10px; text-align: center; }
+                        td { padding: 8px; border: 1px solid #ddd; text-align: center; }
+                        .summary { margin-top: 30px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; }
+                        .badge { padding: 3px 8px; border-radius: 10px; font-size: 12px; }
+                        .low { background-color: #28a745; color: white; }
+                        .medium { background-color: #ffc107; color: #212529; }
+                        .high { background-color: #dc3545; color: white; }
+                        @media print {
+                            .no-print { display: none; }
+                            body { padding: 0; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="logo">معمل كواليتك إنترناشيونال</div>
+                        <h1>تقرير تحليل المخاطر (FMEA)</h1>
+                        <div class="date">تاريخ التقرير: ${document.getElementById('currentDate').textContent}</div>
+                    </div>
+                    
+                    <div class="summary">
+                        <h3>ملخص الإحصاءات:</h3>
+                        <p>إجمالي التحليلات: ${fmeaRecords.length}</p>
+                        <p>المخاطر المنخفضة: <span id="printLow">0</span></p>
+                        <p>المخاطر المتوسطة: <span id="printMedium">0</span></p>
+                        <p>المخاطر المرتفعة: <span id="printHigh">0</span></p>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الجهاز</th>
+                                <th>نمط الفشل</th>
+                                <th>O</th>
+                                <th>S</th>
+                                <th>D</th>
+                                <th>RPN</th>
+                                <th>المستوى</th>
+                                <th>المسؤول</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${generatePrintRows()}
+                        </tbody>
+                    </table>
+                    
+                    <div class="no-print" style="margin-top: 30px; text-align: center; padding: 20px;">
+                        <button onclick="window.print()" style="padding: 10px 20px; background-color: #7d3c98; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            طباعة التقرير
+                        </button>
+                        <button onclick="window.close()" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                            إغلاق
+                        </button>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            // Calculate statistics for print
+            let lowRisk = 0, mediumRisk = 0, highRisk = 0;
+            fmeaRecords.forEach(record => {
+                const occurrence = parseInt(record[4] || 0);
+                const severity = parseInt(record[5] || 0);
+                const detection = parseInt(record[6] || 0);
+                const rpn = calculateRPN(occurrence, severity, detection);
+                
+                if (rpn <= 50) lowRisk++;
+                else if (rpn <= 200) mediumRisk++;
+                else highRisk++;
+            });
+            
+            // Open print window
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent.innerHTML);
+            printWindow.document.close();
+            
+            // Update statistics in print window
+            printWindow.document.getElementById('printLow').textContent = lowRisk;
+            printWindow.document.getElementById('printMedium').textContent = mediumRisk;
+            printWindow.document.getElementById('printHigh').textContent = highRisk;
+            
+            printWindow.focus();
+        }
+        
+        function generatePrintRows() {
+            let rows = '';
+            
+            fmeaRecords.forEach((record, index) => {
+                const occurrence = parseInt(record[4] || 0);
+                const severity = parseInt(record[5] || 0);
+                const detection = parseInt(record[6] || 0);
+                const rpn = calculateRPN(occurrence, severity, detection);
+                const riskLevel = getRiskLevel(rpn);
+                const riskClass = riskLevel === 'منخفض' ? 'low' : riskLevel === 'متوسط' ? 'medium' : 'high';
+                
+                rows += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${escapeHtml(record[0] || '')}</td>
+                        <td>${escapeHtml(record[1] || '')}</td>
+                        <td>${occurrence}</td>
+                        <td>${severity}</td>
+                        <td>${detection}</td>
+                        <td>${rpn}</td>
+                        <td><span class="badge ${riskClass}">${riskLevel}</span></td>
+                        <td>${escapeHtml(record[8] || '')}</td>
+                        <td>${escapeHtml(record[9] || 'مفتوحة')}</td>
+                    </tr>
+                `;
+            });
+            
+            return rows;
+        }
+        
+        // ================ VIEW DETAILS FUNCTION ================
+        function viewFmeaDetails(recordIndex) {
+            if (recordIndex < 0 || recordIndex >= fmeaRecords.length) {
+                showNotification('❌ لم يتم العثور على تحليل المخاطر', 'error');
+                return;
+            }
+            
+            const record = fmeaRecords[recordIndex];
+            const occurrence = parseInt(record[4] || 0);
+            const severity = parseInt(record[5] || 0);
+            const detection = parseInt(record[6] || 0);
+            const rpn = calculateRPN(occurrence, severity, detection);
+            const riskLevel = getRiskLevel(rpn);
+            const riskClass = getRiskClass(rpn);
+            
+            let riskClassBadge = 'badge bg-secondary';
+            if (riskClass === 'rpn-high') {
+                riskClassBadge = 'badge bg-danger';
+            } else if (riskClass === 'rpn-medium') {
+                riskClassBadge = 'badge bg-warning text-dark';
+            } else {
+                riskClassBadge = 'badge bg-success';
+            }
+            
+            let statusClass = 'badge bg-secondary';
+            const status = record[9] || 'مفتوحة';
+            if (status === 'مفتوحة') {
+                statusClass = 'badge bg-danger';
+            } else if (status === 'قيد التنفيذ') {
+                statusClass = 'badge bg-warning text-dark';
+            } else if (status === 'مكتملة') {
+                statusClass = 'badge bg-success';
+            } else if (status === 'ملغاة') {
+                statusClass = 'badge bg-secondary';
+            }
+            
+            const modalHtml = `
+                <div class="modal fade" id="detailsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header modal-header-custom">
+                                <h5 class="modal-title">تفاصيل تحليل المخاطر</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>الجهاز / العملية:</strong> ${escapeHtml(record[0] || '')}</p>
+                                        <p><strong>نمط الفشل / العطل:</strong> ${escapeHtml(record[1] || '')}</p>
+                                        <p><strong>المسؤول:</strong> ${escapeHtml(record[8] || '')}</p>
+                                        <p><strong>الحالة:</strong> <span class="${statusClass}">${status}</span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>التكرار (O):</strong> <span class="score-indicator ${occurrence >= 7 ? 'score-high' : occurrence >= 4 ? 'score-medium' : 'score-low'}">${occurrence}</span></p>
+                                        <p><strong>الشدة (S):</strong> <span class="score-indicator ${severity >= 7 ? 'score-high' : severity >= 4 ? 'score-medium' : 'score-low'}">${severity}</span></p>
+                                        <p><strong>الكشف (D):</strong> <span class="score-indicator ${detection >= 7 ? 'score-high' : detection >= 4 ? 'score-medium' : 'score-low'}">${detection}</span></p>
+                                        <p><strong>RPN:</strong> <span class="${riskClassBadge}">${rpn} (${riskLevel})</span></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <h6>تأثير الفشل:</h6>
+                                        <div class="alert alert-light">${escapeHtml(record[2] || '')}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <h6>سبب الفشل:</h6>
+                                        <div class="alert alert-light">${escapeHtml(record[3] || '')}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <h6>الإجراءات التصحيحية / الوقائية:</h6>
+                                        <div class="alert alert-info">${escapeHtml(record[7] || '')}</div>
+                                    </div>
+                                </div>
+                                
+                                ${record[10] ? `
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <h6>التاريخ المستهدف:</h6>
+                                        <p>${formatDate(record[10])}</p>
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                ${record[11] ? `
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <h6>ملاحظات إضافية:</h6>
+                                        <div class="alert alert-secondary">${escapeHtml(record[11] || '')}</div>
+                                    </div>
+                                </div>
+                                ` : ''}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const existingModal = document.getElementById('detailsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+        
+        // ================ DELETE FUNCTIONALITY ================
+        function showDeleteModal(rowNumber, device, failure) {
+            deleteRowNumber = rowNumber;
+            deleteDevice = device;
+            deleteFailure = failure;
+            
+            document.getElementById('deleteRowNumber').textContent = rowNumber;
+            document.getElementById('deleteDevice').textContent = device || 'غير معروف';
+            document.getElementById('deleteFailure').textContent = failure || 'غير معروف';
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+        
+        async function confirmDelete() {
+            if (!deleteRowNumber) return;
+            
+            const button = document.getElementById('confirmDeleteBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
+            
+            try {
+                const result = await callGoogleScript(FMEA_SCRIPT_URL, 'delete', { rowNumber: deleteRowNumber });
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                    
+                    deleteRowNumber = '';
+                    deleteDevice = '';
+                    deleteFailure = '';
+                    
+                    await loadFmeaData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في حذف تحليل المخاطر`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        // ================ HELP FUNCTION ================
+        function showHelp() {
+            const helpModal = new bootstrap.Modal(document.getElementById('helpModal'));
+            helpModal.show();
+        }
+    </script>
+</body>
+</html>
