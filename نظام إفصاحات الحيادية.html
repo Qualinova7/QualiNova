@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة إفصاحات الحيادية - معمل كواليتك إنترناشيونال</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --impartiality-color: #9b59b6;
+        }
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .main-header .lead {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .header-badge {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Card Styles */
+        .custom-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card-header-custom {
+            padding: 15px 20px;
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+        }
+        
+        .card-header-impartiality {
+            background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
+        }
+        
+        /* Form Styles */
+        .form-control-custom, .form-select-custom, .form-textarea-custom {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
+            border-color: var(--impartiality-color);
+            box-shadow: 0 0 0 0.25rem rgba(155, 89, 182, 0.25);
+            background: white;
+        }
+        
+        .form-textarea-custom {
+            min-height: 70px;
+            resize: vertical;
+        }
+        
+        .form-label-custom {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        /* Custom Date Input */
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .date-input-group .form-control-custom {
+            text-align: center;
+            padding: 0.375rem 0.25rem;
+            flex: 1;
+        }
+        
+        .date-input-group .date-day {
+            max-width: 60px;
+        }
+        
+        .date-input-group .date-month {
+            max-width: 60px;
+        }
+        
+        .date-input-group .date-year {
+            max-width: 80px;
+        }
+        
+        .date-input-group .date-separator {
+            font-size: 1.2rem;
+            color: #6c757d;
+            font-weight: bold;
+            min-width: 10px;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+        
+        .table-custom {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0;
+            min-width: 1000px;
+            width: 100%;
+        }
+        
+        .table-custom thead th {
+            background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
+            color: white;
+            border: none;
+            padding: 15px 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        
+        .table-custom tbody tr {
+            transition: all 0.2s;
+        }
+        
+        .table-custom tbody tr:hover {
+            background-color: rgba(155, 89, 182, 0.08);
+        }
+        
+        .table-custom tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+        
+        /* Action Buttons */
+        .action-buttons .btn {
+            margin: 0 2px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            min-width: 70px;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            padding: 15px 20px;
+            color: white;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: #212529;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        .spinner-border-custom {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-width: 0.2rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons .btn {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                margin: 1px;
+                min-width: 60px;
+            }
+            
+            .table-custom {
+                min-width: 800px;
+            }
+        }
+        
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section-title {
+            color: var(--impartiality-color);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--impartiality-color);
+            border-radius: 10px;
+        }
+        
+        /* تنسيق placeholders داخل حقول التاريخ */
+        .date-input-group input::placeholder {
+            color: #adb5bd;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        /* Badge Styles */
+        .badge {
+            font-size: 0.75em;
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+    
+    <!-- Main Container -->
+    <div class="container-fluid main-container">
+        <!-- Main Header -->
+        <div class="main-header fade-in">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-balance-scale me-2"></i> نظام إدارة إفصاحات الحيادية</h1>
+                    <p class="lead mb-0">نظام متكامل لتسجيل وإدارة إفصاحات الحيادية لموظفي معمل كواليتك إنترناشيونال</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="header-badge d-inline-block me-3">
+                        <i class="fas fa-database me-2"></i>
+                        <span id="totalRecords">0</span> إفصاح
+                    </div>
+                    <div class="header-badge d-inline-block">
+                        <i class="fas fa-calendar me-2"></i>
+                        <span id="currentDate">--/--/----</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-impartiality">
+                        <i class="fas fa-balance-scale me-2"></i> إدارة إفصاحات الحيادية
+                    </div>
+                    <div class="card-body">
+                        <form id="impartialityForm">
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-user-tie"></i> المعلومات الأساسية
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم السجل</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_recordId" placeholder="اتركه فارغاً للتوليد التلقائي">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اسم الموظف *</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_employeeName" placeholder="اسم الموظف" required>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الرقم الوظيفي *</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_employeeNumber" placeholder="الرقم الوظيفي" required>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم سجل مخاطر الحيادية</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_impartialityRiskNumber" placeholder="رقم سجل مخاطر الحيادية">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ التوقيع *</label>
+                                        <div class="date-input-group">
+                                            <input type="number" class="form-control form-control-custom text-center date-day" id="impartiality_signDate_day" placeholder="يوم" min="1" max="31" required>
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom text-center date-month" id="impartiality_signDate_month" placeholder="شهر" min="1" max="12" required>
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom text-center date-year" id="impartiality_signDate_year" placeholder="سنة" min="1900" max="2100" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اسم المراجع</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_reviewerName" placeholder="اسم المراجع">
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">المصادر المالية</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_financialSources" placeholder="المصادر المالية">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">تفاصيل المصادر المالية</label>
+                                        <textarea class="form-control form-textarea-custom" id="impartiality_financialDetails" placeholder="تفاصيل المصادر المالية" rows="2"></textarea>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">تفاصيل العلاقات الشخصية</label>
+                                        <textarea class="form-control form-textarea-custom" id="impartiality_personalRelationsDetails" placeholder="تفاصيل العلاقات الشخصية" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-handshake"></i> الإفصاحات التفصيلية
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label-custom">العلاقات الشخصية</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_personalRelations" placeholder="العلاقات الشخصية (أقارب، أصدقاء، معارف)">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label-custom">الأنشطة الخارجية</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_externalActivities" placeholder="الأنشطة الخارجية (عمل آخر، عضوية في مجالس)">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label-custom">تفاصيل الأنشطة الخارجية</label>
+                                        <textarea class="form-control form-textarea-custom" id="impartiality_externalActivitiesDetails" placeholder="تفاصيل الأنشطة الخارجية" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label-custom">الهدايا والضيافة</label>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_gifts" placeholder="الهدايا والضيافة (هدايا، تذاكر، دعوات)">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label-custom">تفاصيل الهدايا والضيافة</label>
+                                        <textarea class="form-control form-textarea-custom" id="impartiality_giftsDetails" placeholder="تفاصيل الهدايا والضيافة" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label-custom">أي إفصاح آخر</label>
+                                        <textarea class="form-control form-textarea-custom" id="impartiality_otherDisclosure" placeholder="أي إفصاح آخر" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button type="button" onclick="resetImpartialityForm()" class="btn btn-outline-secondary">
+                                        <i class="fas fa-redo me-1"></i> مسح النموذج
+                                    </button>
+                                    <div>
+                                        <button type="button" onclick="addImpartialityRecord()" class="btn btn-success me-2" id="impartiality_addBtn">
+                                            <i class="fas fa-plus me-1"></i> إضافة جديد
+                                        </button>
+                                        <button type="button" onclick="updateImpartialityRecord()" class="btn btn-primary" id="impartiality_updateBtn" style="display: none;">
+                                            <i class="fas fa-save me-1"></i> تحديث السجل
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="impartiality_editingId">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Records Table Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-impartiality d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-list me-2"></i> قائمة إفصاحات الحيادية</span>
+                        <div>
+                            <button onclick="loadImpartialityData()" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-sync-alt"></i> تحديث
+                            </button>
+                            <button onclick="exportImpartialityCSV()" class="btn btn-light btn-sm">
+                                <i class="fas fa-download"></i> تصدير
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="loading-spinner" id="impartialityLoadingSpinner">
+                            <div class="spinner-border text-primary spinner-border-custom" role="status">
+                                <span class="visually-hidden">جاري التحميل...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive" id="impartialityTableContainer" style="display: none;">
+                            <table class="table table-custom table-hover" id="impartialityDataTable">
+                            </table>
+                        </div>
+                        
+                        <div id="impartialityNoRecords" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-balance-scale fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted">لا توجد إفصاحات لعرضها</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="row mt-4 fade-in">
+            <div class="col-12 text-center">
+                <p class="text-muted">
+                    <i class="fas fa-copyright me-1"></i> نظام إدارة إفصاحات الحيادية 
+                    <span id="currentYear"></span> | 
+                    <span class="text-info">الإصدار 1.0</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تأكيد الحذف</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle fa-2x float-start me-3"></i>
+                        <h5 class="alert-heading">تحذير!</h5>
+                        <p>هل أنت متأكد من حذف هذا الإفصاح؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+                        <hr>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">إفصاح الحيادية</span></p>
+                        <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
+                        <p class="mb-0"><strong>اسم الموظف:</strong> <span id="deleteRecordName">غير معروف</span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i> نعم، احذف السجل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal (Dynamic) -->
+    <div id="dynamicModalContainer"></div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // ================ CONFIGURATION ================
+        const IMPARTIALITY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXSFMWC-nBHKu7iWUfihxiO5UKK4bjSybTpqV57sxDTGxtabgbi9m73KbIWpqn6o38jw/exec";
+        
+        // ================ GLOBAL VARIABLES ================
+        let impartialityRecords = [];
+        let deleteRecordId = '';
+        let deleteRecordName = '';
+        
+        // ================ INITIALIZATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date and year
+            setCurrentDate();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Load data on page load
+            setTimeout(() => {
+                loadImpartialityData();
+            }, 500);
+            
+            // Setup date input navigation
+            setupDateInputNavigation();
+        });
+        
+        function setupDateInputNavigation() {
+            // دالة للمساعدة في التنقل بين حقول التاريخ باستخدام Tab
+            document.querySelectorAll('.date-day').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    if (this.value.length >= 2) {
+                        this.nextElementSibling.nextElementSibling.nextElementSibling.focus();
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.date-month').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    if (this.value.length >= 2) {
+                        this.nextElementSibling.nextElementSibling.focus();
+                    }
+                });
+            });
+        }
+        
+        // ================ DATE FORMAT FUNCTIONS ================
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                // Handle dd/mm/yyyy format
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        const day = parts[0].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[2];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                // Handle yyyy-mm-dd format
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        const day = parts[2].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[0];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                return dateString;
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        function formatDateForInput(dateString) {
+            if (!dateString) return {day: '', month: '', year: ''};
+            try {
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[0],
+                            month: parts[1],
+                            year: parts[2]
+                        };
+                    }
+                }
+                
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[2],
+                            month: parts[1],
+                            year: parts[0]
+                        };
+                    }
+                }
+                
+                return {day: '', month: '', year: ''};
+            } catch (e) {
+                return {day: '', month: '', year: ''};
+            }
+        }
+        
+        function getDateString(day, month, year) {
+            if (!day || !month || !year) return '';
+            const formattedDay = day.toString().padStart(2, '0');
+            const formattedMonth = month.toString().padStart(2, '0');
+            return `${formattedDay}/${formattedMonth}/${year}`;
+        }
+        
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        // ================ NOTIFICATION SYSTEM ================
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-${getNotificationIcon(type)} me-3"></i>
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, duration);
+            }
+            
+            return notification;
+        }
+        
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                default: return 'info-circle';
+            }
+        }
+        
+        // ================ UTILITY FUNCTIONS ================
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // ================ API COMMUNICATION FUNCTIONS ================
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+                const timeout = 60000;
+                
+                const timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Request timeout'));
+                }, timeout);
+                
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    delete window[callbackName];
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script) script.remove();
+                }
+                
+                window[callbackName] = function(response) {
+                    cleanup();
+                    resolve(response);
+                };
+                
+                const script = document.createElement('script');
+                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+                script.setAttribute('data-callback', callbackName);
+                script.onerror = function() {
+                    cleanup();
+                    reject(new Error('Failed to load script'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        function callGoogleScript(scriptUrl, action, data = {}) {
+            let url = scriptUrl + '?action=' + action;
+            
+            for (const key in data) {
+                if (data[key] !== undefined && data[key] !== null) {
+                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+                }
+            }
+            
+            return jsonp(url);
+        }
+        
+        // ================ VALIDATION HELPER ================
+        function validateForm(requiredFields) {
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            return isValid;
+        }
+        
+        // ================ IMPARTIALITY SYSTEM FUNCTIONS ================
+        async function loadImpartialityData() {
+            const spinner = document.getElementById('impartialityLoadingSpinner');
+            const tableContainer = document.getElementById('impartialityTableContainer');
+            const noRecords = document.getElementById('impartialityNoRecords');
+            
+            spinner.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            noRecords.style.display = 'none';
+            
+            try {
+                const result = await callGoogleScript(IMPARTIALITY_SCRIPT_URL, 'getAll');
+                
+                spinner.style.display = 'none';
+                
+                if (result.status === 'success') {
+                    impartialityRecords = result.data;
+                    
+                    if (impartialityRecords.length > 0) {
+                        displayImpartialityRecords(impartialityRecords);
+                        tableContainer.style.display = 'block';
+                        document.getElementById('totalRecords').textContent = impartialityRecords.length.toLocaleString('ar-SA');
+                    } else {
+                        noRecords.style.display = 'block';
+                        document.getElementById('totalRecords').textContent = '0';
+                    }
+                } else {
+                    noRecords.style.display = 'block';
+                    showNotification(`❌ ${result.message}`, 'error');
+                    document.getElementById('totalRecords').textContent = '0';
+                }
+            } catch (error) {
+                spinner.style.display = 'none';
+                noRecords.style.display = 'block';
+                showNotification(`❌ خطأ في تحميل إفصاحات الحيادية`, 'error');
+                document.getElementById('totalRecords').textContent = '0';
+            }
+        }
+        
+        function displayImpartialityRecords(records) {
+            const table = document.getElementById('impartialityDataTable');
+            
+            let html = '<thead><tr>';
+            const headers = ['رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'تاريخ التوقيع', 'رقم المخاطر', 'اسم المراجع', 'الإجراءات'];
+            headers.forEach(h => {
+                html += `<th>${h}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            records.forEach((record, index) => {
+                html += '<tr>';
+                
+                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
+                html += `<td>${escapeHtml(record[1] || '')}</td>`;
+                html += `<td>${escapeHtml(record[2] || '')}</td>`;
+                html += `<td>${formatDate(record[3] || '')}</td>`;
+                html += `<td>${escapeHtml(record[13] || '')}</td>`;
+                html += `<td>${escapeHtml(record[14] || '')}</td>`;
+                
+                html += `<td class="action-buttons">
+                    <button onclick="editImpartialityRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                        <i class="fas fa-edit"></i> تعديل
+                    </button>
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[1])}')" class="btn btn-sm btn-danger" title="حذف">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                    <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
+                        <i class="fas fa-eye"></i> عرض
+                    </button>
+                </td>`;
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+        
+        async function addImpartialityRecord() {
+            const requiredFields = ['impartiality_employeeName', 'impartiality_employeeNumber', 
+                                  'impartiality_signDate_day', 'impartiality_signDate_month', 'impartiality_signDate_year'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            const button = document.getElementById('impartiality_addBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
+            
+            const signDate = getDateString(
+                document.getElementById('impartiality_signDate_day').value,
+                document.getElementById('impartiality_signDate_month').value,
+                document.getElementById('impartiality_signDate_year').value
+            );
+            
+            const formData = {
+                personalRelations: document.getElementById('impartiality_personalRelations').value,
+                externalActivities: document.getElementById('impartiality_externalActivities').value,
+                externalActivitiesDetails: document.getElementById('impartiality_externalActivitiesDetails').value,
+                gifts: document.getElementById('impartiality_gifts').value,
+                giftsDetails: document.getElementById('impartiality_giftsDetails').value,
+                otherDisclosure: document.getElementById('impartiality_otherDisclosure').value,
+                recordId: document.getElementById('impartiality_recordId').value || 'DISC-' + Date.now(),
+                employeeName: document.getElementById('impartiality_employeeName').value,
+                employeeNumber: document.getElementById('impartiality_employeeNumber').value,
+                signDate: signDate,
+                financialSources: document.getElementById('impartiality_financialSources').value,
+                financialDetails: document.getElementById('impartiality_financialDetails').value,
+                personalRelationsDetails: document.getElementById('impartiality_personalRelationsDetails').value,
+                impartialityRiskNumber: document.getElementById('impartiality_impartialityRiskNumber').value,
+                reviewerName: document.getElementById('impartiality_reviewerName').value
+            };
+            
+            try {
+                const result = await callGoogleScript(IMPARTIALITY_SCRIPT_URL, 'add', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetImpartialityForm();
+                    await loadImpartialityData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في الإضافة`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        async function editImpartialityRecord(recordId) {
+            showNotification('🔍 جاري تحميل بيانات الإفصاح...', 'info');
+            
+            const record = impartialityRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (record) {
+                fillImpartialityForm(record);
+                document.getElementById('impartiality_updateBtn').style.display = 'inline-block';
+                document.getElementById('impartiality_addBtn').style.display = 'none';
+                showNotification('✅ تم تحميل بيانات الإفصاح', 'success');
+            } else {
+                showNotification('❌ لم يتم العثور على الإفصاح', 'error');
+            }
+        }
+        
+        function fillImpartialityForm(record) {
+            document.getElementById('impartiality_recordId').value = record[0] || '';
+            document.getElementById('impartiality_employeeName').value = record[1] || '';
+            document.getElementById('impartiality_employeeNumber').value = record[2] || '';
+            document.getElementById('impartiality_impartialityRiskNumber').value = record[13] || '';
+            document.getElementById('impartiality_reviewerName').value = record[14] || '';
+            
+            const signDate = formatDateForInput(record[3] || '');
+            document.getElementById('impartiality_signDate_day').value = signDate.day;
+            document.getElementById('impartiality_signDate_month').value = signDate.month;
+            document.getElementById('impartiality_signDate_year').value = signDate.year;
+            
+            document.getElementById('impartiality_financialSources').value = record[4] || '';
+            document.getElementById('impartiality_financialDetails').value = record[5] || '';
+            document.getElementById('impartiality_personalRelationsDetails').value = record[7] || '';
+            
+            // Fill additional fields if they exist in the record
+            if (record.length > 15) {
+                document.getElementById('impartiality_personalRelations').value = record[15] || '';
+                document.getElementById('impartiality_externalActivities').value = record[16] || '';
+                document.getElementById('impartiality_externalActivitiesDetails').value = record[17] || '';
+                document.getElementById('impartiality_gifts').value = record[18] || '';
+                document.getElementById('impartiality_giftsDetails').value = record[19] || '';
+                document.getElementById('impartiality_otherDisclosure').value = record[20] || '';
+            }
+            
+            document.getElementById('impartiality_editingId').value = record[0];
+        }
+        
+        async function updateImpartialityRecord() {
+            const recordId = document.getElementById('impartiality_editingId').value;
+            if (!recordId) {
+                showNotification('❌ لم يتم تحديد إفصاح للتحديث', 'error');
+                return;
+            }
+            
+            const button = document.getElementById('impartiality_updateBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
+            
+            const signDate = getDateString(
+                document.getElementById('impartiality_signDate_day').value,
+                document.getElementById('impartiality_signDate_month').value,
+                document.getElementById('impartiality_signDate_year').value
+            );
+            
+            const formData = {
+                personalRelations: document.getElementById('impartiality_personalRelations').value,
+                externalActivities: document.getElementById('impartiality_externalActivities').value,
+                externalActivitiesDetails: document.getElementById('impartiality_externalActivitiesDetails').value,
+                gifts: document.getElementById('impartiality_gifts').value,
+                giftsDetails: document.getElementById('impartiality_giftsDetails').value,
+                otherDisclosure: document.getElementById('impartiality_otherDisclosure').value,
+                recordId: document.getElementById('impartiality_recordId').value,
+                employeeName: document.getElementById('impartiality_employeeName').value,
+                employeeNumber: document.getElementById('impartiality_employeeNumber').value,
+                signDate: signDate,
+                financialSources: document.getElementById('impartiality_financialSources').value,
+                financialDetails: document.getElementById('impartiality_financialDetails').value,
+                personalRelationsDetails: document.getElementById('impartiality_personalRelationsDetails').value,
+                impartialityRiskNumber: document.getElementById('impartiality_impartialityRiskNumber').value,
+                reviewerName: document.getElementById('impartiality_reviewerName').value
+            };
+            
+            try {
+                const result = await callGoogleScript(IMPARTIALITY_SCRIPT_URL, 'update', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetImpartialityForm();
+                    await loadImpartialityData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في التحديث`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        function resetImpartialityForm() {
+            document.getElementById('impartialityForm').reset();
+            document.getElementById('impartiality_editingId').value = '';
+            document.getElementById('impartiality_addBtn').style.display = 'inline-block';
+            document.getElementById('impartiality_updateBtn').style.display = 'none';
+            document.querySelectorAll('#impartialityForm .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+        }
+        
+        function exportImpartialityCSV() {
+            if (impartialityRecords.length === 0) {
+                showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
+                return;
+            }
+            
+            showNotification('📥 جاري تصدير إفصاحات الحيادية...', 'info');
+            
+            try {
+                const headers = [
+                    'رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'تاريخ التوقيع',
+                    'المصادر المالية', 'تفاصيل المصادر المالية',
+                    'تفاصيل العلاقات الشخصية', 'العلاقات الشخصية',
+                    'الأنشطة الخارجية', 'تفاصيل الأنشطة الخارجية',
+                    'الهدايا والضيافة', 'تفاصيل الهدايا والضيافة',
+                    'أي إفصاح آخر', 'رقم سجل مخاطر الحيادية', 'اسم المراجع'
+                ];
+                
+                let csvContent = '\uFEFF';
+                csvContent += headers.join(",") + "\r\n";
+                
+                impartialityRecords.forEach(record => {
+                    const row = [
+                        record[0] || '',
+                        record[1] || '',
+                        record[2] || '',
+                        formatDate(record[3] || ''),
+                        record[4] || '',
+                        record[5] || '',
+                        record[7] || '',
+                        (record[15] || ''),
+                        (record[16] || ''),
+                        (record[17] || ''),
+                        (record[18] || ''),
+                        (record[19] || ''),
+                        (record[20] || ''),
+                        record[13] || '',
+                        record[14] || ''
+                    ];
+                    
+                    const escapedRow = row.map(cell => {
+                        return `"${cell.toString().replace(/"/g, '""')}"`;
+                    });
+                    csvContent += escapedRow.join(",") + "\r\n";
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `إفصاحات_الحيادية_${new Date().toISOString().slice(0,10)}.csv`);
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification(`✅ تم تصدير ${impartialityRecords.length} إفصاح`, 'success');
+            } catch (error) {
+                showNotification(`❌ خطأ في التصدير`, 'error');
+            }
+        }
+        
+        // ================ DETAILS VIEW FUNCTION ================
+        async function viewDetails(recordId) {
+            const record = impartialityRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (!record) {
+                showNotification('❌ لم يتم العثور على الإفصاح', 'error');
+                return;
+            }
+            
+            const existingModal = document.getElementById('detailsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            const detailsHTML = generateImpartialityDetails(record);
+            document.getElementById('dynamicModalContainer').innerHTML = detailsHTML;
+            
+            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+        
+        function generateImpartialityDetails(record) {
+            return `
+                <div class="modal fade" id="detailsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header modal-header-custom">
+                                <h5 class="modal-title">إفصاح الحيادية: ${escapeHtml(record[0])}</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[0])}</p>
+                                        <p><strong>اسم الموظف:</strong> ${escapeHtml(record[1])}</p>
+                                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[2])}</p>
+                                        <p><strong>تاريخ التوقيع:</strong> ${formatDate(record[3])}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>رقم مخاطر الحيادية:</strong> ${escapeHtml(record[13])}</p>
+                                        <p><strong>اسم المراجع:</strong> ${escapeHtml(record[14])}</p>
+                                    </div>
+                                </div>
+                                
+                                ${record[4] ? `<p><strong>المصادر المالية:</strong> ${escapeHtml(record[4])}</p>` : ''}
+                                ${record[5] ? `<p><strong>تفاصيل المصادر المالية:</strong> ${escapeHtml(record[5])}</p>` : ''}
+                                ${record[7] ? `<p><strong>تفاصيل العلاقات الشخصية:</strong> ${escapeHtml(record[7])}</p>` : ''}
+                                
+                                ${record.length > 15 && record[15] ? `<p><strong>العلاقات الشخصية:</strong> ${escapeHtml(record[15])}</p>` : ''}
+                                ${record.length > 16 && record[16] ? `<p><strong>الأنشطة الخارجية:</strong> ${escapeHtml(record[16])}</p>` : ''}
+                                ${record.length > 17 && record[17] ? `<p><strong>تفاصيل الأنشطة الخارجية:</strong> ${escapeHtml(record[17])}</p>` : ''}
+                                ${record.length > 18 && record[18] ? `<p><strong>الهدايا والضيافة:</strong> ${escapeHtml(record[18])}</p>` : ''}
+                                ${record.length > 19 && record[19] ? `<p><strong>تفاصيل الهدايا والضيافة:</strong> ${escapeHtml(record[19])}</p>` : ''}
+                                ${record.length > 20 && record[20] ? `<p><strong>أي إفصاح آخر:</strong> ${escapeHtml(record[20])}</p>` : ''}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // ================ DELETE FUNCTIONALITY ================
+        function showDeleteModal(recordId, recordName) {
+            deleteRecordId = recordId;
+            deleteRecordName = recordName;
+            
+            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+        
+        async function confirmDelete() {
+            if (!deleteRecordId) return;
+            
+            const button = document.getElementById('confirmDeleteBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
+            
+            try {
+                const result = await callGoogleScript(IMPARTIALITY_SCRIPT_URL, 'delete', { recordId: deleteRecordId });
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                    
+                    deleteRecordId = '';
+                    deleteRecordName = '';
+                    
+                    loadImpartialityData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في الحذف`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+    </script>
+</body>
+</html>
