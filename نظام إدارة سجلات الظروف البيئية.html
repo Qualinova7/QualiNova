@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام متابعة الظروف البيئية - معمل كواليتك إنترناشيونال</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --environmental-color: #16a085;
+        }
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, var(--environmental-color), #1a6652);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .main-header .lead {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .header-badge {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Home Button */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .home-button:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .home-button i {
+            margin-right: 5px;
+        }
+        
+        /* Card Styles */
+        .custom-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card-header-custom {
+            padding: 15px 20px;
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+        }
+        
+        .card-header-environmental {
+            background: linear-gradient(135deg, var(--environmental-color), #1a6652);
+        }
+        
+        /* Form Styles */
+        .form-control-custom, .form-select-custom, .form-textarea-custom {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
+            border-color: var(--environmental-color);
+            box-shadow: 0 0 0 0.25rem rgba(22, 160, 133, 0.25);
+            background: white;
+        }
+        
+        .form-textarea-custom {
+            min-height: 70px;
+            resize: vertical;
+        }
+        
+        .form-label-custom {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        /* Custom Date Input */
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .date-input-group .form-control-custom {
+            text-align: center;
+            padding: 0.375rem 0.25rem;
+            flex: 1;
+        }
+        
+        .date-input-group .date-day {
+            max-width: 60px;
+        }
+        
+        .date-input-group .date-month {
+            max-width: 60px;
+        }
+        
+        .date-input-group .date-year {
+            max-width: 80px;
+        }
+        
+        .date-input-group .date-separator {
+            font-size: 1.2rem;
+            color: #6c757d;
+            font-weight: bold;
+            min-width: 10px;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+        
+        .table-custom {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0;
+            width: 100%;
+        }
+        
+        .table-custom thead th {
+            background: linear-gradient(135deg, var(--environmental-color), #1a6652);
+            color: white;
+            border: none;
+            padding: 15px 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        
+        .table-custom tbody tr {
+            transition: all 0.2s;
+        }
+        
+        .table-custom tbody tr:hover {
+            background-color: rgba(22, 160, 133, 0.08);
+        }
+        
+        .table-custom tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+        
+        /* Action Buttons */
+        .action-buttons .btn {
+            margin: 0 2px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            min-width: 70px;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            padding: 15px 20px;
+            color: white;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: #212529;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        .spinner-border-custom {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-width: 0.2rem;
+        }
+        
+        /* System Indicator */
+        .system-indicator {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons .btn {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                margin: 1px;
+                min-width: 60px;
+            }
+            
+            .table-custom {
+                min-width: 1000px;
+            }
+            
+            /* Home button adjustments for mobile */
+            .home-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+                width: auto;
+            }
+            
+            .main-header {
+                padding-top: 60px;
+            }
+        }
+        
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section-title {
+            color: var(--environmental-color);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--environmental-color);
+            border-radius: 10px;
+        }
+        
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--environmental-color), #1a6652);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        /* Badge Styles */
+        .badge {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+        
+        /* Header adjustments to prevent overlap with home button */
+        @media (min-width: 769px) {
+            .main-header .col-md-8 {
+                padding-left: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+    
+    <!-- Main Container -->
+    <div class="container-fluid main-container">
+        <!-- Main Header -->
+        <div class="main-header fade-in">
+            <!-- Return to Home Button -->
+            <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
+                <i class="fas fa-home"></i> العودة للرئيسية
+            </a>
+            
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-temperature-high me-2"></i> نظام متابعة الظروف البيئية</h1>
+                    <p class="lead mb-0">معمل كواليتك إنترناشيونال - نظام متابعة وتسجيل الظروف البيئية للمعامل</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="header-badge d-inline-block me-3">
+                        <i class="fas fa-database me-2"></i>
+                        <span id="totalRecords">0</span> سجلات
+                    </div>
+                    <div class="header-badge d-inline-block">
+                        <i class="fas fa-calendar me-2"></i>
+                        <span id="currentDate">--/--/----</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-environmental">
+                        <i class="fas fa-temperature-high me-2"></i> تسجيل قراءات الظروف البيئية
+                    </div>
+                    <div class="card-body">
+                        <form id="environmentalForm">
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">رقم السجل *</label>
+                                    <input type="text" class="form-control form-control-custom" id="environmental_recordId" placeholder="رقم السجل" required>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">الغرفة *</label>
+                                    <input type="text" class="form-control form-control-custom" id="environmental_room" placeholder="الغرفة" required>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">أرقام أجهزة المراقبة</label>
+                                    <input type="text" class="form-control form-control-custom" id="environmental_devices" placeholder="أرقام أجهزة المراقبة">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">التاريخ *</label>
+                                    <div class="date-input-group">
+                                        <input type="number" class="form-control form-control-custom date-day" id="environmental_date_day" placeholder="يوم" min="1" max="31" required>
+                                        <span class="date-separator">/</span>
+                                        <input type="number" class="form-control form-control-custom date-month" id="environmental_date_month" placeholder="شهر" min="1" max="12" required>
+                                        <span class="date-separator">/</span>
+                                        <input type="number" class="form-control form-control-custom date-year" id="environmental_date_year" placeholder="سنة" min="1900" max="2100" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">الوقت</label>
+                                    <input type="time" class="form-control form-control-custom" id="environmental_time">
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">درجة الحرارة (°C)</label>
+                                    <input type="text" class="form-control form-control-custom" id="environmental_temperature" placeholder="درجة الحرارة">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label-custom">الرطوبة (%RH)</label>
+                                    <input type="text" class="form-control form-control-custom" id="environmental_humidity" placeholder="الرطوبة">
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label-custom">الاهتزاز</label>
+                                    <input type="text" class="form-control form-control-custom" id="environmental_vibration" placeholder="الاهتزاز">
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label-custom">مصدر الكهرباء (V)</label>
+                                    <input type="text" class="form-control form-control-custom" id="environmental_power" placeholder="مصدر الكهرباء">
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label-custom">شدة الإضاءة</label>
+                                    <input type="text" class="form-control form-control-custom" id="environmental_light" placeholder="شدة الإضاءة">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-label-custom">ضمن الحدود؟</label>
+                                    <select class="form-select form-select-custom" id="environmental_withinLimits">
+                                        <option value="">-- اختر الإجابة --</option>
+                                        <option value="نعم">نعم</option>
+                                        <option value="لا">لا</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8 mb-2">
+                                    <label class="form-label-custom">الملاحظات</label>
+                                    <textarea class="form-control form-textarea-custom" id="environmental_notes" placeholder="الملاحظات"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button type="button" onclick="resetEnvironmentalForm()" class="btn btn-outline-secondary">
+                                        <i class="fas fa-redo me-1"></i> مسح النموذج
+                                    </button>
+                                    <div>
+                                        <button type="button" onclick="addEnvironmentalRecord()" class="btn btn-success me-2" id="environmental_addBtn">
+                                            <i class="fas fa-plus me-1"></i> إضافة جديد
+                                        </button>
+                                        <button type="button" onclick="updateEnvironmentalRecord()" class="btn btn-primary" id="environmental_updateBtn" style="display: none;">
+                                            <i class="fas fa-save me-1"></i> تحديث السجل
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="environmental_editingId">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Records Table Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-environmental d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-list me-2"></i> سجلات الظروف البيئية</span>
+                        <div>
+                            <button onclick="loadEnvironmentalData()" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-sync-alt"></i> تحديث
+                            </button>
+                            <button onclick="exportEnvironmentalCSV()" class="btn btn-light btn-sm">
+                                <i class="fas fa-download"></i> تصدير
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="loading-spinner" id="environmentalLoadingSpinner">
+                            <div class="spinner-border text-primary spinner-border-custom" role="status">
+                                <span class="visually-hidden">جاري التحميل...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive" id="environmentalTableContainer" style="display: none;">
+                            <table class="table table-custom table-hover" id="environmentalDataTable">
+                            </table>
+                        </div>
+                        
+                        <div id="environmentalNoRecords" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-temperature-high fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted">لا توجد سجلات ظروف بيئية لعرضها</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="row mt-4 fade-in">
+            <div class="col-12 text-center">
+                <p class="text-muted">
+                    <i class="fas fa-copyright me-1"></i> نظام متابعة الظروف البيئية 
+                    <span id="currentYear"></span> | 
+                    <span id="appVersion" class="text-info">الإصدار 1.0</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تأكيد الحذف</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle fa-2x float-start me-3"></i>
+                        <h5 class="alert-heading">تحذير!</h5>
+                        <p>هل أنت متأكد من حذف هذا السجل؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+                        <hr>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">الظروف البيئية</span></p>
+                        <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
+                        <p class="mb-0"><strong>الغرفة:</strong> <span id="deleteRecordName">غير معروف</span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i> نعم، احذف السجل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal (Dynamic) -->
+    <div id="dynamicModalContainer"></div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // ================ CONFIGURATION ================
+        const ENVIRONMENTAL_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEKz485uet9gaYlrbqETzvk6xjw64wtKgG3yL6XPmC1VsD15ADFW1mXOfVbA0XGfxd/exec";
+        
+        // ================ GLOBAL VARIABLES ================
+        let environmentalRecords = [];
+        let deleteRecordId = '';
+        let deleteRecordName = '';
+        
+        // ================ INITIALIZATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date and year
+            setCurrentDate();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Load environmental data
+            loadEnvironmentalData();
+        });
+        
+        // ================ DATE FORMAT FUNCTIONS ================
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                // Handle dd/mm/yyyy format
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        const day = parts[0].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[2];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                // Handle yyyy-mm-dd format
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        const day = parts[2].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[0];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                return dateString;
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        function formatDateForInput(dateString) {
+            if (!dateString) return {day: '', month: '', year: ''};
+            try {
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[0],
+                            month: parts[1],
+                            year: parts[2]
+                        };
+                    }
+                }
+                
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[2],
+                            month: parts[1],
+                            year: parts[0]
+                        };
+                    }
+                }
+                
+                return {day: '', month: '', year: ''};
+            } catch (e) {
+                return {day: '', month: '', year: ''};
+            }
+        }
+        
+        function getDateString(day, month, year) {
+            if (!day || !month || !year) return '';
+            const formattedDay = day.toString().padStart(2, '0');
+            const formattedMonth = month.toString().padStart(2, '0');
+            return `${formattedDay}/${formattedMonth}/${year}`;
+        }
+        
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        // ================ NOTIFICATION FUNCTIONS ================
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-${getNotificationIcon(type)} me-3"></i>
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, duration);
+            }
+            
+            return notification;
+        }
+        
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                default: return 'info-circle';
+            }
+        }
+        
+        // ================ UTILITY FUNCTIONS ================
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        function formatTime(timeString) {
+            if (!timeString) return '';
+            return timeString;
+        }
+        
+        // ================ API COMMUNICATION FUNCTIONS ================
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+                const timeout = 60000;
+                
+                const timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Request timeout'));
+                }, timeout);
+                
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    delete window[callbackName];
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script) script.remove();
+                }
+                
+                window[callbackName] = function(response) {
+                    cleanup();
+                    resolve(response);
+                };
+                
+                const script = document.createElement('script');
+                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+                script.setAttribute('data-callback', callbackName);
+                script.onerror = function() {
+                    cleanup();
+                    reject(new Error('Failed to load script'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        function callGoogleScript(scriptUrl, action, data = {}) {
+            let url = scriptUrl + '?action=' + action;
+            
+            for (const key in data) {
+                if (data[key] !== undefined && data[key] !== null) {
+                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+                }
+            }
+            
+            return jsonp(url);
+        }
+        
+        // ================ VALIDATION HELPER ================
+        function validateForm(requiredFields) {
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            return isValid;
+        }
+        
+        // ================ ENVIRONMENTAL CONDITIONS FUNCTIONS ================
+        async function loadEnvironmentalData() {
+            const spinner = document.getElementById('environmentalLoadingSpinner');
+            const tableContainer = document.getElementById('environmentalTableContainer');
+            const noRecords = document.getElementById('environmentalNoRecords');
+            
+            spinner.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            noRecords.style.display = 'none';
+            
+            try {
+                const result = await callGoogleScript(ENVIRONMENTAL_SCRIPT_URL, 'getAll');
+                
+                spinner.style.display = 'none';
+                
+                if (result.status === 'success') {
+                    environmentalRecords = result.data;
+                    
+                    if (environmentalRecords.length > 0) {
+                        displayEnvironmentalRecords(environmentalRecords);
+                        tableContainer.style.display = 'block';
+                        updateTotalRecordsCount();
+                    } else {
+                        noRecords.style.display = 'block';
+                    }
+                } else {
+                    noRecords.style.display = 'block';
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                spinner.style.display = 'none';
+                noRecords.style.display = 'block';
+                showNotification(`❌ خطأ في تحميل سجلالظروف البيئية`, 'error');
+            }
+        }
+        
+        function displayEnvironmentalRecords(records) {
+            const table = document.getElementById('environmentalDataTable');
+            
+            let html = '<thead><tr>';
+            const headers = ['رقم السجل', 'الغرفة', 'أجهزة المراقبة', 'التاريخ', 'الوقت', 'درجة الحرارة', 'الرطوبة', 'الاهتزاز', 'مصدر الكهرباء', 'شدة الإضاءة', 'ضمن الحدود', 'الإجراءات'];
+            headers.forEach(h => {
+                html += `<th>${h}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            records.forEach((record, index) => {
+                html += '<tr>';
+                
+                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
+                html += `<td>${escapeHtml(record[1] || '')}</td>`;
+                html += `<td>${escapeHtml(record[2] || '')}</td>`;
+                html += `<td>${formatDate(record[3] || '')}</td>`;
+                html += `<td>${formatTime(record[4] || '')}</td>`;
+                html += `<td>${escapeHtml(record[5] || '')}°C</td>`;
+                html += `<td>${escapeHtml(record[6] || '')}%RH</td>`;
+                html += `<td>${escapeHtml(record[7] || '')}</td>`;
+                html += `<td>${escapeHtml(record[8] || '')}V</td>`;
+                html += `<td>${escapeHtml(record[9] || '')}</td>`;
+                
+                let withinLimitsClass = 'badge bg-secondary';
+                let withinLimitsText = escapeHtml(record[10] || '');
+                if (withinLimitsText === 'نعم') {
+                    withinLimitsClass = 'badge bg-success';
+                } else if (withinLimitsText === 'لا') {
+                    withinLimitsClass = 'badge bg-danger';
+                }
+                html += `<td><span class="${withinLimitsClass}">${withinLimitsText}</span></td>`;
+                
+                html += `<td class="action-buttons">
+                    <button onclick="editEnvironmentalRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                        <i class="fas fa-edit"></i> تعديل
+                    </button>
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[1])}')" class="btn btn-sm btn-danger" title="حذف">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                    <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
+                        <i class="fas fa-eye"></i> عرض
+                    </button>
+                </td>`;
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+        
+        async function addEnvironmentalRecord() {
+            const requiredFields = ['environmental_recordId', 'environmental_room', 
+                                  'environmental_date_day', 'environmental_date_month', 'environmental_date_year'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            const button = document.getElementById('environmental_addBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
+            
+            const date = getDateString(
+                document.getElementById('environmental_date_day').value,
+                document.getElementById('environmental_date_month').value,
+                document.getElementById('environmental_date_year').value
+            );
+            
+            const formData = {
+                recordId: document.getElementById('environmental_recordId').value,
+                room: document.getElementById('environmental_room').value,
+                devices: document.getElementById('environmental_devices').value,
+                date: date,
+                time: document.getElementById('environmental_time').value,
+                temperature: document.getElementById('environmental_temperature').value,
+                humidity: document.getElementById('environmental_humidity').value,
+                vibration: document.getElementById('environmental_vibration').value,
+                power: document.getElementById('environmental_power').value,
+                light: document.getElementById('environmental_light').value,
+                withinLimits: document.getElementById('environmental_withinLimits').value,
+                notes: document.getElementById('environmental_notes').value
+            };
+            
+            try {
+                const result = await callGoogleScript(ENVIRONMENTAL_SCRIPT_URL, 'add', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetEnvironmentalForm();
+                    await loadEnvironmentalData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في الإضافة`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        async function editEnvironmentalRecord(recordId) {
+            showNotification('🔍 جاري تحميل بيانات سجل الظروف البيئية...', 'info');
+            
+            const record = environmentalRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (record) {
+                fillEnvironmentalForm(record);
+                document.getElementById('environmental_updateBtn').style.display = 'inline-block';
+                document.getElementById('environmental_addBtn').style.display = 'none';
+                showNotification('✅ تم تحميل بيانات سجل الظروف البيئية', 'success');
+            } else {
+                showNotification('❌ لم يتم العثور على سجل الظروف البيئية', 'error');
+            }
+        }
+        
+        function fillEnvironmentalForm(record) {
+            document.getElementById('environmental_recordId').value = record[0] || '';
+            document.getElementById('environmental_room').value = record[1] || '';
+            document.getElementById('environmental_devices').value = record[2] || '';
+            
+            const date = formatDateForInput(record[3] || '');
+            document.getElementById('environmental_date_day').value = date.day;
+            document.getElementById('environmental_date_month').value = date.month;
+            document.getElementById('environmental_date_year').value = date.year;
+            
+            document.getElementById('environmental_time').value = record[4] || '';
+            document.getElementById('environmental_temperature').value = record[5] || '';
+            document.getElementById('environmental_humidity').value = record[6] || '';
+            document.getElementById('environmental_vibration').value = record[7] || '';
+            document.getElementById('environmental_power').value = record[8] || '';
+            document.getElementById('environmental_light').value = record[9] || '';
+            document.getElementById('environmental_withinLimits').value = record[10] || '';
+            document.getElementById('environmental_notes').value = record[11] || '';
+            document.getElementById('environmental_editingId').value = record[0];
+        }
+        
+        async function updateEnvironmentalRecord() {
+            const recordId = document.getElementById('environmental_editingId').value;
+            if (!recordId) {
+                showNotification('❌ لم يتم تحديد سجل ظروف بيئية للتحديث', 'error');
+                return;
+            }
+            
+            const button = document.getElementById('environmental_updateBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
+            
+            const date = getDateString(
+                document.getElementById('environmental_date_day').value,
+                document.getElementById('environmental_date_month').value,
+                document.getElementById('environmental_date_year').value
+            );
+            
+            const formData = {
+                recordId: document.getElementById('environmental_recordId').value,
+                room: document.getElementById('environmental_room').value,
+                devices: document.getElementById('environmental_devices').value,
+                date: date,
+                time: document.getElementById('environmental_time').value,
+                temperature: document.getElementById('environmental_temperature').value,
+                humidity: document.getElementById('environmental_humidity').value,
+                vibration: document.getElementById('environmental_vibration').value,
+                power: document.getElementById('environmental_power').value,
+                light: document.getElementById('environmental_light').value,
+                withinLimits: document.getElementById('environmental_withinLimits').value,
+                notes: document.getElementById('environmental_notes').value
+            };
+            
+            try {
+                const result = await callGoogleScript(ENVIRONMENTAL_SCRIPT_URL, 'update', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetEnvironmentalForm();
+                    await loadEnvironmentalData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في التحديث`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        function resetEnvironmentalForm() {
+            document.getElementById('environmentalForm').reset();
+            document.getElementById('environmental_editingId').value = '';
+            document.getElementById('environmental_addBtn').style.display = 'inline-block';
+            document.getElementById('environmental_updateBtn').style.display = 'none';
+            document.querySelectorAll('#environmentalForm .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+        }
+        
+        function exportEnvironmentalCSV() {
+            if (environmentalRecords.length === 0) {
+                showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
+                return;
+            }
+            
+            showNotification('📥 جاري تصدير سجلالظروف البيئية...', 'info');
+            
+            try {
+                const headers = [
+                    'رقم السجل', 'الغرفة', 'أجهزة المراقبة', 'التاريخ', 'الوقت',
+                    'درجة الحرارة (°C)', 'الرطوبة (%RH)', 'الاهتزاز',
+                    'مصدر الكهرباء (V)', 'شدة الإضاءة', 'ضمن الحدود', 'الملاحظات'
+                ];
+                
+                let csvContent = '\uFEFF';
+                csvContent += headers.join(",") + "\r\n";
+                
+                environmentalRecords.forEach(record => {
+                    const row = [
+                        record[0] || '',
+                        record[1] || '',
+                        record[2] || '',
+                        formatDate(record[3] || ''),
+                        record[4] || '',
+                        record[5] || '',
+                        record[6] || '',
+                        record[7] || '',
+                        record[8] || '',
+                        record[9] || '',
+                        record[10] || '',
+                        record[11] || ''
+                    ];
+                    
+                    const escapedRow = row.map(cell => {
+                        return `"${cell.toString().replace(/"/g, '""')}"`;
+                    });
+                    csvContent += escapedRow.join(",") + "\r\n";
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `الظروف_البيئية_${new Date().toISOString().slice(0,10)}.csv`);
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification(`✅ تم تصدير ${environmentalRecords.length} سجل`, 'success');
+            } catch (error) {
+                showNotification(`❌ خطأ في التصدير`, 'error');
+            }
+        }
+        
+        // ================ DETAILS VIEW FUNCTION ================
+        async function viewDetails(recordId) {
+            const record = environmentalRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (!record) {
+                showNotification('❌ لم يتم العثور على السجل', 'error');
+                return;
+            }
+            
+            const detailsHTML = generateEnvironmentalDetails(record);
+            
+            const existingModal = document.getElementById('detailsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            document.getElementById('dynamicModalContainer').innerHTML = detailsHTML;
+            
+            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+        
+        function generateEnvironmentalDetails(record) {
+            let withinLimitsClass = 'badge bg-secondary';
+            let withinLimitsText = escapeHtml(record[10] || '');
+            if (withinLimitsText === 'نعم') {
+                withinLimitsClass = 'badge bg-success';
+            } else if (withinLimitsText === 'لا') {
+                withinLimitsClass = 'badge bg-danger';
+            }
+            
+            return `
+                <div class="modal fade" id="detailsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header modal-header-custom">
+                                <h5 class="modal-title">سجل الظروف البيئية: ${escapeHtml(record[0])}</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[0])}</p>
+                                        <p><strong>الغرفة:</strong> ${escapeHtml(record[1])}</p>
+                                        <p><strong>أجهزة المراقبة:</strong> ${escapeHtml(record[2])}</p>
+                                        <p><strong>التاريخ:</strong> ${formatDate(record[3])}</p>
+                                        <p><strong>الوقت:</strong> ${formatTime(record[4])}</p>
+                                        <p><strong>درجة الحرارة:</strong> ${escapeHtml(record[5])}°C</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>الرطوبة:</strong> ${escapeHtml(record[6])}%RH</p>
+                                        <p><strong>الاهتزاز:</strong> ${escapeHtml(record[7])}</p>
+                                        <p><strong>مصدر الكهرباء:</strong> ${escapeHtml(record[8])}V</p>
+                                        <p><strong>شدة الإضاءة:</strong> ${escapeHtml(record[9])}</p>
+                                        <p><strong>ضمن الحدود:</strong> <span class="${withinLimitsClass}">${withinLimitsText}</span></p>
+                                    </div>
+                                </div>
+                                ${record[11] ? `<p><strong>الملاحظات:</strong> ${escapeHtml(record[11])}</p>` : ''}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // ================ DELETE FUNCTIONALITY ================
+        function showDeleteModal(recordId, recordName) {
+            deleteRecordId = recordId;
+            deleteRecordName = recordName;
+            
+            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
+            document.getElementById('deleteSystemType').textContent = 'الظروف البيئية';
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+        
+        async function confirmDelete() {
+            if (!deleteRecordId) return;
+            
+            const button = document.getElementById('confirmDeleteBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
+            
+            try {
+                const result = await callGoogleScript(ENVIRONMENTAL_SCRIPT_URL, 'delete', { recordId: deleteRecordId });
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                    
+                    deleteRecordId = '';
+                    deleteRecordName = '';
+                    
+                    loadEnvironmentalData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في الحذف`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        // ================ HELPER FUNCTIONS ================
+        function updateTotalRecordsCount() {
+            const total = environmentalRecords.length;
+            document.getElementById('totalRecords').textContent = total.toLocaleString('ar-SA');
+        }
+        
+        // ================ TAB NAVIGATION BETWEEN DATE FIELDS ================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add tab navigation for date fields
+            document.querySelectorAll('.date-day').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    if (this.value.length >= 2) {
+                        this.nextElementSibling.nextElementSibling.nextElementSibling.focus();
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.date-month').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    if (this.value.length >= 2) {
+                        this.nextElementSibling.nextElementSibling.focus();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

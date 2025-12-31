@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة وتقييم الموردين - معمل كواليتك إنترناشيونال</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --supplier-color: #2ecc71;
+        }
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .main-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .main-header .lead {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .header-badge {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Home Button - ADDED FROM FIRST CODE */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
+        .home-button:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .home-button i {
+            margin-right: 5px;
+        }
+        
+        /* Card Styles */
+        .custom-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card-header-custom {
+            padding: 15px 20px;
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+        }
+        
+        .card-header-supplier {
+            background: linear-gradient(135deg, var(--supplier-color), #27ae60);
+        }
+        
+        /* Form Styles */
+        .form-control-custom, .form-select-custom, .form-textarea-custom {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            background: white;
+        }
+        
+        .form-textarea-custom {
+            min-height: 70px;
+            resize: vertical;
+        }
+        
+        .form-label-custom {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+        
+        .table-custom {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0;
+            min-width: 1200px;
+            width: 100%;
+        }
+        
+        .table-custom thead th {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: white;
+            border: none;
+            padding: 15px 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        
+        .table-custom tbody tr {
+            transition: all 0.2s;
+        }
+        
+        .table-custom tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.08);
+        }
+        
+        .table-custom tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+        
+        /* Action Buttons */
+        .action-buttons .btn {
+            margin: 0 2px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            min-width: 70px;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            padding: 15px 20px;
+            color: white;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: #212529;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        .spinner-border-custom {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-width: 0.2rem;
+        }
+        
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+        
+        /* تنسيق مجموعة حقول التاريخ */
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .date-input-group .form-control-custom {
+            text-align: center;
+            padding: 0.375rem 0.25rem;
+            flex: 1;
+        }
+        
+        .date-input-group .date-day {
+            max-width: 60px;
+        }
+        
+        .date-input-group .date-month {
+            max-width: 60px;
+        }
+        
+        .date-input-group .date-year {
+            max-width: 80px;
+        }
+        
+        .date-input-group .date-separator {
+            font-size: 1.2rem;
+            color: #6c757d;
+            font-weight: bold;
+            min-width: 10px;
+        }
+        
+        /* تنسيق placeholders داخل حقول التاريخ */
+        .date-input-group input::placeholder {
+            color: #adb5bd;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons .btn {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                margin: 1px;
+                min-width: 60px;
+            }
+            
+            .table-custom {
+                min-width: 1000px;
+            }
+            
+            /* Home Button Responsive Styles - ADDED FROM FIRST CODE */
+            .home-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+            
+            .main-header {
+                padding-top: 60px;
+            }
+        }
+        
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        /* Badge Styles */
+        .badge-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .badge-approved {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .badge-rejected {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .badge-pending {
+            background: #f39c12;
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+    
+    <!-- Main Container -->
+    <div class="container-fluid main-container">
+        <!-- Main Header -->
+        <div class="main-header fade-in">
+            <!-- Return to Home Button - ADDED FROM FIRST CODE -->
+            <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
+                <i class="fas fa-home"></i> العودة للرئيسية
+            </a>
+            
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-truck me-2"></i> نظام إدارة وتقييم الموردين</h1>
+                    <p class="lead mb-0">معمل كواليتك إنترناشيونال - تسجيل وتقييم الموردين حسب معايير الجودة والاعتماد</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="header-badge d-inline-block me-3">
+                        <i class="fas fa-database me-2"></i>
+                        <span id="totalRecords">0</span> مورد
+                    </div>
+                    <div class="header-badge d-inline-block">
+                        <i class="fas fa-calendar me-2"></i>
+                        <span id="currentDate">--/--/----</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-supplier">
+                        <i class="fas fa-truck me-2"></i> نظام إدارة وتقييم الموردين
+                    </div>
+                    <div class="card-body">
+                        <form id="supplierForm">
+                            <!-- ================== Supplier Basic Info ================== -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-user-tie"></i> بيانات المورد
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم المورد</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_supplierId" placeholder="رقم المورد">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اسم المورد *</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_supplierName" placeholder="اسم المورد" required>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">العنوان</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_address" placeholder="العنوان">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الهاتف</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_phone" placeholder="الهاتف">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">البريد الإلكتروني</label>
+                                        <input type="email" class="form-control form-control-custom" id="supplier_email" placeholder="البريد الإلكتروني">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">جهة الاتصال</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_contactPerson" placeholder="جهة الاتصال">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الموقع الإلكتروني</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_website" placeholder="الموقع الإلكتروني">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تم التعرف عليه من خلال</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_knownThrough" placeholder="تم التعرف عليه من خلال">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ آخر معاملة</label>
+                                        <div class="date-input-group">
+                                            <input type="number" class="form-control form-control-custom date-day" id="supplier_lastTransactionDay" placeholder="يوم" min="1" max="31">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-month" id="supplier_lastTransactionMonth" placeholder="شهر" min="1" max="12">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-year" id="supplier_lastTransactionYear" placeholder="سنة" min="1900" max="2100">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الفئة</label>
+                                        <select class="form-select form-select-custom" id="supplier_category">
+                                            <option value="">-- اختر الفئة --</option>
+                                            <option value="حرج">حرج</option>
+                                            <option value="غير حرج">غير حرج</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الخدمة / المنتج</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_serviceProduct" placeholder="الخدمة / المنتج">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الأهمية</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_importance" placeholder="الأهمية">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- ================== Accreditation ================== -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-certificate"></i> الاعتمادات والوثائق
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اعتماد ISO/IEC 17025</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_iso17025" placeholder="اعتماد ISO/IEC 17025">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">نطاق الاعتماد</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_scope" placeholder="نطاق الاعتماد">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">شهادة الاعتماد</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_certificate" placeholder="شهادة الاعتماد">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تقرير معايرة نموذجي</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_sampleReport" placeholder="تقرير معايرة نموذجي">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">دليل الجودة</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_qualityManual" placeholder="دليل الجودة">
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">وثائق أخرى</label>
+                                        <textarea class="form-control form-textarea-custom" id="supplier_otherDocs" placeholder="وثائق أخرى" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- ================== Evaluation ================== -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-chart-line"></i> التقييم الفني والإداري
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الكفاءة الفنية (30%)</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_techCompetence" placeholder="الكفاءة الفنية (30%)">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">نظام الجودة (25%)</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_qualitySystem" placeholder="نظام الجودة (25%)">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الأداء السابق (20%)</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_pastPerformance" placeholder="الأداء السابق (20%)">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الاستقرار المالي (15%)</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_financialStability" placeholder="الاستقرار المالي (15%)">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">السعر والتسليم (10%)</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_priceDelivery" placeholder="السعر والتسليم (10%)">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">النتيجة الكلية %</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_totalScore" placeholder="النتيجة الكلية %">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">قرار الاعتماد</label>
+                                        <select class="form-select form-select-custom" id="supplier_approvalDecision">
+                                            <option value="">-- قرار الاعتماد --</option>
+                                            <option value="معتمد">معتمد</option>
+                                            <option value="غير معتمد">غير معتمد</option>
+                                            <option value="قيد التقييم">قيد التقييم</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الالتزام بمواعيد التسليم</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_deliveryCommitment" placeholder="الالتزام بمواعيد التسليم">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">مطابقة المواصفات</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_specCompliance" placeholder="مطابقة المواصفات">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">سرعة معالجة الشكاوى</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_complaintsHandling" placeholder="سرعة معالجة الشكاوى">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">جودة الوثائق</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_docsQuality" placeholder="جودة الوثائق">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رضا المستخدمين</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_userSatisfaction" placeholder="رضا المستخدمين">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">التقييم الكلي للأداء</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_performanceEvaluation" placeholder="التقييم الكلي للأداء">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- ================== Approvals ================== -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-check-circle"></i> المراجعة والاعتماد
+                                </div>
+                                
+                                <h6 class="mb-3">إعداد</h6>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">أعد بواسطة</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_preparedBy" placeholder="أعد بواسطة">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">تاريخ الإعداد</label>
+                                        <div class="date-input-group">
+                                            <input type="number" class="form-control form-control-custom date-day" id="supplier_prepareDay" placeholder="يوم" min="1" max="31">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-month" id="supplier_prepareMonth" placeholder="شهر" min="1" max="12">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-year" id="supplier_prepareYear" placeholder="سنة" min="1900" max="2100">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">توقيع الإعداد</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_prepareSign" placeholder="توقيع الإعداد">
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mb-3">مراجعة</h6>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">راجع بواسطة</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_reviewedBy" placeholder="راجع بواسطة">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">تاريخ المراجعة</label>
+                                        <div class="date-input-group">
+                                            <input type="number" class="form-control form-control-custom date-day" id="supplier_reviewDay" placeholder="يوم" min="1" max="31">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-month" id="supplier_reviewMonth" placeholder="شهر" min="1" max="12">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-year" id="supplier_reviewYear" placeholder="سنة" min="1900" max="2100">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">توقيع المراجعة</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_reviewSign" placeholder="توقيع المراجعة">
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mb-3">اعتماد</h6>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">اعتمد بواسطة</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_approvedBy" placeholder="اعتمد بواسطة">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">تاريخ الاعتماد</label>
+                                        <div class="date-input-group">
+                                            <input type="number" class="form-control form-control-custom date-day" id="supplier_approvalDay" placeholder="يوم" min="1" max="31">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-month" id="supplier_approvalMonth" placeholder="شهر" min="1" max="12">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-year" id="supplier_approvalYear" placeholder="سنة" min="1900" max="2100">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">توقيع الاعتماد</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_approvalSign" placeholder="توقيع الاعتماد">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم الإصدار</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_versionNo" placeholder="رقم الإصدار">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ الإصدار</label>
+                                        <div class="date-input-group">
+                                            <input type="number" class="form-control form-control-custom date-day" id="supplier_releaseDay" placeholder="يوم" min="1" max="31">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-month" id="supplier_releaseMonth" placeholder="شهر" min="1" max="12">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-year" id="supplier_releaseYear" placeholder="سنة" min="1900" max="2100">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ بدء العمل</label>
+                                        <div class="date-input-group">
+                                            <input type="number" class="form-control form-control-custom date-day" id="supplier_startWorkDay" placeholder="يوم" min="1" max="31">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-month" id="supplier_startWorkMonth" placeholder="شهر" min="1" max="12">
+                                            <span class="date-separator">/</span>
+                                            <input type="number" class="form-control form-control-custom date-year" id="supplier_startWorkYear" placeholder="سنة" min="1900" max="2100">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اسم المراجع</label>
+                                        <input type="text" class="form-control form-control-custom" id="supplier_reviewerName" placeholder="اسم المراجع">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- ================== Notes ================== -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-sticky-note"></i> ملاحظات عامة
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mb-2">
+                                        <textarea class="form-control form-textarea-custom" id="supplier_notes" placeholder="ملاحظات عامة" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button type="button" onclick="resetSupplierForm()" class="btn btn-outline-secondary">
+                                        <i class="fas fa-redo me-1"></i> مسح النموذج
+                                    </button>
+                                    <div>
+                                        <button type="button" onclick="addSupplierRecord()" class="btn btn-success me-2" id="supplier_addBtn">
+                                            <i class="fas fa-plus me-1"></i> إضافة جديد
+                                        </button>
+                                        <button type="button" onclick="updateSupplierRecord()" class="btn btn-primary" id="supplier_updateBtn" style="display: none;">
+                                            <i class="fas fa-save me-1"></i> تحديث السجل
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="supplier_editingId">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Records Table Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-supplier d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-list me-2"></i> قائمة الموردين</span>
+                        <div>
+                            <button onclick="loadSupplierData()" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-sync-alt"></i> تحديث
+                            </button>
+                            <button onclick="exportSupplierCSV()" class="btn btn-light btn-sm">
+                                <i class="fas fa-download"></i> تصدير
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="loading-spinner" id="supplierLoadingSpinner">
+                            <div class="spinner-border text-primary spinner-border-custom" role="status">
+                                <span class="visually-hidden">جاري التحميل...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive" id="supplierTableContainer" style="display: none;">
+                            <table class="table table-custom table-hover" id="supplierDataTable">
+                            </table>
+                        </div>
+                        
+                        <div id="supplierNoRecords" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-truck fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted">لا توجد موردين لعرضها</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="row mt-4 fade-in">
+            <div class="col-12 text-center">
+                <p class="text-muted">
+                    <i class="fas fa-copyright me-1"></i> نظام إدارة الموردين 
+                    <span id="currentYear"></span> | 
+                    <span class="text-info">الإصدار 1.0</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تأكيد الحذف</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle fa-2x float-start me-3"></i>
+                        <h5 class="alert-heading">تحذير!</h5>
+                        <p>هل أنت متأكد من حذف هذا السجل؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+                        <hr>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">إدارة الموردين</span></p>
+                        <p class="mb-0"><strong>رقم المورد:</strong> <span id="deleteRecordId">غير معروف</span></p>
+                        <p class="mb-0"><strong>اسم المورد:</strong> <span id="deleteRecordName">غير معروف</span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i> نعم، احذف السجل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal (Dynamic) -->
+    <div id="dynamicModalContainer"></div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // ================ CONFIGURATION ================
+        const SUPPLIER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjLyLn0eia6MXUJ1KUuiTKq6bt-Ss0Z8b3Qs91xHZ0eWQ1f8hHbqlTJlrNA2rVUnkH/exec";
+        
+        // ================ GLOBAL VARIABLES ================
+        let supplierRecords = [];
+        let deleteRecordId = '';
+        let deleteRecordName = '';
+        
+        // ================ INITIALIZATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date and year
+            setCurrentDate();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Load supplier data
+            loadSupplierData();
+        });
+        
+        // ================ DATE FORMAT FUNCTIONS ================
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                // Handle dd/mm/yyyy format
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        const day = parts[0].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[2];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                // Handle yyyy-mm-dd format
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        const day = parts[2].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[0];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                return dateString;
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        function formatDateForInput(dateString) {
+            if (!dateString) return {day: '', month: '', year: ''};
+            try {
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[0],
+                            month: parts[1],
+                            year: parts[2]
+                        };
+                    }
+                }
+                
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[2],
+                            month: parts[1],
+                            year: parts[0]
+                        };
+                    }
+                }
+                
+                return {day: '', month: '', year: ''};
+            } catch (e) {
+                return {day: '', month: '', year: ''};
+            }
+        }
+        
+        function getDateFromFields(dayField, monthField, yearField) {
+            const day = document.getElementById(dayField).value;
+            const month = document.getElementById(monthField).value;
+            const year = document.getElementById(yearField).value;
+            
+            if (!day || !month || !year) return '';
+            
+            const formattedDay = day.toString().padStart(2, '0');
+            const formattedMonth = month.toString().padStart(2, '0');
+            return `${formattedDay}/${formattedMonth}/${year}`;
+        }
+        
+        function setDateToFields(dateString, dayField, monthField, yearField) {
+            if (!dateString) {
+                document.getElementById(dayField).value = '';
+                document.getElementById(monthField).value = '';
+                document.getElementById(yearField).value = '';
+                return;
+            }
+            
+            const dateParts = formatDateForInput(dateString);
+            document.getElementById(dayField).value = dateParts.day;
+            document.getElementById(monthField).value = dateParts.month;
+            document.getElementById(yearField).value = dateParts.year;
+        }
+        
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        // ================ NOTIFICATION FUNCTION ================
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-${getNotificationIcon(type)} me-3"></i>
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, duration);
+            }
+            
+            return notification;
+        }
+        
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                default: return 'info-circle';
+            }
+        }
+        
+        // ================ HELPER FUNCTIONS ================
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+                const timeout = 60000;
+                
+                const timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Request timeout'));
+                }, timeout);
+                
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    delete window[callbackName];
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script) script.remove();
+                }
+                
+                window[callbackName] = function(response) {
+                    cleanup();
+                    resolve(response);
+                };
+                
+                const script = document.createElement('script');
+                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+                script.setAttribute('data-callback', callbackName);
+                script.onerror = function() {
+                    cleanup();
+                    reject(new Error('Failed to load script'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        function callGoogleScript(scriptUrl, action, data = {}) {
+            let url = scriptUrl + '?action=' + action;
+            
+            for (const key in data) {
+                if (data[key] !== undefined && data[key] !== null) {
+                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+                }
+            }
+            
+            return jsonp(url);
+        }
+        
+        function validateForm(requiredFields) {
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            return isValid;
+        }
+        
+        // ================ SUPPLIER SYSTEM FUNCTIONS ================
+        async function loadSupplierData() {
+            const spinner = document.getElementById('supplierLoadingSpinner');
+            const tableContainer = document.getElementById('supplierTableContainer');
+            const noRecords = document.getElementById('supplierNoRecords');
+            
+            spinner.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            noRecords.style.display = 'none';
+            
+            try {
+                const result = await callGoogleScript(SUPPLIER_SCRIPT_URL, 'getAll');
+                
+                spinner.style.display = 'none';
+                
+                if (result.status === 'success') {
+                    supplierRecords = result.data;
+                    
+                    if (supplierRecords.length > 0) {
+                        displaySupplierRecords(supplierRecords);
+                        tableContainer.style.display = 'block';
+                        document.getElementById('totalRecords').textContent = supplierRecords.length.toLocaleString('ar-SA');
+                    } else {
+                        noRecords.style.display = 'block';
+                    }
+                } else {
+                    noRecords.style.display = 'block';
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                spinner.style.display = 'none';
+                noRecords.style.display = 'block';
+                showNotification(`❌ خطأ في تحميل الموردين`, 'error');
+            }
+        }
+        
+        function displaySupplierRecords(records) {
+            const table = document.getElementById('supplierDataTable');
+            
+            let html = '<thead><tr>';
+            const headers = ['رقم المورد', 'اسم المورد', 'الهاتف', 'البريد الإلكتروني', 'جهة الاتصال', 'الفئة', 'قرار الاعتماد', 'الإجراءات'];
+            headers.forEach(h => {
+                html += `<th>${h}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            records.forEach((record, index) => {
+                let approvalBadge = '';
+                const approvalStatus = record[24] || '';
+                if (approvalStatus === 'معتمد') {
+                    approvalBadge = '<span class="badge-status badge-approved">معتمد</span>';
+                } else if (approvalStatus === 'غير معتمد') {
+                    approvalBadge = '<span class="badge-status badge-rejected">غير معتمد</span>';
+                } else if (approvalStatus === 'قيد التقييم') {
+                    approvalBadge = '<span class="badge-status badge-pending">قيد التقييم</span>';
+                } else {
+                    approvalBadge = '<span class="badge-status">-</span>';
+                }
+                
+                html += '<tr>';
+                
+                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
+                html += `<td>${escapeHtml(record[1] || '')}</td>`;
+                html += `<td>${escapeHtml(record[3] || '')}</td>`;
+                html += `<td>${escapeHtml(record[4] || '')}</td>`;
+                html += `<td>${escapeHtml(record[5] || '')}</td>`;
+                html += `<td>${escapeHtml(record[9] || '')}</td>`;
+                html += `<td>${approvalBadge}</td>`;
+                
+                html += `<td class="action-buttons">
+                    <button onclick="editSupplierRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                        <i class="fas fa-edit"></i> تعديل
+                    </button>
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[1])}')" class="btn btn-sm btn-danger" title="حذف">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                    <button onclick="viewSupplierDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
+                        <i class="fas fa-eye"></i> عرض
+                    </button>
+                </td>`;
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+        
+        async function addSupplierRecord() {
+            const requiredFields = ['supplier_supplierId', 'supplier_supplierName'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            const button = document.getElementById('supplier_addBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
+            
+            const formData = {
+                supplierId: document.getElementById('supplier_supplierId').value,
+                supplierName: document.getElementById('supplier_supplierName').value,
+                address: document.getElementById('supplier_address').value,
+                phone: document.getElementById('supplier_phone').value,
+                email: document.getElementById('supplier_email').value,
+                contactPerson: document.getElementById('supplier_contactPerson').value,
+                website: document.getElementById('supplier_website').value,
+                knownThrough: document.getElementById('supplier_knownThrough').value,
+                lastTransactionDate: getDateFromFields('supplier_lastTransactionDay', 'supplier_lastTransactionMonth', 'supplier_lastTransactionYear'),
+                category: document.getElementById('supplier_category').value,
+                serviceProduct: document.getElementById('supplier_serviceProduct').value,
+                importance: document.getElementById('supplier_importance').value,
+                iso17025: document.getElementById('supplier_iso17025').value,
+                scope: document.getElementById('supplier_scope').value,
+                certificate: document.getElementById('supplier_certificate').value,
+                sampleReport: document.getElementById('supplier_sampleReport').value,
+                qualityManual: document.getElementById('supplier_qualityManual').value,
+                otherDocs: document.getElementById('supplier_otherDocs').value,
+                techCompetence: document.getElementById('supplier_techCompetence').value,
+                qualitySystem: document.getElementById('supplier_qualitySystem').value,
+                pastPerformance: document.getElementById('supplier_pastPerformance').value,
+                financialStability: document.getElementById('supplier_financialStability').value,
+                priceDelivery: document.getElementById('supplier_priceDelivery').value,
+                totalScore: document.getElementById('supplier_totalScore').value,
+                approvalDecision: document.getElementById('supplier_approvalDecision').value,
+                deliveryCommitment: document.getElementById('supplier_deliveryCommitment').value,
+                specCompliance: document.getElementById('supplier_specCompliance').value,
+                complaintsHandling: document.getElementById('supplier_complaintsHandling').value,
+                docsQuality: document.getElementById('supplier_docsQuality').value,
+                userSatisfaction: document.getElementById('supplier_userSatisfaction').value,
+                performanceEvaluation: document.getElementById('supplier_performanceEvaluation').value,
+                preparedBy: document.getElementById('supplier_preparedBy').value,
+                prepareDate: getDateFromFields('supplier_prepareDay', 'supplier_prepareMonth', 'supplier_prepareYear'),
+                prepareSign: document.getElementById('supplier_prepareSign').value,
+                reviewedBy: document.getElementById('supplier_reviewedBy').value,
+                reviewDate: getDateFromFields('supplier_reviewDay', 'supplier_reviewMonth', 'supplier_reviewYear'),
+                reviewSign: document.getElementById('supplier_reviewSign').value,
+                approvedBy: document.getElementById('supplier_approvedBy').value,
+                approvalDate: getDateFromFields('supplier_approvalDay', 'supplier_approvalMonth', 'supplier_approvalYear'),
+                approvalSign: document.getElementById('supplier_approvalSign').value,
+                versionNo: document.getElementById('supplier_versionNo').value,
+                releaseDate: getDateFromFields('supplier_releaseDay', 'supplier_releaseMonth', 'supplier_releaseYear'),
+                startWorkDate: getDateFromFields('supplier_startWorkDay', 'supplier_startWorkMonth', 'supplier_startWorkYear'),
+                reviewerName: document.getElementById('supplier_reviewerName').value,
+                notes: document.getElementById('supplier_notes').value
+            };
+            
+            try {
+                const result = await callGoogleScript(SUPPLIER_SCRIPT_URL, 'add', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetSupplierForm();
+                    await loadSupplierData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في الإضافة`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        async function editSupplierRecord(recordId) {
+            showNotification('🔍 جاري تحميل بيانات المورد...', 'info');
+            
+            const record = supplierRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (record) {
+                fillSupplierForm(record);
+                document.getElementById('supplier_updateBtn').style.display = 'inline-block';
+                document.getElementById('supplier_addBtn').style.display = 'none';
+                showNotification('✅ تم تحميل بيانات المورد', 'success');
+            } else {
+                showNotification('❌ لم يتم العثور على المورد', 'error');
+            }
+        }
+        
+        function fillSupplierForm(record) {
+            document.getElementById('supplier_supplierId').value = record[0] || '';
+            document.getElementById('supplier_supplierName').value = record[1] || '';
+            document.getElementById('supplier_address').value = record[2] || '';
+            document.getElementById('supplier_phone').value = record[3] || '';
+            document.getElementById('supplier_email').value = record[4] || '';
+            document.getElementById('supplier_contactPerson').value = record[5] || '';
+            document.getElementById('supplier_website').value = record[6] || '';
+            document.getElementById('supplier_knownThrough').value = record[7] || '';
+            setDateToFields(record[8], 'supplier_lastTransactionDay', 'supplier_lastTransactionMonth', 'supplier_lastTransactionYear');
+            document.getElementById('supplier_category').value = record[9] || '';
+            document.getElementById('supplier_serviceProduct').value = record[10] || '';
+            document.getElementById('supplier_importance').value = record[11] || '';
+            document.getElementById('supplier_iso17025').value = record[12] || '';
+            document.getElementById('supplier_scope').value = record[13] || '';
+            document.getElementById('supplier_certificate').value = record[14] || '';
+            document.getElementById('supplier_sampleReport').value = record[15] || '';
+            document.getElementById('supplier_qualityManual').value = record[16] || '';
+            document.getElementById('supplier_otherDocs').value = record[17] || '';
+            document.getElementById('supplier_techCompetence').value = record[18] || '';
+            document.getElementById('supplier_qualitySystem').value = record[19] || '';
+            document.getElementById('supplier_pastPerformance').value = record[20] || '';
+            document.getElementById('supplier_financialStability').value = record[21] || '';
+            document.getElementById('supplier_priceDelivery').value = record[22] || '';
+            document.getElementById('supplier_totalScore').value = record[23] || '';
+            document.getElementById('supplier_approvalDecision').value = record[24] || '';
+            document.getElementById('supplier_deliveryCommitment').value = record[25] || '';
+            document.getElementById('supplier_specCompliance').value = record[26] || '';
+            document.getElementById('supplier_complaintsHandling').value = record[27] || '';
+            document.getElementById('supplier_docsQuality').value = record[28] || '';
+            document.getElementById('supplier_userSatisfaction').value = record[29] || '';
+            document.getElementById('supplier_performanceEvaluation').value = record[30] || '';
+            document.getElementById('supplier_preparedBy').value = record[31] || '';
+            setDateToFields(record[32], 'supplier_prepareDay', 'supplier_prepareMonth', 'supplier_prepareYear');
+            document.getElementById('supplier_prepareSign').value = record[33] || '';
+            document.getElementById('supplier_reviewedBy').value = record[34] || '';
+            setDateToFields(record[35], 'supplier_reviewDay', 'supplier_reviewMonth', 'supplier_reviewYear');
+            document.getElementById('supplier_reviewSign').value = record[36] || '';
+            document.getElementById('supplier_approvedBy').value = record[37] || '';
+            setDateToFields(record[38], 'supplier_approvalDay', 'supplier_approvalMonth', 'supplier_approvalYear');
+            document.getElementById('supplier_approvalSign').value = record[39] || '';
+            document.getElementById('supplier_versionNo').value = record[40] || '';
+            setDateToFields(record[41], 'supplier_releaseDay', 'supplier_releaseMonth', 'supplier_releaseYear');
+            setDateToFields(record[42], 'supplier_startWorkDay', 'supplier_startWorkMonth', 'supplier_startWorkYear');
+            document.getElementById('supplier_reviewerName').value = record[44] || '';
+            document.getElementById('supplier_notes').value = record[45] || '';
+            document.getElementById('supplier_editingId').value = record[0];
+        }
+        
+        async function updateSupplierRecord() {
+            const recordId = document.getElementById('supplier_editingId').value;
+            if (!recordId) {
+                showNotification('❌ لم يتم تحديد مورد للتحديث', 'error');
+                return;
+            }
+            
+            const button = document.getElementById('supplier_updateBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
+            
+            const formData = {
+                supplierId: document.getElementById('supplier_supplierId').value,
+                supplierName: document.getElementById('supplier_supplierName').value,
+                address: document.getElementById('supplier_address').value,
+                phone: document.getElementById('supplier_phone').value,
+                email: document.getElementById('supplier_email').value,
+                contactPerson: document.getElementById('supplier_contactPerson').value,
+                website: document.getElementById('supplier_website').value,
+                knownThrough: document.getElementById('supplier_knownThrough').value,
+                lastTransactionDate: getDateFromFields('supplier_lastTransactionDay', 'supplier_lastTransactionMonth', 'supplier_lastTransactionYear'),
+                category: document.getElementById('supplier_category').value,
+                serviceProduct: document.getElementById('supplier_serviceProduct').value,
+                importance: document.getElementById('supplier_importance').value,
+                iso17025: document.getElementById('supplier_iso17025').value,
+                scope: document.getElementById('supplier_scope').value,
+                certificate: document.getElementById('supplier_certificate').value,
+                sampleReport: document.getElementById('supplier_sampleReport').value,
+                qualityManual: document.getElementById('supplier_qualityManual').value,
+                otherDocs: document.getElementById('supplier_otherDocs').value,
+                techCompetence: document.getElementById('supplier_techCompetence').value,
+                qualitySystem: document.getElementById('supplier_qualitySystem').value,
+                pastPerformance: document.getElementById('supplier_pastPerformance').value,
+                financialStability: document.getElementById('supplier_financialStability').value,
+                priceDelivery: document.getElementById('supplier_priceDelivery').value,
+                totalScore: document.getElementById('supplier_totalScore').value,
+                approvalDecision: document.getElementById('supplier_approvalDecision').value,
+                deliveryCommitment: document.getElementById('supplier_deliveryCommitment').value,
+                specCompliance: document.getElementById('supplier_specCompliance').value,
+                complaintsHandling: document.getElementById('supplier_complaintsHandling').value,
+                docsQuality: document.getElementById('supplier_docsQuality').value,
+                userSatisfaction: document.getElementById('supplier_userSatisfaction').value,
+                performanceEvaluation: document.getElementById('supplier_performanceEvaluation').value,
+                preparedBy: document.getElementById('supplier_preparedBy').value,
+                prepareDate: getDateFromFields('supplier_prepareDay', 'supplier_prepareMonth', 'supplier_prepareYear'),
+                prepareSign: document.getElementById('supplier_prepareSign').value,
+                reviewedBy: document.getElementById('supplier_reviewedBy').value,
+                reviewDate: getDateFromFields('supplier_reviewDay', 'supplier_reviewMonth', 'supplier_reviewYear'),
+                reviewSign: document.getElementById('supplier_reviewSign').value,
+                approvedBy: document.getElementById('supplier_approvedBy').value,
+                approvalDate: getDateFromFields('supplier_approvalDay', 'supplier_approvalMonth', 'supplier_approvalYear'),
+                approvalSign: document.getElementById('supplier_approvalSign').value,
+                versionNo: document.getElementById('supplier_versionNo').value,
+                releaseDate: getDateFromFields('supplier_releaseDay', 'supplier_releaseMonth', 'supplier_releaseYear'),
+                startWorkDate: getDateFromFields('supplier_startWorkDay', 'supplier_startWorkMonth', 'supplier_startWorkYear'),
+                reviewerName: document.getElementById('supplier_reviewerName').value,
+                notes: document.getElementById('supplier_notes').value
+            };
+            
+            try {
+                const result = await callGoogleScript(SUPPLIER_SCRIPT_URL, 'update', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetSupplierForm();
+                    await loadSupplierData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في التحديث`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        function resetSupplierForm() {
+            document.getElementById('supplierForm').reset();
+            document.getElementById('supplier_editingId').value = '';
+            document.getElementById('supplier_addBtn').style.display = 'inline-block';
+            document.getElementById('supplier_updateBtn').style.display = 'none';
+            document.querySelectorAll('#supplierForm .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+        }
+        
+        function exportSupplierCSV() {
+            if (supplierRecords.length === 0) {
+                showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
+                return;
+            }
+            
+            showNotification('📥 جاري تصدير الموردين...', 'info');
+            
+            try {
+                const headers = [
+                    'رقم المورد', 'اسم المورد', 'العنوان', 'الهاتف', 'البريد الإلكتروني',
+                    'جهة الاتصال', 'الموقع الإلكتروني', 'تم التعرف عليه من خلال',
+                    'تاريخ آخر معاملة', 'الفئة', 'الخدمة / المنتج', 'الأهمية',
+                    'اعتماد ISO/IEC 17025', 'نطاق الاعتماد', 'شهادة الاعتماد',
+                    'تقرير معايرة نموذجي', 'دليل الجودة', 'وثائق أخرى',
+                    'الكفاءة الفنية (30%)', 'نظام الجودة (25%)', 'الأداء السابق (20%)',
+                    'الاستقرار المالي (15%)', 'السعر والتسليم (10%)', 'النتيجة الكلية %',
+                    'قرار الاعتماد', 'الالتزام بمواعيد التسليم', 'مطابقة المواصفات',
+                    'سرعة معالجة الشكاوى', 'جودة الوثائق', 'رضا المستخدمين',
+                    'التقييم الكلي للأداء', 'أعد بواسطة', 'تاريخ الإعداد', 'توقيع الإعداد',
+                    'راجع بواسطة', 'تاريخ المراجعة', 'توقيع المراجعة', 'اعتمد بواسطة',
+                    'تاريخ الاعتماد', 'توقيع الاعتماد', 'رقم الإصدار', 'تاريخ الإصدار',
+                    'تاريخ بدء العمل', 'اسم المراجع', 'ملاحظات'
+                ];
+                
+                let csvContent = '\uFEFF';
+                csvContent += headers.join(",") + "\r\n";
+                
+                supplierRecords.forEach(record => {
+                    const row = [];
+                    for (let i = 0; i < 46; i++) {
+                        if (i === 8 || i === 32 || i === 35 || i === 38 || i === 41 || i === 42) {
+                            row.push(formatDate(record[i] || ''));
+                        } else {
+                            row.push(record[i] || '');
+                        }
+                    }
+                    
+                    const escapedRow = row.map(cell => {
+                        return `"${cell.toString().replace(/"/g, '""')}"`;
+                    });
+                    csvContent += escapedRow.join(",") + "\r\n";
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `الموردين_${new Date().toISOString().slice(0,10)}.csv`);
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification(`✅ تم تصدير ${supplierRecords.length} مورد`, 'success');
+            } catch (error) {
+                showNotification(`❌ خطأ في التصدير`, 'error');
+            }
+        }
+        
+        // ================ DETAILS VIEW FUNCTION ================
+        function viewSupplierDetails(recordId) {
+            const record = supplierRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (!record) {
+                showNotification('❌ لم يتم العثور على المورد', 'error');
+                return;
+            }
+            
+            let approvalBadge = '';
+            const approvalStatus = record[24] || '';
+            if (approvalStatus === 'معتمد') {
+                approvalBadge = '<span class="badge-status badge-approved">معتمد</span>';
+            } else if (approvalStatus === 'غير معتمد') {
+                approvalBadge = '<span class="badge-status badge-rejected">غير معتمد</span>';
+            } else if (approvalStatus === 'قيد التقييم') {
+                approvalBadge = '<span class="badge-status badge-pending">قيد التقييم</span>';
+            }
+            
+            const detailsHTML = `
+                <div class="modal fade" id="detailsModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header modal-header-custom">
+                                <h5 class="modal-title">تفاصيل المورد: ${escapeHtml(record[0])}</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>رقم المورد:</strong> ${escapeHtml(record[0])}</p>
+                                        <p><strong>اسم المورد:</strong> ${escapeHtml(record[1])}</p>
+                                        <p><strong>العنوان:</strong> ${escapeHtml(record[2])}</p>
+                                        <p><strong>الهاتف:</strong> ${escapeHtml(record[3])}</p>
+                                        <p><strong>البريد الإلكتروني:</strong> ${escapeHtml(record[4])}</p>
+                                        <p><strong>جهة الاتصال:</strong> ${escapeHtml(record[5])}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>الموقع الإلكتروني:</strong> ${escapeHtml(record[6])}</p>
+                                        <p><strong>تم التعرف عليه من خلال:</strong> ${escapeHtml(record[7])}</p>
+                                        <p><strong>تاريخ آخر معاملة:</strong> ${formatDate(record[8])}</p>
+                                        <p><strong>الفئة:</strong> ${escapeHtml(record[9])}</p>
+                                        <p><strong>الخدمة/المنتج:</strong> ${escapeHtml(record[10])}</p>
+                                        <p><strong>الأهمية:</strong> ${escapeHtml(record[11])}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <div class="form-section-title">الاعتمادات والوثائق</div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>اعتماد ISO/IEC 17025:</strong> ${escapeHtml(record[12])}</p>
+                                            <p><strong>نطاق الاعتماد:</strong> ${escapeHtml(record[13])}</p>
+                                            <p><strong>شهادة الاعتماد:</strong> ${escapeHtml(record[14])}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>تقرير معايرة نموذجي:</strong> ${escapeHtml(record[15])}</p>
+                                            <p><strong>دليل الجودة:</strong> ${escapeHtml(record[16])}</p>
+                                            <p><strong>وثائق أخرى:</strong> ${escapeHtml(record[17])}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <div class="form-section-title">التقييم الفني والإداري</div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>الكفاءة الفنية (30%):</strong> ${escapeHtml(record[18])}</p>
+                                            <p><strong>نظام الجودة (25%):</strong> ${escapeHtml(record[19])}</p>
+                                            <p><strong>الأداء السابق (20%):</strong> ${escapeHtml(record[20])}</p>
+                                            <p><strong>الاستقرار المالي (15%):</strong> ${escapeHtml(record[21])}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>السعر والتسليم (10%):</strong> ${escapeHtml(record[22])}</p>
+                                            <p><strong>النتيجة الكلية:</strong> ${escapeHtml(record[23])}%</p>
+                                            <p><strong>قرار الاعتماد:</strong> ${approvalBadge}</p>
+                                            <p><strong>التقييم الكلي للأداء:</strong> ${escapeHtml(record[30])}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                ${record[45] ? `<div class="form-section">
+                                    <div class="form-section-title">ملاحظات</div>
+                                    <p>${escapeHtml(record[45])}</p>
+                                </div>` : ''}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const existingModal = document.getElementById('detailsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            document.getElementById('dynamicModalContainer').innerHTML = detailsHTML;
+            
+            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+        
+        // ================ DELETE FUNCTIONALITY ================
+        function showDeleteModal(recordId, recordName) {
+            deleteRecordId = recordId;
+            deleteRecordName = recordName;
+            
+            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+        
+        async function confirmDelete() {
+            if (!deleteRecordId) return;
+            
+            const button = document.getElementById('confirmDeleteBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
+            
+            try {
+                const result = await callGoogleScript(SUPPLIER_SCRIPT_URL, 'delete', { recordId: deleteRecordId });
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                    
+                    deleteRecordId = '';
+                    deleteRecordName = '';
+                    
+                    await loadSupplierData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showNotification(`❌ خطأ في الحذف`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        // ================ DATE FIELD TAB NAVIGATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            // دالة للمساعدة في التنقل بين حقول التاريخ باستخدام Tab
+            document.querySelectorAll('.date-day').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    if (this.value.length >= 2) {
+                        const nextElement = this.nextElementSibling;
+                        if (nextElement && nextElement.nextElementSibling && nextElement.nextElementSibling.nextElementSibling) {
+                            nextElement.nextElementSibling.nextElementSibling.focus();
+                        }
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.date-month').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    if (this.value.length >= 2) {
+                        const nextElement = this.nextElementSibling;
+                        if (nextElement && nextElement.nextElementSibling) {
+                            nextElement.nextElementSibling.focus();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
