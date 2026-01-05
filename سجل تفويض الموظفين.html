@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة تفويض الصلاحيات</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --delegation-color: #2980b9;
+        }
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .main-header .lead {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .header-badge {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Home Button */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            white-space: nowrap;
+        }
+        
+        .home-button:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .home-button i {
+            margin-right: 5px;
+        }
+        
+        /* Card Styles */
+        .custom-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card-header-custom {
+            padding: 15px 20px;
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+        }
+        
+        .card-header-delegation {
+            background: linear-gradient(135deg, var(--delegation-color), #3498db);
+        }
+        
+        /* Form Styles */
+        .form-control-custom, .form-select-custom, .form-textarea-custom {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            background: white;
+        }
+        
+        .form-textarea-custom {
+            min-height: 70px;
+            resize: vertical;
+        }
+        
+        .form-label-custom {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        /* Custom Date Input */
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .date-input-group .form-control-custom {
+            text-align: center;
+            padding: 0.375rem 0.25rem;
+            flex: 1;
+        }
+        
+        .date-input-group .date-day {
+            max-width: 60px;
+        }
+        
+        .date-input-group .date-month {
+            max-width: 60px;
+        }
+        
+        .date-input-group .date-year {
+            max-width: 80px;
+        }
+        
+        .date-input-group .date-separator {
+            font-size: 1.2rem;
+            color: #6c757d;
+            font-weight: bold;
+            min-width: 10px;
+        }
+        
+        .date-input-group input::placeholder {
+            color: #adb5bd;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+        
+        .table-custom {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0;
+            width: 100%;
+        }
+        
+        .table-custom thead th {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: white;
+            border: none;
+            padding: 15px 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        
+        .table-custom tbody tr {
+            transition: all 0.2s;
+        }
+        
+        .table-custom tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.08);
+        }
+        
+        .table-custom tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+        
+        /* Action Buttons */
+        .action-buttons .btn {
+            margin: 0 2px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            min-width: 70px;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            padding: 15px 20px;
+            color: white;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: #212529;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        .spinner-border-custom {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-width: 0.2rem;
+        }
+        
+        /* Badge Status */
+        .badge-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons .btn {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                margin: 1px;
+                min-width: 60px;
+            }
+            
+            .table-custom {
+                min-width: 1200px;
+            }
+            
+            .home-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+            
+            .main-header {
+                padding-top: 60px;
+            }
+            
+            .header-badge-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+        
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        /* Header adjustments for home button */
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Ensure the date badge doesn't overlap with home button */
+        @media (min-width: 769px) {
+            .header-badge-container {
+                position: relative;
+                padding-left: 130px; /* Space for home button */
+            }
+        }
+        
+        /* Signature Preview */
+        .signature-preview {
+            font-family: 'Comic Sans MS', cursive;
+            color: #666;
+            font-style: italic;
+            min-height: 24px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #f8f9fa;
+            margin-top: 4px;
+        }
+        
+        /* Status Badges for Delegation */
+        .status-active {
+            background-color: #28a745 !important;
+            color: white !important;
+        }
+        
+        .status-expired {
+            background-color: #dc3545 !important;
+            color: white !important;
+        }
+        
+        .status-pending {
+            background-color: #ffc107 !important;
+            color: #212529 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+    
+    <!-- Main Container -->
+    <div class="container-fluid main-container">
+        <!-- Main Header -->
+        <div class="main-header fade-in">
+            <!-- Return to Home Button -->
+            <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
+                <i class="fas fa-home"></i> العودة للرئيسية
+            </a>
+            
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1><i class="fas fa-user-shield me-2"></i> نظام إدارة تفويض الصلاحيات</h1>
+                        <p class="lead mb-0">إدارة تفويض الصلاحيات والتوقيعات والقيود ومراجعة التفويض</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
+                        <div class="header-badge d-inline-block me-3">
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> سجلات
+                        </div>
+                        <div class="header-badge d-inline-block">
+                            <i class="fas fa-calendar me-2"></i>
+                            <span id="currentDate">--/--/----</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-delegation">
+                        <i class="fas fa-user-tag me-2"></i> إضافة / تعديل سجل تفويض
+                    </div>
+                    <div class="card-body">
+                        <form id="delegationForm">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label-custom">الرقم الوظيفي *</label>
+                                    <input type="text" class="form-control form-control-custom" id="recordId" placeholder="الرقم الوظيفي" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label-custom">الاسم *</label>
+                                    <input type="text" class="form-control form-control-custom" id="name" placeholder="الاسم" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label-custom">المنصب *</label>
+                                    <input type="text" class="form-control form-control-custom" id="position" placeholder="المنصب" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label-custom">الصلاحية المفوضة *</label>
+                                    <input type="text" class="form-control form-control-custom" id="delegatedAuthority" placeholder="الصلاحية المفوضة" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">القيود</label>
+                                    <textarea class="form-control form-textarea-custom" id="restrictions" placeholder="القيود" rows="2"></textarea>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label-custom">ملاحظات إضافية</label>
+                                    <textarea class="form-control form-textarea-custom" id="notes" placeholder="ملاحظات إضافية" rows="2"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label-custom">تاريخ التفويض *</label>
+                                    <div class="date-input-group">
+                                        <input type="number" class="form-control form-control-custom text-center date-day" id="delegation_date_day" placeholder="يوم" min="1" max="31" required>
+                                        <span class="date-separator">/</span>
+                                        <input type="number" class="form-control form-control-custom text-center date-month" id="delegation_date_month" placeholder="شهر" min="1" max="12" required>
+                                        <span class="date-separator">/</span>
+                                        <input type="number" class="form-control form-control-custom text-center date-year" id="delegation_date_year" placeholder="سنة" min="1900" max="2100" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label-custom">تاريخ الانتهاء/المراجعة *</label>
+                                    <div class="date-input-group">
+                                        <input type="number" class="form-control form-control-custom text-center date-day" id="expiry_date_day" placeholder="يوم" min="1" max="31" required>
+                                        <span class="date-separator">/</span>
+                                        <input type="number" class="form-control form-control-custom text-center date-month" id="expiry_date_month" placeholder="شهر" min="1" max="12" required>
+                                        <span class="date-separator">/</span>
+                                        <input type="number" class="form-control form-control-custom text-center date-year" id="expiry_date_year" placeholder="سنة" min="1900" max="2100" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label-custom">توقيع المفوض *</label>
+                                    <input type="text" class="form-control form-control-custom" id="labManagerSignature" placeholder="توقيع المفوض (مدير المعمل)" required>
+                                    <div class="signature-preview" id="labSignaturePreview"></div>
+                                </div>
+                                
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label-custom">توقيع المفوض إليه *</label>
+                                    <input type="text" class="form-control form-control-custom" id="delegateSignature" placeholder="توقيع المفوض إليه" required>
+                                    <div class="signature-preview" id="delegateSignaturePreview"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label-custom">سبب إنهاء التفويض (إن وجد)</label>
+                                    <textarea class="form-control form-textarea-custom" id="terminationReason" placeholder="سبب إنهاء التفويض" rows="2"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button type="button" onclick="resetDelegationForm()" class="btn btn-outline-secondary">
+                                        <i class="fas fa-redo me-1"></i> مسح النموذج
+                                    </button>
+                                    <div>
+                                        <button type="button" onclick="addDelegationRecord()" class="btn btn-success me-2" id="delegation_addBtn">
+                                            <i class="fas fa-plus me-1"></i> إضافة جديد
+                                        </button>
+                                        <button type="button" onclick="updateDelegationRecord()" class="btn btn-primary" id="delegation_updateBtn" style="display: none;">
+                                            <i class="fas fa-save me-1"></i> تحديث السجل
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="delegation_editingId">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Records Table Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-delegation d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-list me-2"></i> قائمة سجلات تفويض الصلاحيات</span>
+                        <div>
+                            <button onclick="loadDelegationData()" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-sync-alt"></i> تحديث القائمة
+                            </button>
+                            <button onclick="exportDelegationCSV()" class="btn btn-light btn-sm">
+                                <i class="fas fa-download"></i> تصدير CSV
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="loading-spinner" id="delegationLoadingSpinner">
+                            <div class="spinner-border text-primary spinner-border-custom" role="status">
+                                <span class="visually-hidden">جاري التحميل...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive" id="delegationTableContainer" style="display: none;">
+                            <table class="table table-custom table-hover" id="delegationDataTable">
+                                <!-- Table content will be loaded dynamically -->
+                            </table>
+                        </div>
+                        
+                        <div id="delegationNoRecords" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-user-shield fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted">لا توجد سجلات تفويض لعرضها</h4>
+                            <p class="text-muted">ابدأ بإضافة سجل تفويض جديد باستخدام النموذج أعلاه</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="row mt-4 fade-in">
+            <div class="col-12 text-center">
+                <p class="text-muted">
+                    <i class="fas fa-copyright me-1"></i> نظام إدارة تفويض الصلاحيات
+                    <span id="currentYear"></span> | 
+                    <span class="text-info">الإصدار 2.0</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تأكيد الحذف</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle fa-2x float-start me-3"></i>
+                        <h5 class="alert-heading">تحذير!</h5>
+                        <p>هل أنت متأكد من حذف هذا السجل؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+                        <hr>
+                        <p class="mb-0"><strong>الرقم الوظيفي:</strong> <span id="deleteRecordId">غير معروف</span></p>
+                        <p class="mb-0"><strong>الاسم:</strong> <span id="deleteRecordName">غير معروف</span></p>
+                        <p class="mb-0"><strong>الصلاحية:</strong> <span id="deleteRecordAuthority">غير معروف</span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i> نعم، احذف السجل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title" id="detailsModalTitle">تفاصيل سجل التفويض</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Details will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // ================ CONFIGURATION ================
+        const DELEGATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnQeMasA2IThUIVMy5nn-_c1TwePITdoSM8-z8ldE15SuAbBTWJyJGyaV9eHLOgx9sdg/exec";
+        
+        // ================ GLOBAL VARIABLES ================
+        let delegationRecords = [];
+        let deleteRecordId = '';
+        let deleteRecordName = '';
+        let deleteRecordAuthority = '';
+        
+        // ================ INITIALIZATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date and year
+            setCurrentDate();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Load data on page load
+            setTimeout(() => {
+                loadDelegationData();
+            }, 500);
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl + S to save
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    if (document.getElementById('delegation_updateBtn').style.display !== 'none') {
+                        updateDelegationRecord();
+                    } else {
+                        addDelegationRecord();
+                    }
+                }
+                
+                // Escape to clear form
+                if (e.key === 'Escape') {
+                    resetDelegationForm();
+                }
+            });
+            
+            // Update signature previews
+            document.getElementById('labManagerSignature').addEventListener('input', function() {
+                document.getElementById('labSignaturePreview').textContent = this.value;
+            });
+            
+            document.getElementById('delegateSignature').addEventListener('input', function() {
+                document.getElementById('delegateSignaturePreview').textContent = this.value;
+            });
+            
+            // Keyboard navigation for date fields
+            const dateFields = document.querySelectorAll('.date-day, .date-month, .date-year');
+            dateFields.forEach((field, index) => {
+                field.addEventListener('input', function(e) {
+                    if (this.value.length >= this.maxLength && index < dateFields.length - 1) {
+                        dateFields[index + 1].focus();
+                    }
+                });
+                
+                field.addEventListener('keydown', function(e) {
+                    if (e.key === 'ArrowLeft' && index > 0) {
+                        dateFields[index - 1].focus();
+                    } else if (e.key === 'ArrowRight' && index < dateFields.length - 1) {
+                        dateFields[index + 1].focus();
+                    }
+                });
+            });
+        });
+        
+        // ================ DATE FORMAT FUNCTIONS ================
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                // Handle dd/mm/yyyy format
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        const day = parts[0].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[2];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                // Handle yyyy-mm-dd format
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        const day = parts[2].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[0];
+                        return `${day}/${month}/${year}`;
+                    }
+                }
+                
+                return dateString;
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        function formatDateForInput(dateString) {
+            if (!dateString) return {day: '', month: '', year: ''};
+            try {
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[0],
+                            month: parts[1],
+                            year: parts[2]
+                        };
+                    }
+                }
+                
+                if (dateString.includes('-')) {
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        return {
+                            day: parts[2],
+                            month: parts[1],
+                            year: parts[0]
+                        };
+                    }
+                }
+                
+                return {day: '', month: '', year: ''};
+            } catch (e) {
+                return {day: '', month: '', year: ''};
+            }
+        }
+        
+        function getDateString(day, month, year) {
+            if (!day || !month || !year) return '';
+            const formattedDay = day.toString().padStart(2, '0');
+            const formattedMonth = month.toString().padStart(2, '0');
+            return `${formattedDay}/${formattedMonth}/${year}`;
+        }
+        
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        // ================ NOTIFICATION FUNCTIONS ================
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-${getNotificationIcon(type)} me-3"></i>
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, duration);
+            }
+            
+            return notification;
+        }
+        
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                default: return 'info-circle';
+            }
+        }
+        
+        // ================ API COMMUNICATION FUNCTIONS ================
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+                const timeout = 60000;
+                
+                const timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Request timeout'));
+                }, timeout);
+                
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    delete window[callbackName];
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script) script.remove();
+                }
+                
+                window[callbackName] = function(response) {
+                    cleanup();
+                    resolve(response);
+                };
+                
+                const script = document.createElement('script');
+                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+                script.setAttribute('data-callback', callbackName);
+                script.onerror = function() {
+                    cleanup();
+                    reject(new Error('Failed to load script'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        function callGoogleScript(scriptUrl, action, data = {}) {
+            let url = scriptUrl + '?action=' + action;
+            
+            for (const key in data) {
+                if (data[key] !== undefined && data[key] !== null) {
+                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+                }
+            }
+            
+            return jsonp(url);
+        }
+        
+        // ================ VALIDATION HELPER ================
+        function validateForm(requiredFields) {
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            return isValid;
+        }
+        
+        // ================ DELEGATION FUNCTIONS ================
+        async function loadDelegationData() {
+            const spinner = document.getElementById('delegationLoadingSpinner');
+            const tableContainer = document.getElementById('delegationTableContainer');
+            const noRecords = document.getElementById('delegationNoRecords');
+            
+            spinner.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            noRecords.style.display = 'none';
+            
+            try {
+                const result = await callGoogleScript(DELEGATION_SCRIPT_URL, 'getAll');
+                
+                spinner.style.display = 'none';
+                
+                if (result.status === 'success') {
+                    delegationRecords = result.data;
+                    
+                    if (delegationRecords.length > 0) {
+                        displayDelegationRecords(delegationRecords);
+                        tableContainer.style.display = 'block';
+                        updateTotalRecordsCount();
+                        showNotification(`✅ تم تحميل ${delegationRecords.length} سجل تفويض`, 'success', 3000);
+                    } else {
+                        noRecords.style.display = 'block';
+                    }
+                } else {
+                    noRecords.style.display = 'block';
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error loading delegation records:', error);
+                spinner.style.display = 'none';
+                noRecords.style.display = 'block';
+                showNotification(`❌ خطأ في تحميل سجلات التفويض`, 'error');
+            }
+        }
+        
+        function displayDelegationRecords(records) {
+            const table = document.getElementById('delegationDataTable');
+            
+            let html = '<thead><tr>';
+            const headers = ['الرقم الوظيفي', 'الاسم', 'المنصب', 'الصلاحية المفوضة', 'القيود', 'تاريخ التفويض', 'تاريخ الانتهاء', 'توقيع المفوض', 'توقيع المفوض إليه', 'سبب الإنهاء', 'ملاحظات', 'الإجراءات'];
+            headers.forEach(h => {
+                html += `<th>${h}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            records.forEach((record, index) => {
+                html += '<tr>';
+                
+                // Add all fields
+                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
+                html += `<td>${escapeHtml(record[1] || '')}</td>`;
+                html += `<td>${escapeHtml(record[2] || '')}</td>`;
+                html += `<td>${escapeHtml(record[3] || '').substring(0, 20)}${escapeHtml(record[3] || '').length > 20 ? '...' : ''}</td>`;
+                html += `<td>${escapeHtml(record[4] || '').substring(0, 15)}${escapeHtml(record[4] || '').length > 15 ? '...' : ''}</td>`;
+                html += `<td>${formatDate(record[5] || '')}</td>`;
+                html += `<td>${formatDate(record[6] || '')}</td>`;
+                html += `<td>${escapeHtml(record[7] || '').substring(0, 10)}${escapeHtml(record[7] || '').length > 10 ? '...' : ''}</td>`;
+                html += `<td>${escapeHtml(record[8] || '').substring(0, 10)}${escapeHtml(record[8] || '').length > 10 ? '...' : ''}</td>`;
+                html += `<td>${escapeHtml(record[9] || '').substring(0, 15)}${escapeHtml(record[9] || '').length > 15 ? '...' : ''}</td>`;
+                html += `<td>${escapeHtml(record[10] || '').substring(0, 15)}${escapeHtml(record[10] || '').length > 15 ? '...' : ''}</td>`;
+                
+                // Action buttons
+                html += `<td class="action-buttons">
+                    <button onclick="editDelegationRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[1])}', '${escapeHtml(record[3])}')" class="btn btn-sm btn-danger" title="حذف">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button onclick="viewDelegationDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض التفاصيل">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>`;
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+        
+        async function addDelegationRecord() {
+            const requiredFields = ['recordId', 'name', 'position', 'delegatedAuthority', 
+                                 'delegation_date_day', 'delegation_date_month', 'delegation_date_year',
+                                 'expiry_date_day', 'expiry_date_month', 'expiry_date_year',
+                                 'labManagerSignature', 'delegateSignature'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء جميع الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            const button = document.getElementById('delegation_addBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
+            
+            const delegationDate = getDateString(
+                document.getElementById('delegation_date_day').value,
+                document.getElementById('delegation_date_month').value,
+                document.getElementById('delegation_date_year').value
+            );
+            
+            const expiryDate = getDateString(
+                document.getElementById('expiry_date_day').value,
+                document.getElementById('expiry_date_month').value,
+                document.getElementById('expiry_date_year').value
+            );
+            
+            const formData = {
+                recordId: document.getElementById('recordId').value,
+                name: document.getElementById('name').value,
+                position: document.getElementById('position').value,
+                delegatedAuthority: document.getElementById('delegatedAuthority').value,
+                restrictions: document.getElementById('restrictions').value,
+                delegationDate: delegationDate,
+                expiryOrReviewDate: expiryDate,
+                labManagerSignature: document.getElementById('labManagerSignature').value,
+                delegateSignature: document.getElementById('delegateSignature').value,
+                terminationReason: document.getElementById('terminationReason').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            try {
+                const result = await callGoogleScript(DELEGATION_SCRIPT_URL, 'add', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetDelegationForm();
+                    await loadDelegationData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error adding delegation record:', error);
+                showNotification(`❌ خطأ في إضافة سجل التفويض`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        async function editDelegationRecord(recordId) {
+            showNotification('🔍 جاري تحميل بيانات السجل...', 'info');
+            
+            const record = delegationRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (record) {
+                fillDelegationForm(record);
+                document.getElementById('delegation_updateBtn').style.display = 'inline-block';
+                document.getElementById('delegation_addBtn').style.display = 'none';
+                showNotification('✅ تم تحميل بيانات السجل', 'success');
+            } else {
+                showNotification('❌ لم يتم العثور على السجل', 'error');
+            }
+        }
+        
+        function fillDelegationForm(record) {
+            document.getElementById('recordId').value = record[0] || '';
+            document.getElementById('name').value = record[1] || '';
+            document.getElementById('position').value = record[2] || '';
+            document.getElementById('delegatedAuthority').value = record[3] || '';
+            document.getElementById('restrictions').value = record[4] || '';
+            
+            const delegationDate = formatDateForInput(record[5] || '');
+            document.getElementById('delegation_date_day').value = delegationDate.day;
+            document.getElementById('delegation_date_month').value = delegationDate.month;
+            document.getElementById('delegation_date_year').value = delegationDate.year;
+            
+            const expiryDate = formatDateForInput(record[6] || '');
+            document.getElementById('expiry_date_day').value = expiryDate.day;
+            document.getElementById('expiry_date_month').value = expiryDate.month;
+            document.getElementById('expiry_date_year').value = expiryDate.year;
+            
+            document.getElementById('labManagerSignature').value = record[7] || '';
+            document.getElementById('delegateSignature').value = record[8] || '';
+            document.getElementById('terminationReason').value = record[9] || '';
+            document.getElementById('notes').value = record[10] || '';
+            document.getElementById('delegation_editingId').value = record[0];
+            
+            // Update signature previews
+            document.getElementById('labSignaturePreview').textContent = record[7] || '';
+            document.getElementById('delegateSignaturePreview').textContent = record[8] || '';
+        }
+        
+        async function updateDelegationRecord() {
+            const recordId = document.getElementById('delegation_editingId').value;
+            if (!recordId) {
+                showNotification('❌ لم يتم تحديد سجل للتحديث', 'error');
+                return;
+            }
+            
+            const button = document.getElementById('delegation_updateBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
+            
+            const delegationDate = getDateString(
+                document.getElementById('delegation_date_day').value,
+                document.getElementById('delegation_date_month').value,
+                document.getElementById('delegation_date_year').value
+            );
+            
+            const expiryDate = getDateString(
+                document.getElementById('expiry_date_day').value,
+                document.getElementById('expiry_date_month').value,
+                document.getElementById('expiry_date_year').value
+            );
+            
+            const formData = {
+                recordId: document.getElementById('recordId').value,
+                name: document.getElementById('name').value,
+                position: document.getElementById('position').value,
+                delegatedAuthority: document.getElementById('delegatedAuthority').value,
+                restrictions: document.getElementById('restrictions').value,
+                delegationDate: delegationDate,
+                expiryOrReviewDate: expiryDate,
+                labManagerSignature: document.getElementById('labManagerSignature').value,
+                delegateSignature: document.getElementById('delegateSignature').value,
+                terminationReason: document.getElementById('terminationReason').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            try {
+                const result = await callGoogleScript(DELEGATION_SCRIPT_URL, 'update', formData);
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    resetDelegationForm();
+                    await loadDelegationData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error updating delegation record:', error);
+                showNotification(`❌ خطأ في تحديث سجل التفويض`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        function resetDelegationForm() {
+            document.getElementById('delegationForm').reset();
+            document.getElementById('delegation_editingId').value = '';
+            document.getElementById('delegation_addBtn').style.display = 'inline-block';
+            document.getElementById('delegation_updateBtn').style.display = 'none';
+            document.querySelectorAll('#delegationForm .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+            
+            // Clear signature previews
+            document.getElementById('labSignaturePreview').textContent = '';
+            document.getElementById('delegateSignaturePreview').textContent = '';
+            
+            showNotification('تم مسح النموذج', 'info', 2000);
+        }
+        
+        function exportDelegationCSV() {
+            if (delegationRecords.length === 0) {
+                showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
+                return;
+            }
+            
+            showNotification('📥 جاري تصدير سجلات التفويض...', 'info');
+            
+            try {
+                const headers = [
+                    'الرقم الوظيفي', 'الاسم', 'المنصب', 'الصلاحية المفوضة',
+                    'القيود', 'تاريخ التفويض', 'تاريخ الانتهاء', 'توقيع المفوض',
+                    'توقيع المفوض إليه', 'سبب الإنهاء', 'ملاحظات'
+                ];
+                
+                let csvContent = '\uFEFF';
+                csvContent += headers.join(",") + "\r\n";
+                
+                delegationRecords.forEach(record => {
+                    const row = [
+                        record[0] || '',
+                        record[1] || '',
+                        record[2] || '',
+                        record[3] || '',
+                        record[4] || '',
+                        formatDate(record[5] || ''),
+                        formatDate(record[6] || ''),
+                        record[7] || '',
+                        record[8] || '',
+                        record[9] || '',
+                        record[10] || ''
+                    ];
+                    
+                    const escapedRow = row.map(cell => {
+                        return `"${cell.toString().replace(/"/g, '""')}"`;
+                    });
+                    csvContent += escapedRow.join(",") + "\r\n";
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `سجلات_التفويض_${new Date().toISOString().slice(0,10)}.csv`);
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification(`✅ تم تصدير ${delegationRecords.length} سجل`, 'success');
+            } catch (error) {
+                console.error('Error exporting CSV:', error);
+                showNotification(`❌ خطأ في التصدير`, 'error');
+            }
+        }
+        
+        // ================ DETAILS VIEW FUNCTION ================
+        async function viewDelegationDetails(recordId) {
+            const record = delegationRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (!record) {
+                showNotification('❌ لم يتم العثور على السجل', 'error');
+                return;
+            }
+            
+            document.getElementById('detailsModalTitle').textContent = `تفاصيل سجل التفويض: ${escapeHtml(record[0])}`;
+            
+            const delegationStatus = getDelegationStatus(record[6]);
+            let statusClass = 'badge bg-secondary';
+            if (delegationStatus === 'نشط') {
+                statusClass = 'badge bg-success status-active';
+            } else if (delegationStatus === 'منتهي') {
+                statusClass = 'badge bg-danger status-expired';
+            } else {
+                statusClass = 'badge bg-warning status-pending';
+            }
+            
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[0])}</p>
+                        <p><strong>الاسم:</strong> ${escapeHtml(record[1])}</p>
+                        <p><strong>المنصب:</strong> ${escapeHtml(record[2])}</p>
+                        <p><strong>الصلاحية المفوضة:</strong> ${escapeHtml(record[3])}</p>
+                        <p><strong>القيود:</strong> ${escapeHtml(record[4]) || 'لا توجد'}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>تاريخ التفويض:</strong> ${formatDate(record[5])}</p>
+                        <p><strong>تاريخ الانتهاء:</strong> ${formatDate(record[6])}</p>
+                        <p><strong>حالة التفويض:</strong> <span class="badge-status ${statusClass}">${delegationStatus}</span></p>
+                        <p><strong>توقيع المفوض:</strong> ${escapeHtml(record[7])}</p>
+                        <p><strong>توقيع المفوض إليه:</strong> ${escapeHtml(record[8])}</p>
+                    </div>
+                </div>
+                ${record[9] ? `
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>سبب إنهاء التفويض:</strong></p>
+                        <div class="alert alert-light">${escapeHtml(record[9])}</div>
+                    </div>
+                </div>
+                ` : ''}
+                ${record[10] ? `
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>ملاحظات إضافية:</strong></p>
+                        <div class="alert alert-light">${escapeHtml(record[10])}</div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+            
+            document.getElementById('detailsModalBody').innerHTML = detailsHTML;
+            
+            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+        
+        function getDelegationStatus(expiryDateStr) {
+            if (!expiryDateStr) return 'غير محدد';
+            
+            try {
+                const today = new Date();
+                const expiryDateParts = expiryDateStr.split('/');
+                if (expiryDateParts.length === 3) {
+                    const expiryDate = new Date(expiryDateParts[2], expiryDateParts[1] - 1, expiryDateParts[0]);
+                    if (expiryDate < today) {
+                        return 'منتهي';
+                    } else {
+                        return 'نشط';
+                    }
+                }
+                return 'غير محدد';
+            } catch (e) {
+                return 'غير محدد';
+            }
+        }
+        
+        // ================ DELETE FUNCTIONALITY ================
+        function showDeleteModal(recordId, recordName, recordAuthority) {
+            deleteRecordId = recordId;
+            deleteRecordName = recordName;
+            deleteRecordAuthority = recordAuthority;
+            
+            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
+            document.getElementById('deleteRecordAuthority').textContent = recordAuthority || 'غير معروف';
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+        
+        async function confirmDelete() {
+            if (!deleteRecordId) return;
+            
+            const button = document.getElementById('confirmDeleteBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
+            
+            try {
+                const result = await callGoogleScript(DELEGATION_SCRIPT_URL, 'delete', { recordId: deleteRecordId });
+                
+                if (result.status === 'success') {
+                    showNotification(`✅ ${result.message}`, 'success');
+                    
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                    
+                    deleteRecordId = '';
+                    deleteRecordName = '';
+                    deleteRecordAuthority = '';
+                    
+                    await loadDelegationData();
+                } else {
+                    showNotification(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting delegation record:', error);
+                showNotification(`❌ خطأ في حذف سجل التفويض`, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        // ================ HELPER FUNCTIONS ================
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        function updateTotalRecordsCount() {
+            document.getElementById('totalRecords').textContent = delegationRecords.length.toLocaleString('ar-SA');
+        }
+    </script>
+</body>
+</html>
