@@ -247,6 +247,23 @@
             background: linear-gradient(135deg, #8e44ad, #7d3c98);
         }
         
+        /* الأنظمة الجديدة */
+        .system-card[data-system="delegation"] .card-icon-wrapper {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+        }
+        
+        .system-card[data-system="complaints"] .card-icon-wrapper {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .system-card[data-system="employee-skills"] .card-icon-wrapper {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        
+        .system-card[data-system="ncr"] .card-icon-wrapper {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+        }
+        
         /* Action Button */
         .card-action-btn {
             background: var(--primary-color);
@@ -667,7 +684,7 @@
                 <div class="col-lg-8">
                     <h1><i class="fas fa-tasks me-3"></i> نظام إدارة السجلات المتكامل</h1>
                     <p class="lead">
-                        إدارة 11 نظام متكاملة لمعمل كواليتك إنترناشيونال. نظام شامل لإدارة سجلات السرية، الحيادية، العقود، الموردين، المعايرة، الصيانة، الأجهزة، المخاطر، الإجراءات التصحيحية، الظروف البيئية، والتدريب.
+                        إدارة 15 نظام متكاملة لمعمل كواليتك إنترناشيونال. نظام شامل لإدارة سجلات السرية، الحيادية، العقود، الموردين، المعايرة، الصيانة، الأجهزة، المخاطر، الإجراءات التصحيحية، الظروف البيئية، التدريب، تفويض الصلاحيات، الشكاوى، تقييم الموظفين، وعدم المطابقة.
                     </p>
                 </div>
                 <div class="col-lg-4 text-lg-end text-center mt-4 mt-lg-0">
@@ -704,7 +721,7 @@
                 <div class="col-md-4 col-6 mb-4">
                     <div class="stat-card">
                         <i class="fas fa-check-circle stat-icon"></i>
-                        <div class="stat-number" id="activeSystems">11</div>
+                        <div class="stat-number" id="activeSystems">15</div>
                         <div class="stat-label">نظام نشط</div>
                     </div>
                 </div>
@@ -928,6 +945,82 @@
                     </div>
                 </div>
             </a>
+            
+            <!-- النظام 12: تفويض الصلاحيات (جديد) -->
+            <a href="https://qualinova7.github.io/QualiNova/%D8%B3%D8%AC%D9%84%20%D8%AA%D9%81%D9%88%D9%8A%D8%B6%20%D8%A7%D9%84%D9%85%D9%88%D8%B8%D9%81%D9%8A%D9%86.html" class="system-card" data-system="delegation" data-shortcut="L">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-user-shield card-icon text-white"></i>
+                    <span class="card-count" id="count-delegation">0</span>
+                    <span class="shortcut-key">L</span>
+                </div>
+                <div class="card-body-custom">
+                    <h3 class="card-title">نظام إدارة تفويض الصلاحيات</h3>
+                    <p class="card-description">
+                        إدارة تفويض الصلاحيات والتوقيعات والقيود ومراجعة التفويض
+                    </p>
+                    <div class="card-action-btn">
+                        <i class="fas fa-external-link-alt"></i>
+                        فتح النظام
+                    </div>
+                </div>
+            </a>
+            
+            <!-- النظام 13: إدارة الشكاوى (جديد) -->
+            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A7%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D9%83%D8%A7%D9%88%D9%89.html" class="system-card" data-system="complaints" data-shortcut="M">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-clipboard-list card-icon text-white"></i>
+                    <span class="card-count" id="count-complaints">0</span>
+                    <span class="shortcut-key">M</span>
+                </div>
+                <div class="card-body-custom">
+                    <h3 class="card-title">نظام إدارة سجلات الشكاوى</h3>
+                    <p class="card-description">
+                        إدارة وتتبع جميع الشكاوى المقدمة من العملاء وحل المشكلات
+                    </p>
+                    <div class="card-action-btn">
+                        <i class="fas fa-external-link-alt"></i>
+                        فتح النظام
+                    </div>
+                </div>
+            </a>
+            
+            <!-- النظام 14: تقييم مهارات الموظفين (جديد) -->
+            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85%20%D8%A7%D9%84%D9%85%D9%88%D8%B8%D9%81%D9%8A%D9%86.html" class="system-card" data-system="employee-skills" data-shortcut="N">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-user-tie card-icon text-white"></i>
+                    <span class="card-count" id="count-employee-skills">0</span>
+                    <span class="shortcut-key">N</span>
+                </div>
+                <div class="card-body-custom">
+                    <h3 class="card-title">نظام تقييم مهارات الموظفين</h3>
+                    <p class="card-description">
+                        إدارة وتقييم كفاءات الموظفين وتحديد فجوات التدريب والمهارات
+                    </p>
+                    <div class="card-action-btn">
+                        <i class="fas fa-external-link-alt"></i>
+                        فتح النظام
+                    </div>
+                </div>
+            </a>
+            
+            <!-- النظام 15: سجلات عدم المطابقة (جديد) -->
+            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%B9%D8%AF%D9%85%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D8%A8%D9%82%D8%A9.html" class="system-card" data-system="ncr" data-shortcut="O">
+                <div class="card-icon-wrapper">
+                    <i class="fas fa-ban card-icon text-white"></i>
+                    <span class="card-count" id="count-ncr">0</span>
+                    <span class="shortcut-key">O</span>
+                </div>
+                <div class="card-body-custom">
+                    <h3 class="card-title">نظام إدارة سجلات عدم المطابقة</h3>
+                    <p class="card-description">
+                        إدارة سجلات عدم المطابقة والمراجعة والتحكم في العملية التصحيحية
+                    </p>
+                    <div class="card-action-btn">
+                        <i class="fas fa-external-link-alt"></i>
+                        فتح النظام
+                    </div>
+                </div>
+            </a>
         </div>
         
         <!-- Quick Actions -->
@@ -969,7 +1062,7 @@
                     <div class="d-flex justify-content-center justify-content-md-end gap-3">
                         <span class="text-light">
                             <i class="fas fa-code me-1"></i>
-                            الإصدار 11.0
+                            الإصدار 15.0
                         </span>
                         <span class="text-light">
                             <i class="fas fa-database me-1"></i>
@@ -1002,7 +1095,11 @@
             fmea: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%AA%D8%AD%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AE%D8%A7%D8%B7%D8%B1.html",
             corrective: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%B5%D8%AD%D9%8A%D8%AD%D9%8A%D8%A9.html",
             environmental: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B8%D8%B1%D9%88%D9%81%20%D8%A7%D9%84%D8%A8%D9%8A%D8%A6%D9%8A%D8%A9.html",
-            training: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8.html"
+            training: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8.html",
+            delegation: "https://qualinova7.github.io/QualiNova/%D8%B3%D8%AC%D9%84%20%D8%AA%D9%81%D9%88%D9%8A%D8%B6%20%D8%A7%D9%84%D9%85%D9%88%D8%B8%D9%81%D9%8A%D9%86.html",
+            complaints: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A7%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D9%83%D8%A7%D9%88%D9%89.html",
+            "employee-skills": "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85%20%D8%A7%D9%84%D9%85%D9%88%D8%B8%D9%81%D9%8A%D9%86.html",
+            ncr: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%B9%D8%AF%D9%85%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D8%A8%D9%82%D8%A9.html"
         };
         
         const API_URLS = {
@@ -1016,7 +1113,11 @@
             fmea: "https://script.google.com/macros/s/AKfycby314ii-A-5OQrfCpd14wGcEXBIuQh9qlrFccf14QmRKuz9WbwtRp7lzuhERVw67UAzVg/exec",
             corrective: "https://script.google.com/macros/s/AKfycby5I5LQAZg_nou7flikY-9qJRN8lmvjXYZlXF42PYID2kXluhnIrDtkFI2ck9Oj_HuZvA/exec",
             environmental: "https://script.google.com/macros/s/AKfycbyEKz485uet9gaYlrbqETzvk6xjw64wtKgG3yL6XPmC1VsD15ADFW1mXOfVbA0XGfxd/exec",
-            training: "https://script.google.com/macros/s/AKfycbyhspPy9B2RGQdv6cCb-6y4VfQQPOkUXPgaT118s6qV9mqvdR9zLy9XknDAJdW7AYcM_g/exec"
+            training: "https://script.google.com/macros/s/AKfycbyhspPy9B2RGQdv6cCb-6y4VfQQPOkUXPgaT118s6qV9mqvdR9zLy9XknDAJdW7AYcM_g/exec",
+            delegation: "https://script.google.com/macros/s/AKfycbwnQeMasA2IThUIVMy5nn-_c1TwePITdoSM8-z8ldE15SuAbBTWJyJGyaV9eHLOgx9sdg/exec",
+            complaints: "https://script.google.com/macros/s/AKfycbzNgDdk_hMp_LUuOjSFt9mf2Pgk2LS0HuLH7VFxmvz8CDN_lBQz6YP4ZfQqYMZ8tUeIzQ/exec",
+            "employee-skills": "https://script.google.com/macros/s/AKfycbwwwXD8i0dgJhfpixMYvdxKx_e7_fZ5KZqFTek97DUvxyfsBvIv5DK2YtL0OOWWCif8/exec",
+            ncr: "https://script.google.com/macros/s/AKfycbzljEO6Cc7ZuLQOJrBygcGqJA4IrZKf_YgkqT0A02BnhL7bzilYQER2NRiRIPLudQ5mzA/exec"
         };
         
         // Global variables
@@ -1031,7 +1132,11 @@
             fmea: 0,
             corrective: 0,
             environmental: 0,
-            training: 0
+            training: 0,
+            delegation: 0,
+            complaints: 0,
+            "employee-skills": 0,
+            ncr: 0
         };
         
         let systemData = {}; // لتخزين البيانات الفعلية من الأنظمة
@@ -1116,7 +1221,11 @@
                 fmea: 'المخاطر',
                 corrective: 'التصحيحية',
                 environmental: 'البيئية',
-                training: 'التدريب'
+                training: 'التدريب',
+                delegation: 'تفويض الصلاحيات',
+                complaints: 'الشكاوى',
+                'employee-skills': 'تقييم الموظفين',
+                ncr: 'عدم المطابقة'
             };
             return names[system] || system;
         }
@@ -1172,12 +1281,14 @@
                 
                 // Update individual counts
                 Object.keys(systemRecords).forEach(system => {
-                    document.getElementById(`count-${system}`).textContent = 
-                        systemRecords[system].toLocaleString('ar-SA');
+                    const countElement = document.getElementById(`count-${system}`);
+                    if (countElement) {
+                        countElement.textContent = systemRecords[system].toLocaleString('ar-SA');
+                    }
                 });
                 
                 if (!backgroundMode) {
-                    showNotification(`✅ تم تحديث ${total} سجل من 11 نظام`, 'success');
+                    showNotification(`✅ تم تحديث ${total} سجل من 15 نظام`, 'success');
                     showUpdateIndicator('تم تحديث البيانات بنجاح', false);
                     
                     // Hide update indicator after 3 seconds
@@ -1338,9 +1449,9 @@
                     document.getElementById('searchInput').dispatchEvent(new Event('input'));
                 }
                 
-                // Letters A-Z: Open specific system
+                // Letters A-O: Open specific system
                 const key = e.key.toUpperCase();
-                if (key >= 'A' && key <= 'Z') {
+                if (key >= 'A' && key <= 'O') {
                     const systemCard = document.querySelector(`.system-card[data-shortcut="${key}"]`);
                     if (systemCard) {
                         systemCard.click();
@@ -1469,7 +1580,11 @@
                 fmea: 'exclamation-triangle',
                 corrective: 'clipboard-check',
                 environmental: 'temperature-high',
-                training: 'graduation-cap'
+                training: 'graduation-cap',
+                delegation: 'user-shield',
+                complaints: 'clipboard-list',
+                'employee-skills': 'user-tie',
+                ncr: 'ban'
             };
             return icons[system] || 'cube';
         }
@@ -1487,7 +1602,11 @@
                 fmea: '#7d3c98',
                 corrective: '#c0392b',
                 environmental: '#16a085',
-                training: '#8e44ad'
+                training: '#8e44ad',
+                delegation: '#8e44ad',
+                complaints: '#e74c3c',
+                'employee-skills': '#2ecc71',
+                ncr: '#e67e22'
             };
             return colors[system] || '#3498db';
         }
@@ -1575,12 +1694,12 @@
                 
                 // Add file to list
                 const fileItem = document.createElement('div');
-                fileItem.className = 'export-file-item pending';
-                fileItem.innerHTML = `
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <span>${systemName}</span>
-                `;
-                document.getElementById('exportFileList').appendChild(fileItem);
+                    fileItem.className = 'export-file-item pending';
+                    fileItem.innerHTML = `
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>${systemName}</span>
+                    `;
+                    document.getElementById('exportFileList').appendChild(fileItem);
                 
                 try {
                     // تحويل البيانات إلى CSV
@@ -1748,7 +1867,7 @@
                                     <ul class="list-unstyled">
                                         <li class="mb-2"><kbd>Ctrl</kbd> + <kbd>R</kbd> تحديث البيانات</li>
                                         <li class="mb-2"><kbd>Esc</kbd> مسح البحث</li>
-                                        <li class="mb-2"><kbd>A-Z</kbd> فتح أنظمة سريعة</li>
+                                        <li class="mb-2"><kbd>A-O</kbd> فتح أنظمة سريعة</li>
                                     </ul>
                                 </div>
                             </div>
