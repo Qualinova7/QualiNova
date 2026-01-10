@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr Calendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -71,7 +74,7 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Home Button - NEW */
+        /* Home Button */
         .home-button {
             position: absolute;
             top: 20px;
@@ -148,6 +151,45 @@
             color: var(--dark-color);
             margin-bottom: 6px;
             font-size: 0.9rem;
+        }
+        
+        /* Date Input Styling */
+        .date-input-wrapper {
+            position: relative;
+        }
+        
+        .date-input-wrapper .date-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            pointer-events: none;
+        }
+        
+        .date-input-wrapper .form-control-custom {
+            padding-right: 40px;
+            direction: ltr;
+            text-align: right;
+        }
+        
+        /* Flatpickr Customization */
+        .flatpickr-calendar {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+        
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .flatpickr-weekdays {
+            font-family: 'Cairo', sans-serif;
         }
         
         /* Table Styles */
@@ -254,36 +296,12 @@
             border-width: 0.2rem;
         }
         
-        /* Custom Date Input */
-        .date-input-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .date-input-group .form-control-custom {
-            text-align: center;
-            padding: 0.375rem 0.25rem;
-            flex: 1;
-        }
-        
-        .date-input-group .date-day {
-            max-width: 60px;
-        }
-        
-        .date-input-group .date-month {
-            max-width: 60px;
-        }
-        
-        .date-input-group .date-year {
-            max-width: 80px;
-        }
-        
-        .date-input-group .date-separator {
-            font-size: 1.2rem;
-            color: #6c757d;
-            font-weight: bold;
-            min-width: 10px;
+        /* FIX FOR ENGLISH DATE DISPLAY IN RTL CONTEXT */
+        .english-date {
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: embed !important;
+            display: inline-block;
         }
         
         /* Responsive */
@@ -327,13 +345,6 @@
             background: var(--secondary-color);
             border-radius: 10px;
         }
-        
-        /* تنسيق placeholders داخل حقول التاريخ */
-        .date-input-group input::placeholder {
-            color: #adb5bd;
-            text-align: center;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
 <body>
@@ -344,7 +355,7 @@
     <div class="container-fluid main-container">
         <!-- Main Header -->
         <div class="main-header fade-in">
-            <!-- Return to Home Button - ADDED -->
+            <!-- Return to Home Button -->
             <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
@@ -378,67 +389,60 @@
                         <form id="calibrationForm">
                             <div class="row">
                                 <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">رقم السجل</label>
-                                    <input type="text" class="form-control form-control-custom" id="calibration_recordId" placeholder="اتركه فارغاً للتوليد التلقائي">
+                                    <label class="form-label-custom">رقم سجل السرية *</label>
+                                    <input type="text" class="form-control form-control-custom" id="calibration_secretRecordNumber" placeholder="رقم سجل السرية" required>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">اسم الموظف *</label>
-                                    <input type="text" class="form-control form-control-custom" id="calibration_employeeName" placeholder="اسم الموظف" required>
+                                    <input type="text" class="form-control form-control-custom" id="calibration_employeeName" placeholder="اسم الموظف" required list="employeeNameList">
+                                    <datalist id="employeeNameList"></datalist>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">الرقم الوظيفي *</label>
-                                    <input type="text" class="form-control form-control-custom" id="calibration_employeeNumber" placeholder="الرقم الوظيفي" required>
+                                    <input type="text" class="form-control form-control-custom" id="calibration_employeeNumber" placeholder="الرقم الوظيفي" required list="employeeNumberList">
+                                    <datalist id="employeeNumberList"></datalist>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">القسم *</label>
-                                    <input type="text" class="form-control form-control-custom" id="calibration_department" placeholder="القسم" required>
+                                    <input type="text" class="form-control form-control-custom" id="calibration_department" placeholder="القسم" required list="departmentList">
+                                    <datalist id="departmentList"></datalist>
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">نوع العقد</label>
-                                    <select class="form-select form-select-custom" id="calibration_contractType">
-                                        <option value="">اختر نوع العقد</option>
+                                    <input type="text" class="form-control form-control-custom" id="calibration_contractType" placeholder="اختر نوع العقد" list="contractTypeList">
+                                    <datalist id="contractTypeList">
                                         <option value="دائم">دائم</option>
                                         <option value="مؤقت">مؤقت</option>
                                         <option value="تدريب">تدريب</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">رقم سجل السرية</label>
-                                    <input type="text" class="form-control form-control-custom" id="calibration_secretRecordNumber" placeholder="رقم سجل السرية">
+                                    </datalist>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">تاريخ بدء العمل</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center" id="calibration_startDate_day" placeholder="يوم" min="1" max="31">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center" id="calibration_startDate_month" placeholder="شهر" min="1" max="12">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center" id="calibration_startDate_year" placeholder="سنة" min="1900" max="2100">
+                                    <div class="date-input-wrapper">
+                                        <input type="text" class="form-control form-control-custom date-picker" id="calibration_startDate" placeholder="يوم/شهر/سنة" readonly>
+                                        <i class="fas fa-calendar-alt date-icon"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">تاريخ التوقيع</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center" id="calibration_signDate_day" placeholder="يوم" min="1" max="31">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center" id="calibration_signDate_month" placeholder="شهر" min="1" max="12">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center" id="calibration_signDate_year" placeholder="سنة" min="1900" max="2100">
+                                    <div class="date-input-wrapper">
+                                        <input type="text" class="form-control form-control-custom date-picker" id="calibration_signDate" placeholder="يوم/شهر/سنة" readonly>
+                                        <i class="fas fa-calendar-alt date-icon"></i>
                                     </div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label-custom">اسم المراجع</label>
+                                    <input type="text" class="form-control form-control-custom" id="calibration_reviewerName" placeholder="اسم المراجع">
                                 </div>
                             </div>
                             
                             <div class="row">
-                                <div class="col-md-8 mb-2">
+                                <div class="col-12 mb-2">
                                     <label class="form-label-custom">ملاحظات</label>
-                                    <textarea class="form-control form-textarea-custom" id="calibration_notes" placeholder="ملاحظات"></textarea>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <label class="form-label-custom">اسم المراجع</label>
-                                    <input type="text" class="form-control form-control-custom" id="calibration_reviewerName" placeholder="اسم المراجع">
+                                    <textarea class="form-control form-textarea-custom" id="calibration_notes" placeholder="ملاحظات" rows="2"></textarea>
                                 </div>
                             </div>
                             
@@ -458,6 +462,7 @@
                                 </div>
                             </div>
                             <input type="hidden" id="calibration_editingId">
+                            <input type="hidden" id="calibration_recordId">
                         </form>
                     </div>
                 </div>
@@ -504,7 +509,7 @@
         <div class="row mt-4 fade-in">
             <div class="col-12 text-center">
                 <p class="text-muted">
-                    <i class="fas fa-copyright me-1"></i> نظام إدارة سجلات السرية 
+                    <i class="fas fa-copyright me-1"></i> نظام إدارة سجلال السرية 
                     <span id="currentYear"></span> | 
                     <span id="appVersion" class="text-info">الإصدار 1.0</span>
                 </p>
@@ -526,8 +531,8 @@
                         <h5 class="alert-heading">تحذير!</h5>
                         <p>هل أنت متأكد من حذف هذا السجل؟ هذا الإجراء لا يمكن التراجع عنه.</p>
                         <hr>
-                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">سجلات السرية</span></p>
-                        <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">سجلال السرية</span></p>
+                        <p class="mb-0"><strong>رقم سجل السرية:</strong> <span id="deleteRecordId">غير معروف</span></p>
                         <p class="mb-0"><strong>الاسم:</strong> <span id="deleteRecordName">غير معروف</span></p>
                     </div>
                 </div>
@@ -548,16 +553,22 @@
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr Calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
     
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
         const CALIBRATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxzUljzgWR0jBrrp61DWBUxVB-Ku5bH3I736KHlrpJAHaQlPOAaklbswpPOi1Wut14/exec";
+        const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
         
         // ================ GLOBAL VARIABLES ================
         let calibrationRecords = [];
+        let employeeRecords = [];
         let deleteRecordId = '';
         let deleteRecordName = '';
+        let flatpickrInstances = {};
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
@@ -565,80 +576,358 @@
             setCurrentDate();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
+            // Initialize calendar pickers with FIXED approach
+            initializeDatePickers();
+            
             // Load data
             setTimeout(() => {
                 loadCalibrationData();
+                loadEmployeeData(); // Load employee data for dropdowns
             }, 500);
         });
         
-        // ================ DATE FORMAT FUNCTIONS ================
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            try {
-                // Handle dd/mm/yyyy format
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        const day = parts[0].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[2];
-                        return `${day}/${month}/${year}`;
+        // ================ FIXED DATE PICKER INITIALIZATION ================
+        function initializeDatePickers() {
+            // Destroy existing instances if any
+            if (flatpickrInstances.startDate) {
+                flatpickrInstances.startDate.destroy();
+            }
+            if (flatpickrInstances.signDate) {
+                flatpickrInstances.signDate.destroy();
+            }
+            
+            // Simple Flatpickr configuration that works in RTL
+            const dateOptions = {
+                locale: 'ar',
+                dateFormat: "d/m/Y",  // Use d/m/Y format for display
+                altFormat: "d/m/Y",
+                altInput: false,
+                allowInput: false,
+                clickOpens: true,
+                position: 'auto',
+                monthSelectorType: 'static',
+                yearSelectorType: 'scrolling',
+                prevArrow: '<i class="fas fa-chevron-right"></i>',
+                nextArrow: '<i class="fas fa-chevron-left"></i>',
+                weekNumbers: false,
+                disableMobile: true,
+                // IMPORTANT: Set the calendar to RTL mode
+                nextArrow: '<i class="fas fa-chevron-right"></i>',
+                prevArrow: '<i class="fas fa-chevron-left"></i>',
+                // Force RTL for the calendar
+                onReady: function(selectedDates, dateStr, instance) {
+                    // Force RTL direction on calendar container
+                    if (instance.calendarContainer) {
+                        instance.calendarContainer.style.direction = 'rtl';
+                    }
+                },
+                onChange: function(selectedDates, dateStr, instance) {
+                    // The date will be automatically set in d/m/Y format
+                    // Validate sign date is not older than start date
+                    validateSignDateNotOlder();
+                    
+                    // Force the input value to update (in case Flatpickr didn't)
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const formattedDate = formatDateToDDMMYYYY(date);
+                        instance.input.value = formattedDate;
                     }
                 }
-                
-                // Handle yyyy-mm-dd format
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        const day = parts[2].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[0];
-                        return `${day}/${month}/${year}`;
-                    }
-                }
-                
-                return dateString;
-            } catch (e) {
-                return dateString;
+            };
+            
+            // Initialize start date picker
+            flatpickrInstances.startDate = flatpickr('#calibration_startDate', dateOptions);
+            
+            // Initialize sign date picker
+            flatpickrInstances.signDate = flatpickr('#calibration_signDate', dateOptions);
+            
+            // Force Arabic locale on both instances
+            if (flatpickrInstances.startDate) {
+                flatpickrInstances.startDate.set('locale', 'ar');
+            }
+            if (flatpickrInstances.signDate) {
+                flatpickrInstances.signDate.set('locale', 'ar');
             }
         }
         
+        // ================ HELPER FUNCTION TO FORMAT DATE AS DD/MM/YYYY ================
+        function formatDateToDDMMYYYY(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // ================ DATE VALIDATION: SIGN DATE NOT OLDER THAN START DATE ================
+        function validateSignDateNotOlder() {
+            const startDateStr = document.getElementById('calibration_startDate').value;
+            const signDateStr = document.getElementById('calibration_signDate').value;
+            
+            if (!startDateStr || !signDateStr) return;
+            
+            try {
+                const startDate = parseDateDDMMYYYY(startDateStr);
+                const signDate = parseDateDDMMYYYY(signDateStr);
+                
+                if (startDate && signDate && signDate < startDate) {
+                    showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
+                    // Clear the sign date
+                    if (flatpickrInstances.signDate) {
+                        flatpickrInstances.signDate.clear();
+                    }
+                    document.getElementById('calibration_signDate').value = '';
+                }
+            } catch (e) {
+                console.error('Error validating dates:', e);
+            }
+        }
+        
+        // ================ SIMPLIFIED DATE FORMAT FUNCTIONS ================
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
+            
+            // Handle dd/mm/yyyy format only
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    // Basic validation
+                    if (day < 1 || day > 31) return null;
+                    if (month < 0 || month > 11) return null;
+                    if (year < 1900 || year > 2100) return null;
+                    
+                    return new Date(year, month, day);
+                }
+            }
+            
+            return null;
+        }
+        
+        // ================ FIXED DATE DISPLAY FORMAT FUNCTION ================
+        // This function converts dates from Google Sheets format (2026/05/01) to display format (30 September 2026)
+        // AND fixes the RTL display issue by wrapping in a span with LTR direction
+        function formatDateForDisplay(dateString) {
+            if (!dateString || dateString.trim() === '') return '';
+            
+            // Check if it's already in the desired format (like "30 September 2026")
+            const englishMonthRegex = /^\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}$/i;
+            const arabicMonthRegex = /^\d{1,2}\s+(يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر)\s+\d{4}$/;
+            
+            if (englishMonthRegex.test(dateString) || arabicMonthRegex.test(dateString)) {
+                return `<span class="english-date">${dateString}</span>`;
+            }
+            
+            // Try different date formats that might come from Google Sheets
+            let dateObj = null;
+            
+            // Format 1: YYYY/MM/DD (Google Sheets format)
+            if (dateString.includes('/') && dateString.split('/')[0].length === 4) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const day = parseInt(parts[2], 10);
+                    
+                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                        dateObj = new Date(year, month, day);
+                    }
+                }
+            }
+            // Format 2: DD/MM/YYYY (our display format)
+            else if (dateString.includes('/') && dateString.split('/')[2].length === 4) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                        dateObj = new Date(year, month, day);
+                    }
+                }
+            }
+            // Format 3: YYYY-MM-DD (ISO format)
+            else if (dateString.includes('-') && dateString.split('-')[0].length === 4) {
+                const parts = dateString.split('-');
+                if (parts.length === 3) {
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const day = parseInt(parts[2], 10);
+                    
+                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                        dateObj = new Date(year, month, day);
+                    }
+                }
+            }
+            // Format 4: Already a Date object
+            else if (dateString instanceof Date) {
+                dateObj = dateString;
+            }
+            // Format 5: Try parsing as is
+            else {
+                dateObj = new Date(dateString);
+            }
+            
+            // If we couldn't parse the date, return the original string
+            if (!dateObj || isNaN(dateObj.getTime())) {
+                console.log("Could not parse date:", dateString);
+                return `<span class="english-date">${dateString}</span>`;
+            }
+            
+            // Format the date as "30 September 2026"
+            const day = dateObj.getDate();
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            const month = monthNames[dateObj.getMonth()];
+            const year = dateObj.getFullYear();
+            
+            const formattedDate = `${day} ${month} ${year}`;
+            return `<span class="english-date">${formattedDate}</span>`;
+        }
+        
+        // ================ NEW FUNCTION FOR FORM INPUT DISPLAY ================
         function formatDateForInput(dateString) {
-            if (!dateString) return {day: '', month: '', year: ''};
-            try {
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[0],
-                            month: parts[1],
-                            year: parts[2]
-                        };
-                    }
-                }
-                
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[2],
-                            month: parts[1],
-                            year: parts[0]
-                        };
-                    }
-                }
-                
-                return {day: '', month: '', year: ''};
-            } catch (e) {
-                return {day: '', month: '', year: ''};
+            if (!dateString || dateString.trim() === '') return '';
+            
+            // Check if it's already in dd/mm/yyyy format
+            const ddMMyyyyRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                return dateString;
             }
+            
+            // Try to parse the date
+            // First, remove any HTML tags if present
+            const cleanDateString = dateString.replace(/<[^>]*>/g, '');
+            
+            const parts = cleanDateString.split(' ');
+            if (parts.length === 3 && isNaN(parts[1])) {
+                // This is in "30 September 2026" format
+                const day = parseInt(parts[0], 10).toString().padStart(2, '0');
+                const monthNames = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                const monthIndex = monthNames.findIndex(name => name.toLowerCase() === parts[1].toLowerCase());
+                const month = (monthIndex + 1).toString().padStart(2, '0');
+                const year = parts[2];
+                
+                if (monthIndex !== -1) {
+                    return `${day}/${month}/${year}`;
+                }
+            }
+            
+            // Try to parse as a date
+            try {
+                const dateObj = new Date(cleanDateString);
+                if (!isNaN(dateObj.getTime())) {
+                    const day = dateObj.getDate().toString().padStart(2, '0');
+                    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+            } catch (e) {
+                console.error('Error parsing date for input:', e);
+            }
+            
+            // Fallback: return empty string
+            return '';
         }
         
-        function getDateString(day, month, year) {
-            if (!day || !month || !year) return '';
-            const formattedDay = day.toString().padStart(2, '0');
-            const formattedMonth = month.toString().padStart(2, '0');
-            return `${formattedDay}/${formattedMonth}/${year}`;
+        function formatDateForStorage(dateString) {
+            if (!dateString) return '';
+            
+            // If it's already in dd/mm/yyyy format, return as is
+            const ddMMyyyyRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                return dateString;
+            }
+            
+            // Clean any HTML tags
+            const cleanDateString = dateString.replace(/<[^>]*>/g, '');
+            
+            // Try to convert from display format to dd/mm/yyyy
+            const parts = cleanDateString.split(' ');
+            if (parts.length === 3 && isNaN(parts[1])) {
+                // This is in "30 September 2026" format
+                const day = parseInt(parts[0], 10).toString().padStart(2, '0');
+                const monthNames = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                const monthIndex = monthNames.findIndex(name => name.toLowerCase() === parts[1].toLowerCase());
+                const month = (monthIndex + 1).toString().padStart(2, '0');
+                const year = parts[2];
+                
+                if (monthIndex !== -1) {
+                    return `${day}/${month}/${year}`;
+                }
+            }
+            
+            // Fallback: try to parse as a date
+            try {
+                const dateObj = new Date(cleanDateString);
+                if (!isNaN(dateObj.getTime())) {
+                    const day = dateObj.getDate().toString().padStart(2, '0');
+                    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+            } catch (e) {
+                console.error('Error parsing date for storage:', e);
+            }
+            
+            return '';
+        }
+        
+        function validateDate(dateString) {
+            if (!dateString) return true; // Empty date is valid
+            
+            // Accept both dd/mm/yyyy and display format (30 September 2026)
+            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            const displayFormatRegex = /^(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})$/i;
+            
+            if (ddMMyyyyRegex.test(dateString)) {
+                const match = dateString.match(ddMMyyyyRegex);
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
+                
+                // Basic date validation
+                if (year < 1900 || year > 2100) return false;
+                if (month < 1 || month > 12) return false;
+                if (day < 1 || day > 31) return false;
+                
+                // Check for specific month days
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            if (displayFormatRegex.test(dateString)) {
+                const match = dateString.match(displayFormatRegex);
+                const day = parseInt(match[1], 10);
+                const monthName = match[2];
+                const year = parseInt(match[3], 10);
+                
+                const monthNames = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                const month = monthNames.findIndex(name => name.toLowerCase() === monthName.toLowerCase()) + 1;
+                
+                if (month === 0) return false; // Month not found
+                if (year < 1900 || year > 2100) return false;
+                if (day < 1 || day > 31) return false;
+                
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            return false;
         }
         
         function setCurrentDate() {
@@ -762,7 +1051,199 @@
                     field.classList.remove('is-invalid');
                 }
             });
+            
+            // Validate dates
+            const startDate = document.getElementById('calibration_startDate').value;
+            const signDate = document.getElementById('calibration_signDate').value;
+            
+            if (startDate && !validateDate(startDate)) {
+                document.getElementById('calibration_startDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ بدء العمل غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('calibration_startDate').classList.remove('is-invalid');
+            }
+            
+            if (signDate && !validateDate(signDate)) {
+                document.getElementById('calibration_signDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ التوقيع غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('calibration_signDate').classList.remove('is-invalid');
+            }
+            
+            // Validate sign date is not older than start date
+            if (startDate && signDate) {
+                try {
+                    const startDateObj = parseDateDDMMYYYY(startDate);
+                    const signDateObj = parseDateDDMMYYYY(signDate);
+                    
+                    if (startDateObj && signDateObj && signDateObj < startDateObj) {
+                        showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
+                        document.getElementById('calibration_signDate').classList.add('is-invalid');
+                        isValid = false;
+                    }
+                } catch (e) {
+                    console.error('Error comparing dates:', e);
+                }
+            }
+            
             return isValid;
+        }
+        
+        // ================ EMPLOYEE DATA FUNCTIONS (Second Sheet) ================
+        async function loadEmployeeData() {
+            try {
+                const result = await callGoogleScript(EMPLOYEE_SCRIPT_URL, 'getAll');
+                if (result.status === 'success') {
+                    employeeRecords = result.records || [];
+                    populateEmployeeDatalists();
+                    attachEmployeeEvents();
+                    showNotification('✅ تم تحميل بيانات الموظفين بنجاح', 'success', 3000);
+                } else {
+                    showNotification('❌ فشل في تحميل بيانات الموظفين', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading employee data:', error);
+                showNotification('❌ خطأ في تحميل بيانات الموظفين', 'error');
+            }
+        }
+        
+        function populateEmployeeDatalists() {
+            const nameList = document.getElementById('employeeNameList');
+            const numberList = document.getElementById('employeeNumberList');
+            const deptList = document.getElementById('departmentList');
+            const contractList = document.getElementById('contractTypeList');
+            
+            // Clear existing options
+            nameList.innerHTML = '';
+            numberList.innerHTML = '';
+            deptList.innerHTML = '';
+            
+            // Use Sets for unique values
+            const names = new Set();
+            const numbers = new Set();
+            const departments = new Set();
+            const contracts = new Set();
+            
+            employeeRecords.forEach(record => {
+                // record[1] = name, record[2] = employee number, record[4] = department, record[5] = contract type
+                if (record[1]) names.add(record[1]);
+                if (record[2]) numbers.add(record[2]);
+                if (record[4]) departments.add(record[4]);
+                if (record[5]) contracts.add(record[5]);
+            });
+            
+            // Populate employee names
+            names.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                nameList.appendChild(option);
+            });
+            
+            // Populate employee numbers
+            numbers.forEach(number => {
+                const option = document.createElement('option');
+                option.value = number;
+                numberList.appendChild(option);
+            });
+            
+            // Populate departments
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept;
+                deptList.appendChild(option);
+            });
+            
+            // Add contract types from employee records to the datalist
+            contracts.forEach(contract => {
+                const option = document.createElement('option');
+                option.value = contract;
+                contractList.appendChild(option);
+            });
+        }
+        
+        function attachEmployeeEvents() {
+            const employeeNameField = document.getElementById('calibration_employeeName');
+            const employeeNumberField = document.getElementById('calibration_employeeNumber');
+            
+            // Auto-fill when employee name is selected
+            employeeNameField.addEventListener('change', function() {
+                const selectedName = this.value;
+                if (!selectedName) return;
+                
+                // Find the record with this name
+                const record = employeeRecords.find(r => r[1] === selectedName);
+                if (record) {
+                    document.getElementById('calibration_employeeNumber').value = record[2] || '';
+                    document.getElementById('calibration_department').value = record[4] || '';
+                    document.getElementById('calibration_contractType').value = record[5] || '';
+                    
+                    // Set start date if available (record[6] is start date in second sheet)
+                    if (record[6]) {
+                        // Convert from Google Sheets format to display format
+                        const inputDate = formatDateForInput(record[6]);
+                        
+                        document.getElementById('calibration_startDate').value = inputDate;
+                        
+                        // Set the Flatpickr instance value
+                        if (flatpickrInstances.startDate && inputDate) {
+                            try {
+                                // Convert dd/mm/yyyy to Date object for Flatpickr
+                                const parts = inputDate.split('/');
+                                if (parts.length === 3) {
+                                    const day = parseInt(parts[0], 10);
+                                    const month = parseInt(parts[1], 10) - 1;
+                                    const year = parseInt(parts[2], 10);
+                                    const dateObj = new Date(year, month, day);
+                                    flatpickrInstances.startDate.setDate(dateObj, false);
+                                }
+                            } catch (e) {
+                                console.error('Error setting date:', e);
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Auto-fill when employee number is selected
+            employeeNumberField.addEventListener('change', function() {
+                const selectedNumber = this.value;
+                if (!selectedNumber) return;
+                
+                // Find the record with this employee number
+                const record = employeeRecords.find(r => r[2] === selectedNumber);
+                if (record) {
+                    document.getElementById('calibration_employeeName').value = record[1] || '';
+                    document.getElementById('calibration_department').value = record[4] || '';
+                    document.getElementById('calibration_contractType').value = record[5] || '';
+                    
+                    // Set start date if available
+                    if (record[6]) {
+                        // Convert from Google Sheets format to display format
+                        const inputDate = formatDateForInput(record[6]);
+                        
+                        document.getElementById('calibration_startDate').value = inputDate;
+                        
+                        // Set the Flatpickr instance value
+                        if (flatpickrInstances.startDate && inputDate) {
+                            try {
+                                // Convert dd/mm/yyyy to Date object for Flatpickr
+                                const parts = inputDate.split('/');
+                                if (parts.length === 3) {
+                                    const day = parseInt(parts[0], 10);
+                                    const month = parseInt(parts[1], 10) - 1;
+                                    const year = parseInt(parts[2], 10);
+                                    const dateObj = new Date(year, month, day);
+                                    flatpickrInstances.startDate.setDate(dateObj, false);
+                                }
+                            } catch (e) {
+                                console.error('Error setting date:', e);
+                            }
+                        }
+                    }
+                }
+            });
         }
         
         // ================ CALIBRATION SYSTEM FUNCTIONS ================
@@ -799,7 +1280,7 @@
             } catch (error) {
                 spinner.style.display = 'none';
                 noRecords.style.display = 'block';
-                showNotification(`❌ خطأ في تحميل سجلالسرية`, 'error');
+                showNotification(`❌ خطأ في تحميل سجلال السرية`, 'error');
                 document.getElementById('totalRecords').textContent = '0';
             }
         }
@@ -808,7 +1289,7 @@
             const table = document.getElementById('calibrationDataTable');
             
             let html = '<thead><tr>';
-            const headers = ['رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد', 'تاريخ التوقيع', 'اسم المراجع', 'الإجراءات'];
+            const headers = ['رقم سجل السرية', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد', 'تاريخ التوقيع', 'اسم المراجع', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
@@ -817,19 +1298,20 @@
             records.forEach((record, index) => {
                 html += '<tr>';
                 
-                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
+                // Show secret record number (record[15]) instead of internal recordId (record[0])
+                html += `<td><strong>${escapeHtml(record[15] || '')}</strong></td>`;
                 html += `<td>${escapeHtml(record[1] || '')}</td>`;
                 html += `<td>${escapeHtml(record[2] || '')}</td>`;
                 html += `<td>${escapeHtml(record[3] || '')}</td>`;
                 html += `<td>${escapeHtml(record[4] || '')}</td>`;
-                html += `<td>${formatDate(record[6] || '')}</td>`;
+                html += `<td>${formatDateForDisplay(record[6] || '')}</td>`;
                 html += `<td>${escapeHtml(record[14] || '')}</td>`;
                 
                 html += `<td class="action-buttons">
                     <button onclick="editCalibrationRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
                         <i class="fas fa-edit"></i> تعديل
                     </button>
-                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[1])}', 'calibration')" class="btn btn-sm btn-danger" title="حذف">
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[1])}', 'calibration', '${escapeHtml(record[15] || '')}')" class="btn btn-sm btn-danger" title="حذف">
                         <i class="fas fa-trash"></i> حذف
                     </button>
                     <button onclick="viewDetails('${escapeHtml(record[0])}', 'calibration')" class="btn btn-sm btn-info" title="عرض">
@@ -845,10 +1327,28 @@
         }
         
         async function addCalibrationRecord() {
-            const requiredFields = ['calibration_employeeName', 'calibration_employeeNumber', 'calibration_department'];
+            const requiredFields = ['calibration_secretRecordNumber', 'calibration_employeeName', 'calibration_employeeNumber', 'calibration_department'];
             if (!validateForm(requiredFields)) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
                 return;
+            }
+            
+            // Validate sign date is not older than start date
+            const startDate = document.getElementById('calibration_startDate').value;
+            const signDate = document.getElementById('calibration_signDate').value;
+            
+            if (startDate && signDate) {
+                try {
+                    const startDateObj = parseDateDDMMYYYY(startDate);
+                    const signDateObj = parseDateDDMMYYYY(signDate);
+                    
+                    if (startDateObj && signDateObj && signDateObj < startDateObj) {
+                        showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error comparing dates:', e);
+                }
             }
             
             const button = document.getElementById('calibration_addBtn');
@@ -857,26 +1357,37 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
-            const startDate = getDateString(
-                document.getElementById('calibration_startDate_day').value,
-                document.getElementById('calibration_startDate_month').value,
-                document.getElementById('calibration_startDate_year').value
-            );
+            // Get date values from date inputs (already in dd/mm/yyyy format)
+            const startDateForStorage = formatDateForStorage(startDate);
+            const signDateForStorage = formatDateForStorage(signDate);
             
-            const signDate = getDateString(
-                document.getElementById('calibration_signDate_day').value,
-                document.getElementById('calibration_signDate_month').value,
-                document.getElementById('calibration_signDate_year').value
-            );
+            // Validate dates again
+            if (startDate && !validateDate(startDate)) {
+                showNotification('❌ تاريخ بدء العمل غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+            
+            if (signDate && !validateDate(signDate)) {
+                showNotification('❌ تاريخ التوقيع غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+            
+            // Generate internal recordId (hidden from user)
+            const recordId = 'CAL-' + Date.now();
+            document.getElementById('calibration_recordId').value = recordId;
             
             const formData = {
-                recordId: document.getElementById('calibration_recordId').value || 'CAL-' + Date.now(),
+                recordId: recordId,
                 employeeName: document.getElementById('calibration_employeeName').value,
                 employeeNumber: document.getElementById('calibration_employeeNumber').value,
                 department: document.getElementById('calibration_department').value,
                 contractType: document.getElementById('calibration_contractType').value,
-                startDate: startDate,
-                signDate: signDate,
+                startDate: startDateForStorage,
+                signDate: signDateForStorage,
                 notes: document.getElementById('calibration_notes').value,
                 reviewerName: document.getElementById('calibration_reviewerName').value,
                 secretRecordNumber: document.getElementById('calibration_secretRecordNumber').value
@@ -918,26 +1429,57 @@
         }
         
         function fillCalibrationForm(record) {
-            document.getElementById('calibration_recordId').value = record[0] || '';
+            document.getElementById('calibration_secretRecordNumber').value = record[15] || '';
             document.getElementById('calibration_employeeName').value = record[1] || '';
             document.getElementById('calibration_employeeNumber').value = record[2] || '';
             document.getElementById('calibration_department').value = record[3] || '';
             document.getElementById('calibration_contractType').value = record[4] || '';
-            document.getElementById('calibration_secretRecordNumber').value = record[15] || '';
             
+            // Set date values - convert from Google Sheets format to input format
             const startDate = formatDateForInput(record[5] || '');
-            document.getElementById('calibration_startDate_day').value = startDate.day;
-            document.getElementById('calibration_startDate_month').value = startDate.month;
-            document.getElementById('calibration_startDate_year').value = startDate.year;
-            
             const signDate = formatDateForInput(record[6] || '');
-            document.getElementById('calibration_signDate_day').value = signDate.day;
-            document.getElementById('calibration_signDate_month').value = signDate.month;
-            document.getElementById('calibration_signDate_year').value = signDate.year;
+            
+            // Set the input values directly
+            document.getElementById('calibration_startDate').value = startDate;
+            document.getElementById('calibration_signDate').value = signDate;
+            
+            // Update Flatpickr instances WITHOUT triggering onChange
+            if (flatpickrInstances.startDate && startDate) {
+                try {
+                    const parts = startDate.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.startDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting start date:', e);
+                }
+            }
+            
+            if (flatpickrInstances.signDate && signDate) {
+                try {
+                    const parts = signDate.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.signDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting sign date:', e);
+                }
+            }
             
             document.getElementById('calibration_notes').value = record[13] || '';
             document.getElementById('calibration_reviewerName').value = record[14] || '';
+            
+            // Set the internal recordId in hidden field
             document.getElementById('calibration_editingId').value = record[0];
+            document.getElementById('calibration_recordId').value = record[0];
         }
         
         async function updateCalibrationRecord() {
@@ -947,32 +1489,63 @@
                 return;
             }
             
+            const requiredFields = ['calibration_secretRecordNumber', 'calibration_employeeName', 'calibration_employeeNumber', 'calibration_department'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            // Validate sign date is not older than start date
+            const startDate = document.getElementById('calibration_startDate').value;
+            const signDate = document.getElementById('calibration_signDate').value;
+            
+            if (startDate && signDate) {
+                try {
+                    const startDateObj = parseDateDDMMYYYY(startDate);
+                    const signDateObj = parseDateDDMMYYYY(signDate);
+                    
+                    if (startDateObj && signDateObj && signDateObj < startDateObj) {
+                        showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error comparing dates:', e);
+                }
+            }
+            
             const button = document.getElementById('calibration_updateBtn');
             const originalHtml = button.innerHTML;
             
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
-            const startDate = getDateString(
-                document.getElementById('calibration_startDate_day').value,
-                document.getElementById('calibration_startDate_month').value,
-                document.getElementById('calibration_startDate_year').value
-            );
+            // Get date values from date inputs (already in dd/mm/yyyy format)
+            const startDateForStorage = formatDateForStorage(startDate);
+            const signDateForStorage = formatDateForStorage(signDate);
             
-            const signDate = getDateString(
-                document.getElementById('calibration_signDate_day').value,
-                document.getElementById('calibration_signDate_month').value,
-                document.getElementById('calibration_signDate_year').value
-            );
+            // Validate dates again
+            if (startDate && !validateDate(startDate)) {
+                showNotification('❌ تاريخ بدء العمل غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+            
+            if (signDate && !validateDate(signDate)) {
+                showNotification('❌ تاريخ التوقيع غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
             
             const formData = {
-                recordId: document.getElementById('calibration_recordId').value,
+                recordId: recordId,
                 employeeName: document.getElementById('calibration_employeeName').value,
                 employeeNumber: document.getElementById('calibration_employeeNumber').value,
                 department: document.getElementById('calibration_department').value,
                 contractType: document.getElementById('calibration_contractType').value,
-                startDate: startDate,
-                signDate: signDate,
+                startDate: startDateForStorage,
+                signDate: signDateForStorage,
                 notes: document.getElementById('calibration_notes').value,
                 reviewerName: document.getElementById('calibration_reviewerName').value,
                 secretRecordNumber: document.getElementById('calibration_secretRecordNumber').value
@@ -999,11 +1572,20 @@
         function resetCalibrationForm() {
             document.getElementById('calibrationForm').reset();
             document.getElementById('calibration_editingId').value = '';
+            document.getElementById('calibration_recordId').value = '';
             document.getElementById('calibration_addBtn').style.display = 'inline-block';
             document.getElementById('calibration_updateBtn').style.display = 'none';
             document.querySelectorAll('#calibrationForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
+            
+            // Clear Flatpickr instances
+            if (flatpickrInstances.startDate) {
+                flatpickrInstances.startDate.clear();
+            }
+            if (flatpickrInstances.signDate) {
+                flatpickrInstances.signDate.clear();
+            }
         }
         
         function exportCalibrationCSV() {
@@ -1012,30 +1594,33 @@
                 return;
             }
             
-            showNotification('📥 جاري تصدير سجلالسرية...', 'info');
+            showNotification('📥 جاري تصدير سجلال السرية...', 'info');
             
             try {
                 const headers = [
-                    'رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد',
+                    'رقم سجل السرية', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد',
                     'تاريخ بدء العمل', 'تاريخ التوقيع', 'ملاحظات',
-                    'اسم المراجع', 'رقم سجل السرية'
+                    'اسم المراجع'
                 ];
                 
                 let csvContent = '\uFEFF';
                 csvContent += headers.join(",") + "\r\n";
                 
                 calibrationRecords.forEach(record => {
+                    // Clean HTML tags from dates for CSV export
+                    const startDateDisplay = formatDateForDisplay(record[5] || '').replace(/<[^>]*>/g, '');
+                    const signDateDisplay = formatDateForDisplay(record[6] || '').replace(/<[^>]*>/g, '');
+                    
                     const row = [
-                        record[0] || '',
+                        record[15] || '', // Secret record number
                         record[1] || '',
                         record[2] || '',
                         record[3] || '',
                         record[4] || '',
-                        formatDate(record[5] || ''),
-                        formatDate(record[6] || ''),
+                        startDateDisplay,
+                        signDateDisplay,
                         record[13] || '',
-                        record[14] || '',
-                        record[15] || ''
+                        record[14] || ''
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -1048,7 +1633,7 @@
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.setAttribute("href", url);
-                link.setAttribute("download", `سجلالسرية_${new Date().toISOString().slice(0,10)}.csv`);
+                link.setAttribute("download", `سجلال السرية_${new Date().toISOString().slice(0,10)}.csv`);
                 
                 document.body.appendChild(link);
                 link.click();
@@ -1080,22 +1665,21 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header modal-header-custom">
-                                <h5 class="modal-title">${title}: ${escapeHtml(record[0])}</h5>
+                                <h5 class="modal-title">${title}: ${escapeHtml(record[15] || '')}</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[0])}</p>
+                                        <p><strong>رقم سجل السرية:</strong> ${escapeHtml(record[15] || '')}</p>
                                         <p><strong>اسم الموظف:</strong> ${escapeHtml(record[1])}</p>
                                         <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[2])}</p>
                                         <p><strong>القسم:</strong> ${escapeHtml(record[3])}</p>
                                     </div>
                                     <div class="col-md-6">
                                         <p><strong>نوع العقد:</strong> ${escapeHtml(record[4])}</p>
-                                        <p><strong>تاريخ بدء العمل:</strong> ${formatDate(record[5])}</p>
-                                        <p><strong>تاريخ التوقيع:</strong> ${formatDate(record[6])}</p>
-                                        <p><strong>رقم سجل السرية:</strong> ${escapeHtml(record[15])}</p>
+                                        <p><strong>تاريخ بدء العمل:</strong> <span class="english-date">${formatDateForDisplay(record[5]).replace(/<[^>]*>/g, '')}</span></p>
+                                        <p><strong>تاريخ التوقيع:</strong> <span class="english-date">${formatDateForDisplay(record[6]).replace(/<[^>]*>/g, '')}</span></p>
                                     </div>
                                 </div>
                                 ${record[13] ? `<p><strong>ملاحظات:</strong> ${escapeHtml(record[13])}</p>` : ''}
@@ -1121,13 +1705,13 @@
         }
         
         // ================ DELETE FUNCTIONALITY ================
-        function showDeleteModal(recordId, recordName, systemType) {
+        function showDeleteModal(recordId, recordName, systemType, secretRecordNumber = '') {
             deleteRecordId = recordId;
             deleteRecordName = recordName;
             
-            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordId').textContent = secretRecordNumber || 'غير معروف';
             document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
-            document.getElementById('deleteSystemType').textContent = 'سجلالسرية';
+            document.getElementById('deleteSystemType').textContent = 'سجلال السرية';
             
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
             deleteModal.show();
