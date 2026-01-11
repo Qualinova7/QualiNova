@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr Calendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -19,7 +22,7 @@
             --warning-color: #f39c12;
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
-            --training-color: #8e44ad;
+            --training-color: #9b59b6;
         }
         
         * {
@@ -34,14 +37,14 @@
         }
         
         .main-container {
-            max-width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 15px;
         }
         
         /* Header Styles */
         .main-header {
-            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            background: linear-gradient(135deg, var(--training-color), #8e44ad);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -71,7 +74,7 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Home Button - Added from first code */
+        /* Home Button */
         .home-button {
             position: absolute;
             top: 20px;
@@ -133,8 +136,8 @@
         }
         
         .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            border-color: var(--training-color);
+            box-shadow: 0 0 0 0.25rem rgba(155, 89, 182, 0.25);
             background: white;
         }
         
@@ -150,36 +153,43 @@
             font-size: 0.9rem;
         }
         
-        /* Custom Date Input */
-        .date-input-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        /* Date Input Styling */
+        .date-input-wrapper {
+            position: relative;
         }
         
-        .date-input-group .form-control-custom {
-            text-align: center;
-            padding: 0.375rem 0.25rem;
-            flex: 1;
+        .date-input-wrapper .date-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--training-color);
+            pointer-events: none;
         }
         
-        .date-input-group .date-day {
-            max-width: 60px;
+        .date-input-wrapper .form-control-custom {
+            padding-right: 40px;
+            direction: ltr;
+            text-align: right;
         }
         
-        .date-input-group .date-month {
-            max-width: 60px;
+        /* Flatpickr Customization */
+        .flatpickr-calendar {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
         }
         
-        .date-input-group .date-year {
-            max-width: 80px;
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+            background: var(--training-color);
+            border-color: var(--training-color);
         }
         
-        .date-input-group .date-separator {
-            font-size: 1.2rem;
-            color: #6c757d;
-            font-weight: bold;
-            min-width: 10px;
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .flatpickr-weekdays {
+            font-family: 'Cairo', sans-serif;
         }
         
         /* Table Styles */
@@ -197,7 +207,7 @@
         }
         
         .table-custom thead th {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            background: linear-gradient(135deg, var(--training-color), #8e44ad);
             color: white;
             border: none;
             padding: 15px 12px;
@@ -213,7 +223,7 @@
         }
         
         .table-custom tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.08);
+            background-color: rgba(155, 89, 182, 0.08);
         }
         
         .table-custom tbody td {
@@ -286,20 +296,22 @@
             border-width: 0.2rem;
         }
         
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        /* Status Message */
+        .status-message {
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
         }
         
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
-            border-radius: 10px;
+        /* FIX FOR ENGLISH DATE DISPLAY IN RTL CONTEXT */
+        .english-date {
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: embed !important;
+            display: inline-block;
         }
         
         /* Responsive */
@@ -319,7 +331,7 @@
                 min-width: 1000px;
             }
             
-            /* Adjust home button for mobile */
+            /* Home Button Responsive Styles */
             .home-button {
                 position: relative;
                 top: 0;
@@ -328,20 +340,73 @@
                 display: inline-block;
             }
             
-            /* Adjust header padding for mobile to accommodate home button */
             .main-header {
-                padding-top: 20px;
-                padding-bottom: 20px;
+                padding-top: 60px;
             }
-            
-            .main-header .row {
-                margin-top: 0;
-            }
+        }
+        
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section-title {
+            color: var(--training-color);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--training-color);
+            border-radius: 10px;
+        }
+        
+        /* Badge Styles */
+        .badge {
+            font-size: 0.75em;
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+        
+        /* Status Colors */
+        .status-success {
+            background-color: rgba(39, 174, 96, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+        
+        .status-error {
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        .status-info {
+            background-color: rgba(52, 152, 219, 0.1);
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
         }
         
         /* Modal Custom */
         .modal-header-custom {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            background: linear-gradient(135deg, var(--training-color), #8e44ad);
             color: white;
             border-radius: 15px 15px 0 0;
         }
@@ -365,7 +430,7 @@
     <div class="container-fluid main-container">
         <!-- Main Header -->
         <div class="main-header fade-in">
-            <!-- Return to Home Button - ADDED -->
+            <!-- Return to Home Button -->
             <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
@@ -397,70 +462,82 @@
                     </div>
                     <div class="card-body">
                         <form id="trainingForm">
-                            <div class="row">
-                                <div class="col-md-2 mb-2">
-                                    <label class="form-label-custom">م (رقم السجل) *</label>
-                                    <input type="text" class="form-control form-control-custom" id="training_id" placeholder="م" required>
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-user-tie"></i> المعلومات الأساسية
                                 </div>
-                                <div class="col-md-2 mb-2">
-                                    <label class="form-label-custom">العام *</label>
-                                    <input type="number" class="form-control form-control-custom" id="training_year" placeholder="العام" min="2000" max="2100" required>
-                                </div>
-                                <div class="col-md-2 mb-2">
-                                    <label class="form-label-custom">الرقم الوظيفي *</label>
-                                    <input type="text" class="form-control form-control-custom" id="training_employeeNumber" placeholder="الرقم الوظيفي" required>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">الاسم *</label>
-                                    <input type="text" class="form-control form-control-custom" id="training_name" placeholder="الاسم" required>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">الوظيفة *</label>
-                                    <input type="text" class="form-control form-control-custom" id="training_jobTitle" placeholder="الوظيفة" required>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <label class="form-label-custom">الاحتياج التدريبي / الهدف من التدريب</label>
-                                    <textarea class="form-control form-textarea-custom" id="training_trainingNeed" placeholder="الاحتياج التدريبي / الهدف من التدريب"></textarea>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <label class="form-label-custom">مسمى التدريب *</label>
-                                    <input type="text" class="form-control form-control-custom" id="training_trainingTitle" placeholder="مسمى التدريب" required>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">مكان الانعقاد</label>
-                                    <input type="text" class="form-control form-control-custom" id="training_location" placeholder="مكان الانعقاد">
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">الجهة</label>
-                                    <input type="text" class="form-control form-control-custom" id="training_organization" placeholder="الجهة">
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">تاريخ البداية</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center date-day" id="training_startDate_day" placeholder="يوم" min="1" max="31">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-month" id="training_startDate_month" placeholder="شهر" min="1" max="12">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-year" id="training_startDate_year" placeholder="سنة" min="1900" max="2100">
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم السجل *</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_id" placeholder="رقم السجل" required>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">العام *</label>
+                                        <input type="number" class="form-control form-control-custom" id="training_year" placeholder="العام" min="2000" max="2100" required>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الرقم الوظيفي *</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_employeeNumber" placeholder="الرقم الوظيفي" required list="employeeNumberList">
+                                        <datalist id="employeeNumberList"></datalist>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اسم الموظف *</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_name" placeholder="الاسم" required list="employeeNameList">
+                                        <datalist id="employeeNameList"></datalist>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">تاريخ الانتهاء</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center date-day" id="training_endDate_day" placeholder="يوم" min="1" max="31">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-month" id="training_endDate_month" placeholder="شهر" min="1" max="12">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-year" id="training_endDate_year" placeholder="سنة" min="1900" max="2100">
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الوظيفة *</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_jobTitle" placeholder="الوظيفة" required>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">مسمى التدريب *</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_trainingTitle" placeholder="مسمى التدريب" required>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">الهدف من التدريب</label>
+                                        <textarea class="form-control form-textarea-custom" id="training_trainingNeed" placeholder="الهدف من التدريب"></textarea>
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-calendar-alt"></i> تفاصيل التدريب
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">مكان الانعقاد</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_location" placeholder="مكان الانعقاد">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">الجهة المنظمة</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_organization" placeholder="الجهة المنظمة">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ البداية</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="training_startDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ الانتهاء</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="training_endDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Status Message -->
+                            <div id="status" class="status-message"></div>
                             
                             <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-between">
@@ -500,18 +577,18 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <div class="loading-spinner" id="trainingLoadingSpinner">
+                        <div class="loading-spinner" id="loadingSpinner" style="display: none;">
                             <div class="spinner-border text-primary spinner-border-custom" role="status">
                                 <span class="visually-hidden">جاري التحميل...</span>
                             </div>
                         </div>
                         
-                        <div class="table-responsive" id="trainingTableContainer" style="display: none;">
-                            <table class="table table-custom table-hover" id="trainingDataTable">
+                        <div class="table-responsive" id="dataTableContainer">
+                            <table class="table table-custom table-hover" id="dataTable">
                             </table>
                         </div>
                         
-                        <div id="trainingNoRecords" class="text-center py-5" style="display: none;">
+                        <div id="noRecords" class="text-center py-5" style="display: none;">
                             <i class="fas fa-graduation-cap fa-4x text-muted mb-4"></i>
                             <h4 class="text-muted">لا توجد سجلات تدريب لعرضها</h4>
                         </div>
@@ -526,7 +603,7 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة التدريب 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 1.0</span>
+                    <span class="text-info">الإصدار 1.0</span>
                 </p>
             </div>
         </div>
@@ -548,7 +625,7 @@
                         <hr>
                         <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">إدارة التدريب</span></p>
                         <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
-                        <p class="mb-0"><strong>الاسم:</strong> <span id="deleteRecordName">غير معروف</span></p>
+                        <p class="mb-0"><strong>اسم الموظف:</strong> <span id="deleteRecordName">غير معروف</span></p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -564,20 +641,42 @@
     </div>
 
     <!-- Details Modal -->
-    <div id="dynamicModalContainer"></div>
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تفاصيل سجل التدريب</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr Calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
     
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
         const TRAINING_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhspPy9B2RGQdv6cCb-6y4VfQQPOkUXPgaT118s6qV9mqvdR9zLy9XknDAJdW7AYcM_g/exec";
+        const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
         
         // ================ GLOBAL VARIABLES ================
         let trainingRecords = [];
+        let employeeRecords = [];
         let deleteRecordId = '';
         let deleteRecordName = '';
+        let flatpickrInstances = {};
+        let employeeDataLoaded = false;
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
@@ -585,81 +684,361 @@
             setCurrentDate();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // Load training data
-            loadTrainingData();
+            // Initialize calendar pickers with FIXED approach
+            initializeDatePickers();
             
-            // Set up date input navigation
-            setupDateInputNavigation();
+            // Load data - تحميل بيانات التدريب وبيانات الموظفين
+            setTimeout(() => {
+                loadTrainingData(); // تحميل بيانات التدريب
+                loadEmployeeData(); // تحميل بيانات الموظفين للقوائم المنسدلة
+            }, 500);
+            
+            // إضافة event listeners للحقول
+            setupEmployeeAutocomplete();
         });
         
-        // ================ DATE FUNCTIONS ================
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            try {
-                // Handle dd/mm/yyyy format
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        const day = parts[0].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[2];
-                        return `${day}/${month}/${year}`;
+        // ================ FIXED DATE PICKER INITIALIZATION ================
+        function initializeDatePickers() {
+            // Destroy existing instances if any
+            if (flatpickrInstances.startDate) {
+                flatpickrInstances.startDate.destroy();
+            }
+            if (flatpickrInstances.endDate) {
+                flatpickrInstances.endDate.destroy();
+            }
+            
+            // Simple Flatpickr configuration that works in RTL
+            const dateOptions = {
+                locale: 'ar',
+                dateFormat: "d/m/Y",  // Use d/m/Y format for display
+                altFormat: "d/m/Y",
+                altInput: false,
+                allowInput: false,
+                clickOpens: true,
+                position: 'auto',
+                monthSelectorType: 'static',
+                yearSelectorType: 'scrolling',
+                prevArrow: '<i class="fas fa-chevron-right"></i>',
+                nextArrow: '<i class="fas fa-chevron-left"></i>',
+                weekNumbers: false,
+                disableMobile: true,
+                // IMPORTANT: Set the calendar to RTL mode
+                nextArrow: '<i class="fas fa-chevron-right"></i>',
+                prevArrow: '<i class="fas fa-chevron-left"></i>',
+                // Force RTL for the calendar
+                onReady: function(selectedDates, dateStr, instance) {
+                    // Force RTL direction on calendar container
+                    if (instance.calendarContainer) {
+                        instance.calendarContainer.style.direction = 'rtl';
+                    }
+                },
+                onChange: function(selectedDates, dateStr, instance) {
+                    // The date will be automatically set in d/m/Y format
+                    // Validate end date is not earlier than start date
+                    validateTrainingDates();
+                    
+                    // Force the input value to update (in case Flatpickr didn't)
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const formattedDate = formatDateToDDMMYYYY(date);
+                        instance.input.value = formattedDate;
                     }
                 }
-                
-                // Handle yyyy-mm-dd format
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        const day = parts[2].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[0];
-                        return `${day}/${month}/${year}`;
-                    }
-                }
-                
-                return dateString;
-            } catch (e) {
-                return dateString;
+            };
+            
+            // Initialize start date picker
+            flatpickrInstances.startDate = flatpickr('#training_startDate', dateOptions);
+            
+            // Initialize end date picker
+            flatpickrInstances.endDate = flatpickr('#training_endDate', dateOptions);
+            
+            // Force Arabic locale on both instances
+            if (flatpickrInstances.startDate) {
+                flatpickrInstances.startDate.set('locale', 'ar');
+            }
+            if (flatpickrInstances.endDate) {
+                flatpickrInstances.endDate.set('locale', 'ar');
             }
         }
         
+        // ================ HELPER FUNCTION TO FORMAT DATE AS DD/MM/YYYY ================
+        function formatDateToDDMMYYYY(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // ================ DATE VALIDATION: END DATE NOT EARLIER THAN START DATE ================
+        function validateTrainingDates() {
+            const startDateStr = document.getElementById('training_startDate').value;
+            const endDateStr = document.getElementById('training_endDate').value;
+            
+            if (!startDateStr || !endDateStr) return;
+            
+            try {
+                const startDate = parseDateDDMMYYYY(startDateStr);
+                const endDate = parseDateDDMMYYYY(endDateStr);
+                
+                if (startDate && endDate && endDate < startDate) {
+                    showNotification('❌ تاريخ الانتهاء يجب أن يكون بعد تاريخ البداية أو مساوياً له', 'error');
+                    // Clear the end date
+                    if (flatpickrInstances.endDate) {
+                        flatpickrInstances.endDate.clear();
+                    }
+                    document.getElementById('training_endDate').value = '';
+                }
+            } catch (e) {
+                console.error('Error validating dates:', e);
+            }
+        }
+        
+        // ================ SIMPLIFIED DATE FORMAT FUNCTIONS ================
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
+            
+            // Handle dd/mm/yyyy format only
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    // Basic validation
+                    if (day < 1 || day > 31) return null;
+                    if (month < 0 || month > 11) return null;
+                    if (year < 1900 || year > 2100) return null;
+                    
+                    return new Date(year, month, day);
+                }
+            }
+            
+            return null;
+        }
+        
+        // ================ FIXED DATE DISPLAY FORMAT FUNCTION ================
+        // This function converts dates from Google Sheets format (2026/05/01) to display format (30 September 2026)
+        // AND fixes the RTL display issue by wrapping in a span with LTR direction
+        function formatDateForDisplay(dateString) {
+            if (!dateString || dateString.trim() === '') return '';
+            
+            // Check if it's already in the desired format (like "30 September 2026")
+            const englishMonthRegex = /^\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}$/i;
+            const arabicMonthRegex = /^\d{1,2}\s+(يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر)\s+\d{4}$/;
+            
+            if (englishMonthRegex.test(dateString) || arabicMonthRegex.test(dateString)) {
+                return `<span class="english-date">${dateString}</span>`;
+            }
+            
+            // Try different date formats that might come from Google Sheets
+            let dateObj = null;
+            
+            // Format 1: YYYY/MM/DD (Google Sheets format)
+            if (dateString.includes('/') && dateString.split('/')[0].length === 4) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const day = parseInt(parts[2], 10);
+                    
+                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                        dateObj = new Date(year, month, day);
+                    }
+                }
+            }
+            // Format 2: DD/MM/YYYY (our display format)
+            else if (dateString.includes('/') && dateString.split('/')[2].length === 4) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                        dateObj = new Date(year, month, day);
+                    }
+                }
+            }
+            // Format 3: YYYY-MM-DD (ISO format)
+            else if (dateString.includes('-') && dateString.split('-')[0].length === 4) {
+                const parts = dateString.split('-');
+                if (parts.length === 3) {
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const day = parseInt(parts[2], 10);
+                    
+                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                        dateObj = new Date(year, month, day);
+                    }
+                }
+            }
+            // Format 4: Already a Date object
+            else if (dateString instanceof Date) {
+                dateObj = dateString;
+            }
+            // Format 5: Try parsing as is
+            else {
+                dateObj = new Date(dateString);
+            }
+            
+            // If we couldn't parse the date, return the original string
+            if (!dateObj || isNaN(dateObj.getTime())) {
+                console.log("Could not parse date:", dateString);
+                return `<span class="english-date">${dateString}</span>`;
+            }
+            
+            // Format the date as "30 September 2026"
+            const day = dateObj.getDate();
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            const month = monthNames[dateObj.getMonth()];
+            const year = dateObj.getFullYear();
+            
+            const formattedDate = `${day} ${month} ${year}`;
+            return `<span class="english-date">${formattedDate}</span>`;
+        }
+        
+        // ================ NEW FUNCTION FOR FORM INPUT DISPLAY ================
         function formatDateForInput(dateString) {
-            if (!dateString) return {day: '', month: '', year: ''};
-            try {
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[0],
-                            month: parts[1],
-                            year: parts[2]
-                        };
-                    }
-                }
-                
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[2],
-                            month: parts[1],
-                            year: parts[0]
-                        };
-                    }
-                }
-                
-                return {day: '', month: '', year: ''};
-            } catch (e) {
-                return {day: '', month: '', year: ''};
+            if (!dateString || dateString.trim() === '') return '';
+            
+            // Check if it's already in dd/mm/yyyy format
+            const ddMMyyyyRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                return dateString;
             }
+            
+            // Try to parse the date
+            // First, remove any HTML tags if present
+            const cleanDateString = dateString.replace(/<[^>]*>/g, '');
+            
+            const parts = cleanDateString.split(' ');
+            if (parts.length === 3 && isNaN(parts[1])) {
+                // This is in "30 September 2026" format
+                const day = parseInt(parts[0], 10).toString().padStart(2, '0');
+                const monthNames = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                const monthIndex = monthNames.findIndex(name => name.toLowerCase() === parts[1].toLowerCase());
+                const month = (monthIndex + 1).toString().padStart(2, '0');
+                const year = parts[2];
+                
+                if (monthIndex !== -1) {
+                    return `${day}/${month}/${year}`;
+                }
+            }
+            
+            // Try to parse as a date
+            try {
+                const dateObj = new Date(cleanDateString);
+                if (!isNaN(dateObj.getTime())) {
+                    const day = dateObj.getDate().toString().padStart(2, '0');
+                    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+            } catch (e) {
+                console.error('Error parsing date for input:', e);
+            }
+            
+            // Fallback: return empty string
+            return '';
         }
         
-        function getDateString(day, month, year) {
-            if (!day || !month || !year) return '';
-            const formattedDay = day.toString().padStart(2, '0');
-            const formattedMonth = month.toString().padStart(2, '0');
-            return `${formattedDay}/${formattedMonth}/${year}`;
+        function formatDateForStorage(dateString) {
+            if (!dateString) return '';
+            
+            // If it's already in dd/mm/yyyy format, return as is
+            const ddMMyyyyRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                return dateString;
+            }
+            
+            // Clean any HTML tags
+            const cleanDateString = dateString.replace(/<[^>]*>/g, '');
+            
+            // Try to convert from display format to dd/mm/yyyy
+            const parts = cleanDateString.split(' ');
+            if (parts.length === 3 && isNaN(parts[1])) {
+                // This is in "30 September 2026" format
+                const day = parseInt(parts[0], 10).toString().padStart(2, '0');
+                const monthNames = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                const monthIndex = monthNames.findIndex(name => name.toLowerCase() === parts[1].toLowerCase());
+                const month = (monthIndex + 1).toString().padStart(2, '0');
+                const year = parts[2];
+                
+                if (monthIndex !== -1) {
+                    return `${day}/${month}/${year}`;
+                }
+            }
+            
+            // Fallback: try to parse as a date
+            try {
+                const dateObj = new Date(cleanDateString);
+                if (!isNaN(dateObj.getTime())) {
+                    const day = dateObj.getDate().toString().padStart(2, '0');
+                    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+            } catch (e) {
+                console.error('Error parsing date for storage:', e);
+            }
+            
+            return '';
+        }
+        
+        function validateDate(dateString) {
+            if (!dateString) return true; // Empty date is valid
+            
+            // Accept both dd/mm/yyyy and display format (30 September 2026)
+            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            const displayFormatRegex = /^(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})$/i;
+            
+            if (ddMMyyyyRegex.test(dateString)) {
+                const match = dateString.match(ddMMyyyyRegex);
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
+                
+                // Basic date validation
+                if (year < 1900 || year > 2100) return false;
+                if (month < 1 || month > 12) return false;
+                if (day < 1 || day > 31) return false;
+                
+                // Check for specific month days
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            if (displayFormatRegex.test(dateString)) {
+                const match = dateString.match(displayFormatRegex);
+                const day = parseInt(match[1], 10);
+                const monthName = match[2];
+                const year = parseInt(match[3], 10);
+                
+                const monthNames = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                const month = monthNames.findIndex(name => name.toLowerCase() === monthName.toLowerCase()) + 1;
+                
+                if (month === 0) return false; // Month not found
+                if (year < 1900 || year > 2100) return false;
+                if (day < 1 || day > 31) return false;
+                
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            return false;
         }
         
         function setCurrentDate() {
@@ -670,26 +1049,7 @@
             document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
         }
         
-        function setupDateInputNavigation() {
-            // دالة للمساعدة في التنقل بين حقول التاريخ باستخدام Tab
-            document.querySelectorAll('.date-day').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    if (this.value.length >= 2) {
-                        this.nextElementSibling.nextElementSibling.nextElementSibling.focus();
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.date-month').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    if (this.value.length >= 2) {
-                        this.nextElementSibling.nextElementSibling.focus();
-                    }
-                });
-            });
-        }
-        
-        // ================ NOTIFICATION FUNCTIONS ================
+        // ================ NOTIFICATION SYSTEM ================
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notificationContainer');
             
@@ -734,6 +1094,18 @@
             }
         }
         
+        // ================ JSONP Loader ================
+        function jsonp(url) {
+            const old = document.getElementById("jsonp");
+            if (old) old.remove();
+
+            const s = document.createElement('script');
+            s.id = "jsonp";
+            s.src = url;
+            document.body.appendChild(s);
+        }
+        
+        // ================ UTILITY FUNCTIONS ================
         function escapeHtml(unsafe) {
             if (unsafe === null || unsafe === undefined) return '';
             return unsafe.toString()
@@ -744,109 +1116,247 @@
                 .replace(/'/g, "&#039;");
         }
         
-        // ================ API COMMUNICATION FUNCTIONS ================
-        function jsonp(url) {
-            return new Promise((resolve, reject) => {
-                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
-                const timeout = 60000;
+        // ================ STATUS MESSAGE FUNCTIONS ================
+        function setStatus(msg, type = 'info') {
+            const statusDiv = document.getElementById("status");
+            statusDiv.innerHTML = msg;
+            statusDiv.className = `status-message status-${type}`;
+            statusDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                if (statusDiv.innerHTML === msg) {
+                    statusDiv.style.display = 'none';
+                }
+            }, 5000);
+        }
+        
+        // ================ EMPLOYEE DATA FUNCTIONS - FIXED VERSION ================
+        function loadEmployeeData() {
+            if (employeeDataLoaded) return;
+            
+            showNotification('📥 جاري تحميل بيانات الموظفين...', 'info', 3000);
+            jsonp(`${EMPLOYEE_SCRIPT_URL}?action=getAll&callback=handleEmployeeData`);
+        }
+        
+        function handleEmployeeData(res) {
+            console.log('Employee data response:', res);
+            
+            if (res && res.status === 'success') {
+                // Extract data from response - handle multiple possible formats
+                let records = [];
                 
-                const timeoutId = setTimeout(() => {
-                    cleanup();
-                    reject(new Error('Request timeout'));
-                }, timeout);
-                
-                function cleanup() {
-                    clearTimeout(timeoutId);
-                    delete window[callbackName];
-                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
-                    if (script) script.remove();
+                if (Array.isArray(res.records)) {
+                    records = res.records;
+                } else if (Array.isArray(res.data)) {
+                    records = res.data;
+                } else if (Array.isArray(res)) {
+                    records = res;
                 }
                 
-                window[callbackName] = function(response) {
-                    cleanup();
-                    resolve(response);
-                };
+                employeeRecords = records;
+                employeeDataLoaded = true;
                 
-                const script = document.createElement('script');
-                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
-                script.setAttribute('data-callback', callbackName);
-                script.onerror = function() {
-                    cleanup();
-                    reject(new Error('Failed to load script'));
-                };
-                
-                document.body.appendChild(script);
+                populateEmployeeDatalists();
+                setupEmployeeAutocomplete();
+                showNotification('✅ تم تحميل بيانات الموظفين بنجاح (' + employeeRecords.length + ' موظف)', 'success', 3000);
+            } else {
+                showNotification('❌ فشل في تحميل بيانات الموظفين. تأكد من صحة سكريبت الويب', 'error');
+                console.error('Employee data response:', res);
+            }
+        }
+        
+        function populateEmployeeDatalists() {
+            const nameList = document.getElementById('employeeNameList');
+            const numberList = document.getElementById('employeeNumberList');
+            
+            // Clear existing options
+            nameList.innerHTML = '';
+            numberList.innerHTML = '';
+            
+            // Use Sets for unique values
+            const names = new Set();
+            const numbers = new Set();
+            
+            employeeRecords.forEach(record => {
+                // Assuming record structure: [id, name, empNo, job, department, contract, startDate]
+                // Index: 0=id, 1=name, 2=employee number, 3=job, 4=department, 5=contract type, 6=start date
+                if (record && record.length > 1) {
+                    if (record[1] && String(record[1]).trim() !== '') names.add(String(record[1]).trim());
+                    if (record[2] && String(record[2]).trim() !== '') numbers.add(String(record[2]).trim());
+                }
+            });
+            
+            // Populate employee names
+            names.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                nameList.appendChild(option);
+            });
+            
+            // Populate employee numbers
+            numbers.forEach(number => {
+                const option = document.createElement('option');
+                option.value = number;
+                numberList.appendChild(option);
+            });
+            
+            console.log('Employee datalists populated:', {
+                names: names.size,
+                numbers: numbers.size
             });
         }
         
-        function callGoogleScript(scriptUrl, action, data = {}) {
-            let url = scriptUrl + '?action=' + action;
+        function setupEmployeeAutocomplete() {
+            const employeeNameField = document.getElementById('training_name');
+            const employeeNumberField = document.getElementById('training_employeeNumber');
             
-            for (const key in data) {
-                if (data[key] !== undefined && data[key] !== null) {
-                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+            // Auto-fill when employee name is selected
+            employeeNameField.addEventListener('change', function() {
+                autoFillFromEmployee('name', this.value);
+            });
+            
+            // Auto-fill when employee number is selected
+            employeeNumberField.addEventListener('change', function() {
+                autoFillFromEmployee('number', this.value);
+            });
+            
+            // Also trigger on input for better UX
+            employeeNameField.addEventListener('input', function() {
+                if (this.value.length > 2) {
+                    autoFillFromEmployee('name', this.value);
+                }
+            });
+            
+            employeeNumberField.addEventListener('input', function() {
+                if (this.value.length > 2) {
+                    autoFillFromEmployee('number', this.value);
+                }
+            });
+        }
+        
+        function autoFillFromEmployee(fieldType, value) {
+            if (!value || !employeeDataLoaded || employeeRecords.length === 0) return;
+            
+            let record = null;
+            
+            if (fieldType === 'name') {
+                // Find record by name (case insensitive)
+                record = employeeRecords.find(r => 
+                    r && r[1] && String(r[1]).trim().toLowerCase() === String(value).trim().toLowerCase()
+                );
+                
+                if (record && record[2]) {
+                    document.getElementById('training_employeeNumber').value = record[2] || '';
+                }
+            } else if (fieldType === 'number') {
+                // Find record by employee number
+                record = employeeRecords.find(r => 
+                    r && r[2] && String(r[2]).trim() === String(value).trim()
+                );
+                
+                if (record && record[1]) {
+                    document.getElementById('training_name').value = record[1] || '';
                 }
             }
             
-            return jsonp(url);
-        }
-        
-        // ================ VALIDATION HELPER ================
-        function validateForm(requiredFields) {
-            let isValid = true;
-            requiredFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (!field.value.trim()) {
-                    field.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    field.classList.remove('is-invalid');
+            // Fill other fields if record found
+            if (record) {
+                if (record[3]) { // Job title
+                    document.getElementById('training_jobTitle').value = record[3] || '';
                 }
-            });
-            return isValid;
+                
+                // Show success notification
+                showNotification(`✅ تم تحميل بيانات الموظف: ${record[1] || ''}`, 'success', 2000);
+            }
         }
         
-        // ================ TRAINING SYSTEM FUNCTIONS ================
-        async function loadTrainingData() {
-            const spinner = document.getElementById('trainingLoadingSpinner');
-            const tableContainer = document.getElementById('trainingTableContainer');
-            const noRecords = document.getElementById('trainingNoRecords');
+        // ================ LOAD DATA - FIXED VERSION ================
+        function loadTrainingData() {
+            setStatus("جاري تحميل البيانات...", 'info');
+            
+            const spinner = document.getElementById('loadingSpinner');
+            const tableContainer = document.getElementById('dataTableContainer');
+            const noRecords = document.getElementById('noRecords');
             
             spinner.style.display = 'flex';
             tableContainer.style.display = 'none';
             noRecords.style.display = 'none';
             
-            try {
-                const result = await callGoogleScript(TRAINING_SCRIPT_URL, 'getAll');
+            // Add timestamp to prevent caching
+            const timestamp = new Date().getTime();
+            jsonp(`${TRAINING_SCRIPT_URL}?action=getAll&callback=showTrainingData&t=${timestamp}`);
+        }
+        
+        function showTrainingData(res) {
+            console.log('Training data response:', res);
+            
+            const spinner = document.getElementById('loadingSpinner');
+            const tableContainer = document.getElementById('dataTableContainer');
+            const noRecords = document.getElementById('noRecords');
+            
+            spinner.style.display = 'none';
+            
+            // Handle multiple response formats
+            let records = [];
+            let responseStatus = 'error';
+            let responseMessage = 'خطأ غير معروف';
+            
+            // Check if response has status field
+            if (res && res.status) {
+                responseStatus = res.status;
+                responseMessage = res.message || 'بدون رسالة';
                 
-                spinner.style.display = 'none';
-                
-                if (result.status === 'success') {
-                    trainingRecords = result.data;
-                    
-                    if (trainingRecords.length > 0) {
-                        displayTrainingRecords(trainingRecords);
-                        tableContainer.style.display = 'block';
-                        updateTotalRecordsCount();
-                    } else {
-                        noRecords.style.display = 'block';
+                if (responseStatus === 'success') {
+                    // Try to extract records from various possible locations
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (res.records && typeof res.records === 'object') {
+                        // If records is an object with array inside
+                        const keys = Object.keys(res.records);
+                        if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
+                            records = res.records[keys[0]];
+                        }
                     }
-                } else {
-                    noRecords.style.display = 'block';
-                    showNotification(`❌ ${result.message}`, 'error');
                 }
-            } catch (error) {
-                spinner.style.display = 'none';
-                noRecords.style.display = 'block';
-                showNotification(`❌ خطأ في تحميل سجلات التدريب`, 'error');
+            } else if (Array.isArray(res)) {
+                // If response is directly an array
+                records = res;
+                responseStatus = 'success';
+                responseMessage = 'تم تحميل البيانات بنجاح';
             }
+            
+            if (responseStatus !== 'success') {
+                noRecords.style.display = 'block';
+                showNotification(`❌ ${responseMessage}`, 'error');
+                setStatus(responseMessage, 'error');
+                document.getElementById('totalRecords').textContent = '0';
+                return;
+            }
+            
+            trainingRecords = records;
+            
+            if (trainingRecords.length > 0) {
+                displayTrainingRecords(trainingRecords);
+                tableContainer.style.display = 'block';
+                document.getElementById('totalRecords').textContent = trainingRecords.length.toLocaleString('ar-SA');
+            } else {
+                noRecords.style.display = 'block';
+                document.getElementById('totalRecords').textContent = '0';
+            }
+            
+            setStatus("تم تحميل البيانات بنجاح ✅", 'success');
+            showNotification(`✅ تم تحميل ${trainingRecords.length} سجل تدريب`, 'success', 3000);
         }
         
         function displayTrainingRecords(records) {
-            const table = document.getElementById('trainingDataTable');
+            const table = document.getElementById('dataTable');
             
             let html = '<thead><tr>';
-            const headers = ['م', 'العام', 'الرقم الوظيفي', 'الاسم', 'الوظيفة', 'مسمى التدريب', 'مكان الانعقاد', 'الجهة', 'تاريخ البداية', 'تاريخ الانتهاء', 'الإجراءات'];
+            const headers = ['رقم السجل', 'العام', 'الرقم الوظيفي', 'اسم الموظف', 'الوظيفة', 
+                           'مسمى التدريب', 'مكان الانعقاد', 'الجهة', 'تاريخ البداية', 'تاريخ الانتهاء', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
@@ -855,25 +1365,37 @@
             records.forEach((record, index) => {
                 html += '<tr>';
                 
-                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
-                html += `<td>${escapeHtml(record[1] || '')}</td>`;
-                html += `<td>${escapeHtml(record[2] || '')}</td>`;
-                html += `<td>${escapeHtml(record[3] || '')}</td>`;
-                html += `<td>${escapeHtml(record[4] || '')}</td>`;
-                html += `<td>${escapeHtml(record[6] || '')}</td>`;
-                html += `<td>${escapeHtml(record[7] || '')}</td>`;
-                html += `<td>${escapeHtml(record[8] || '')}</td>`;
-                html += `<td>${formatDate(record[9] || '')}</td>`;
-                html += `<td>${formatDate(record[10] || '')}</td>`;
+                // Handle different record structures
+                const recordId = record[0] || record.id || record.recordId || '';
+                const year = record[1] || record.year || '';
+                const employeeNumber = record[2] || record.empNo || record.employeeNumber || '';
+                const employeeName = record[3] || record.name || record.employeeName || '';
+                const jobTitle = record[4] || record.jobTitle || record.job || '';
+                const trainingTitle = record[6] || record.trainingTitle || record.title || '';
+                const location = record[7] || record.location || '';
+                const organization = record[8] || record.organization || record.company || '';
+                const startDate = record[9] || record.startDate || '';
+                const endDate = record[10] || record.endDate || '';
+                
+                html += `<td><strong>${escapeHtml(recordId)}</strong></td>`;
+                html += `<td>${escapeHtml(year)}</td>`;
+                html += `<td>${escapeHtml(employeeNumber)}</td>`;
+                html += `<td>${escapeHtml(employeeName)}</td>`;
+                html += `<td>${escapeHtml(jobTitle)}</td>`;
+                html += `<td>${escapeHtml(trainingTitle)}</td>`;
+                html += `<td>${escapeHtml(location)}</td>`;
+                html += `<td>${escapeHtml(organization)}</td>`;
+                html += `<td>${formatDateForDisplay(startDate)}</td>`;
+                html += `<td>${formatDateForDisplay(endDate)}</td>`;
                 
                 html += `<td class="action-buttons">
-                    <button onclick="editTrainingRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                    <button onclick="editTrainingRecord('${escapeHtml(recordId)}')" class="btn btn-sm btn-primary" title="تعديل">
                         <i class="fas fa-edit"></i> تعديل
                     </button>
-                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[3])}')" class="btn btn-sm btn-danger" title="حذف">
+                    <button onclick="showDeleteModal('${escapeHtml(recordId)}', '${escapeHtml(employeeName)}')" class="btn btn-sm btn-danger" title="حذف">
                         <i class="fas fa-trash"></i> حذف
                     </button>
-                    <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
+                    <button onclick="viewTrainingDetails('${escapeHtml(recordId)}')" class="btn btn-sm btn-info" title="عرض">
                         <i class="fas fa-eye"></i> عرض
                     </button>
                 </td>`;
@@ -885,160 +1407,294 @@
             table.innerHTML = html;
         }
         
-        async function addTrainingRecord() {
+        // ================ CRUD OPERATIONS ================
+        function addTrainingRecord() { 
             const requiredFields = ['training_id', 'training_year', 'training_employeeNumber', 
                                   'training_name', 'training_jobTitle', 'training_trainingTitle'];
-            if (!validateForm(requiredFields)) {
+            let isValid = true;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
                 return;
             }
             
-            const button = document.getElementById('training_addBtn');
-            const originalHtml = button.innerHTML;
+            // Validate dates if provided
+            const startDate = document.getElementById('training_startDate').value;
+            const endDate = document.getElementById('training_endDate').value;
             
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
-            
-            const startDate = getDateString(
-                document.getElementById('training_startDate_day').value,
-                document.getElementById('training_startDate_month').value,
-                document.getElementById('training_startDate_year').value
-            );
-            
-            const endDate = getDateString(
-                document.getElementById('training_endDate_day').value,
-                document.getElementById('training_endDate_month').value,
-                document.getElementById('training_endDate_year').value
-            );
-            
-            const formData = {
-                id: document.getElementById('training_id').value,
-                year: document.getElementById('training_year').value,
-                employeeNumber: document.getElementById('training_employeeNumber').value,
-                name: document.getElementById('training_name').value,
-                jobTitle: document.getElementById('training_jobTitle').value,
-                trainingNeed: document.getElementById('training_trainingNeed').value,
-                trainingTitle: document.getElementById('training_trainingTitle').value,
-                location: document.getElementById('training_location').value,
-                organization: document.getElementById('training_organization').value,
-                startDate: startDate,
-                endDate: endDate
-            };
-            
-            try {
-                const result = await callGoogleScript(TRAINING_SCRIPT_URL, 'add', formData);
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
-                    resetTrainingForm();
-                    await loadTrainingData();
-                } else {
-                    showNotification(`❌ ${result.message}`, 'error');
-                }
-            } catch (error) {
-                showNotification(`❌ خطأ في الإضافة`, 'error');
-            } finally {
-                button.disabled = false;
-                button.innerHTML = originalHtml;
+            if (startDate && !validateDate(startDate)) {
+                document.getElementById('training_startDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ البداية غير صحيح', 'error');
+                return;
+            } else {
+                document.getElementById('training_startDate').classList.remove('is-invalid');
             }
+            
+            if (endDate && !validateDate(endDate)) {
+                document.getElementById('training_endDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ الانتهاء غير صحيح', 'error');
+                return;
+            } else {
+                document.getElementById('training_endDate').classList.remove('is-invalid');
+            }
+            
+            // Validate end date is not earlier than start date
+            if (startDate && endDate) {
+                try {
+                    const startDateObj = parseDateDDMMYYYY(startDate);
+                    const endDateObj = parseDateDDMMYYYY(endDate);
+                    
+                    if (startDateObj && endDateObj && endDateObj < startDateObj) {
+                        showNotification('❌ تاريخ الانتهاء يجب أن يكون بعد تاريخ البداية أو مساوياً له', 'error');
+                        document.getElementById('training_endDate').classList.add('is-invalid');
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error comparing dates:', e);
+                }
+            }
+            
+            setStatus("جاري الإرسال...", 'info');
+            
+            // Get date values from date inputs (already in dd/mm/yyyy format)
+            const startDateForStorage = formatDateForStorage(startDate);
+            const endDateForStorage = formatDateForStorage(endDate);
+            
+            const fields = [
+                'training_id',
+                'training_year',
+                'training_employeeNumber',
+                'training_name',
+                'training_jobTitle',
+                'training_trainingNeed',
+                'training_trainingTitle',
+                'training_location',
+                'training_organization',
+                'training_startDate',
+                'training_endDate'
+            ];
+            
+            // Temporarily update date fields for submission
+            const originalStartDate = document.getElementById('training_startDate').value;
+            const originalEndDate = document.getElementById('training_endDate').value;
+            
+            document.getElementById('training_startDate').value = startDateForStorage;
+            document.getElementById('training_endDate').value = endDateForStorage;
+            
+            let q = fields.map(f =>
+                `${f}=${encodeURIComponent(document.getElementById(f).value || '')}`
+            ).join('&');
+            
+            // Restore original values for display
+            document.getElementById('training_startDate').value = originalStartDate;
+            document.getElementById('training_endDate').value = originalEndDate;
+            
+            jsonp(`${TRAINING_SCRIPT_URL}?action=add&${q}&callback=alertTrainingResult`);
         }
         
-        async function editTrainingRecord(recordId) {
-            showNotification('🔍 جاري تحميل بيانات سجل التدريب...', 'info');
+        function updateTrainingRecord() { 
+            const requiredFields = ['training_id', 'training_year', 'training_employeeNumber', 
+                                  'training_name', 'training_jobTitle', 'training_trainingTitle'];
+            let isValid = true;
             
-            const record = trainingRecords.find(r => 
-                String(r[0] || '').trim() === String(recordId).trim()
-            );
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            // Validate dates if provided
+            const startDate = document.getElementById('training_startDate').value;
+            const endDate = document.getElementById('training_endDate').value;
+            
+            if (startDate && !validateDate(startDate)) {
+                document.getElementById('training_startDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ البداية غير صحيح', 'error');
+                return;
+            } else {
+                document.getElementById('training_startDate').classList.remove('is-invalid');
+            }
+            
+            if (endDate && !validateDate(endDate)) {
+                document.getElementById('training_endDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ الانتهاء غير صحيح', 'error');
+                return;
+            } else {
+                document.getElementById('training_endDate').classList.remove('is-invalid');
+            }
+            
+            // Validate end date is not earlier than start date
+            if (startDate && endDate) {
+                try {
+                    const startDateObj = parseDateDDMMYYYY(startDate);
+                    const endDateObj = parseDateDDMMYYYY(endDate);
+                    
+                    if (startDateObj && endDateObj && endDateObj < startDateObj) {
+                        showNotification('❌ تاريخ الانتهاء يجب أن يكون بعد تاريخ البداية أو مساوياً له', 'error');
+                        document.getElementById('training_endDate').classList.add('is-invalid');
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error comparing dates:', e);
+                }
+            }
+            
+            setStatus("جاري الإرسال...", 'info');
+            
+            // Get date values from date inputs (already in dd/mm/yyyy format)
+            const startDateForStorage = formatDateForStorage(startDate);
+            const endDateForStorage = formatDateForStorage(endDate);
+            
+            const fields = [
+                'training_id',
+                'training_year',
+                'training_employeeNumber',
+                'training_name',
+                'training_jobTitle',
+                'training_trainingNeed',
+                'training_trainingTitle',
+                'training_location',
+                'training_organization',
+                'training_startDate',
+                'training_endDate'
+            ];
+            
+            // Temporarily update date fields for submission
+            const originalStartDate = document.getElementById('training_startDate').value;
+            const originalEndDate = document.getElementById('training_endDate').value;
+            
+            document.getElementById('training_startDate').value = startDateForStorage;
+            document.getElementById('training_endDate').value = endDateForStorage;
+            
+            let q = fields.map(f =>
+                `${f}=${encodeURIComponent(document.getElementById(f).value || '')}`
+            ).join('&');
+            
+            // Restore original values for display
+            document.getElementById('training_startDate').value = originalStartDate;
+            document.getElementById('training_endDate').value = originalEndDate;
+            
+            jsonp(`${TRAINING_SCRIPT_URL}?action=update&${q}&callback=alertTrainingResult`);
+        }
+        
+        function alertTrainingResult(res) {
+            console.log('CRUD operation result:', res);
+            
+            if (res && res.status === 'success') {
+                showNotification(`✅ ${res.message}`, 'success');
+                setStatus(res.message, 'success');
+                resetTrainingForm();
+            } else {
+                const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                showNotification(`❌ ${errorMsg}`, 'error');
+                setStatus(errorMsg, 'error');
+            }
+            loadTrainingData();
+        }
+        
+        function editTrainingRecord(recordId) {
+            setStatus('🔍 جاري تحميل بيانات التدريب...', 'info');
+            
+            const record = trainingRecords.find(r => {
+                const id = r[0] || r.id || r.recordId || '';
+                return String(id).trim() === String(recordId).trim();
+            });
             
             if (record) {
                 fillTrainingForm(record);
                 document.getElementById('training_updateBtn').style.display = 'inline-block';
                 document.getElementById('training_addBtn').style.display = 'none';
-                showNotification('✅ تم تحميل بيانات سجل التدريب', 'success');
+                showNotification('✅ تم تحميل بيانات التدريب', 'success');
+                setStatus('تم تحميل بيانات التدريب', 'success');
             } else {
                 showNotification('❌ لم يتم العثور على سجل التدريب', 'error');
+                setStatus('لم يتم العثور على سجل التدريب', 'error');
             }
         }
         
         function fillTrainingForm(record) {
-            document.getElementById('training_id').value = record[0] || '';
-            document.getElementById('training_year').value = record[1] || '';
-            document.getElementById('training_employeeNumber').value = record[2] || '';
-            document.getElementById('training_name').value = record[3] || '';
-            document.getElementById('training_jobTitle').value = record[4] || '';
-            document.getElementById('training_trainingNeed').value = record[5] || '';
-            document.getElementById('training_trainingTitle').value = record[6] || '';
-            document.getElementById('training_location').value = record[7] || '';
-            document.getElementById('training_organization').value = record[8] || '';
+            // Handle multiple record formats
+            const recordId = record[0] || record.id || record.recordId || '';
+            const year = record[1] || record.year || '';
+            const employeeNumber = record[2] || record.empNo || record.employeeNumber || '';
+            const employeeName = record[3] || record.name || record.employeeName || '';
+            const jobTitle = record[4] || record.jobTitle || record.job || '';
+            const trainingNeed = record[5] || record.trainingNeed || '';
+            const trainingTitle = record[6] || record.trainingTitle || record.title || '';
+            const location = record[7] || record.location || '';
+            const organization = record[8] || record.organization || record.company || '';
+            const startDate = record[9] || record.startDate || '';
+            const endDate = record[10] || record.endDate || '';
             
-            const startDate = formatDateForInput(record[9] || '');
-            document.getElementById('training_startDate_day').value = startDate.day;
-            document.getElementById('training_startDate_month').value = startDate.month;
-            document.getElementById('training_startDate_year').value = startDate.year;
+            document.getElementById('training_id').value = recordId;
+            document.getElementById('training_year').value = year;
+            document.getElementById('training_employeeNumber').value = employeeNumber;
+            document.getElementById('training_name').value = employeeName;
+            document.getElementById('training_jobTitle').value = jobTitle;
+            document.getElementById('training_trainingNeed').value = trainingNeed || '';
+            document.getElementById('training_trainingTitle').value = trainingTitle;
+            document.getElementById('training_location').value = location || '';
+            document.getElementById('training_organization').value = organization || '';
             
-            const endDate = formatDateForInput(record[10] || '');
-            document.getElementById('training_endDate_day').value = endDate.day;
-            document.getElementById('training_endDate_month').value = endDate.month;
-            document.getElementById('training_endDate_year').value = endDate.year;
+            // Set date values - convert from Google Sheets format to input format
+            const startDateFormatted = formatDateForInput(startDate);
+            const endDateFormatted = formatDateForInput(endDate);
             
-            document.getElementById('training_editingId').value = record[0];
-        }
-        
-        async function updateTrainingRecord() {
-            const recordId = document.getElementById('training_editingId').value;
-            if (!recordId) {
-                showNotification('❌ لم يتم تحديد سجل تدريب للتحديث', 'error');
-                return;
-            }
+            // Set the input values directly
+            document.getElementById('training_startDate').value = startDateFormatted;
+            document.getElementById('training_endDate').value = endDateFormatted;
             
-            const button = document.getElementById('training_updateBtn');
-            const originalHtml = button.innerHTML;
-            
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
-            
-            const startDate = getDateString(
-                document.getElementById('training_startDate_day').value,
-                document.getElementById('training_startDate_month').value,
-                document.getElementById('training_startDate_year').value
-            );
-            
-            const endDate = getDateString(
-                document.getElementById('training_endDate_day').value,
-                document.getElementById('training_endDate_month').value,
-                document.getElementById('training_endDate_year').value
-            );
-            
-            const formData = {
-                id: document.getElementById('training_id').value,
-                year: document.getElementById('training_year').value,
-                employeeNumber: document.getElementById('training_employeeNumber').value,
-                name: document.getElementById('training_name').value,
-                jobTitle: document.getElementById('training_jobTitle').value,
-                trainingNeed: document.getElementById('training_trainingNeed').value,
-                trainingTitle: document.getElementById('training_trainingTitle').value,
-                location: document.getElementById('training_location').value,
-                organization: document.getElementById('training_organization').value,
-                startDate: startDate,
-                endDate: endDate
-            };
-            
-            try {
-                const result = await callGoogleScript(TRAINING_SCRIPT_URL, 'update', formData);
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
-                    resetTrainingForm();
-                    await loadTrainingData();
-                } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+            // Update Flatpickr instances WITHOUT triggering onChange
+            if (flatpickrInstances.startDate && startDateFormatted) {
+                try {
+                    const parts = startDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.startDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting start date:', e);
                 }
-            } catch (error) {
-                showNotification(`❌ خطأ في التحديث`, 'error');
-            } finally {
-                button.disabled = false;
-                button.innerHTML = originalHtml;
             }
+            
+            if (flatpickrInstances.endDate && endDateFormatted) {
+                try {
+                    const parts = endDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.endDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting end date:', e);
+                }
+            }
+            
+            document.getElementById('training_editingId').value = recordId;
         }
         
         function resetTrainingForm() {
@@ -1049,8 +1705,123 @@
             document.querySelectorAll('#trainingForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
+            
+            // Clear Flatpickr instances
+            if (flatpickrInstances.startDate) {
+                flatpickrInstances.startDate.clear();
+            }
+            if (flatpickrInstances.endDate) {
+                flatpickrInstances.endDate.clear();
+            }
+            
+            setStatus('تم مسح النموذج', 'success');
         }
         
+        function showDeleteModal(recordId, recordName) {
+            deleteRecordId = recordId;
+            deleteRecordName = recordName;
+            
+            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+        
+        function confirmDelete() {
+            if (!deleteRecordId) return;
+            
+            const button = document.getElementById('confirmDeleteBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
+            
+            setStatus("جاري الحذف...", 'info');
+            
+            jsonp(`${TRAINING_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}&callback=deleteTrainingResult`);
+            
+            function deleteTrainingResult(res) {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
+                    setStatus(res.message, 'success');
+                    
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                    
+                    deleteRecordId = '';
+                    deleteRecordName = '';
+                    
+                    loadTrainingData();
+                } else {
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
+                    setStatus(errorMsg, 'error');
+                }
+            }
+        }
+        
+        // ================ DETAILS VIEW FUNCTION ================
+        function viewTrainingDetails(recordId) {
+            const record = trainingRecords.find(r => {
+                const id = r[0] || r.id || r.recordId || '';
+                return String(id).trim() === String(recordId).trim();
+            });
+            
+            if (!record) {
+                showNotification('❌ لم يتم العثور على سجل التدريب', 'error');
+                return;
+            }
+            
+            const recordIdDisplay = record[0] || record.id || record.recordId || '';
+            const year = record[1] || record.year || '';
+            const employeeNumber = record[2] || record.empNo || record.employeeNumber || '';
+            const employeeName = record[3] || record.name || record.employeeName || '';
+            const jobTitle = record[4] || record.jobTitle || record.job || '';
+            const trainingNeed = record[5] || record.trainingNeed || '';
+            const trainingTitle = record[6] || record.trainingTitle || record.title || '';
+            const location = record[7] || record.location || '';
+            const organization = record[8] || record.organization || record.company || '';
+            const startDate = record[9] || record.startDate || '';
+            const endDate = record[10] || record.endDate || '';
+            
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>رقم السجل:</strong> ${escapeHtml(recordIdDisplay)}</p>
+                        <p><strong>العام:</strong> ${escapeHtml(year)}</p>
+                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(employeeNumber)}</p>
+                        <p><strong>اسم الموظف:</strong> ${escapeHtml(employeeName)}</p>
+                        <p><strong>الوظيفة:</strong> ${escapeHtml(jobTitle)}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>مسمى التدريب:</strong> ${escapeHtml(trainingTitle)}</p>
+                        <p><strong>مكان الانعقاد:</strong> ${escapeHtml(location)}</p>
+                        <p><strong>الجهة المنظمة:</strong> ${escapeHtml(organization)}</p>
+                        <p><strong>تاريخ البداية:</strong> <span class="english-date">${formatDateForDisplay(startDate).replace(/<[^>]*>/g, '')}</span></p>
+                        <p><strong>تاريخ الانتهاء:</strong> <span class="english-date">${formatDateForDisplay(endDate).replace(/<[^>]*>/g, '')}</span></p>
+                    </div>
+                </div>
+                
+                ${trainingNeed ? `
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <p><strong>الهدف من التدريب:</strong> ${escapeHtml(trainingNeed)}</p>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+            
+            document.getElementById('detailsModalBody').innerHTML = detailsHTML;
+            
+            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            detailsModal.show();
+        }
+        
+        // ================ EXPORT FUNCTION ================
         function exportTrainingCSV() {
             if (trainingRecords.length === 0) {
                 showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
@@ -1061,27 +1832,31 @@
             
             try {
                 const headers = [
-                    'م', 'العام', 'الرقم الوظيفي', 'الاسم', 'الوظيفة',
-                    'الاحتياج التدريبي / الهدف من التدريب', 'مسمى التدريب',
-                    'مكان الانعقاد', 'الجهة', 'تاريخ البداية', 'تاريخ الانتهاء'
+                    'رقم السجل', 'العام', 'الرقم الوظيفي', 'اسم الموظف', 'الوظيفة',
+                    'مسمى التدريب', 'الهدف من التدريب',
+                    'مكان الانعقاد', 'الجهة المنظمة', 'تاريخ البداية', 'تاريخ الانتهاء'
                 ];
                 
                 let csvContent = '\uFEFF';
                 csvContent += headers.join(",") + "\r\n";
                 
                 trainingRecords.forEach(record => {
+                    // Clean HTML tags from dates for CSV export
+                    const startDateDisplay = formatDateForDisplay(record[9] || record.startDate || '').replace(/<[^>]*>/g, '');
+                    const endDateDisplay = formatDateForDisplay(record[10] || record.endDate || '').replace(/<[^>]*>/g, '');
+                    
                     const row = [
-                        record[0] || '',
-                        record[1] || '',
-                        record[2] || '',
-                        record[3] || '',
-                        record[4] || '',
-                        record[5] || '',
-                        record[6] || '',
-                        record[7] || '',
-                        record[8] || '',
-                        formatDate(record[9] || ''),
-                        formatDate(record[10] || '')
+                        record[0] || record.id || record.recordId || '',
+                        record[1] || record.year || '',
+                        record[2] || record.empNo || record.employeeNumber || '',
+                        record[3] || record.name || record.employeeName || '',
+                        record[4] || record.jobTitle || record.job || '',
+                        record[6] || record.trainingTitle || record.title || '',
+                        record[5] || record.trainingNeed || '',
+                        record[7] || record.location || '',
+                        record[8] || record.organization || record.company || '',
+                        startDateDisplay,
+                        endDateDisplay
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -1102,121 +1877,28 @@
                 
                 setTimeout(() => URL.revokeObjectURL(url), 100);
                 
-                showNotification(`✅ تم تصدير ${trainingRecords.length} سجل`, 'success');
+                showNotification(`✅ تم تصدير ${trainingRecords.length} سجل تدريب`, 'success');
             } catch (error) {
                 showNotification(`❌ خطأ في التصدير`, 'error');
             }
         }
         
-        // ================ DETAILS VIEW FUNCTION ================
-        function viewDetails(recordId) {
-            const record = trainingRecords.find(r => 
-                String(r[0] || '').trim() === String(recordId).trim()
-            );
-            
-            if (!record) {
-                showNotification('❌ لم يتم العثور على السجل', 'error');
-                return;
-            }
-            
-            const detailsHTML = generateTrainingDetails(record);
-            
-            const existingModal = document.getElementById('detailsModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-            
-            document.getElementById('dynamicModalContainer').innerHTML = detailsHTML;
-            
-            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-            detailsModal.show();
+        // ================ REFRESH EMPLOYEE DATA ================
+        function refreshEmployeeData() {
+            employeeDataLoaded = false;
+            loadEmployeeData();
+            showNotification('🔄 جاري تحديث بيانات الموظفين...', 'info');
         }
         
-        function generateTrainingDetails(record) {
-            return `
-                <div class="modal fade" id="detailsModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header modal-header-custom">
-                                <h5 class="modal-title">سجل التدريب: ${escapeHtml(record[0])}</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>م (رقم السجل):</strong> ${escapeHtml(record[0])}</p>
-                                        <p><strong>العام:</strong> ${escapeHtml(record[1])}</p>
-                                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[2])}</p>
-                                        <p><strong>الاسم:</strong> ${escapeHtml(record[3])}</p>
-                                        <p><strong>الوظيفة:</strong> ${escapeHtml(record[4])}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>مسمى التدريب:</strong> ${escapeHtml(record[6])}</p>
-                                        <p><strong>مكان الانعقاد:</strong> ${escapeHtml(record[7])}</p>
-                                        <p><strong>الجهة:</strong> ${escapeHtml(record[8])}</p>
-                                        <p><strong>تاريخ البداية:</strong> ${formatDate(record[9])}</p>
-                                        <p><strong>تاريخ الانتهاء:</strong> ${formatDate(record[10])}</p>
-                                    </div>
-                                </div>
-                                ${record[5] ? `<p><strong>الاحتياج التدريبي / الهدف من التدريب:</strong> ${escapeHtml(record[5])}</p>` : ''}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+        // ================ DEBUGGING HELPER ================
+        function testTrainingScript() {
+            console.log('Testing training script...');
+            loadTrainingData();
         }
         
-        // ================ DELETE FUNCTIONALITY ================
-        function showDeleteModal(recordId, recordName) {
-            deleteRecordId = recordId;
-            deleteRecordName = recordName;
-            
-            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
-            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
-            
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
-        }
-        
-        async function confirmDelete() {
-            if (!deleteRecordId) return;
-            
-            const button = document.getElementById('confirmDeleteBtn');
-            const originalHtml = button.innerHTML;
-            
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
-            
-            try {
-                const result = await callGoogleScript(TRAINING_SCRIPT_URL, 'delete', { id: deleteRecordId });
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
-                    
-                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-                    deleteModal.hide();
-                    
-                    deleteRecordId = '';
-                    deleteRecordName = '';
-                    
-                    loadTrainingData();
-                } else {
-                    showNotification(`❌ ${result.message}`, 'error');
-                }
-            } catch (error) {
-                showNotification(`❌ خطأ في الحذف`, 'error');
-            } finally {
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-            }
-        }
-        
-        // ================ HELPER FUNCTIONS ================
-        function updateTotalRecordsCount() {
-            document.getElementById('totalRecords').textContent = trainingRecords.length.toLocaleString('ar-SA');
+        function testEmployeeScript() {
+            console.log('Testing employee script...');
+            loadEmployeeData();
         }
     </script>
 </body>
