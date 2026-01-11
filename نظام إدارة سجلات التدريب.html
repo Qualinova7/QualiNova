@@ -22,7 +22,7 @@
             --warning-color: #f39c12;
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
-            --training-color: #9b59b6;
+            --training-color: #8e44ad;
         }
         
         * {
@@ -37,14 +37,14 @@
         }
         
         .main-container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
             padding: 0 15px;
         }
         
         /* Header Styles */
         .main-header {
-            background: linear-gradient(135deg, var(--training-color), #8e44ad);
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -137,7 +137,7 @@
         
         .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
             border-color: var(--training-color);
-            box-shadow: 0 0 0 0.25rem rgba(155, 89, 182, 0.25);
+            box-shadow: 0 0 0 0.25rem rgba(142, 68, 173, 0.25);
             background: white;
         }
         
@@ -223,7 +223,7 @@
         }
         
         .table-custom tbody tr:hover {
-            background-color: rgba(155, 89, 182, 0.08);
+            background-color: rgba(142, 68, 173, 0.08);
         }
         
         .table-custom tbody td {
@@ -385,6 +385,14 @@
             border-radius: 10px;
         }
         
+        /* Additional Info Section */
+        .additional-info-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
         /* Status Colors */
         .status-success {
             background-color: rgba(39, 174, 96, 0.1);
@@ -402,23 +410,6 @@
             background-color: rgba(52, 152, 219, 0.1);
             border: 1px solid var(--secondary-color);
             color: var(--secondary-color);
-        }
-        
-        /* Modal Custom */
-        .modal-header-custom {
-            background: linear-gradient(135deg, var(--training-color), #8e44ad);
-            color: white;
-            border-radius: 15px 15px 0 0;
-        }
-        
-        /* Fade-in animation */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -464,49 +455,50 @@
                         <form id="trainingForm">
                             <div class="form-section">
                                 <div class="form-section-title">
-                                    <i class="fas fa-user-tie"></i> المعلومات الأساسية
+                                    <i class="fas fa-info-circle"></i> المعلومات الأساسية
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3 mb-2">
+                                    <div class="col-md-2 mb-2">
                                         <label class="form-label-custom">رقم السجل *</label>
                                         <input type="text" class="form-control form-control-custom" id="training_id" placeholder="رقم السجل" required>
                                     </div>
-                                    <div class="col-md-3 mb-2">
+                                    <div class="col-md-2 mb-2">
                                         <label class="form-label-custom">العام *</label>
                                         <input type="number" class="form-control form-control-custom" id="training_year" placeholder="العام" min="2000" max="2100" required>
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">الرقم الوظيفي *</label>
-                                        <input type="text" class="form-control form-control-custom" id="training_employeeNumber" placeholder="الرقم الوظيفي" required list="employeeNumberList">
-                                        <datalist id="employeeNumberList"></datalist>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">اسم الموظف *</label>
                                         <input type="text" class="form-control form-control-custom" id="training_name" placeholder="الاسم" required list="employeeNameList">
                                         <datalist id="employeeNameList"></datalist>
                                     </div>
-                                </div>
-                                
-                                <div class="row">
                                     <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الرقم الوظيفي *</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_employeeNumber" placeholder="الرقم الوظيفي" required list="employeeNumberList">
+                                        <datalist id="employeeNumberList"></datalist>
+                                    </div>
+                                    <div class="col-md-2 mb-2">
                                         <label class="form-label-custom">الوظيفة *</label>
                                         <input type="text" class="form-control form-control-custom" id="training_jobTitle" placeholder="الوظيفة" required>
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">مسمى التدريب *</label>
-                                        <input type="text" class="form-control form-control-custom" id="training_trainingTitle" placeholder="مسمى التدريب" required>
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <label class="form-label-custom">الهدف من التدريب</label>
-                                        <textarea class="form-control form-textarea-custom" id="training_trainingNeed" placeholder="الهدف من التدريب"></textarea>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="form-section">
                                 <div class="form-section-title">
-                                    <i class="fas fa-calendar-alt"></i> تفاصيل التدريب
+                                    <i class="fas fa-chalkboard-teacher"></i> تفاصيل التدريب
                                 </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">مسمى التدريب *</label>
+                                        <input type="text" class="form-control form-control-custom" id="training_trainingTitle" placeholder="مسمى التدريب" required>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">الهدف من التدريب</label>
+                                        <textarea class="form-control form-textarea-custom" id="training_trainingNeed" placeholder="الهدف من التدريب" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
                                         <label class="form-label-custom">مكان الانعقاد</label>
@@ -514,7 +506,16 @@
                                     </div>
                                     <div class="col-md-4 mb-2">
                                         <label class="form-label-custom">الجهة المنظمة</label>
-                                        <input type="text" class="form-control form-control-custom" id="training_organization" placeholder="الجهة المنظمة">
+                                        <input type="text" class="form-control form-control-custom" id="training_organization" placeholder="الجهة">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">نوع التدريب</label>
+                                        <select class="form-select form-select-custom" id="training_type">
+                                            <option value="">اختر نوع التدريب</option>
+                                            <option value="داخلي">داخلي</option>
+                                            <option value="خارجي">خارجي</option>
+                                            <option value="أونلاين">أونلاين</option>
+                                        </select>
                                     </div>
                                 </div>
                                 
@@ -531,6 +532,72 @@
                                         <div class="date-input-wrapper">
                                             <input type="text" class="form-control form-control-custom date-picker" id="training_endDate" placeholder="يوم/شهر/سنة" readonly>
                                             <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">المدة بالأيام</label>
+                                        <input type="number" class="form-control form-control-custom" id="training_duration" placeholder="المدة بالأيام" min="1" max="365">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">حالة التدريب</label>
+                                        <select class="form-select form-select-custom" id="training_status">
+                                            <option value="مخطط له">مخطط له</option>
+                                            <option value="جاري التنفيذ">جاري التنفيذ</option>
+                                            <option value="مكتمل">مكتمل</option>
+                                            <option value="ملغي">ملغي</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-file-certificate"></i> تقييم التدريب
+                                </div>
+                                <div class="additional-info-section">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label-custom">التقييم</label>
+                                            <select class="form-select form-select-custom" id="training_evaluation">
+                                                <option value="">اختر التقييم</option>
+                                                <option value="ممتاز">ممتاز</option>
+                                                <option value="جيد جداً">جيد جداً</option>
+                                                <option value="جيد">جيد</option>
+                                                <option value="مقبول">مقبول</option>
+                                                <option value="ضعيف">ضعيف</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label-custom">الدرجة النهائية</label>
+                                            <input type="number" class="form-control form-control-custom" id="training_grade" placeholder="الدرجة" min="0" max="100" step="0.1">
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label-custom">الشهادة</label>
+                                            <select class="form-select form-select-custom" id="training_certificate">
+                                                <option value="نعم">نعم</option>
+                                                <option value="لا">لا</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-label-custom">ملاحظات إضافية</label>
+                                            <textarea class="form-control form-textarea-custom" id="training_notes" placeholder="ملاحظات إضافية حول التدريب" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label-custom">اسم المشرف</label>
+                                            <input type="text" class="form-control form-control-custom" id="training_supervisor" placeholder="اسم المشرف">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label-custom">تاريخ الإدخال</label>
+                                            <div class="date-input-wrapper">
+                                                <input type="text" class="form-control form-control-custom date-picker" id="training_entryDate" placeholder="يوم/شهر/سنة" readonly>
+                                                <i class="fas fa-calendar-alt date-icon"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -577,18 +644,18 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+                        <div class="loading-spinner" id="trainingLoadingSpinner" style="display: none;">
                             <div class="spinner-border text-primary spinner-border-custom" role="status">
                                 <span class="visually-hidden">جاري التحميل...</span>
                             </div>
                         </div>
                         
-                        <div class="table-responsive" id="dataTableContainer">
-                            <table class="table table-custom table-hover" id="dataTable">
+                        <div class="table-responsive" id="trainingTableContainer">
+                            <table class="table table-custom table-hover" id="trainingDataTable">
                             </table>
                         </div>
                         
-                        <div id="noRecords" class="text-center py-5" style="display: none;">
+                        <div id="trainingNoRecords" class="text-center py-5" style="display: none;">
                             <i class="fas fa-graduation-cap fa-4x text-muted mb-4"></i>
                             <h4 class="text-muted">لا توجد سجلات تدريب لعرضها</h4>
                         </div>
@@ -603,7 +670,7 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة التدريب 
                     <span id="currentYear"></span> | 
-                    <span class="text-info">الإصدار 1.0</span>
+                    <span class="text-info">الإصدار 2.0</span>
                 </p>
             </div>
         </div>
@@ -667,7 +734,7 @@
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const TRAINING_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhspPy9B2RGQdv6cCb-6y4VfQQPOkUXPgaT118s6qV9mqvdR9zLy9XknDAJdW7AYcM_g/exec";
+        const TRAINING_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzK1FGd_qDpT_q6iEItaJXYHJ6wWHUtw3FMmfWuAUfPgANUfGxoLn0qpbLM0hrU1klLxg/exec";
         const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
         
         // ================ GLOBAL VARIABLES ================
@@ -687,6 +754,11 @@
             // Initialize calendar pickers with FIXED approach
             initializeDatePickers();
             
+            // Set current date for entry date
+            const now = new Date();
+            const today = formatDateToDDMMYYYY(now);
+            document.getElementById('training_entryDate').value = today;
+            
             // Load data - تحميل بيانات التدريب وبيانات الموظفين
             setTimeout(() => {
                 loadTrainingData(); // تحميل بيانات التدريب
@@ -695,6 +767,9 @@
             
             // إضافة event listeners للحقول
             setupEmployeeAutocomplete();
+            
+            // إضافة حدث لحساب المدة تلقائياً
+            setupDurationCalculation();
         });
         
         // ================ FIXED DATE PICKER INITIALIZATION ================
@@ -705,6 +780,9 @@
             }
             if (flatpickrInstances.endDate) {
                 flatpickrInstances.endDate.destroy();
+            }
+            if (flatpickrInstances.entryDate) {
+                flatpickrInstances.entryDate.destroy();
             }
             
             // Simple Flatpickr configuration that works in RTL
@@ -734,8 +812,8 @@
                 },
                 onChange: function(selectedDates, dateStr, instance) {
                     // The date will be automatically set in d/m/Y format
-                    // Validate end date is not earlier than start date
-                    validateTrainingDates();
+                    // Update duration if both dates are set
+                    calculateDuration();
                     
                     // Force the input value to update (in case Flatpickr didn't)
                     if (selectedDates.length > 0) {
@@ -752,12 +830,21 @@
             // Initialize end date picker
             flatpickrInstances.endDate = flatpickr('#training_endDate', dateOptions);
             
-            // Force Arabic locale on both instances
+            // Initialize entry date picker
+            flatpickrInstances.entryDate = flatpickr('#training_entryDate', {
+                ...dateOptions,
+                defaultDate: 'today'
+            });
+            
+            // Force Arabic locale on instances
             if (flatpickrInstances.startDate) {
                 flatpickrInstances.startDate.set('locale', 'ar');
             }
             if (flatpickrInstances.endDate) {
                 flatpickrInstances.endDate.set('locale', 'ar');
+            }
+            if (flatpickrInstances.entryDate) {
+                flatpickrInstances.entryDate.set('locale', 'ar');
             }
         }
         
@@ -769,8 +856,8 @@
             return `${day}/${month}/${year}`;
         }
         
-        // ================ DATE VALIDATION: END DATE NOT EARLIER THAN START DATE ================
-        function validateTrainingDates() {
+        // ================ DATE VALIDATION: END DATE NOT BEFORE START DATE ================
+        function validateEndDateNotBeforeStartDate() {
             const startDateStr = document.getElementById('training_startDate').value;
             const endDateStr = document.getElementById('training_endDate').value;
             
@@ -790,6 +877,39 @@
                 }
             } catch (e) {
                 console.error('Error validating dates:', e);
+            }
+        }
+        
+        // ================ DURATION CALCULATION ================
+        function setupDurationCalculation() {
+            const startDateInput = document.getElementById('training_startDate');
+            const endDateInput = document.getElementById('training_endDate');
+            
+            startDateInput.addEventListener('change', calculateDuration);
+            endDateInput.addEventListener('change', calculateDuration);
+        }
+        
+        function calculateDuration() {
+            const startDateStr = document.getElementById('training_startDate').value;
+            const endDateStr = document.getElementById('training_endDate').value;
+            
+            if (!startDateStr || !endDateStr) return;
+            
+            try {
+                const startDate = parseDateDDMMYYYY(startDateStr);
+                const endDate = parseDateDDMMYYYY(endDateStr);
+                
+                if (startDate && endDate) {
+                    // Calculate difference in days
+                    const diffTime = Math.abs(endDate - startDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both dates
+                    
+                    if (diffDays > 0) {
+                        document.getElementById('training_duration').value = diffDays;
+                    }
+                }
+            } catch (e) {
+                console.error('Error calculating duration:', e);
             }
         }
         
@@ -818,7 +938,7 @@
         }
         
         // ================ FIXED DATE DISPLAY FORMAT FUNCTION ================
-        // This function converts dates from Google Sheets format (2026/05/01) to display format (30 September 2026)
+        // This function converts dates from Google Sheets format to display format
         // AND fixes the RTL display issue by wrapping in a span with LTR direction
         function formatDateForDisplay(dateString) {
             if (!dateString || dateString.trim() === '') return '';
@@ -1131,7 +1251,7 @@
             }, 5000);
         }
         
-        // ================ EMPLOYEE DATA FUNCTIONS - FIXED VERSION ================
+        // ================ EMPLOYEE DATA FUNCTIONS ================
         function loadEmployeeData() {
             if (employeeDataLoaded) return;
             
@@ -1260,24 +1380,22 @@
                 }
             }
             
-            // Fill other fields if record found
-            if (record) {
-                if (record[3]) { // Job title
-                    document.getElementById('training_jobTitle').value = record[3] || '';
-                }
+            // Fill job title if record found
+            if (record && record[3]) {
+                document.getElementById('training_jobTitle').value = record[3] || '';
                 
                 // Show success notification
                 showNotification(`✅ تم تحميل بيانات الموظف: ${record[1] || ''}`, 'success', 2000);
             }
         }
         
-        // ================ LOAD DATA - FIXED VERSION ================
+        // ================ LOAD TRAINING DATA ================
         function loadTrainingData() {
             setStatus("جاري تحميل البيانات...", 'info');
             
-            const spinner = document.getElementById('loadingSpinner');
-            const tableContainer = document.getElementById('dataTableContainer');
-            const noRecords = document.getElementById('noRecords');
+            const spinner = document.getElementById('trainingLoadingSpinner');
+            const tableContainer = document.getElementById('trainingTableContainer');
+            const noRecords = document.getElementById('trainingNoRecords');
             
             spinner.style.display = 'flex';
             tableContainer.style.display = 'none';
@@ -1291,9 +1409,9 @@
         function showTrainingData(res) {
             console.log('Training data response:', res);
             
-            const spinner = document.getElementById('loadingSpinner');
-            const tableContainer = document.getElementById('dataTableContainer');
-            const noRecords = document.getElementById('noRecords');
+            const spinner = document.getElementById('trainingLoadingSpinner');
+            const tableContainer = document.getElementById('trainingTableContainer');
+            const noRecords = document.getElementById('trainingNoRecords');
             
             spinner.style.display = 'none';
             
@@ -1352,11 +1470,11 @@
         }
         
         function displayTrainingRecords(records) {
-            const table = document.getElementById('dataTable');
+            const table = document.getElementById('trainingDataTable');
             
             let html = '<thead><tr>';
-            const headers = ['رقم السجل', 'العام', 'الرقم الوظيفي', 'اسم الموظف', 'الوظيفة', 
-                           'مسمى التدريب', 'مكان الانعقاد', 'الجهة', 'تاريخ البداية', 'تاريخ الانتهاء', 'الإجراءات'];
+            const headers = ['رقم السجل', 'العام', 'الاسم', 'الوظيفة', 'مسمى التدريب', 'الجهة', 'تاريخ البداية', 
+                           'تاريخ الانتهاء', 'المدة', 'حالة التدريب', 'التقييم', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
@@ -1365,28 +1483,33 @@
             records.forEach((record, index) => {
                 html += '<tr>';
                 
-                // Handle different record structures
+                // Handle different record structures (assuming original format)
+                // Original: [id, year, empNo, name, jobTitle, trainingNeed, trainingTitle, location, organization, startDate, endDate]
+                // New format with additional fields: [id, year, empNo, name, jobTitle, trainingNeed, trainingTitle, location, organization, startDate, endDate, type, status, duration, evaluation, grade, certificate, notes, supervisor, entryDate]
+                
                 const recordId = record[0] || record.id || record.recordId || '';
                 const year = record[1] || record.year || '';
-                const employeeNumber = record[2] || record.empNo || record.employeeNumber || '';
-                const employeeName = record[3] || record.name || record.employeeName || '';
-                const jobTitle = record[4] || record.jobTitle || record.job || '';
-                const trainingTitle = record[6] || record.trainingTitle || record.title || '';
-                const location = record[7] || record.location || '';
-                const organization = record[8] || record.organization || record.company || '';
+                const employeeName = record[3] || record.name || '';
+                const jobTitle = record[4] || record.jobTitle || '';
+                const trainingTitle = record[6] || record.trainingTitle || '';
+                const organization = record[8] || record.organization || '';
                 const startDate = record[9] || record.startDate || '';
                 const endDate = record[10] || record.endDate || '';
+                const duration = record[13] || record.duration || '';
+                const status = record[12] || record.status || '';
+                const evaluation = record[14] || record.evaluation || '';
                 
                 html += `<td><strong>${escapeHtml(recordId)}</strong></td>`;
                 html += `<td>${escapeHtml(year)}</td>`;
-                html += `<td>${escapeHtml(employeeNumber)}</td>`;
                 html += `<td>${escapeHtml(employeeName)}</td>`;
                 html += `<td>${escapeHtml(jobTitle)}</td>`;
                 html += `<td>${escapeHtml(trainingTitle)}</td>`;
-                html += `<td>${escapeHtml(location)}</td>`;
                 html += `<td>${escapeHtml(organization)}</td>`;
                 html += `<td>${formatDateForDisplay(startDate)}</td>`;
                 html += `<td>${formatDateForDisplay(endDate)}</td>`;
+                html += `<td>${escapeHtml(duration)}</td>`;
+                html += `<td>${escapeHtml(status)}</td>`;
+                html += `<td>${escapeHtml(evaluation)}</td>`;
                 
                 html += `<td class="action-buttons">
                     <button onclick="editTrainingRecord('${escapeHtml(recordId)}')" class="btn btn-sm btn-primary" title="تعديل">
@@ -1409,8 +1532,7 @@
         
         // ================ CRUD OPERATIONS ================
         function addTrainingRecord() { 
-            const requiredFields = ['training_id', 'training_year', 'training_employeeNumber', 
-                                  'training_name', 'training_jobTitle', 'training_trainingTitle'];
+            const requiredFields = ['training_id', 'training_year', 'training_name', 'training_employeeNumber', 'training_jobTitle', 'training_trainingTitle'];
             let isValid = true;
             
             requiredFields.forEach(fieldId => {
@@ -1431,6 +1553,7 @@
             // Validate dates if provided
             const startDate = document.getElementById('training_startDate').value;
             const endDate = document.getElementById('training_endDate').value;
+            const entryDate = document.getElementById('training_entryDate').value;
             
             if (startDate && !validateDate(startDate)) {
                 document.getElementById('training_startDate').classList.add('is-invalid');
@@ -1448,7 +1571,15 @@
                 document.getElementById('training_endDate').classList.remove('is-invalid');
             }
             
-            // Validate end date is not earlier than start date
+            if (entryDate && !validateDate(entryDate)) {
+                document.getElementById('training_entryDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
+                return;
+            } else {
+                document.getElementById('training_entryDate').classList.remove('is-invalid');
+            }
+            
+            // Validate end date is not before start date
             if (startDate && endDate) {
                 try {
                     const startDateObj = parseDateDDMMYYYY(startDate);
@@ -1469,6 +1600,7 @@
             // Get date values from date inputs (already in dd/mm/yyyy format)
             const startDateForStorage = formatDateForStorage(startDate);
             const endDateForStorage = formatDateForStorage(endDate);
+            const entryDateForStorage = formatDateForStorage(entryDate);
             
             const fields = [
                 'training_id',
@@ -1480,31 +1612,35 @@
                 'training_trainingTitle',
                 'training_location',
                 'training_organization',
-                'training_startDate',
-                'training_endDate'
+                'training_type',
+                'training_status',
+                'training_duration',
+                'training_evaluation',
+                'training_grade',
+                'training_certificate',
+                'training_notes',
+                'training_supervisor'
             ];
             
-            // Temporarily update date fields for submission
-            const originalStartDate = document.getElementById('training_startDate').value;
-            const originalEndDate = document.getElementById('training_endDate').value;
-            
-            document.getElementById('training_startDate').value = startDateForStorage;
-            document.getElementById('training_endDate').value = endDateForStorage;
+            // Include date fields
+            const startDateField = 'training_startDate';
+            const endDateField = 'training_endDate';
+            const entryDateField = 'training_entryDate';
             
             let q = fields.map(f =>
-                `${f}=${encodeURIComponent(document.getElementById(f).value || '')}`
+                `${f.replace('training_', '')}=${encodeURIComponent(document.getElementById(f).value || '')}`
             ).join('&');
             
-            // Restore original values for display
-            document.getElementById('training_startDate').value = originalStartDate;
-            document.getElementById('training_endDate').value = originalEndDate;
+            // Add date fields
+            q += `&startDate=${encodeURIComponent(startDateForStorage)}`;
+            q += `&endDate=${encodeURIComponent(endDateForStorage)}`;
+            q += `&entryDate=${encodeURIComponent(entryDateForStorage)}`;
             
             jsonp(`${TRAINING_SCRIPT_URL}?action=add&${q}&callback=alertTrainingResult`);
         }
         
         function updateTrainingRecord() { 
-            const requiredFields = ['training_id', 'training_year', 'training_employeeNumber', 
-                                  'training_name', 'training_jobTitle', 'training_trainingTitle'];
+            const requiredFields = ['training_id', 'training_year', 'training_name', 'training_employeeNumber', 'training_jobTitle', 'training_trainingTitle'];
             let isValid = true;
             
             requiredFields.forEach(fieldId => {
@@ -1525,6 +1661,7 @@
             // Validate dates if provided
             const startDate = document.getElementById('training_startDate').value;
             const endDate = document.getElementById('training_endDate').value;
+            const entryDate = document.getElementById('training_entryDate').value;
             
             if (startDate && !validateDate(startDate)) {
                 document.getElementById('training_startDate').classList.add('is-invalid');
@@ -1542,7 +1679,15 @@
                 document.getElementById('training_endDate').classList.remove('is-invalid');
             }
             
-            // Validate end date is not earlier than start date
+            if (entryDate && !validateDate(entryDate)) {
+                document.getElementById('training_entryDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
+                return;
+            } else {
+                document.getElementById('training_entryDate').classList.remove('is-invalid');
+            }
+            
+            // Validate end date is not before start date
             if (startDate && endDate) {
                 try {
                     const startDateObj = parseDateDDMMYYYY(startDate);
@@ -1563,6 +1708,12 @@
             // Get date values from date inputs (already in dd/mm/yyyy format)
             const startDateForStorage = formatDateForStorage(startDate);
             const endDateForStorage = formatDateForStorage(endDate);
+            const entryDateForStorage = formatDateForStorage(entryDate);
+            
+            // Update the hidden fields with correct dates
+            document.getElementById('training_startDate').value = startDateForStorage;
+            document.getElementById('training_endDate').value = endDateForStorage;
+            document.getElementById('training_entryDate').value = entryDateForStorage;
             
             const fields = [
                 'training_id',
@@ -1574,24 +1725,29 @@
                 'training_trainingTitle',
                 'training_location',
                 'training_organization',
-                'training_startDate',
-                'training_endDate'
+                'training_type',
+                'training_status',
+                'training_duration',
+                'training_evaluation',
+                'training_grade',
+                'training_certificate',
+                'training_notes',
+                'training_supervisor'
             ];
             
-            // Temporarily update date fields for submission
-            const originalStartDate = document.getElementById('training_startDate').value;
-            const originalEndDate = document.getElementById('training_endDate').value;
-            
-            document.getElementById('training_startDate').value = startDateForStorage;
-            document.getElementById('training_endDate').value = endDateForStorage;
+            // Include date fields
+            const startDateField = 'training_startDate';
+            const endDateField = 'training_endDate';
+            const entryDateField = 'training_entryDate';
             
             let q = fields.map(f =>
-                `${f}=${encodeURIComponent(document.getElementById(f).value || '')}`
+                `${f.replace('training_', '')}=${encodeURIComponent(document.getElementById(f).value || '')}`
             ).join('&');
             
-            // Restore original values for display
-            document.getElementById('training_startDate').value = originalStartDate;
-            document.getElementById('training_endDate').value = originalEndDate;
+            // Add date fields
+            q += `&startDate=${encodeURIComponent(startDateForStorage)}`;
+            q += `&endDate=${encodeURIComponent(endDateForStorage)}`;
+            q += `&entryDate=${encodeURIComponent(entryDateForStorage)}`;
             
             jsonp(`${TRAINING_SCRIPT_URL}?action=update&${q}&callback=alertTrainingResult`);
         }
@@ -1612,7 +1768,7 @@
         }
         
         function editTrainingRecord(recordId) {
-            setStatus('🔍 جاري تحميل بيانات التدريب...', 'info');
+            setStatus('🔍 جاري تحميل بيانات سجل التدريب...', 'info');
             
             const record = trainingRecords.find(r => {
                 const id = r[0] || r.id || r.recordId || '';
@@ -1623,8 +1779,8 @@
                 fillTrainingForm(record);
                 document.getElementById('training_updateBtn').style.display = 'inline-block';
                 document.getElementById('training_addBtn').style.display = 'none';
-                showNotification('✅ تم تحميل بيانات التدريب', 'success');
-                setStatus('تم تحميل بيانات التدريب', 'success');
+                showNotification('✅ تم تحميل بيانات سجل التدريب', 'success');
+                setStatus('تم تحميل بيانات سجل التدريب', 'success');
             } else {
                 showNotification('❌ لم يتم العثور على سجل التدريب', 'error');
                 setStatus('لم يتم العثور على سجل التدريب', 'error');
@@ -1633,15 +1789,27 @@
         
         function fillTrainingForm(record) {
             // Handle multiple record formats
+            // Expected format: [id, year, empNo, name, jobTitle, trainingNeed, trainingTitle, location, organization, startDate, endDate, type, status, duration, evaluation, grade, certificate, notes, supervisor, entryDate]
+            
             const recordId = record[0] || record.id || record.recordId || '';
             const year = record[1] || record.year || '';
-            const employeeNumber = record[2] || record.empNo || record.employeeNumber || '';
-            const employeeName = record[3] || record.name || record.employeeName || '';
-            const jobTitle = record[4] || record.jobTitle || record.job || '';
+            const employeeNumber = record[2] || record.employeeNumber || '';
+            const employeeName = record[3] || record.name || '';
+            const jobTitle = record[4] || record.jobTitle || '';
             const trainingNeed = record[5] || record.trainingNeed || '';
-            const trainingTitle = record[6] || record.trainingTitle || record.title || '';
+            const trainingTitle = record[6] || record.trainingTitle || '';
             const location = record[7] || record.location || '';
-            const organization = record[8] || record.organization || record.company || '';
+            const organization = record[8] || record.organization || '';
+            const trainingType = record[11] || record.type || '';
+            const status = record[12] || record.status || '';
+            const duration = record[13] || record.duration || '';
+            const evaluation = record[14] || record.evaluation || '';
+            const grade = record[15] || record.grade || '';
+            const certificate = record[16] || record.certificate || '';
+            const notes = record[17] || record.notes || '';
+            const supervisor = record[18] || record.supervisor || '';
+            const entryDate = record[19] || record.entryDate || '';
+            
             const startDate = record[9] || record.startDate || '';
             const endDate = record[10] || record.endDate || '';
             
@@ -1650,18 +1818,28 @@
             document.getElementById('training_employeeNumber').value = employeeNumber;
             document.getElementById('training_name').value = employeeName;
             document.getElementById('training_jobTitle').value = jobTitle;
-            document.getElementById('training_trainingNeed').value = trainingNeed || '';
+            document.getElementById('training_trainingNeed').value = trainingNeed;
             document.getElementById('training_trainingTitle').value = trainingTitle;
-            document.getElementById('training_location').value = location || '';
-            document.getElementById('training_organization').value = organization || '';
+            document.getElementById('training_location').value = location;
+            document.getElementById('training_organization').value = organization;
+            document.getElementById('training_type').value = trainingType;
+            document.getElementById('training_status').value = status;
+            document.getElementById('training_duration').value = duration;
+            document.getElementById('training_evaluation').value = evaluation;
+            document.getElementById('training_grade').value = grade;
+            document.getElementById('training_certificate').value = certificate || 'نعم';
+            document.getElementById('training_notes').value = notes;
+            document.getElementById('training_supervisor').value = supervisor;
             
             // Set date values - convert from Google Sheets format to input format
             const startDateFormatted = formatDateForInput(startDate);
             const endDateFormatted = formatDateForInput(endDate);
+            const entryDateFormatted = formatDateForInput(entryDate);
             
             // Set the input values directly
             document.getElementById('training_startDate').value = startDateFormatted;
             document.getElementById('training_endDate').value = endDateFormatted;
+            document.getElementById('training_entryDate').value = entryDateFormatted;
             
             // Update Flatpickr instances WITHOUT triggering onChange
             if (flatpickrInstances.startDate && startDateFormatted) {
@@ -1694,6 +1872,21 @@
                 }
             }
             
+            if (flatpickrInstances.entryDate && entryDateFormatted) {
+                try {
+                    const parts = entryDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.entryDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting entry date:', e);
+                }
+            }
+            
             document.getElementById('training_editingId').value = recordId;
         }
         
@@ -1706,12 +1899,26 @@
                 el.classList.remove('is-invalid');
             });
             
+            // Set default values for dropdowns
+            document.getElementById('training_type').value = '';
+            document.getElementById('training_status').value = 'مخطط له';
+            document.getElementById('training_evaluation').value = '';
+            document.getElementById('training_certificate').value = 'نعم';
+            
+            // Set current date for entry date
+            const now = new Date();
+            const today = formatDateToDDMMYYYY(now);
+            document.getElementById('training_entryDate').value = today;
+            
             // Clear Flatpickr instances
             if (flatpickrInstances.startDate) {
                 flatpickrInstances.startDate.clear();
             }
             if (flatpickrInstances.endDate) {
                 flatpickrInstances.endDate.clear();
+            }
+            if (flatpickrInstances.entryDate) {
+                flatpickrInstances.entryDate.setDate('today', false);
             }
             
             setStatus('تم مسح النموذج', 'success');
@@ -1739,7 +1946,7 @@
             
             setStatus("جاري الحذف...", 'info');
             
-            jsonp(`${TRAINING_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}&callback=deleteTrainingResult`);
+            jsonp(`${TRAINING_SCRIPT_URL}?action=delete&id=${encodeURIComponent(deleteRecordId)}&callback=deleteTrainingResult`);
             
             function deleteTrainingResult(res) {
                 button.disabled = false;
@@ -1776,43 +1983,52 @@
                 return;
             }
             
-            const recordIdDisplay = record[0] || record.id || record.recordId || '';
-            const year = record[1] || record.year || '';
-            const employeeNumber = record[2] || record.empNo || record.employeeNumber || '';
-            const employeeName = record[3] || record.name || record.employeeName || '';
-            const jobTitle = record[4] || record.jobTitle || record.job || '';
-            const trainingNeed = record[5] || record.trainingNeed || '';
-            const trainingTitle = record[6] || record.trainingTitle || record.title || '';
-            const location = record[7] || record.location || '';
-            const organization = record[8] || record.organization || record.company || '';
-            const startDate = record[9] || record.startDate || '';
-            const endDate = record[10] || record.endDate || '';
+            // Expected format: [id, year, empNo, name, jobTitle, trainingNeed, trainingTitle, location, organization, startDate, endDate, type, status, duration, evaluation, grade, certificate, notes, supervisor, entryDate]
             
             const detailsHTML = `
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>رقم السجل:</strong> ${escapeHtml(recordIdDisplay)}</p>
-                        <p><strong>العام:</strong> ${escapeHtml(year)}</p>
-                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(employeeNumber)}</p>
-                        <p><strong>اسم الموظف:</strong> ${escapeHtml(employeeName)}</p>
-                        <p><strong>الوظيفة:</strong> ${escapeHtml(jobTitle)}</p>
+                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[0] || record.id || record.recordId || '')}</p>
+                        <p><strong>العام:</strong> ${escapeHtml(record[1] || record.year || '')}</p>
+                        <p><strong>اسم الموظف:</strong> ${escapeHtml(record[3] || record.name || '')}</p>
+                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[2] || record.employeeNumber || '')}</p>
+                        <p><strong>الوظيفة:</strong> ${escapeHtml(record[4] || record.jobTitle || '')}</p>
+                        <p><strong>نوع التدريب:</strong> ${escapeHtml(record[11] || record.type || '')}</p>
+                        <p><strong>حالة التدريب:</strong> ${escapeHtml(record[12] || record.status || '')}</p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>مسمى التدريب:</strong> ${escapeHtml(trainingTitle)}</p>
-                        <p><strong>مكان الانعقاد:</strong> ${escapeHtml(location)}</p>
-                        <p><strong>الجهة المنظمة:</strong> ${escapeHtml(organization)}</p>
-                        <p><strong>تاريخ البداية:</strong> <span class="english-date">${formatDateForDisplay(startDate).replace(/<[^>]*>/g, '')}</span></p>
-                        <p><strong>تاريخ الانتهاء:</strong> <span class="english-date">${formatDateForDisplay(endDate).replace(/<[^>]*>/g, '')}</span></p>
+                        <p><strong>مسمى التدريب:</strong> ${escapeHtml(record[6] || record.trainingTitle || '')}</p>
+                        <p><strong>مكان الانعقاد:</strong> ${escapeHtml(record[7] || record.location || '')}</p>
+                        <p><strong>الجهة المنظمة:</strong> ${escapeHtml(record[8] || record.organization || '')}</p>
+                        <p><strong>تاريخ البداية:</strong> <span class="english-date">${formatDateForDisplay(record[9] || record.startDate || '').replace(/<[^>]*>/g, '')}</span></p>
+                        <p><strong>تاريخ الانتهاء:</strong> <span class="english-date">${formatDateForDisplay(record[10] || record.endDate || '').replace(/<[^>]*>/g, '')}</span></p>
+                        <p><strong>المدة بالأيام:</strong> ${escapeHtml(record[13] || record.duration || '')}</p>
+                        <p><strong>تاريخ الإدخال:</strong> <span class="english-date">${formatDateForDisplay(record[19] || record.entryDate || '').replace(/<[^>]*>/g, '')}</span></p>
                     </div>
                 </div>
                 
-                ${trainingNeed ? `
                 <div class="row mt-3">
-                    <div class="col-12">
-                        <p><strong>الهدف من التدريب:</strong> ${escapeHtml(trainingNeed)}</p>
+                    <div class="col-md-12">
+                        <p><strong>الهدف من التدريب:</strong> ${escapeHtml(record[5] || record.trainingNeed || '')}</p>
                     </div>
                 </div>
-                ` : ''}
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p><strong>التقييم:</strong> ${escapeHtml(record[14] || record.evaluation || '')}</p>
+                        <p><strong>الدرجة النهائية:</strong> ${escapeHtml(record[15] || record.grade || '')}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>الشهادة:</strong> ${escapeHtml(record[16] || record.certificate || '')}</p>
+                        <p><strong>اسم المشرف:</strong> ${escapeHtml(record[18] || record.supervisor || '')}</p>
+                    </div>
+                </div>
+                
+                ${record[17] ? `<div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>ملاحظات إضافية:</strong> ${escapeHtml(record[17] || record.notes || '')}</p>
+                    </div>
+                </div>` : ''}
             `;
             
             document.getElementById('detailsModalBody').innerHTML = detailsHTML;
@@ -1833,8 +2049,10 @@
             try {
                 const headers = [
                     'رقم السجل', 'العام', 'الرقم الوظيفي', 'اسم الموظف', 'الوظيفة',
-                    'مسمى التدريب', 'الهدف من التدريب',
-                    'مكان الانعقاد', 'الجهة المنظمة', 'تاريخ البداية', 'تاريخ الانتهاء'
+                    'الهدف من التدريب', 'مسمى التدريب', 'مكان الانعقاد', 'الجهة المنظمة',
+                    'تاريخ البداية', 'تاريخ الانتهاء', 'نوع التدريب', 'حالة التدريب',
+                    'المدة بالأيام', 'التقييم', 'الدرجة النهائية', 'الشهادة',
+                    'ملاحظات إضافية', 'اسم المشرف', 'تاريخ الإدخال'
                 ];
                 
                 let csvContent = '\uFEFF';
@@ -1844,19 +2062,29 @@
                     // Clean HTML tags from dates for CSV export
                     const startDateDisplay = formatDateForDisplay(record[9] || record.startDate || '').replace(/<[^>]*>/g, '');
                     const endDateDisplay = formatDateForDisplay(record[10] || record.endDate || '').replace(/<[^>]*>/g, '');
+                    const entryDateDisplay = formatDateForDisplay(record[19] || record.entryDate || '').replace(/<[^>]*>/g, '');
                     
                     const row = [
                         record[0] || record.id || record.recordId || '',
                         record[1] || record.year || '',
-                        record[2] || record.empNo || record.employeeNumber || '',
-                        record[3] || record.name || record.employeeName || '',
-                        record[4] || record.jobTitle || record.job || '',
-                        record[6] || record.trainingTitle || record.title || '',
+                        record[2] || record.employeeNumber || '',
+                        record[3] || record.name || '',
+                        record[4] || record.jobTitle || '',
                         record[5] || record.trainingNeed || '',
+                        record[6] || record.trainingTitle || '',
                         record[7] || record.location || '',
-                        record[8] || record.organization || record.company || '',
+                        record[8] || record.organization || '',
                         startDateDisplay,
-                        endDateDisplay
+                        endDateDisplay,
+                        record[11] || record.type || '',
+                        record[12] || record.status || '',
+                        record[13] || record.duration || '',
+                        record[14] || record.evaluation || '',
+                        record[15] || record.grade || '',
+                        record[16] || record.certificate || '',
+                        record[17] || record.notes || '',
+                        record[18] || record.supervisor || '',
+                        entryDateDisplay
                     ];
                     
                     const escapedRow = row.map(cell => {
