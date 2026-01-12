@@ -42,7 +42,7 @@
             padding: 0 15px;
         }
         
-        /* Header Styles */
+        /* Header Styles - Updated Layout */
         .main-header {
             background: linear-gradient(135deg, var(--primary-color), #1a2530);
             color: white;
@@ -89,6 +89,7 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             z-index: 10;
+            white-space: nowrap;
         }
         
         .home-button:hover {
@@ -99,6 +100,20 @@
         
         .home-button i {
             margin-right: 5px;
+        }
+        
+        /* Header adjustments for home button */
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Ensure the date badge doesn't overlap with home button */
+        @media (min-width: 769px) {
+            .header-badge-container {
+                position: relative;
+                padding-left: 130px; /* Space for home button */
+            }
         }
         
         /* Card Styles */
@@ -171,6 +186,62 @@
             padding-right: 40px;
             direction: ltr;
             text-align: right;
+        }
+        
+        /* Custom Year Input with Dropdown */
+        .year-input-group {
+            position: relative;
+        }
+        
+        .year-input-group .form-control-custom {
+            padding-right: 40px;
+        }
+        
+        .year-input-group .year-dropdown-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--training-color);
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .year-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .year-dropdown.show {
+            display: block;
+        }
+        
+        .year-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .year-option:hover, .year-option.active {
+            background-color: var(--training-color);
+            color: white;
         }
         
         /* Flatpickr Customization */
@@ -343,6 +414,13 @@
             .main-header {
                 padding-top: 60px;
             }
+            
+            .header-badge-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
         }
         
         /* Form Sections */
@@ -411,6 +489,23 @@
             border: 1px solid var(--secondary-color);
             color: var(--secondary-color);
         }
+        
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        /* Modal Fix - Prevent background scroll */
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
+        }
     </style>
 </head>
 <body>
@@ -419,26 +514,28 @@
     
     <!-- Main Container -->
     <div class="container-fluid main-container">
-        <!-- Main Header -->
+        <!-- Main Header - Updated Layout -->
         <div class="main-header fade-in">
             <!-- Return to Home Button -->
             <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
             
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-graduation-cap me-2"></i> نظام إدارة التدريب - معمل كواليتك إنترناشيونال</h1>
-                    <p class="lead mb-0">إدارة سجلات التدريب للموظفين: التسجيل والمتابعة والتقييم</p>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <div class="header-badge d-inline-block me-3">
-                        <i class="fas fa-database me-2"></i>
-                        <span id="totalRecords">0</span> سجلات تدريب
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1><i class="fas fa-graduation-cap me-2"></i> نظام إدارة التدريب - معمل كواليتك إنترناشيونال</h1>
+                        <p class="lead mb-0">إدارة سجلات التدريب للموظفين: التسجيل والمتابعة والتقييم</p>
                     </div>
-                    <div class="header-badge d-inline-block">
-                        <i class="fas fa-calendar me-2"></i>
-                        <span id="currentDate">--/--/----</span>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
+                        <div class="header-badge d-inline-block me-3">
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> سجلات تدريب
+                        </div>
+                        <div class="header-badge d-inline-block">
+                            <i class="fas fa-calendar me-2"></i>
+                            <span id="currentDate">--/--/----</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -462,9 +559,15 @@
                                         <label class="form-label-custom">رقم السجل *</label>
                                         <input type="text" class="form-control form-control-custom" id="training_id" placeholder="رقم السجل" required>
                                     </div>
-                                    <div class="col-md-2 mb-2">
+                                    <div class="col-md-2 mb-2 year-input-group">
                                         <label class="form-label-custom">العام *</label>
-                                        <input type="number" class="form-control form-control-custom" id="training_year" placeholder="العام" min="2000" max="2100" required>
+                                        <input type="text" class="form-control form-control-custom" id="training_year" placeholder="العام" required 
+                                               oninput="this.value = this.value.replace(/[^0-9٠-٩]/g, '').replace(/\s/g, '')"
+                                               onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        <button type="button" class="year-dropdown-btn" onclick="toggleYearDropdown()">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <div class="year-dropdown" id="yearDropdown"></div>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">اسم الموظف *</label>
@@ -568,8 +671,8 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4 mb-2">
-                                            <label class="form-label-custom">الدرجة النهائية</label>
-                                            <input type="number" class="form-control form-control-custom" id="training_grade" placeholder="الدرجة" min="0" max="100" step="0.1">
+                                            <label class="form-label-custom">النسبة المئوية %</label>
+                                            <input type="number" class="form-control form-control-custom" id="training_grade" placeholder="النسبة المئوية %" min="0" max="100" step="0.1">
                                         </div>
                                         <div class="col-md-4 mb-2">
                                             <label class="form-label-custom">الشهادة</label>
@@ -670,19 +773,19 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة التدريب 
                     <span id="currentYear"></span> | 
-                    <span class="text-info">الإصدار 2.0</span>
+                    <span class="text-info">الإصدار 2.2</span>
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
+    <!-- Delete Confirmation Modal - FIXED -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title">تأكيد الحذف</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
@@ -708,12 +811,12 @@
     </div>
 
     <!-- Details Modal -->
-    <div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title">تفاصيل سجل التدريب</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="detailsModalBody">
                     <!-- Details will be loaded here -->
@@ -744,6 +847,8 @@
         let deleteRecordName = '';
         let flatpickrInstances = {};
         let employeeDataLoaded = false;
+        let yearDropdownVisible = false;
+        let deleteModalInstance = null; // Store modal instance globally
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
@@ -759,6 +864,13 @@
             const today = formatDateToDDMMYYYY(now);
             document.getElementById('training_entryDate').value = today;
             
+            // Initialize year dropdown with current year as default
+            initializeYearDropdown();
+            
+            // Initialize Bootstrap modal instance
+            const deleteModalElement = document.getElementById('deleteModal');
+            deleteModalInstance = new bootstrap.Modal(deleteModalElement);
+            
             // Load data - تحميل بيانات التدريب وبيانات الموظفين
             setTimeout(() => {
                 loadTrainingData(); // تحميل بيانات التدريب
@@ -770,7 +882,81 @@
             
             // إضافة حدث لحساب المدة تلقائياً
             setupDurationCalculation();
+            
+            // Close year dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const yearInput = document.getElementById('training_year');
+                const dropdown = document.getElementById('yearDropdown');
+                const dropdownBtn = document.querySelector('.year-dropdown-btn');
+                
+                if (!yearInput.contains(event.target) && 
+                    !dropdown.contains(event.target) && 
+                    !dropdownBtn.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                    yearDropdownVisible = false;
+                }
+            });
+            
+            // Set current year as default
+            const currentYear = new Date().getFullYear();
+            document.getElementById('training_year').value = currentYear;
+            
+            // Fix modal backdrop issue - Remove body class when modal is hidden
+            deleteModalElement.addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            });
+            
+            // Also fix for details modal
+            const detailsModalElement = document.getElementById('detailsModal');
+            detailsModalElement.addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            });
         });
+        
+        // ================ YEAR DROPDOWN FUNCTIONS ================
+        function initializeYearDropdown() {
+            const dropdown = document.getElementById('yearDropdown');
+            const currentYear = new Date().getFullYear();
+            
+            // Generate years from current year - 50 to current year + 50
+            let html = '';
+            for (let year = currentYear - 50; year <= currentYear + 50; year++) {
+                html += `<div class="year-option" onclick="selectYear(${year})">${year}</div>`;
+            }
+            dropdown.innerHTML = html;
+            
+            // Highlight current year
+            setTimeout(() => {
+                const currentYearOption = dropdown.querySelector(`.year-option:nth-child(${51})`);
+                if (currentYearOption) {
+                    currentYearOption.classList.add('active');
+                    // Scroll to center
+                    dropdown.scrollTop = currentYearOption.offsetTop - dropdown.offsetHeight / 2 + currentYearOption.offsetHeight / 2;
+                }
+            }, 100);
+        }
+        
+        function toggleYearDropdown() {
+            const dropdown = document.getElementById('yearDropdown');
+            dropdown.classList.toggle('show');
+            yearDropdownVisible = !yearDropdownVisible;
+        }
+        
+        function selectYear(year) {
+            document.getElementById('training_year').value = year;
+            document.getElementById('yearDropdown').classList.remove('show');
+            yearDropdownVisible = false;
+        }
         
         // ================ FIXED DATE PICKER INITIALIZATION ================
         function initializeDatePickers() {
@@ -788,10 +974,10 @@
             // Simple Flatpickr configuration that works in RTL
             const dateOptions = {
                 locale: 'ar',
-                dateFormat: "d/m/Y",  // Use d/m/Y format for display
+                dateFormat: "d/m/Y",
                 altFormat: "d/m/Y",
                 altInput: false,
-                allowInput: false,
+                allowInput: true, // Allow manual input
                 clickOpens: true,
                 position: 'auto',
                 monthSelectorType: 'static',
@@ -800,22 +986,11 @@
                 nextArrow: '<i class="fas fa-chevron-left"></i>',
                 weekNumbers: false,
                 disableMobile: true,
-                // IMPORTANT: Set the calendar to RTL mode
-                nextArrow: '<i class="fas fa-chevron-right"></i>',
-                prevArrow: '<i class="fas fa-chevron-left"></i>',
-                // Force RTL for the calendar
-                onReady: function(selectedDates, dateStr, instance) {
-                    // Force RTL direction on calendar container
-                    if (instance.calendarContainer) {
-                        instance.calendarContainer.style.direction = 'rtl';
-                    }
-                },
                 onChange: function(selectedDates, dateStr, instance) {
-                    // The date will be automatically set in d/m/Y format
                     // Update duration if both dates are set
                     calculateDuration();
                     
-                    // Force the input value to update (in case Flatpickr didn't)
+                    // Force the input value to update
                     if (selectedDates.length > 0) {
                         const date = selectedDates[0];
                         const formattedDate = formatDateToDDMMYYYY(date);
@@ -848,36 +1023,38 @@
             }
         }
         
-        // ================ HELPER FUNCTION TO FORMAT DATE AS DD/MM/YYYY ================
+        // ================ FIXED DATE HANDLING FUNCTIONS ================
         function formatDateToDDMMYYYY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+                return '';
+            }
             const day = date.getDate().toString().padStart(2, '0');
             const month = (date.getMonth() + 1).toString().padStart(2, '0');
             const year = date.getFullYear();
             return `${day}/${month}/${year}`;
         }
         
-        // ================ DATE VALIDATION: END DATE NOT BEFORE START DATE ================
-        function validateEndDateNotBeforeStartDate() {
-            const startDateStr = document.getElementById('training_startDate').value;
-            const endDateStr = document.getElementById('training_endDate').value;
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
             
-            if (!startDateStr || !endDateStr) return;
-            
-            try {
-                const startDate = parseDateDDMMYYYY(startDateStr);
-                const endDate = parseDateDDMMYYYY(endDateStr);
-                
-                if (startDate && endDate && endDate < startDate) {
-                    showNotification('❌ تاريخ الانتهاء يجب أن يكون بعد تاريخ البداية أو مساوياً له', 'error');
-                    // Clear the end date
-                    if (flatpickrInstances.endDate) {
-                        flatpickrInstances.endDate.clear();
-                    }
-                    document.getElementById('training_endDate').value = '';
+            // Handle dd/mm/yyyy format only
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    // Basic validation
+                    if (day < 1 || day > 31) return null;
+                    if (month < 0 || month > 11) return null;
+                    if (year < 1900 || year > 2100) return null;
+                    
+                    return new Date(year, month, day);
                 }
-            } catch (e) {
-                console.error('Error validating dates:', e);
             }
+            
+            return null;
         }
         
         // ================ DURATION CALCULATION ================
@@ -902,7 +1079,7 @@
                 if (startDate && endDate) {
                     // Calculate difference in days
                     const diffTime = Math.abs(endDate - startDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both dates
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
                     
                     if (diffDays > 0) {
                         document.getElementById('training_duration').value = diffDays;
@@ -913,260 +1090,84 @@
             }
         }
         
-        // ================ SIMPLIFIED DATE FORMAT FUNCTIONS ================
-        function parseDateDDMMYYYY(dateString) {
-            if (!dateString) return null;
-            
-            // Handle dd/mm/yyyy format only
-            if (dateString.includes('/')) {
-                const parts = dateString.split('/');
-                if (parts.length === 3) {
-                    const day = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const year = parseInt(parts[2], 10);
-                    
-                    // Basic validation
-                    if (day < 1 || day > 31) return null;
-                    if (month < 0 || month > 11) return null;
-                    if (year < 1900 || year > 2100) return null;
-                    
-                    return new Date(year, month, day);
-                }
-            }
-            
-            return null;
-        }
-        
-        // ================ FIXED DATE DISPLAY FORMAT FUNCTION ================
-        // This function converts dates from Google Sheets format to display format
-        // AND fixes the RTL display issue by wrapping in a span with LTR direction
+        // ================ SIMPLIFIED DATE FORMATTING ================
         function formatDateForDisplay(dateString) {
             if (!dateString || dateString.trim() === '') return '';
             
-            // Check if it's already in the desired format (like "30 September 2026")
-            const englishMonthRegex = /^\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}$/i;
-            const arabicMonthRegex = /^\d{1,2}\s+(يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر)\s+\d{4}$/;
-            
-            if (englishMonthRegex.test(dateString) || arabicMonthRegex.test(dateString)) {
+            // If it's already in dd/mm/yyyy format, return with LTR wrapper
+            if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString.trim())) {
                 return `<span class="english-date">${dateString}</span>`;
             }
             
-            // Try different date formats that might come from Google Sheets
+            // Try to parse other formats
             let dateObj = null;
             
-            // Format 1: YYYY/MM/DD (Google Sheets format)
-            if (dateString.includes('/') && dateString.split('/')[0].length === 4) {
+            // Try different separators
+            if (dateString.includes('/')) {
                 const parts = dateString.split('/');
                 if (parts.length === 3) {
-                    const year = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const day = parseInt(parts[2], 10);
-                    
-                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
-                        dateObj = new Date(year, month, day);
-                    }
-                }
-            }
-            // Format 2: DD/MM/YYYY (our display format)
-            else if (dateString.includes('/') && dateString.split('/')[2].length === 4) {
-                const parts = dateString.split('/');
-                if (parts.length === 3) {
+                    // Check if format is dd/mm/yyyy or mm/dd/yyyy
                     const day = parseInt(parts[0], 10);
                     const month = parseInt(parts[1], 10) - 1;
                     const year = parseInt(parts[2], 10);
                     
-                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                    if (day > 31) {
+                        // Probably yyyy/mm/dd format
+                        const year2 = parseInt(parts[0], 10);
+                        const month2 = parseInt(parts[1], 10) - 1;
+                        const day2 = parseInt(parts[2], 10);
+                        dateObj = new Date(year2, month2, day2);
+                    } else {
                         dateObj = new Date(year, month, day);
                     }
                 }
-            }
-            // Format 3: YYYY-MM-DD (ISO format)
-            else if (dateString.includes('-') && dateString.split('-')[0].length === 4) {
-                const parts = dateString.split('-');
-                if (parts.length === 3) {
-                    const year = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const day = parseInt(parts[2], 10);
-                    
-                    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
-                        dateObj = new Date(year, month, day);
-                    }
-                }
-            }
-            // Format 4: Already a Date object
-            else if (dateString instanceof Date) {
-                dateObj = dateString;
-            }
-            // Format 5: Try parsing as is
-            else {
+            } else if (dateString.includes('-')) {
+                // Try ISO format or similar
+                dateObj = new Date(dateString);
+            } else {
+                // Try as is
                 dateObj = new Date(dateString);
             }
             
-            // If we couldn't parse the date, return the original string
             if (!dateObj || isNaN(dateObj.getTime())) {
-                console.log("Could not parse date:", dateString);
                 return `<span class="english-date">${dateString}</span>`;
             }
             
-            // Format the date as "30 September 2026"
-            const day = dateObj.getDate();
-            const monthNames = [
-                'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
-            ];
-            const month = monthNames[dateObj.getMonth()];
-            const year = dateObj.getFullYear();
-            
-            const formattedDate = `${day} ${month} ${year}`;
+            const formattedDate = formatDateToDDMMYYYY(dateObj);
             return `<span class="english-date">${formattedDate}</span>`;
         }
         
-        // ================ NEW FUNCTION FOR FORM INPUT DISPLAY ================
         function formatDateForInput(dateString) {
             if (!dateString || dateString.trim() === '') return '';
-            
-            // Check if it's already in dd/mm/yyyy format
-            const ddMMyyyyRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-            if (ddMMyyyyRegex.test(dateString)) {
-                return dateString;
-            }
-            
-            // Try to parse the date
-            // First, remove any HTML tags if present
-            const cleanDateString = dateString.replace(/<[^>]*>/g, '');
-            
-            const parts = cleanDateString.split(' ');
-            if (parts.length === 3 && isNaN(parts[1])) {
-                // This is in "30 September 2026" format
-                const day = parseInt(parts[0], 10).toString().padStart(2, '0');
-                const monthNames = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
-                const monthIndex = monthNames.findIndex(name => name.toLowerCase() === parts[1].toLowerCase());
-                const month = (monthIndex + 1).toString().padStart(2, '0');
-                const year = parts[2];
-                
-                if (monthIndex !== -1) {
-                    return `${day}/${month}/${year}`;
-                }
-            }
-            
-            // Try to parse as a date
-            try {
-                const dateObj = new Date(cleanDateString);
-                if (!isNaN(dateObj.getTime())) {
-                    const day = dateObj.getDate().toString().padStart(2, '0');
-                    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-                    const year = dateObj.getFullYear();
-                    return `${day}/${month}/${year}`;
-                }
-            } catch (e) {
-                console.error('Error parsing date for input:', e);
-            }
-            
-            // Fallback: return empty string
-            return '';
-        }
-        
-        function formatDateForStorage(dateString) {
-            if (!dateString) return '';
-            
-            // If it's already in dd/mm/yyyy format, return as is
-            const ddMMyyyyRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-            if (ddMMyyyyRegex.test(dateString)) {
-                return dateString;
-            }
             
             // Clean any HTML tags
             const cleanDateString = dateString.replace(/<[^>]*>/g, '');
             
-            // Try to convert from display format to dd/mm/yyyy
-            const parts = cleanDateString.split(' ');
-            if (parts.length === 3 && isNaN(parts[1])) {
-                // This is in "30 September 2026" format
-                const day = parseInt(parts[0], 10).toString().padStart(2, '0');
-                const monthNames = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
-                const monthIndex = monthNames.findIndex(name => name.toLowerCase() === parts[1].toLowerCase());
-                const month = (monthIndex + 1).toString().padStart(2, '0');
-                const year = parts[2];
-                
-                if (monthIndex !== -1) {
-                    return `${day}/${month}/${year}`;
+            // If it's already in dd/mm/yyyy format, return it
+            if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(cleanDateString.trim())) {
+                return cleanDateString;
+            }
+            
+            // Try to parse the date
+            let dateObj = null;
+            
+            if (cleanDateString.includes('/')) {
+                const parts = cleanDateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    dateObj = new Date(year, month, day);
                 }
+            } else {
+                dateObj = new Date(cleanDateString);
             }
             
-            // Fallback: try to parse as a date
-            try {
-                const dateObj = new Date(cleanDateString);
-                if (!isNaN(dateObj.getTime())) {
-                    const day = dateObj.getDate().toString().padStart(2, '0');
-                    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-                    const year = dateObj.getFullYear();
-                    return `${day}/${month}/${year}`;
-                }
-            } catch (e) {
-                console.error('Error parsing date for storage:', e);
+            if (!dateObj || isNaN(dateObj.getTime())) {
+                return '';
             }
             
-            return '';
-        }
-        
-        function validateDate(dateString) {
-            if (!dateString) return true; // Empty date is valid
-            
-            // Accept both dd/mm/yyyy and display format (30 September 2026)
-            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-            const displayFormatRegex = /^(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})$/i;
-            
-            if (ddMMyyyyRegex.test(dateString)) {
-                const match = dateString.match(ddMMyyyyRegex);
-                const day = parseInt(match[1], 10);
-                const month = parseInt(match[2], 10);
-                const year = parseInt(match[3], 10);
-                
-                // Basic date validation
-                if (year < 1900 || year > 2100) return false;
-                if (month < 1 || month > 12) return false;
-                if (day < 1 || day > 31) return false;
-                
-                // Check for specific month days
-                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                return day <= daysInMonth[month - 1];
-            }
-            
-            if (displayFormatRegex.test(dateString)) {
-                const match = dateString.match(displayFormatRegex);
-                const day = parseInt(match[1], 10);
-                const monthName = match[2];
-                const year = parseInt(match[3], 10);
-                
-                const monthNames = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
-                const month = monthNames.findIndex(name => name.toLowerCase() === monthName.toLowerCase()) + 1;
-                
-                if (month === 0) return false; // Month not found
-                if (year < 1900 || year > 2100) return false;
-                if (day < 1 || day > 31) return false;
-                
-                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                return day <= daysInMonth[month - 1];
-            }
-            
-            return false;
-        }
-        
-        function setCurrentDate() {
-            const now = new Date();
-            const day = now.getDate().toString().padStart(2, '0');
-            const month = (now.getMonth() + 1).toString().padStart(2, '0');
-            const year = now.getFullYear();
-            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+            return formatDateToDDMMYYYY(dateObj);
         }
         
         // ================ NOTIFICATION SYSTEM ================
@@ -1214,15 +1215,51 @@
             }
         }
         
-        // ================ JSONP Loader ================
-        function jsonp(url) {
-            const old = document.getElementById("jsonp");
-            if (old) old.remove();
-
-            const s = document.createElement('script');
-            s.id = "jsonp";
-            s.src = url;
-            document.body.appendChild(s);
+        function setStatus(msg, type = 'info') {
+            const statusDiv = document.getElementById("status");
+            statusDiv.innerHTML = msg;
+            statusDiv.className = `status-message status-${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                if (statusDiv.innerHTML === msg) {
+                    statusDiv.style.display = 'none';
+                }
+            }, 5000);
+        }
+        
+        // ================ JSONP Loader - IMPROVED VERSION ================
+        function jsonp(url, callbackParam = 'callback') {
+            return new Promise((resolve, reject) => {
+                // Generate a unique callback name
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                
+                // Create script element
+                const script = document.createElement('script');
+                
+                // Set the URL with callback parameter
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + callbackParam + '=' + callbackName;
+                
+                // Define the callback function
+                window[callbackName] = function(data) {
+                    // Clean up
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    
+                    // Resolve the promise
+                    resolve(data);
+                };
+                
+                // Handle script loading error
+                script.onerror = function() {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
+                };
+                
+                // Add script to document
+                document.body.appendChild(script);
+            });
         }
         
         // ================ UTILITY FUNCTIONS ================
@@ -1236,19 +1273,12 @@
                 .replace(/'/g, "&#039;");
         }
         
-        // ================ STATUS MESSAGE FUNCTIONS ================
-        function setStatus(msg, type = 'info') {
-            const statusDiv = document.getElementById("status");
-            statusDiv.innerHTML = msg;
-            statusDiv.className = `status-message status-${type}`;
-            statusDiv.style.display = 'block';
-            
-            // Auto-hide after 5 seconds
-            setTimeout(() => {
-                if (statusDiv.innerHTML === msg) {
-                    statusDiv.style.display = 'none';
-                }
-            }, 5000);
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
         }
         
         // ================ EMPLOYEE DATA FUNCTIONS ================
@@ -1256,14 +1286,16 @@
             if (employeeDataLoaded) return;
             
             showNotification('📥 جاري تحميل بيانات الموظفين...', 'info', 3000);
-            jsonp(`${EMPLOYEE_SCRIPT_URL}?action=getAll&callback=handleEmployeeData`);
+            jsonp(`${EMPLOYEE_SCRIPT_URL}?action=getAll`).then(handleEmployeeData).catch(error => {
+                console.error('Error loading employee data:', error);
+                showNotification('❌ فشل في تحميل بيانات الموظفين', 'error');
+            });
         }
         
         function handleEmployeeData(res) {
             console.log('Employee data response:', res);
             
             if (res && res.status === 'success') {
-                // Extract data from response - handle multiple possible formats
                 let records = [];
                 
                 if (Array.isArray(res.records)) {
@@ -1281,7 +1313,7 @@
                 setupEmployeeAutocomplete();
                 showNotification('✅ تم تحميل بيانات الموظفين بنجاح (' + employeeRecords.length + ' موظف)', 'success', 3000);
             } else {
-                showNotification('❌ فشل في تحميل بيانات الموظفين. تأكد من صحة سكريبت الويب', 'error');
+                showNotification('❌ فشل في تحميل بيانات الموظفين', 'error');
                 console.error('Employee data response:', res);
             }
         }
@@ -1290,40 +1322,29 @@
             const nameList = document.getElementById('employeeNameList');
             const numberList = document.getElementById('employeeNumberList');
             
-            // Clear existing options
             nameList.innerHTML = '';
             numberList.innerHTML = '';
             
-            // Use Sets for unique values
             const names = new Set();
             const numbers = new Set();
             
             employeeRecords.forEach(record => {
-                // Assuming record structure: [id, name, empNo, job, department, contract, startDate]
-                // Index: 0=id, 1=name, 2=employee number, 3=job, 4=department, 5=contract type, 6=start date
                 if (record && record.length > 1) {
                     if (record[1] && String(record[1]).trim() !== '') names.add(String(record[1]).trim());
                     if (record[2] && String(record[2]).trim() !== '') numbers.add(String(record[2]).trim());
                 }
             });
             
-            // Populate employee names
             names.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name;
                 nameList.appendChild(option);
             });
             
-            // Populate employee numbers
             numbers.forEach(number => {
                 const option = document.createElement('option');
                 option.value = number;
                 numberList.appendChild(option);
-            });
-            
-            console.log('Employee datalists populated:', {
-                names: names.size,
-                numbers: numbers.size
             });
         }
         
@@ -1331,27 +1352,12 @@
             const employeeNameField = document.getElementById('training_name');
             const employeeNumberField = document.getElementById('training_employeeNumber');
             
-            // Auto-fill when employee name is selected
             employeeNameField.addEventListener('change', function() {
                 autoFillFromEmployee('name', this.value);
             });
             
-            // Auto-fill when employee number is selected
             employeeNumberField.addEventListener('change', function() {
                 autoFillFromEmployee('number', this.value);
-            });
-            
-            // Also trigger on input for better UX
-            employeeNameField.addEventListener('input', function() {
-                if (this.value.length > 2) {
-                    autoFillFromEmployee('name', this.value);
-                }
-            });
-            
-            employeeNumberField.addEventListener('input', function() {
-                if (this.value.length > 2) {
-                    autoFillFromEmployee('number', this.value);
-                }
             });
         }
         
@@ -1361,7 +1367,6 @@
             let record = null;
             
             if (fieldType === 'name') {
-                // Find record by name (case insensitive)
                 record = employeeRecords.find(r => 
                     r && r[1] && String(r[1]).trim().toLowerCase() === String(value).trim().toLowerCase()
                 );
@@ -1370,7 +1375,6 @@
                     document.getElementById('training_employeeNumber').value = record[2] || '';
                 }
             } else if (fieldType === 'number') {
-                // Find record by employee number
                 record = employeeRecords.find(r => 
                     r && r[2] && String(r[2]).trim() === String(value).trim()
                 );
@@ -1380,11 +1384,8 @@
                 }
             }
             
-            // Fill job title if record found
             if (record && record[3]) {
                 document.getElementById('training_jobTitle').value = record[3] || '';
-                
-                // Show success notification
                 showNotification(`✅ تم تحميل بيانات الموظف: ${record[1] || ''}`, 'success', 2000);
             }
         }
@@ -1401,9 +1402,16 @@
             tableContainer.style.display = 'none';
             noRecords.style.display = 'none';
             
-            // Add timestamp to prevent caching
             const timestamp = new Date().getTime();
-            jsonp(`${TRAINING_SCRIPT_URL}?action=getAll&callback=showTrainingData&t=${timestamp}`);
+            jsonp(`${TRAINING_SCRIPT_URL}?action=getAll&t=${timestamp}`)
+                .then(showTrainingData)
+                .catch(error => {
+                    console.error('Error loading training data:', error);
+                    spinner.style.display = 'none';
+                    noRecords.style.display = 'block';
+                    showNotification('❌ فشل في تحميل بيانات التدريب', 'error');
+                    setStatus('فشل في تحميل البيانات', 'error');
+                });
         }
         
         function showTrainingData(res) {
@@ -1415,24 +1423,20 @@
             
             spinner.style.display = 'none';
             
-            // Handle multiple response formats
             let records = [];
             let responseStatus = 'error';
             let responseMessage = 'خطأ غير معروف';
             
-            // Check if response has status field
             if (res && res.status) {
                 responseStatus = res.status;
                 responseMessage = res.message || 'بدون رسالة';
                 
                 if (responseStatus === 'success') {
-                    // Try to extract records from various possible locations
                     if (Array.isArray(res.records)) {
                         records = res.records;
                     } else if (Array.isArray(res.data)) {
                         records = res.data;
                     } else if (res.records && typeof res.records === 'object') {
-                        // If records is an object with array inside
                         const keys = Object.keys(res.records);
                         if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
                             records = res.records[keys[0]];
@@ -1440,7 +1444,6 @@
                     }
                 }
             } else if (Array.isArray(res)) {
-                // If response is directly an array
                 records = res;
                 responseStatus = 'success';
                 responseMessage = 'تم تحميل البيانات بنجاح';
@@ -1474,7 +1477,7 @@
             
             let html = '<thead><tr>';
             const headers = ['رقم السجل', 'العام', 'الاسم', 'الوظيفة', 'مسمى التدريب', 'الجهة', 'تاريخ البداية', 
-                           'تاريخ الانتهاء', 'المدة', 'حالة التدريب', 'التقييم', 'الإجراءات'];
+                           'تاريخ الانتهاء', 'المدة', 'حالة التدريب', 'التقييم', 'النسبة %', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
@@ -1482,10 +1485,6 @@
             
             records.forEach((record, index) => {
                 html += '<tr>';
-                
-                // Handle different record structures (assuming original format)
-                // Original: [id, year, empNo, name, jobTitle, trainingNeed, trainingTitle, location, organization, startDate, endDate]
-                // New format with additional fields: [id, year, empNo, name, jobTitle, trainingNeed, trainingTitle, location, organization, startDate, endDate, type, status, duration, evaluation, grade, certificate, notes, supervisor, entryDate]
                 
                 const recordId = record[0] || record.id || record.recordId || '';
                 const year = record[1] || record.year || '';
@@ -1498,6 +1497,7 @@
                 const duration = record[13] || record.duration || '';
                 const status = record[12] || record.status || '';
                 const evaluation = record[14] || record.evaluation || '';
+                const grade = record[15] || record.grade || '';
                 
                 html += `<td><strong>${escapeHtml(recordId)}</strong></td>`;
                 html += `<td>${escapeHtml(year)}</td>`;
@@ -1510,6 +1510,7 @@
                 html += `<td>${escapeHtml(duration)}</td>`;
                 html += `<td>${escapeHtml(status)}</td>`;
                 html += `<td>${escapeHtml(evaluation)}</td>`;
+                html += `<td>${escapeHtml(grade)}</td>`;
                 
                 html += `<td class="action-buttons">
                     <button onclick="editTrainingRecord('${escapeHtml(recordId)}')" class="btn btn-sm btn-primary" title="تعديل">
@@ -1530,7 +1531,7 @@
             table.innerHTML = html;
         }
         
-        // ================ CRUD OPERATIONS ================
+        // ================ CRUD OPERATIONS - FIXED UPDATE FUNCTION ================
         function addTrainingRecord() { 
             const requiredFields = ['training_id', 'training_year', 'training_name', 'training_employeeNumber', 'training_jobTitle', 'training_trainingTitle'];
             let isValid = true;
@@ -1550,57 +1551,11 @@
                 return;
             }
             
-            // Validate dates if provided
+            setStatus("جاري الإرسال...", 'info');
+            
             const startDate = document.getElementById('training_startDate').value;
             const endDate = document.getElementById('training_endDate').value;
             const entryDate = document.getElementById('training_entryDate').value;
-            
-            if (startDate && !validateDate(startDate)) {
-                document.getElementById('training_startDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ البداية غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('training_startDate').classList.remove('is-invalid');
-            }
-            
-            if (endDate && !validateDate(endDate)) {
-                document.getElementById('training_endDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ الانتهاء غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('training_endDate').classList.remove('is-invalid');
-            }
-            
-            if (entryDate && !validateDate(entryDate)) {
-                document.getElementById('training_entryDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('training_entryDate').classList.remove('is-invalid');
-            }
-            
-            // Validate end date is not before start date
-            if (startDate && endDate) {
-                try {
-                    const startDateObj = parseDateDDMMYYYY(startDate);
-                    const endDateObj = parseDateDDMMYYYY(endDate);
-                    
-                    if (startDateObj && endDateObj && endDateObj < startDateObj) {
-                        showNotification('❌ تاريخ الانتهاء يجب أن يكون بعد تاريخ البداية أو مساوياً له', 'error');
-                        document.getElementById('training_endDate').classList.add('is-invalid');
-                        return;
-                    }
-                } catch (e) {
-                    console.error('Error comparing dates:', e);
-                }
-            }
-            
-            setStatus("جاري الإرسال...", 'info');
-            
-            // Get date values from date inputs (already in dd/mm/yyyy format)
-            const startDateForStorage = formatDateForStorage(startDate);
-            const endDateForStorage = formatDateForStorage(endDate);
-            const entryDateForStorage = formatDateForStorage(entryDate);
             
             const fields = [
                 'training_id',
@@ -1622,24 +1577,31 @@
                 'training_supervisor'
             ];
             
-            // Include date fields
-            const startDateField = 'training_startDate';
-            const endDateField = 'training_endDate';
-            const entryDateField = 'training_entryDate';
-            
             let q = fields.map(f =>
                 `${f.replace('training_', '')}=${encodeURIComponent(document.getElementById(f).value || '')}`
             ).join('&');
             
-            // Add date fields
-            q += `&startDate=${encodeURIComponent(startDateForStorage)}`;
-            q += `&endDate=${encodeURIComponent(endDateForStorage)}`;
-            q += `&entryDate=${encodeURIComponent(entryDateForStorage)}`;
+            // Add date fields exactly as they appear in the input
+            q += `&startDate=${encodeURIComponent(startDate)}`;
+            q += `&endDate=${encodeURIComponent(endDate)}`;
+            q += `&entryDate=${encodeURIComponent(entryDate)}`;
             
-            jsonp(`${TRAINING_SCRIPT_URL}?action=add&${q}&callback=alertTrainingResult`);
+            jsonp(`${TRAINING_SCRIPT_URL}?action=add&${q}`)
+                .then(alertTrainingResult)
+                .catch(error => {
+                    console.error('Error adding record:', error);
+                    showNotification('❌ خطأ في إضافة السجل', 'error');
+                    setStatus('خطأ في الإضافة', 'error');
+                });
         }
         
         function updateTrainingRecord() { 
+            const editingId = document.getElementById('training_editingId').value;
+            if (!editingId) {
+                showNotification('❌ لم يتم تحديد سجل للتحديث', 'error');
+                return;
+            }
+            
             const requiredFields = ['training_id', 'training_year', 'training_name', 'training_employeeNumber', 'training_jobTitle', 'training_trainingTitle'];
             let isValid = true;
             
@@ -1658,62 +1620,11 @@
                 return;
             }
             
-            // Validate dates if provided
+            setStatus("جاري تحديث السجل...", 'info');
+            
             const startDate = document.getElementById('training_startDate').value;
             const endDate = document.getElementById('training_endDate').value;
             const entryDate = document.getElementById('training_entryDate').value;
-            
-            if (startDate && !validateDate(startDate)) {
-                document.getElementById('training_startDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ البداية غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('training_startDate').classList.remove('is-invalid');
-            }
-            
-            if (endDate && !validateDate(endDate)) {
-                document.getElementById('training_endDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ الانتهاء غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('training_endDate').classList.remove('is-invalid');
-            }
-            
-            if (entryDate && !validateDate(entryDate)) {
-                document.getElementById('training_entryDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('training_entryDate').classList.remove('is-invalid');
-            }
-            
-            // Validate end date is not before start date
-            if (startDate && endDate) {
-                try {
-                    const startDateObj = parseDateDDMMYYYY(startDate);
-                    const endDateObj = parseDateDDMMYYYY(endDate);
-                    
-                    if (startDateObj && endDateObj && endDateObj < startDateObj) {
-                        showNotification('❌ تاريخ الانتهاء يجب أن يكون بعد تاريخ البداية أو مساوياً له', 'error');
-                        document.getElementById('training_endDate').classList.add('is-invalid');
-                        return;
-                    }
-                } catch (e) {
-                    console.error('Error comparing dates:', e);
-                }
-            }
-            
-            setStatus("جاري الإرسال...", 'info');
-            
-            // Get date values from date inputs (already in dd/mm/yyyy format)
-            const startDateForStorage = formatDateForStorage(startDate);
-            const endDateForStorage = formatDateForStorage(endDate);
-            const entryDateForStorage = formatDateForStorage(entryDate);
-            
-            // Update the hidden fields with correct dates
-            document.getElementById('training_startDate').value = startDateForStorage;
-            document.getElementById('training_endDate').value = endDateForStorage;
-            document.getElementById('training_entryDate').value = entryDateForStorage;
             
             const fields = [
                 'training_id',
@@ -1735,21 +1646,23 @@
                 'training_supervisor'
             ];
             
-            // Include date fields
-            const startDateField = 'training_startDate';
-            const endDateField = 'training_endDate';
-            const entryDateField = 'training_entryDate';
-            
-            let q = fields.map(f =>
+            let q = `id=${encodeURIComponent(editingId)}&`;
+            q += fields.map(f =>
                 `${f.replace('training_', '')}=${encodeURIComponent(document.getElementById(f).value || '')}`
             ).join('&');
             
-            // Add date fields
-            q += `&startDate=${encodeURIComponent(startDateForStorage)}`;
-            q += `&endDate=${encodeURIComponent(endDateForStorage)}`;
-            q += `&entryDate=${encodeURIComponent(entryDateForStorage)}`;
+            // Add date fields exactly as they appear in the input
+            q += `&startDate=${encodeURIComponent(startDate)}`;
+            q += `&endDate=${encodeURIComponent(endDate)}`;
+            q += `&entryDate=${encodeURIComponent(entryDate)}`;
             
-            jsonp(`${TRAINING_SCRIPT_URL}?action=update&${q}&callback=alertTrainingResult`);
+            jsonp(`${TRAINING_SCRIPT_URL}?action=update&${q}`)
+                .then(alertTrainingResult)
+                .catch(error => {
+                    console.error('Error updating record:', error);
+                    showNotification('❌ خطأ في تحديث السجل', 'error');
+                    setStatus('خطأ في التحديث', 'error');
+                });
         }
         
         function alertTrainingResult(res) {
@@ -1788,9 +1701,6 @@
         }
         
         function fillTrainingForm(record) {
-            // Handle multiple record formats
-            // Expected format: [id, year, empNo, name, jobTitle, trainingNeed, trainingTitle, location, organization, startDate, endDate, type, status, duration, evaluation, grade, certificate, notes, supervisor, entryDate]
-            
             const recordId = record[0] || record.id || record.recordId || '';
             const year = record[1] || record.year || '';
             const employeeNumber = record[2] || record.employeeNumber || '';
@@ -1831,17 +1741,16 @@
             document.getElementById('training_notes').value = notes;
             document.getElementById('training_supervisor').value = supervisor;
             
-            // Set date values - convert from Google Sheets format to input format
+            // Set date values - fix for exact date retrieval
             const startDateFormatted = formatDateForInput(startDate);
             const endDateFormatted = formatDateForInput(endDate);
             const entryDateFormatted = formatDateForInput(entryDate);
             
-            // Set the input values directly
             document.getElementById('training_startDate').value = startDateFormatted;
             document.getElementById('training_endDate').value = endDateFormatted;
             document.getElementById('training_entryDate').value = entryDateFormatted;
             
-            // Update Flatpickr instances WITHOUT triggering onChange
+            // Update Flatpickr instances with the exact date
             if (flatpickrInstances.startDate && startDateFormatted) {
                 try {
                     const parts = startDateFormatted.split('/');
@@ -1899,18 +1808,18 @@
                 el.classList.remove('is-invalid');
             });
             
-            // Set default values for dropdowns
             document.getElementById('training_type').value = '';
             document.getElementById('training_status').value = 'مخطط له';
             document.getElementById('training_evaluation').value = '';
             document.getElementById('training_certificate').value = 'نعم';
             
-            // Set current date for entry date
             const now = new Date();
             const today = formatDateToDDMMYYYY(now);
             document.getElementById('training_entryDate').value = today;
             
-            // Clear Flatpickr instances
+            const currentYear = new Date().getFullYear();
+            document.getElementById('training_year').value = currentYear;
+            
             if (flatpickrInstances.startDate) {
                 flatpickrInstances.startDate.clear();
             }
@@ -1924,6 +1833,7 @@
             setStatus('تم مسح النموذج', 'success');
         }
         
+        // ================ FIXED DELETE MODAL FUNCTIONS ================
         function showDeleteModal(recordId, recordName) {
             deleteRecordId = recordId;
             deleteRecordName = recordName;
@@ -1931,11 +1841,13 @@
             document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
             document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
             
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
+            // Show the modal using the stored instance
+            if (deleteModalInstance) {
+                deleteModalInstance.show();
+            }
         }
         
-        function confirmDelete() {
+        async function confirmDelete() {
             if (!deleteRecordId) return;
             
             const button = document.getElementById('confirmDeleteBtn');
@@ -1946,9 +1858,10 @@
             
             setStatus("جاري الحذف...", 'info');
             
-            jsonp(`${TRAINING_SCRIPT_URL}?action=delete&id=${encodeURIComponent(deleteRecordId)}&callback=deleteTrainingResult`);
-            
-            function deleteTrainingResult(res) {
+            try {
+                // Use the improved jsonp function that returns a promise
+                const res = await jsonp(`${TRAINING_SCRIPT_URL}?action=delete&id=${encodeURIComponent(deleteRecordId)}`);
+                
                 button.disabled = false;
                 button.innerHTML = originalHtml;
                 
@@ -1956,18 +1869,28 @@
                     showNotification(`✅ ${res.message}`, 'success');
                     setStatus(res.message, 'success');
                     
-                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-                    deleteModal.hide();
+                    // Hide the modal using the stored instance
+                    if (deleteModalInstance) {
+                        deleteModalInstance.hide();
+                    }
                     
+                    // Clear the delete variables
                     deleteRecordId = '';
                     deleteRecordName = '';
                     
+                    // Reload the data
                     loadTrainingData();
                 } else {
                     const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
                     showNotification(`❌ ${errorMsg}`, 'error');
                     setStatus(errorMsg, 'error');
                 }
+            } catch (error) {
+                console.error('Error deleting record:', error);
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                showNotification('❌ خطأ في الاتصال بالخادم', 'error');
+                setStatus('خطأ في الحذف', 'error');
             }
         }
         
@@ -1982,8 +1905,6 @@
                 showNotification('❌ لم يتم العثور على سجل التدريب', 'error');
                 return;
             }
-            
-            // Expected format: [id, year, empNo, name, jobTitle, trainingNeed, trainingTitle, location, organization, startDate, endDate, type, status, duration, evaluation, grade, certificate, notes, supervisor, entryDate]
             
             const detailsHTML = `
                 <div class="row">
@@ -2016,7 +1937,7 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <p><strong>التقييم:</strong> ${escapeHtml(record[14] || record.evaluation || '')}</p>
-                        <p><strong>الدرجة النهائية:</strong> ${escapeHtml(record[15] || record.grade || '')}</p>
+                        <p><strong>النسبة المئوية %:</strong> ${escapeHtml(record[15] || record.grade || '')}</p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>الشهادة:</strong> ${escapeHtml(record[16] || record.certificate || '')}</p>
@@ -2051,7 +1972,7 @@
                     'رقم السجل', 'العام', 'الرقم الوظيفي', 'اسم الموظف', 'الوظيفة',
                     'الهدف من التدريب', 'مسمى التدريب', 'مكان الانعقاد', 'الجهة المنظمة',
                     'تاريخ البداية', 'تاريخ الانتهاء', 'نوع التدريب', 'حالة التدريب',
-                    'المدة بالأيام', 'التقييم', 'الدرجة النهائية', 'الشهادة',
+                    'المدة بالأيام', 'التقييم', 'النسبة المئوية %', 'الشهادة',
                     'ملاحظات إضافية', 'اسم المشرف', 'تاريخ الإدخال'
                 ];
                 
@@ -2059,7 +1980,6 @@
                 csvContent += headers.join(",") + "\r\n";
                 
                 trainingRecords.forEach(record => {
-                    // Clean HTML tags from dates for CSV export
                     const startDateDisplay = formatDateForDisplay(record[9] || record.startDate || '').replace(/<[^>]*>/g, '');
                     const endDateDisplay = formatDateForDisplay(record[10] || record.endDate || '').replace(/<[^>]*>/g, '');
                     const entryDateDisplay = formatDateForDisplay(record[19] || record.entryDate || '').replace(/<[^>]*>/g, '');
@@ -2111,14 +2031,13 @@
             }
         }
         
-        // ================ REFRESH EMPLOYEE DATA ================
+        // ================ UTILITY FUNCTIONS ================
         function refreshEmployeeData() {
             employeeDataLoaded = false;
             loadEmployeeData();
             showNotification('🔄 جاري تحديث بيانات الموظفين...', 'info');
         }
         
-        // ================ DEBUGGING HELPER ================
         function testTrainingScript() {
             console.log('Testing training script...');
             loadTrainingData();
