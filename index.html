@@ -390,7 +390,7 @@
         /* Horizontal Systems Container - UPDATED FOR HORIZONTAL SLIDING */
         .horizontal-systems-container {
             flex: 1;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255,255,0.95);
             border-radius: 12px;
             padding: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -565,95 +565,82 @@
             max-width: 300px;
         }
         
-        /* System Colors - UPDATED: Same base color for clause, different contrast levels */
-        /* Clause 4 Systems */
-        .horizontal-system-card[data-system="calibration"][data-clause="4"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #06D6A0, #0aa878);
+        /* UPDATED: System Colors with varying contrast within same clause */
+        /* Clause 4 colors - Base: #06D6A0 */
+        .horizontal-system-card[data-clause="4"][data-system="calibration"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #00A87A, #06D6A0);
+        }
+        .horizontal-system-card[data-clause="4"][data-system="impartiality"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #06D6A0, #2AE0AE);
         }
         
-        .horizontal-system-card[data-system="impartiality"][data-clause="4"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #2AE0AE, #4DE8BD);
-        }
-        
-        .horizontal-system-card[data-system="calibration"][data-clause="4"] .horizontal-card-count,
-        .horizontal-system-card[data-system="impartiality"][data-clause="4"] .horizontal-card-count {
+        .horizontal-system-card[data-clause="4"] .horizontal-card-count {
             background: #06D6A0;
         }
         
-        /* Clause 5 Systems */
-        .horizontal-system-card[data-system="delegation"][data-clause="5"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #118AB2, #0d6e8f);
+        /* Clause 5 colors - Base: #118AB2 */
+        .horizontal-system-card[data-clause="5"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0D6B8F, #118AB2);
         }
         
-        .horizontal-system-card[data-system="delegation"][data-clause="5"] .horizontal-card-count {
+        .horizontal-system-card[data-clause="5"] .horizontal-card-count {
             background: #118AB2;
         }
         
-        /* Clause 6 Systems - Different contrast levels */
-        .horizontal-system-card[data-system="employee-skills"][data-clause="6"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #073B4C, #052935);
+        /* Clause 6 colors - Base: #073B4C - Most important has highest contrast */
+        .horizontal-system-card[data-clause="6"][data-system="employee-skills"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #041D27, #073B4C);
         }
-        
-        .horizontal-system-card[data-system="training"][data-clause="6"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #0a4a5f, #073B4C);
+        .horizontal-system-card[data-clause="6"][data-system="training"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #052A36, #09495F);
         }
-        
-        .horizontal-system-card[data-system="environmental"][data-clause="6"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #0b5670, #09455a);
+        .horizontal-system-card[data-clause="6"][data-system="environmental"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #063240, #0A536A);
         }
-        
-        .horizontal-system-card[data-system="devices"][data-clause="6"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #0c6181, #0a4e6a);
+        .horizontal-system-card[data-clause="6"][data-system="devices"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #073B4C, #0B5D75);
         }
-        
-        .horizontal-system-card[data-system="calibration-mgmt"][data-clause="6"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #0d6c92, #0b5979);
+        .horizontal-system-card[data-clause="6"][data-system="calibration-mgmt"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #08445A, #0D6780);
         }
-        
-        .horizontal-system-card[data-system="maintenance"][data-clause="6"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #0e77a3, #0c6488);
+        .horizontal-system-card[data-clause="6"][data-system="maintenance"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #094D68, #0E718B);
         }
-        
-        .horizontal-system-card[data-system="supplier"][data-clause="6"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #0f82b4, #0d6f97);
+        .horizontal-system-card[data-clause="6"][data-system="supplier"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0A5676, #107B96);
         }
         
         .horizontal-system-card[data-clause="6"] .horizontal-card-count {
             background: #073B4C;
         }
         
-        /* Clause 7 Systems - Different contrast levels */
-        .horizontal-system-card[data-system="contract"][data-clause="7"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #EF476F, #d63058);
+        /* Clause 7 colors - Base: #EF476F - Most important has highest contrast */
+        .horizontal-system-card[data-clause="7"][data-system="contract"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #D91C4D, #EF476F);
         }
-        
-        .horizontal-system-card[data-system="complaints"][data-clause="7"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #f56c8c, #f25a7e);
+        .horizontal-system-card[data-clause="7"][data-system="complaints"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #E02A5A, #F1587C);
         }
-        
-        .horizontal-system-card[data-system="ncr"][data-clause="7"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #f782a1, #f56c8c);
+        .horizontal-system-card[data-clause="7"][data-system="ncr"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #E83867, #F3698A);
         }
-        
-        .horizontal-system-card[data-system="corrective"][data-clause="7"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #f998b6, #f782a1);
+        .horizontal-system-card[data-clause="7"][data-system="corrective"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #F04674, #F57A97);
         }
-        
-        .horizontal-system-card[data-system="fmea"][data-clause="7"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #faaecb, #f998b6);
+        .horizontal-system-card[data-clause="7"][data-system="fmea"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #F25481, #F78BA4);
         }
         
         .horizontal-system-card[data-clause="7"] .horizontal-card-count {
             background: #EF476F;
         }
         
-        /* Clause 8 Systems - Different contrast levels */
-        .horizontal-system-card[data-system="fmea"][data-clause="8"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #7209B7, #5d0794);
+        /* Clause 8 colors - Base: #7209B7 */
+        .horizontal-system-card[data-clause="8"][data-system="fmea"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #5A0792, #7209B7);
         }
-        
-        .horizontal-system-card[data-system="corrective"][data-clause="8"] .horizontal-card-icon-wrapper {
-            background: linear-gradient(135deg, #8a2be2, #7820d0);
+        .horizontal-system-card[data-clause="8"][data-system="corrective"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #7209B7, #8A2BE2);
         }
         
         .horizontal-system-card[data-clause="8"] .horizontal-card-count {
