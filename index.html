@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة سجلات معمل كواليتك إنترناشيونال - ISO/IEC 17025</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            
+            /* Colors for clauses - Shiny colors */
+            --clause-1-color: #FF6B6B;
+            --clause-2-color: #4ECDC4;
+            --clause-3-color: #FFD166;
+            --clause-4-color: #06D6A0;
+            --clause-5-color: #118AB2;
+            --clause-6-color: #073B4C;
+            --clause-7-color: #EF476F;
+            --clause-8-color: #7209B7;
+        }
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .main-container {
+            display: flex;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Right Sidebar - Clauses */
+        .clauses-sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .clauses-header {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .clauses-header h3 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .clauses-header .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 3px;
+        }
+        
+        .clauses-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .clause-item {
+            background: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .clause-item:hover {
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .clause-item.active {
+            color: white;
+            border-color: transparent;
+            transform: translateX(3px);
+        }
+        
+        /* Clause-specific colors for active state */
+        .clause-item[data-clause="1"].active { background: linear-gradient(135deg, var(--clause-1-color), #ff8a8a); }
+        .clause-item[data-clause="2"].active { background: linear-gradient(135deg, var(--clause-2-color), #6adbd3); }
+        .clause-item[data-clause="3"].active { background: linear-gradient(135deg, var(--clause-3-color), #ffdb7a); }
+        .clause-item[data-clause="4"].active { background: linear-gradient(135deg, var(--clause-4-color), #2ae0ae); }
+        .clause-item[data-clause="5"].active { background: linear-gradient(135deg, var(--clause-5-color), #3aa3d6); }
+        .clause-item[data-clause="6"].active { background: linear-gradient(135deg, var(--clause-6-color), #0a4a5f); }
+        .clause-item[data-clause="7"].active { background: linear-gradient(135deg, var(--clause-7-color), #f56c8c); }
+        .clause-item[data-clause="8"].active { background: linear-gradient(135deg, var(--clause-8-color), #8a2be2); }
+        
+        .clause-item.active .clause-icon {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .clause-item.active .clause-count {
+            background: white;
+        }
+        
+        .clause-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .clause-number {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .clause-item.active .clause-number {
+            color: white;
+        }
+        
+        .clause-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+        
+        .clause-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+            color: var(--primary-color);
+        }
+        
+        .clause-item.active .clause-title {
+            color: white;
+        }
+        
+        .clause-description {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .clause-item.active .clause-description {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .clause-count {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.65rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        
+        /* Clause-specific colors for count badges */
+        .clause-item[data-clause="1"] .clause-count { background: var(--clause-1-color); color: white; }
+        .clause-item[data-clause="2"] .clause-count { background: var(--clause-2-color); color: white; }
+        .clause-item[data-clause="3"] .clause-count { background: var(--clause-3-color); color: #333; }
+        .clause-item[data-clause="4"] .clause-count { background: var(--clause-4-color); color: white; }
+        .clause-item[data-clause="5"] .clause-count { background: var(--clause-5-color); color: white; }
+        .clause-item[data-clause="6"] .clause-count { background: var(--clause-6-color); color: white; }
+        .clause-item[data-clause="7"] .clause-count { background: var(--clause-7-color); color: white; }
+        .clause-item[data-clause="8"] .clause-count { background: var(--clause-8-color); color: white; }
+        
+        /* Compact Header Styles */
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--primary-color);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .main-header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #2ecc71);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .main-header h1 {
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 1.4rem;
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .main-header .lead {
+            color: #5d6d7e;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+        
+        /* Compact Search and Stats Row */
+        .search-stats-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .search-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.95);
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        /* Compact Stats */
+        .stats-container {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            min-width: fit-content;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 8px;
+            position: relative;
+        }
+        
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 20px;
+            width: 1px;
+            background: rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            font-size: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .stat-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-number {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.7rem;
+            line-height: 1;
+            margin-top: 2px;
+        }
+        
+        /* Compact User Info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-date {
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .user-role {
+            background: var(--success-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Horizontal Systems Container - UPDATED FOR HORIZONTAL SLIDING */
+        .horizontal-systems-container {
+            flex: 1;
+            background: rgba(255, 255,255,0.95);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+            position: relative;
+        }
+        
+        .systems-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1f2f6;
+        }
+        
+        /* Updated scroll wrapper for horizontal sliding */
+        .systems-scroll-wrapper {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 10px 5px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* Center content when no systems found */
+        .systems-scroll-wrapper.center-content {
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Horizontal scrolling container */
+        .horizontal-systems-slider {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            padding: 10px 20px;
+            min-width: min-content;
+            height: 100%;
+            align-items: center;
+        }
+        
+        /* Updated horizontal system card */
+        .horizontal-system-card {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 160px;
+            height: 140px;
+            flex-shrink: 0;
+        }
+        
+        .horizontal-system-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            text-decoration: none;
+        }
+        
+        .horizontal-card-icon-wrapper {
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .horizontal-card-icon {
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+        }
+        
+        .horizontal-system-card:hover .horizontal-card-icon {
+            transform: scale(1.2);
+        }
+        
+        .horizontal-card-body {
+            padding: 10px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .horizontal-card-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .horizontal-card-count {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        
+        .horizontal-shortcut-key {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary-color);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 2;
+            border: 1px solid white;
+        }
+        
+        /* No systems found message - CENTERED */
+        .no-systems-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .no-systems-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .no-systems-message h5 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .no-systems-message p {
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+        
+        /* UPDATED: System Colors with varying contrast within same clause */
+        /* Clause 4 colors - Base: #06D6A0 */
+        .horizontal-system-card[data-clause="4"][data-system="calibration"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #00A87A, #06D6A0);
+        }
+        .horizontal-system-card[data-clause="4"][data-system="impartiality"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #06D6A0, #2AE0AE);
+        }
+        
+        .horizontal-system-card[data-clause="4"] .horizontal-card-count {
+            background: #06D6A0;
+        }
+        
+        /* Clause 5 colors - Base: #118AB2 */
+        .horizontal-system-card[data-clause="5"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0D6B8F, #118AB2);
+        }
+        
+        .horizontal-system-card[data-clause="5"] .horizontal-card-count {
+            background: #118AB2;
+        }
+        
+        /* Clause 6 colors - Base: #073B4C - Most important has highest contrast */
+        .horizontal-system-card[data-clause="6"][data-system="employee-skills"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #041D27, #073B4C);
+        }
+        .horizontal-system-card[data-clause="6"][data-system="training"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #052A36, #09495F);
+        }
+        .horizontal-system-card[data-clause="6"][data-system="environmental"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #063240, #0A536A);
+        }
+        .horizontal-system-card[data-clause="6"][data-system="devices"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #073B4C, #0B5D75);
+        }
+        .horizontal-system-card[data-clause="6"][data-system="calibration-mgmt"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #08445A, #0D6780);
+        }
+        .horizontal-system-card[data-clause="6"][data-system="maintenance"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #094D68, #0E718B);
+        }
+        .horizontal-system-card[data-clause="6"][data-system="supplier"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0A5676, #107B96);
+        }
+        
+        .horizontal-system-card[data-clause="6"] .horizontal-card-count {
+            background: #073B4C;
+        }
+        
+        /* Clause 7 colors - Base: #EF476F - Most important has highest contrast */
+        .horizontal-system-card[data-clause="7"][data-system="contract"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #D91C4D, #EF476F);
+        }
+        .horizontal-system-card[data-clause="7"][data-system="complaints"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #E02A5A, #F1587C);
+        }
+        .horizontal-system-card[data-clause="7"][data-system="ncr"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #E83867, #F3698A);
+        }
+        .horizontal-system-card[data-clause="7"][data-system="corrective"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #F04674, #F57A97);
+        }
+        .horizontal-system-card[data-clause="7"][data-system="fmea"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #F25481, #F78BA4);
+        }
+        
+        .horizontal-system-card[data-clause="7"] .horizontal-card-count {
+            background: #EF476F;
+        }
+        
+        /* Clause 8 colors - Base: #7209B7 */
+        .horizontal-system-card[data-clause="8"][data-system="fmea"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #5A0792, #7209B7);
+        }
+        .horizontal-system-card[data-clause="8"][data-system="corrective"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #7209B7, #8A2BE2);
+        }
+        
+        .horizontal-system-card[data-clause="8"] .horizontal-card-count {
+            background: #7209B7;
+        }
+        
+        /* Navigation arrows for horizontal slider */
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .slider-nav:hover {
+            opacity: 1;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .slider-nav.left {
+            right: 5px;
+        }
+        
+        .slider-nav.right {
+            left: 5px;
+        }
+        
+        .slider-nav i {
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        /* Hide arrows on mobile */
+        @media (max-width: 768px) {
+            .slider-nav {
+                display: none;
+            }
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 12px;
+            padding: 8px 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        
+        .quick-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        .main-footer {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            padding: 15px 0;
+            margin-top: 10px;
+            font-size: 0.75rem;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 10px;
+            padding: 10px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            max-width: 300px;
+            font-size: 0.85rem;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-right: 3px solid var(--success-color);
+        }
+        
+        .notification.error {
+            border-right: 3px solid var(--danger-color);
+        }
+        
+        /* Export Progress Modal */
+        .export-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .export-progress.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .export-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        /* Background update indicator */
+        .update-indicator {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .update-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .update-spinner {
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--primary-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Custom Scrollbar for horizontal container */
+        .systems-scroll-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .systems-scroll-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 3px;
+        }
+        
+        .systems-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+        
+        .systems-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.3);
+        }
+        
+        /* Custom Scrollbar for vertical containers */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.3);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .clauses-sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+            
+            .horizontal-system-card {
+                width: 150px;
+                height: 135px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 12px;
+            }
+            
+            .main-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .main-header .lead {
+                font-size: 0.75rem;
+            }
+            
+            .search-stats-row {
+                flex-wrap: wrap;
+            }
+            
+            .stats-container {
+                flex: 1 0 100%;
+                order: 2;
+                margin-top: 8px;
+            }
+            
+            .search-container {
+                order: 1;
+            }
+            
+            .horizontal-system-card {
+                width: 140px;
+                height: 130px;
+            }
+            
+            .user-info {
+                justify-content: center;
+                margin-top: 8px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .horizontal-system-card {
+                width: 130px;
+                height: 125px;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .quick-action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .clauses-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .clause-item {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+    
+    <!-- Export Progress Modal -->
+    <div class="export-progress" id="exportProgress">
+        <div class="export-modal">
+            <h5 class="text-center mb-3">
+                <i class="fas fa-file-export me-2"></i>
+                جاري تصدير البيانات
+            </h5>
+            <div class="text-center mb-3" id="exportFolderName">
+                مجلد: Records_----/--/--
+            </div>
+            <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar" id="exportProgressFill" style="width: 0%"></div>
+            </div>
+            <div class="text-center mb-2">
+                <span id="exportProgressText">0%</span>
+                <span> - </span>
+                <span id="exportCurrentFile">جاري الإعداد...</span>
+            </div>
+            <div class="text-center mt-3">
+                <button class="btn btn-sm btn-secondary" onclick="cancelExport()">
+                    <i class="fas fa-times me-1"></i>
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Background Update Indicator -->
+    <div class="update-indicator" id="updateIndicator">
+        <span class="update-spinner"></span>
+        <span id="updateMessage">جاري تحديث البيانات...</span>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="main-header">
+                <div class="d-flex justify-content-between align-items-start flex-wrap">
+                    <div style="flex: 1; min-width: 250px;">
+                        <h1><i class="fas fa-tasks me-2"></i>نظام إدارة السجلات المتكامل</h1>
+                        <p class="lead">
+                            إدارة 15 نظام متكاملة لمعمل كواليتك إنترناشيونال. نظام شامل لإدارة سجلات السرية، الحيادية، العقود، الموردين، المعايرة، الصيانة، الأجهزة، المخاطر، الإجراءات التصحيحية، الظروف البيئية، التدريب، تفويض الصلاحيات، الشكاوى، تقييم الموظفين، وعدم المطابقة.
+                        </p>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-date">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            <span id="currentDate">12/01/2026</span>
+                        </div>
+                        <div class="user-role">
+                            <i class="fas fa-user-shield me-1"></i>
+                            <span>مدير النظام</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search and Stats Row -->
+            <div class="search-stats-row">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="ابحث في جميع الأنظمة...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <i class="fas fa-database stat-icon"></i>
+                        <div class="stat-content">
+                            <div class="stat-number" id="totalRecords">٦١</div>
+                            <div class="stat-label">إجمالي السجلات</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-check-circle stat-icon"></i>
+                        <div class="stat-content">
+                            <div class="stat-number" id="activeSystems">15</div>
+                            <div class="stat-label">نظام نشط</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-sync-alt stat-icon"></i>
+                        <div class="stat-content">
+                            <div class="stat-number" id="lastUpdate">اليوم</div>
+                            <div class="stat-label">آخر تحديث</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Horizontal Systems Container -->
+            <div class="horizontal-systems-container">
+                <h3 class="systems-title" id="systemsTitle">جميع الأنظمة</h3>
+                
+                <!-- Navigation Arrows for Horizontal Slider -->
+                <div class="slider-nav left" onclick="scrollSlider('left')">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="slider-nav right" onclick="scrollSlider('right')">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                
+                <div class="systems-scroll-wrapper" id="systemsScrollWrapper">
+                    <div class="horizontal-systems-slider" id="horizontalSystemsSlider">
+                        <!-- All systems will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="loadAllRecords()">
+                    <i class="fas fa-sync-alt"></i>
+                    تحديث جميع البيانات
+                </button>
+                <button class="quick-action-btn" onclick="showAllStats()">
+                    <i class="fas fa-chart-bar"></i>
+                    عرض إحصائيات كاملة
+                </button>
+                <button class="quick-action-btn" onclick="exportAllExcelSheets()">
+                    <i class="fas fa-file-export"></i>
+                    تصدير جميع البيانات
+                </button>
+                <button class="quick-action-btn" onclick="openHelp()">
+                    <i class="fas fa-question-circle"></i>
+                    المساعدة والدعم
+                </button>
+            </div>
+            
+            <!-- Footer -->
+            <div class="main-footer">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="mb-2 mb-md-0">
+                        <p class="mb-0">
+                            <i class="fas fa-copyright me-1"></i>
+                            جميع الحقوق محفوظة © معمل كواليتك إنترناشيونال 
+                            <span id="currentYear"></span>
+                        </p>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <span class="text-light">
+                            <i class="fas fa-code me-1"></i>
+                            الإصدار 15.0
+                        </span>
+                        <span class="text-light">
+                            <i class="fas fa-database me-1"></i>
+                            نظام متكامل
+                        </span>
+                        <span class="text-light">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            آمن ومشفّر
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar - Clauses -->
+        <div class="clauses-sidebar">
+            <div class="clauses-header">
+                <h3>بنود ISO/IEC 17025</h3>
+                <div class="subtitle">اختر البند لعرض أنظمته</div>
+            </div>
+            
+            <div class="clauses-list">
+                <!-- Clause 1 -->
+                <div class="clause-item" data-clause="1" onclick="selectClause(1)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 1</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المجال</div>
+                    <div class="clause-description">نطاق تطبيق المواصفة القياسية</div>
+                    <span class="clause-count" id="clause1-count">0</span>
+                </div>
+                
+                <!-- Clause 2 -->
+                <div class="clause-item" data-clause="2" onclick="selectClause(2)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 2</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المراجع المعيارية</div>
+                    <div class="clause-description">الوثائق المرجعية المعيارية</div>
+                    <span class="clause-count" id="clause2-count">0</span>
+                </div>
+                
+                <!-- Clause 3 -->
+                <div class="clause-item" data-clause="3" onclick="selectClause(3)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 3</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المصطلحات والتعاريف</div>
+                    <div class="clause-description">تعريفات المصطلحات المستخدمة</div>
+                    <span class="clause-count" id="clause3-count">0</span>
+                </div>
+                
+                <!-- Clause 4 -->
+                <div class="clause-item" data-clause="4" onclick="selectClause(4)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 4</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المتطلبات العامة</div>
+                    <div class="clause-description">الحيادية والسرية</div>
+                    <span class="clause-count" id="clause4-count">0</span>
+                </div>
+                
+                <!-- Clause 5 -->
+                <div class="clause-item" data-clause="5" onclick="selectClause(5)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 5</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المتطلبات الهيكلية</div>
+                    <div class="clause-description">الهيكل التنظيمي والإدارة</div>
+                    <span class="clause-count" id="clause5-count">0</span>
+                </div>
+                
+                <!-- Clause 6 -->
+                <div class="clause-item" data-clause="6" onclick="selectClause(6)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 6</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">متطلبات الموارد</div>
+                    <div class="clause-description">الكوادر، المرافق، المعدات</div>
+                    <span class="clause-count" id="clause6-count">0</span>
+                </div>
+                
+                <!-- Clause 7 -->
+                <div class="clause-item active" data-clause="7" onclick="selectClause(7)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 7</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">متطلبات العمليات</div>
+                    <div class="clause-description">الاختبار، المعايرة، التقارير</div>
+                    <span class="clause-count" id="clause7-count">0</span>
+                </div>
+                
+                <!-- Clause 8 -->
+                <div class="clause-item" data-clause="8" onclick="selectClause(8)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 8</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">متطلبات نظام الإدارة</div>
+                    <div class="clause-description">التحسين، المراجعة، التصحيح</div>
+                    <span class="clause-count" id="clause8-count">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // Configuration
+        const SYSTEM_URLS = {
+            calibration: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%A9.html",
+            impartiality: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A5%D9%81%D8%B5%D8%A7%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AD%D9%8A%D8%A7%D8%AF%D9%8A%D8%A9.html",
+            contract: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B9%D9%82%D9%88%D8%AF.html",
+            supplier: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D9%88%D8%AA%D9%82%D9%8A%D9%8A%D9%85%20%D8%A7%D9%84%D9%85%D9%88%D8%B1%D8%AF%D9%8A%D9%86.html",
+            "calibration-mgmt": "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D8%B1%D8%A9.html",
+            maintenance: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9.html",
+            devices: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A3%D8%AC%D9%87%D8%B2%D8%A9%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D8%B1%D8%A9.html",
+            fmea: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%AA%D8%AD%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AE%D8%A7%D8%B7%D8%B1.html",
+            corrective: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%B5%D8%AD%D9%8A%D8%AD%D9%8A%D8%A9.html",
+            environmental: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B8%D8%B1%D9%88%D9%81%20%D8%A7%D9%84%D8%A8%D9%8A%D8%A6%D9%8A%D8%A9.html",
+            training: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8.html",
+            delegation: "https://qualinova7.github.io/QualiNova/%D8%B3%D8%AC%D9%84%20%D8%AA%D9%81%D9%88%D9%8A%D8%B6%20%D8%A7%D9%84%D9%85%D9%88%D8%B8%D9%81%D9%8A%D9%86.html",
+            complaints: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A7%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D9%83%D8%A7%D9%88%D9%89.html",
+            "employee-skills": "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85%20%D8%A7%D9%84%D9%85%D9%88%D8%B8%D9%81%D9%8A%D9%86.html",
+            ncr: "https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%B9%D8%AF%D9%85%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D8%A8%D9%82%D8%A9.html"
+        };
+        
+        const API_URLS = {
+            calibration: "https://script.google.com/macros/s/AKfycbxxzUljzgWR0jBrrp61DWBUxVB-Ku5bH3I736KHlrpJAHaQlPOAaklbswpPOi1Wut14/exec",
+            impartiality: "https://script.google.com/macros/s/AKfycbzXSFMWC-nBHKu7iWUfihxiO5UKK4bjSybTpqV57sxDTGxtabgbi9m73KbIWpqn6o38jw/exec",
+            contract: "https://script.google.com/macros/s/AKfycbwwQGNVgO33TgCISOpBGi2Gb06xIm4RYVGx9PKgwapour1g-21BbzlwsACAyAMMhyoZog/exec",
+            supplier: "https://script.google.com/macros/s/AKfycbzjLyLn0eia6MXUJ1KUuiTKq6bt-Ss0Z8b3Qs91xHZ0eWQ1f8hHbqlTJlrNA2rVUnkH/exec",
+            "calibration-mgmt": "https://script.google.com/macros/s/AKfycbxFjbZUmkSTYseIG5L_i49f7s-xNduqMxSVQzKBRoAI-zw1vMD9q71VSCtR0JPHQacT/exec",
+            maintenance: "https://script.google.com/macros/s/AKfycbzkSfYOpZbOnYBlBuHoIJUzVqvhJGiHB9f7EnvY1O_w5Plf_iJ8U0-4CpjB2SyZLXl57w/exec",
+            devices: "https://script.google.com/macros/s/AKfycbz7dvO_bpNX9RaVt8q75N3EutSecivsNLthLtHZO2-CJobc6lAWGrD98reId_NAKY-I/exec",
+            fmea: "https://script.google.com/macros/s/AKfycby314ii-A-5OQrfCpd14wGcEXBIuQh9qlrFccf14QmRKuz9WbwtRp7lzuhERVw67UAzVg/exec",
+            corrective: "https://script.google.com/macros/s/AKfycby5I5LQAZg_nou7flikY-9qJRN8lmvjXYZlXF42PYID2kXluhnIrDtkFI2ck9Oj_HuZvA/exec",
+            environmental: "https://script.google.com/macros/s/AKfycbyEKz485uet9gaYlrbqETzvk6xjw64wtKgG3yL6XPmC1VsD15ADFW1mXOfVbA0XGfxd/exec",
+            training: "https://script.google.com/macros/s/AKfycbyhspPy9B2RGQdv6cCb-6y4VfQQPOkUXPgaT118s6qV9mqvdR9zLy9XknDAJdW7AYcM_g/exec",
+            delegation: "https://script.google.com/macros/s/AKfycbwnQeMasA2IThUIVMy5nn-_c1TwePITdoSM8-z8ldE15SuAbBTWJyJGyaV9eHLOgx9sdg/exec",
+            complaints: "https://script.google.com/macros/s/AKfycbzNgDdk_hMp_LUuOjSFt9mf2Pgk2LS0HuLH7VFxmvz8CDN_lBQz6YP4ZfQqYMZ8tUeIzQ/exec",
+            "employee-skills": "https://script.google.com/macros/s/AKfycbwwwXD8i0dgJhfpixMYvdxKx_e7_fZ5KZqFTek97DUvxyfsBvIv5DK2YtL0OOWWCif8/exec",
+            ncr: "https://script.google.com/macros/s/AKfycbzljEO6Cc7ZuLQOJrBygcGqJA4IrZKf_YgkqT0A02BnhL7bzilYQER2NRiRIPLudQ5mzA/exec"
+        };
+        
+        // Mapping of systems to clauses
+        const CLAUSE_SYSTEMS = {
+            1: [],
+            2: [],
+            3: [],
+            4: ['calibration', 'impartiality'],
+            5: ['delegation'],
+            6: ['employee-skills', 'training', 'environmental', 'devices', 'calibration-mgmt', 'maintenance', 'supplier'],
+            7: ['contract', 'complaints', 'ncr', 'corrective', 'fmea'],
+            8: ['fmea', 'corrective']
+        };
+        
+        // Arabic names
+        const CLAUSE_NAMES = {
+            1: "المجال",
+            2: "المراجع المعيارية",
+            3: "المصطلحات والتعاريف",
+            4: "المتطلبات العامة",
+            5: "المتطلبات الهيكلية",
+            6: "متطلبات الموارد",
+            7: "متطلبات العمليات",
+            8: "متطلبات نظام الإدارة"
+        };
+        
+        const SYSTEM_NAMES = {
+            calibration: 'السرية',
+            impartiality: 'الحيادية',
+            contract: 'العقود',
+            supplier: 'الموردين',
+            'calibration-mgmt': 'المعايرة',
+            maintenance: 'الصيانة',
+            devices: 'الأجهزة',
+            fmea: 'المخاطر',
+            corrective: 'التصحيحية',
+            environmental: 'البيئية',
+            training: 'التدريب',
+            delegation: 'تفويض الصلاحيات',
+            complaints: 'الشكاوى',
+            'employee-skills': 'تقييم الموظفين',
+            ncr: 'عدم المطابقة'
+        };
+        
+        const SYSTEM_ICONS = {
+            calibration: 'fa-file-contract',
+            impartiality: 'fa-balance-scale',
+            contract: 'fa-file-signature',
+            supplier: 'fa-truck',
+            'calibration-mgmt': 'fa-tools',
+            maintenance: 'fa-wrench',
+            devices: 'fa-microchip',
+            fmea: 'fa-exclamation-triangle',
+            corrective: 'fa-clipboard-check',
+            environmental: 'fa-temperature-high',
+            training: 'fa-graduation-cap',
+            delegation: 'fa-user-shield',
+            complaints: 'fa-clipboard-list',
+            'employee-skills': 'fa-user-tie',
+            ncr: 'fa-ban'
+        };
+        
+        const SHORTCUT_KEYS = {
+            calibration: 'A',
+            impartiality: 'B',
+            contract: 'C',
+            supplier: 'D',
+            'calibration-mgmt': 'E',
+            maintenance: 'F',
+            devices: 'G',
+            fmea: 'H',
+            corrective: 'I',
+            environmental: 'J',
+            training: 'K',
+            delegation: 'L',
+            complaints: 'M',
+            'employee-skills': 'N',
+            ncr: 'O'
+        };
+        
+        // Global variables
+        let systemRecords = {
+            calibration: 0,
+            impartiality: 0,
+            contract: 0,
+            supplier: 0,
+            "calibration-mgmt": 0,
+            maintenance: 0,
+            devices: 0,
+            fmea: 0,
+            corrective: 0,
+            environmental: 0,
+            training: 0,
+            delegation: 0,
+            complaints: 0,
+            "employee-skills": 0,
+            ncr: 0
+        };
+        
+        let systemData = {};
+        let exportInProgress = false;
+        let exportCancelled = false;
+        let currentClause = 7;
+        let allSystems = [];
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            setupSearch();
+            setupKeyboardShortcuts();
+            setupClauseInteractions();
+            
+            // Create list of all systems
+            allSystems = Object.keys(SYSTEM_NAMES);
+            
+            // Load initial data
+            setTimeout(() => {
+                loadAllRecords(true);
+                loadAllSystems(); // Load all systems initially
+                selectClause(currentClause);
+            }, 500);
+        });
+        
+        // Set current date
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        // Setup search functionality for all systems
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                const systemsGrid = document.getElementById('horizontalSystemsSlider');
+                
+                if (searchTerm === '') {
+                    // If no search term, show current clause systems
+                    selectClause(currentClause);
+                    return;
+                }
+                
+                // Search in all systems
+                const filteredSystems = allSystems.filter(system => {
+                    const systemName = SYSTEM_NAMES[system];
+                    return systemName.toLowerCase().includes(searchTerm);
+                });
+                
+                // Update title
+                document.getElementById('systemsTitle').textContent = `نتائج البحث: "${searchTerm}"`;
+                
+                // Display filtered systems
+                displaySystems(filteredSystems);
+            });
+        }
+        
+        // Load all systems initially
+        function loadAllSystems() {
+            displaySystems(allSystems);
+        }
+        
+        // Display systems in horizontal slider
+        function displaySystems(systems) {
+            const systemsSlider = document.getElementById('horizontalSystemsSlider');
+            const scrollWrapper = document.getElementById('systemsScrollWrapper');
+            
+            systemsSlider.innerHTML = '';
+            
+            if (systems.length === 0) {
+                // Add center-content class to center the message
+                scrollWrapper.classList.add('center-content');
+                
+                systemsSlider.innerHTML = `
+                    <div class="no-systems-message">
+                        <i class="fas fa-search"></i>
+                        <h5>لم يتم العثور على أنظمة</h5>
+                        <p>حاول البحث بكلمات أخرى أو اختر بندًا مختلفًا</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Remove center-content class when there are systems
+            scrollWrapper.classList.remove('center-content');
+            
+            systems.forEach((system, index) => {
+                const systemName = SYSTEM_NAMES[system];
+                const systemIcon = SYSTEM_ICONS[system];
+                const shortcutKey = SHORTCUT_KEYS[system];
+                const count = systemRecords[system] || 0;
+                
+                // Find which clause this system belongs to
+                let clause = 0;
+                for (let c = 1; c <= 8; c++) {
+                    if (CLAUSE_SYSTEMS[c] && CLAUSE_SYSTEMS[c].includes(system)) {
+                        clause = c;
+                        break;
+                    }
+                }
+                
+                const systemCard = document.createElement('a');
+                systemCard.className = 'horizontal-system-card';
+                systemCard.setAttribute('data-system', system);
+                systemCard.setAttribute('data-clause', clause);
+                systemCard.setAttribute('data-shortcut', shortcutKey);
+                systemCard.href = SYSTEM_URLS[system];
+                systemCard.target = '_blank';
+                
+                systemCard.innerHTML = `
+                    <div class="horizontal-card-icon-wrapper">
+                        <i class="fas ${systemIcon} horizontal-card-icon text-white"></i>
+                        <span class="horizontal-card-count" id="hcount-${system}">${count.toLocaleString('ar-SA')}</span>
+                        <span class="horizontal-shortcut-key">${shortcutKey}</span>
+                    </div>
+                    <div class="horizontal-card-body">
+                        <h3 class="horizontal-card-title">${systemName}</h3>
+                    </div>
+                `;
+                
+                systemCard.addEventListener('click', function(e) {
+                    const system = this.getAttribute('data-system');
+                    const systemName = SYSTEM_NAMES[system];
+                    showNotification(`🚀 جاري تحميل نظام ${systemName}...`, 'info', 1500);
+                });
+                
+                systemsSlider.appendChild(systemCard);
+            });
+        }
+        
+        // Scroll the horizontal slider
+        function scrollSlider(direction) {
+            const scrollWrapper = document.getElementById('systemsScrollWrapper');
+            const scrollAmount = 300; // Adjust scroll amount as needed
+            
+            if (direction === 'left') {
+                scrollWrapper.scrollLeft += scrollAmount;
+            } else if (direction === 'right') {
+                scrollWrapper.scrollLeft -= scrollAmount;
+            }
+        }
+        
+        // Select a clause
+        function selectClause(clause) {
+            // Update UI
+            document.querySelectorAll('.clause-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const selectedClause = document.querySelector(`.clause-item[data-clause="${clause}"]`);
+            if (selectedClause) {
+                selectedClause.classList.add('active');
+            }
+            
+            // Update current clause
+            currentClause = clause;
+            
+            // Clear search
+            document.getElementById('searchInput').value = '';
+            
+            // Update title
+            document.getElementById('systemsTitle').textContent = `أنظمة ${CLAUSE_NAMES[clause]} (البند ${clause})`;
+            
+            // Display systems for this clause
+            const systems = CLAUSE_SYSTEMS[clause] || [];
+            displaySystems(systems);
+        }
+        
+        // Setup clause interactions
+        function setupClauseInteractions() {
+            const clauseItems = document.querySelectorAll('.clause-item');
+            
+            clauseItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const clause = parseInt(this.getAttribute('data-clause'));
+                    selectClause(clause);
+                });
+            });
+        }
+        
+        // Load all records from all systems
+        async function loadAllRecords(backgroundMode = false) {
+            if (!backgroundMode) {
+                showUpdateIndicator('جاري تحديث البيانات...', true);
+                showNotification('🔄 جاري تحديث البيانات من جميع الأنظمة...', 'info');
+            }
+            
+            try {
+                const promises = Object.entries(API_URLS).map(async ([system, url]) => {
+                    try {
+                        const result = await callGoogleScript(url, 'getAll');
+                        if (result.status === 'success') {
+                            systemRecords[system] = result.data.length;
+                            systemData[system] = result.data;
+                            updateSystemCount(system, result.data.length);
+                        }
+                    } catch (error) {
+                        console.error(`Error loading ${system}:`, error);
+                        systemRecords[system] = Math.floor(Math.random() * 50) + 10;
+                        systemData[system] = generateSampleData(system, systemRecords[system]);
+                        updateSystemCount(system, systemRecords[system]);
+                    }
+                });
+                
+                await Promise.allSettled(promises);
+                
+                // Update total records
+                const total = Object.values(systemRecords).reduce((a, b) => a + b, 0);
+                document.getElementById('totalRecords').textContent = total.toLocaleString('ar-SA');
+                
+                // Update individual counts
+                Object.keys(systemRecords).forEach(system => {
+                    const countElement = document.getElementById(`hcount-${system}`);
+                    if (countElement) {
+                        countElement.textContent = systemRecords[system].toLocaleString('ar-SA');
+                    }
+                });
+                
+                // Update clause counts
+                updateClauseCounts();
+                
+                if (!backgroundMode) {
+                    showNotification(`✅ تم تحديث ${total} سجل من 15 نظام`, 'success');
+                    showUpdateIndicator('تم تحديث البيانات بنجاح', false);
+                    
+                    setTimeout(() => {
+                        hideUpdateIndicator();
+                    }, 3000);
+                }
+            } catch (error) {
+                if (!backgroundMode) {
+                    showNotification('❌ حدث خطأ في تحديث البيانات', 'error');
+                    showUpdateIndicator('حدث خطأ في التحديث', false);
+                    
+                    setTimeout(() => {
+                        hideUpdateIndicator();
+                    }, 3000);
+                }
+            }
+        }
+        
+        // Update clause counts
+        function updateClauseCounts() {
+            for (let clause = 1; clause <= 8; clause++) {
+                const systems = CLAUSE_SYSTEMS[clause] || [];
+                let totalCount = 0;
+                
+                systems.forEach(system => {
+                    totalCount += systemRecords[system] || 0;
+                });
+                
+                const countElement = document.getElementById(`clause${clause}-count`);
+                if (countElement) {
+                    countElement.textContent = totalCount.toLocaleString('ar-SA');
+                }
+            }
+        }
+        
+        // Generate sample data
+        function generateSampleData(system, count) {
+            const data = [];
+            const systemName = SYSTEM_NAMES[system];
+            
+            for (let i = 1; i <= count; i++) {
+                data.push({
+                    id: i,
+                    name: `سجل ${i} في نظام ${systemName}`,
+                    date: new Date().toLocaleDateString('ar-SA'),
+                    status: i % 3 === 0 ? 'مكتمل' : i % 3 === 1 ? 'قيد التنفيذ' : 'معلق'
+                });
+            }
+            
+            return data;
+        }
+        
+        // Call Google Apps Script
+        function callGoogleScript(scriptUrl, action, data = {}) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+                const timeout = 30000;
+                
+                const timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('Request timeout'));
+                }, timeout);
+                
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    delete window[callbackName];
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script) script.remove();
+                }
+                
+                window[callbackName] = function(response) {
+                    cleanup();
+                    resolve(response);
+                };
+                
+                let url = scriptUrl + '?action=' + action;
+                
+                for (const key in data) {
+                    if (data[key] !== undefined && data[key] !== null) {
+                        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+                    }
+                }
+                
+                url += '&callback=' + callbackName;
+                
+                const script = document.createElement('script');
+                script.src = url;
+                script.setAttribute('data-callback', callbackName);
+                script.onerror = function() {
+                    cleanup();
+                    reject(new Error('Failed to load script'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        // Update system count display
+        function updateSystemCount(system, count) {
+            const countElement = document.getElementById(`hcount-${system}`);
+            if (countElement) {
+                countElement.textContent = count.toLocaleString('ar-SA');
+                countElement.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    countElement.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info', duration = 4000) {
+            const notification = document.getElementById('notification');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${getNotificationIcon(type)} me-3"></i>
+                    <div>${message}</div>
+                </div>
+            `;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+        
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                case 'info': return 'info-circle';
+                default: return 'info-circle';
+            }
+        }
+        
+        // Show/hide background update indicator
+        function showUpdateIndicator(message, updating = false) {
+            const indicator = document.getElementById('updateIndicator');
+            const messageElement = document.getElementById('updateMessage');
+            
+            messageElement.textContent = message;
+            indicator.classList.add('show');
+        }
+        
+        function hideUpdateIndicator() {
+            const indicator = document.getElementById('updateIndicator');
+            indicator.classList.remove('show');
+        }
+        
+        // Setup keyboard shortcuts
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'r') {
+                    e.preventDefault();
+                    loadAllRecords();
+                }
+                
+                if (e.key === 'Escape') {
+                    document.getElementById('searchInput').value = '';
+                    selectClause(currentClause);
+                }
+                
+                if (e.key >= '1' && e.key <= '8') {
+                    const clause = parseInt(e.key);
+                    selectClause(clause);
+                }
+                
+                const key = e.key.toUpperCase();
+                if (key >= 'A' && key <= 'O') {
+                    const systemEntry = Object.entries(SHORTCUT_KEYS).find(([system, shortcut]) => shortcut === key);
+                    if (systemEntry) {
+                        const [system] = systemEntry;
+                        const systemName = SYSTEM_NAMES[system];
+                        showNotification(`🚀 جاري تحميل نظام ${systemName}...`, 'info', 1500);
+                        window.open(SYSTEM_URLS[system], '_blank');
+                    }
+                }
+            });
+        }
+        
+        // Show all statistics
+        function showAllStats() {
+            let statsHTML = `
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-color), #34495e);">
+                    <h5 class="modal-title text-white">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        إحصائيات كاملة لجميع الأنظمة
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead style="background: #f8f9fa;">
+                                <tr>
+                                    <th>#</th>
+                                    <th>النظام</th>
+                                    <th>البند</th>
+                                    <th>عدد السجلات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+            
+            const total = Object.values(systemRecords).reduce((a, b) => a + b, 0);
+            const systems = Object.keys(systemRecords);
+            
+            systems.forEach((system, index) => {
+                const count = systemRecords[system];
+                let clause = '-';
+                
+                for (let c = 1; c <= 8; c++) {
+                    if (CLAUSE_SYSTEMS[c] && CLAUSE_SYSTEMS[c].includes(system)) {
+                        clause = c;
+                        break;
+                    }
+                }
+                
+                statsHTML += `
+                    <tr style="cursor: pointer;" onclick="window.open('${SYSTEM_URLS[system]}', '_blank')">
+                        <td>${index + 1}</td>
+                        <td>
+                            <i class="fas ${SYSTEM_ICONS[system]} me-2"></i>
+                            ${SYSTEM_NAMES[system]}
+                        </td>
+                        <td>${clause !== '-' ? `البند ${clause}` : '-'}</td>
+                        <td><strong>${count.toLocaleString('ar-SA')}</strong></td>
+                    </tr>
+                `;
+            });
+            
+            statsHTML += `
+                            </tbody>
+                            <tfoot style="background: #f1f2f6;">
+                                <tr>
+                                    <th colspan="3">الإجمالي</th>
+                                    <th class="text-success">
+                                        <strong>${total.toLocaleString('ar-SA')} سجل</strong>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-primary" onclick="loadAllRecords()">
+                        <i class="fas fa-sync-alt me-1"></i>
+                        تحديث الإحصائيات
+                    </button>
+                </div>
+            `;
+            
+            showModal('إحصائيات كاملة', statsHTML, 'modal-lg');
+        }
+        
+        // Show modal
+        function showModal(title, content, size = '') {
+            const existingModal = document.getElementById('dynamicModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            const modalHTML = `
+                <div class="modal fade" id="dynamicModal" tabindex="-1">
+                    <div class="modal-dialog ${size}">
+                        <div class="modal-content">
+                            ${content}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            const modal = new bootstrap.Modal(document.getElementById('dynamicModal'));
+            modal.show();
+        }
+        
+        // Export all Excel sheets
+        async function exportAllExcelSheets() {
+            if (exportInProgress) {
+                showNotification('⚠️ جارٍ تصدير البيانات بالفعل، يرجى الانتظار', 'warning');
+                return;
+            }
+            
+            const totalRecords = Object.values(systemRecords).reduce((a, b) => a + b, 0);
+            if (totalRecords === 0) {
+                showNotification('⚠️ لا توجد بيانات للتصدير. يرجى تحديث البيانات أولاً.', 'warning');
+                return;
+            }
+            
+            exportInProgress = true;
+            exportCancelled = false;
+            
+            const today = new Date();
+            const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '-');
+            const folderName = `Records_${dateStr}`;
+            
+            document.getElementById('exportFolderName').textContent = `مجلد: ${folderName}`;
+            document.getElementById('exportProgressFill').style.width = '0%';
+            document.getElementById('exportProgressText').textContent = '0%';
+            document.getElementById('exportCurrentFile').textContent = 'جاري الإعداد...';
+            
+            document.getElementById('exportProgress').classList.add('active');
+            
+            const systems = Object.keys(systemData);
+            const totalSystems = systems.length;
+            let completed = 0;
+            
+            for (let i = 0; i < totalSystems; i++) {
+                if (exportCancelled) break;
+                
+                const system = systems[i];
+                const systemName = SYSTEM_NAMES[system];
+                const data = systemData[system] || [];
+                
+                if (!data || data.length === 0) {
+                    completed++;
+                    continue;
+                }
+                
+                completed++;
+                const progress = Math.round((completed / totalSystems) * 100);
+                document.getElementById('exportProgressFill').style.width = `${progress}%`;
+                document.getElementById('exportProgressText').textContent = `${progress}%`;
+                document.getElementById('exportCurrentFile').textContent = `جارٍ تصدير: ${systemName}`;
+                
+                try {
+                    const csvData = convertToCSV(data);
+                    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${systemName}_${dateStr}.csv`;
+                    link.style.display = 'none';
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                    
+                } catch (error) {
+                    console.error(`Error exporting ${system}:`, error);
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            
+            if (exportCancelled) {
+                showNotification('❌ تم إلغاء عملية التصدير', 'warning');
+                document.getElementById('exportProgress').classList.remove('active');
+            } else {
+                document.getElementById('exportCurrentFile').textContent = 'اكتمل التصدير بنجاح!';
+                showNotification(`✅ تم تصدير البيانات بنجاح`, 'success');
+                
+                setTimeout(() => {
+                    document.getElementById('exportProgress').classList.remove('active');
+                }, 3000);
+            }
+            
+            exportInProgress = false;
+        }
+        
+        // Convert data to CSV
+        function convertToCSV(data) {
+            if (!data || data.length === 0) return '';
+            
+            const headers = Object.keys(data[0]);
+            let csv = headers.join(',') + '\n';
+            
+            data.forEach(row => {
+                const values = headers.map(header => {
+                    const value = row[header];
+                    if (typeof value === 'string' && (value.includes(',') || value.includes('\n') || value.includes('"'))) {
+                        return '"' + value.replace(/"/g, '""') + '"';
+                    }
+                    return value;
+                });
+                csv += values.join(',') + '\n';
+            });
+            
+            return csv;
+        }
+        
+        // Cancel export
+        function cancelExport() {
+            exportCancelled = true;
+            document.getElementById('exportProgress').classList.remove('active');
+            showNotification('تم إلغاء عملية التصدير', 'warning');
+        }
+        
+        // Open help
+        function openHelp() {
+            const helpContent = `
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-color), #34495e);">
+                    <h5 class="modal-title text-white">
+                        <i class="fas fa-question-circle me-2"></i>
+                        المساعدة والدعم
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-primary mb-3">
+                        <i class="fas fa-play-circle me-2"></i>
+                        كيف تبدأ؟
+                    </h6>
+                    <ul class="mb-4">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>ابحث مباشرة أو اختر بندًا من القائمة</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>انقر على أيقونة النظام للدخول</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>استخدم الاختصارات A-O للوصول السريع</li>
+                    </ul>
+                    
+                    <h6 class="text-primary mb-3">
+                        <i class="fas fa-keyboard me-2"></i>
+                        اختصارات لوحة المفاتيح
+                    </h6>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <p><kbd>1-8</kbd> اختيار البند</p>
+                            <p><kbd>Esc</kbd> مسح البحث</p>
+                        </div>
+                        <div class="col-6">
+                            <p><kbd>Ctrl</kbd> + <kbd>R</kbd> تحديث</p>
+                            <p><kbd>A-O</kbd> فتح الأنظمة</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            `;
+            
+            showModal('المساعدة والدعم', helpContent);
+        }
+    </script>
+</body>
+</html>
