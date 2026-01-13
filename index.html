@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة سجلات معمل كواليتك إنترناشيونال</title>
+    <title>نظام إدارة سجلات معمل كواليتك إنترناشيونال - ISO/IEC 17025</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -19,31 +19,210 @@
             --warning-color: #f39c12;
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
+            
+            /* Colors for clauses - Shiny colors */
+            --clause-1-color: #FF6B6B;
+            --clause-2-color: #4ECDC4;
+            --clause-3-color: #FFD166;
+            --clause-4-color: #06D6A0;
+            --clause-5-color: #118AB2;
+            --clause-6-color: #073B4C;
+            --clause-7-color: #EF476F;
+            --clause-8-color: #7209B7;
         }
         
         * {
             font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
         }
         
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
         
         .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
+            display: flex;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
         }
         
-        /* Header Styles */
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Right Sidebar - Clauses */
+        .clauses-sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .clauses-header {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .clauses-header h3 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .clauses-header .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 3px;
+        }
+        
+        .clauses-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .clause-item {
+            background: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .clause-item:hover {
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .clause-item.active {
+            color: white;
+            border-color: transparent;
+            transform: translateX(3px);
+        }
+        
+        /* Clause-specific colors for active state */
+        .clause-item[data-clause="1"].active { background: linear-gradient(135deg, var(--clause-1-color), #ff8a8a); }
+        .clause-item[data-clause="2"].active { background: linear-gradient(135deg, var(--clause-2-color), #6adbd3); }
+        .clause-item[data-clause="3"].active { background: linear-gradient(135deg, var(--clause-3-color), #ffdb7a); }
+        .clause-item[data-clause="4"].active { background: linear-gradient(135deg, var(--clause-4-color), #2ae0ae); }
+        .clause-item[data-clause="5"].active { background: linear-gradient(135deg, var(--clause-5-color), #3aa3d6); }
+        .clause-item[data-clause="6"].active { background: linear-gradient(135deg, var(--clause-6-color), #0a4a5f); }
+        .clause-item[data-clause="7"].active { background: linear-gradient(135deg, var(--clause-7-color), #f56c8c); }
+        .clause-item[data-clause="8"].active { background: linear-gradient(135deg, var(--clause-8-color), #8a2be2); }
+        
+        .clause-item.active .clause-icon {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .clause-item.active .clause-count {
+            background: white;
+        }
+        
+        .clause-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .clause-number {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .clause-item.active .clause-number {
+            color: white;
+        }
+        
+        .clause-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+        
+        .clause-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+            color: var(--primary-color);
+        }
+        
+        .clause-item.active .clause-title {
+            color: white;
+        }
+        
+        .clause-description {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            line-height: 1.4;
+        }
+        
+        .clause-item.active .clause-description {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .clause-count {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.65rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        
+        /* Clause-specific colors for count badges */
+        .clause-item[data-clause="1"] .clause-count { background: var(--clause-1-color); color: white; }
+        .clause-item[data-clause="2"] .clause-count { background: var(--clause-2-color); color: white; }
+        .clause-item[data-clause="3"] .clause-count { background: var(--clause-3-color); color: #333; }
+        .clause-item[data-clause="4"] .clause-count { background: var(--clause-4-color); color: white; }
+        .clause-item[data-clause="5"] .clause-count { background: var(--clause-5-color); color: white; }
+        .clause-item[data-clause="6"] .clause-count { background: var(--clause-6-color); color: white; }
+        .clause-item[data-clause="7"] .clause-count { background: var(--clause-7-color); color: white; }
+        .clause-item[data-clause="8"] .clause-count { background: var(--clause-8-color); color: white; }
+        
+        /* Compact Header Styles */
         .main-header {
             background: rgba(255, 255, 255, 0.95);
             color: var(--primary-color);
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
@@ -56,7 +235,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 5px;
+            height: 3px;
             background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #2ecc71);
             background-size: 400% 400%;
             animation: gradientBG 10s ease infinite;
@@ -69,280 +248,486 @@
         }
         
         .main-header h1 {
-            font-weight: 800;
-            margin-bottom: 15px;
-            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 1.4rem;
             background: linear-gradient(90deg, #2c3e50, #3498db);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         .main-header .lead {
             color: #5d6d7e;
-            font-size: 1.1rem;
-            line-height: 1.8;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0;
         }
         
-        /* System Cards Grid */
-        .systems-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-        
-        .system-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-            cursor: pointer;
-            height: 100%;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            text-decoration: none;
-            display: block;
-            position: relative;
-        }
-        
-        .system-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-            text-decoration: none;
-        }
-        
-        .system-card:hover .card-icon {
-            transform: scale(1.2) rotate(5deg);
-        }
-        
-        .system-card:hover .card-count {
-            transform: scale(1.1);
-            background: var(--success-color);
-        }
-        
-        .card-icon-wrapper {
-            height: 150px;
+        /* Compact Search and Stats Row */
+        .search-stats-row {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card-icon {
-            font-size: 3.5rem;
-            transition: all 0.4s ease;
-        }
-        
-        .card-body-custom {
-            padding: 25px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .card-title {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--primary-color);
+            gap: 10px;
             margin-bottom: 10px;
-            min-height: 50px;
-            display: flex;
             align-items: center;
-            justify-content: center;
         }
         
-        /* تعديل موقع دائرة السجلات */
-        .card-count {
-            position: absolute;
-            top: 30px;
-            left: 20px;
-            background: var(--secondary-color);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
-            z-index: 2;
+        .search-container {
+            flex: 1;
+            position: relative;
         }
         
-        /* إضافة دائرة الاختصار */
-        .shortcut-key {
-            position: absolute;
-            bottom: 25px;
-            left: 20px;
-            background: var(--primary-color);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.8rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            z-index: 2;
-            border: 2px solid white;
-        }
-        
-        .card-description {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            min-height: 60px;
-        }
-        
-        /* System Colors */
-        .system-card[data-system="calibration"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-        }
-        
-        .system-card[data-system="impartiality"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
-        }
-        
-        .system-card[data-system="contract"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-        }
-        
-        .system-card[data-system="supplier"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-        }
-        
-        .system-card[data-system="calibration-mgmt"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #1abc9c, #16a085);
-        }
-        
-        .system-card[data-system="maintenance"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #e67e22, #d35400);
-        }
-        
-        .system-card[data-system="devices"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #8e44ad, #9b59b6);
-        }
-        
-        .system-card[data-system="fmea"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #7d3c98, #6c3483);
-        }
-        
-        .system-card[data-system="corrective"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #c0392b, #a93226);
-        }
-        
-        .system-card[data-system="environmental"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #16a085, #138d75);
-        }
-        
-        .system-card[data-system="training"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #8e44ad, #7d3c98);
-        }
-        
-        /* الأنظمة الجديدة */
-        .system-card[data-system="delegation"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #8e44ad, #9b59b6);
-        }
-        
-        .system-card[data-system="complaints"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-        }
-        
-        .system-card[data-system="employee-skills"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-        }
-        
-        .system-card[data-system="ncr"] .card-icon-wrapper {
-            background: linear-gradient(135deg, #e67e22, #d35400);
-        }
-        
-        /* Action Button */
-        .card-action-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        .search-input {
             width: 100%;
-            cursor: pointer;
+            padding: 10px 15px 10px 40px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.95);
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
         
-        .card-action-btn:hover {
-            background: #1a2530;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
-        /* Stats Overview */
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        /* Compact Stats */
         .stats-container {
+            display: flex;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 25px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
+            min-width: fit-content;
         }
         
-        .stat-card {
-            text-align: center;
-            padding: 20px;
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 8px;
+            position: relative;
+        }
+        
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 20px;
+            width: 1px;
+            background: rgba(0,0,0,0.1);
         }
         
         .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 1rem;
             color: var(--secondary-color);
         }
         
+        .stat-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
         .stat-number {
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-weight: 700;
+            font-size: 1.1rem;
             color: var(--primary-color);
-            margin-bottom: 5px;
+            line-height: 1;
         }
         
         .stat-label {
             color: #7f8c8d;
+            font-size: 0.7rem;
+            line-height: 1;
+            margin-top: 2px;
+        }
+        
+        /* Compact User Info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-date {
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .user-role {
+            background: var(--success-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Horizontal Systems Container - UPDATED FOR HORIZONTAL SLIDING */
+        .horizontal-systems-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+            position: relative;
+        }
+        
+        .systems-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1f2f6;
+        }
+        
+        /* Updated scroll wrapper for horizontal sliding */
+        .systems-scroll-wrapper {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 10px 5px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* Center content when no systems found */
+        .systems-scroll-wrapper.center-content {
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Horizontal scrolling container */
+        .horizontal-systems-slider {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            padding: 10px 20px;
+            min-width: min-content;
+            height: 100%;
+            align-items: center;
+        }
+        
+        /* Updated horizontal system card */
+        .horizontal-system-card {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 160px;
+            height: 140px;
+            flex-shrink: 0;
+        }
+        
+        .horizontal-system-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            text-decoration: none;
+        }
+        
+        .horizontal-card-icon-wrapper {
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .horizontal-card-icon {
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+        }
+        
+        .horizontal-system-card:hover .horizontal-card-icon {
+            transform: scale(1.2);
+        }
+        
+        .horizontal-card-body {
+            padding: 10px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .horizontal-card-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .horizontal-card-count {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        
+        .horizontal-shortcut-key {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary-color);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 2;
+            border: 1px solid white;
+        }
+        
+        /* No systems found message - CENTERED */
+        .no-systems-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .no-systems-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .no-systems-message h5 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .no-systems-message p {
             font-size: 0.9rem;
+            max-width: 300px;
+        }
+        
+        /* System Colors - UPDATED: Same base color for clause, different contrast levels */
+        /* Clause 4 Systems */
+        .horizontal-system-card[data-system="calibration"][data-clause="4"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #06D6A0, #0aa878);
+        }
+        
+        .horizontal-system-card[data-system="impartiality"][data-clause="4"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #2AE0AE, #4DE8BD);
+        }
+        
+        .horizontal-system-card[data-system="calibration"][data-clause="4"] .horizontal-card-count,
+        .horizontal-system-card[data-system="impartiality"][data-clause="4"] .horizontal-card-count {
+            background: #06D6A0;
+        }
+        
+        /* Clause 5 Systems */
+        .horizontal-system-card[data-system="delegation"][data-clause="5"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #118AB2, #0d6e8f);
+        }
+        
+        .horizontal-system-card[data-system="delegation"][data-clause="5"] .horizontal-card-count {
+            background: #118AB2;
+        }
+        
+        /* Clause 6 Systems - Different contrast levels */
+        .horizontal-system-card[data-system="employee-skills"][data-clause="6"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #073B4C, #052935);
+        }
+        
+        .horizontal-system-card[data-system="training"][data-clause="6"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0a4a5f, #073B4C);
+        }
+        
+        .horizontal-system-card[data-system="environmental"][data-clause="6"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0b5670, #09455a);
+        }
+        
+        .horizontal-system-card[data-system="devices"][data-clause="6"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0c6181, #0a4e6a);
+        }
+        
+        .horizontal-system-card[data-system="calibration-mgmt"][data-clause="6"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0d6c92, #0b5979);
+        }
+        
+        .horizontal-system-card[data-system="maintenance"][data-clause="6"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0e77a3, #0c6488);
+        }
+        
+        .horizontal-system-card[data-system="supplier"][data-clause="6"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #0f82b4, #0d6f97);
+        }
+        
+        .horizontal-system-card[data-clause="6"] .horizontal-card-count {
+            background: #073B4C;
+        }
+        
+        /* Clause 7 Systems - Different contrast levels */
+        .horizontal-system-card[data-system="contract"][data-clause="7"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #EF476F, #d63058);
+        }
+        
+        .horizontal-system-card[data-system="complaints"][data-clause="7"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #f56c8c, #f25a7e);
+        }
+        
+        .horizontal-system-card[data-system="ncr"][data-clause="7"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #f782a1, #f56c8c);
+        }
+        
+        .horizontal-system-card[data-system="corrective"][data-clause="7"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #f998b6, #f782a1);
+        }
+        
+        .horizontal-system-card[data-system="fmea"][data-clause="7"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #faaecb, #f998b6);
+        }
+        
+        .horizontal-system-card[data-clause="7"] .horizontal-card-count {
+            background: #EF476F;
+        }
+        
+        /* Clause 8 Systems - Different contrast levels */
+        .horizontal-system-card[data-system="fmea"][data-clause="8"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #7209B7, #5d0794);
+        }
+        
+        .horizontal-system-card[data-system="corrective"][data-clause="8"] .horizontal-card-icon-wrapper {
+            background: linear-gradient(135deg, #8a2be2, #7820d0);
+        }
+        
+        .horizontal-system-card[data-clause="8"] .horizontal-card-count {
+            background: #7209B7;
+        }
+        
+        /* Navigation arrows for horizontal slider */
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .slider-nav:hover {
+            opacity: 1;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .slider-nav.left {
+            right: 5px;
+        }
+        
+        .slider-nav.right {
+            left: 5px;
+        }
+        
+        .slider-nav i {
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        /* Hide arrows on mobile */
+        @media (max-width: 768px) {
+            .slider-nav {
+                display: none;
+            }
         }
         
         /* Quick Actions */
         .quick-actions {
             display: flex;
-            gap: 15px;
+            gap: 8px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 10px;
             flex-wrap: wrap;
         }
         
         .quick-action-btn {
             background: rgba(255, 255, 255, 0.95);
             border: none;
-            border-radius: 15px;
-            padding: 12px 25px;
+            border-radius: 12px;
+            padding: 8px 15px;
             font-weight: 600;
+            font-size: 0.8rem;
             color: var(--primary-color);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
             cursor: pointer;
         }
@@ -350,120 +735,34 @@
         .quick-action-btn:hover {
             background: var(--primary-color);
             color: white;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
         
         /* Footer */
         .main-footer {
             text-align: center;
             color: rgba(255,255,255,0.8);
-            padding: 30px 0;
-            margin-top: 40px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .systems-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .main-header h1 {
-                font-size: 2rem;
-            }
-            
-            .systems-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
-            }
-            
-            .main-header, .stats-container {
-                padding: 20px;
-            }
-            
-            .quick-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .quick-action-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .card-count {
-                top: 20px;
-                left: 15px;
-                width: 35px;
-                height: 35px;
-                font-size: 0.8rem;
-            }
-            
-            .shortcut-key {
-                bottom: 20px;
-                left: 15px;
-                width: 28px;
-                height: 28px;
-                font-size: 0.75rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .systems-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            body {
-                padding: 15px;
-            }
-            
-            .card-count {
-                top: 15px;
-                left: 15px;
-            }
-            
-            .shortcut-key {
-                bottom: 15px;
-                left: 15px;
-            }
-        }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.5);
+            padding: 15px 0;
+            margin-top: 10px;
+            font-size: 0.75rem;
         }
         
         /* Notification */
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 10px;
+            right: 10px;
             background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            padding: 15px 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             transform: translateX(150%);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease;
             z-index: 1000;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.3);
-            max-width: 400px;
+            max-width: 300px;
+            font-size: 0.85rem;
         }
         
         .notification.show {
@@ -471,93 +770,11 @@
         }
         
         .notification.success {
-            border-right: 5px solid var(--success-color);
+            border-right: 3px solid var(--success-color);
         }
         
         .notification.error {
-            border-right: 5px solid var(--danger-color);
-        }
-        
-        /* Search Bar */
-        .search-container {
-            position: relative;
-            margin-bottom: 30px;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 15px 20px 15px 50px;
-            border: none;
-            border-radius: 50px;
-            background: rgba(255,255,255,0.95);
-            font-size: 1rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-            transform: translateY(-2px);
-        }
-        
-        .search-icon {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary-color);
-            font-size: 1.2rem;
-        }
-        
-        /* Remove default link styling */
-        a.system-card, a.system-card:hover, a.system-card:focus, a.system-card:active {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        /* Background update indicator */
-        .update-indicator {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            padding: 8px 15px;
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-        }
-        
-        .update-indicator.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .update-indicator.updating .update-spinner {
-            display: inline-block;
-        }
-        
-        .update-spinner {
-            display: none;
-            width: 12px;
-            height: 12px;
-            border: 2px solid rgba(52, 152, 219, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--secondary-color);
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            border-right: 3px solid var(--danger-color);
         }
         
         /* Export Progress Modal */
@@ -584,57 +801,178 @@
         
         .export-modal {
             background: white;
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 12px;
+            padding: 20px;
             width: 90%;
-            max-width: 500px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
         
-        .export-progress-bar {
-            height: 10px;
-            background: #ecf0f1;
-            border-radius: 5px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .export-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #2ecc71, #27ae60);
-            border-radius: 5px;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        
-        .export-file-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 15px;
-        }
-        
-        .export-file-item {
+        /* Background update indicator */
+        .update-indicator {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            z-index: 100;
             display: flex;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
+            gap: 5px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
         }
         
-        .export-file-item i {
-            margin-left: 10px;
-            color: #27ae60;
+        .update-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
         }
         
-        .export-file-item.completed i {
-            color: #27ae60;
+        .update-spinner {
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--primary-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
         
-        .export-file-item.pending i {
-            color: #f39c12;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
-        .export-file-item.error i {
-            color: #e74c3c;
+        /* Custom Scrollbar for horizontal container */
+        .systems-scroll-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .systems-scroll-wrapper::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 3px;
+        }
+        
+        .systems-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+        
+        .systems-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.3);
+        }
+        
+        /* Custom Scrollbar for vertical containers */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.3);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .clauses-sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+            
+            .horizontal-system-card {
+                width: 150px;
+                height: 135px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 12px;
+            }
+            
+            .main-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .main-header .lead {
+                font-size: 0.75rem;
+            }
+            
+            .search-stats-row {
+                flex-wrap: wrap;
+            }
+            
+            .stats-container {
+                flex: 1 0 100%;
+                order: 2;
+                margin-top: 8px;
+            }
+            
+            .search-container {
+                order: 1;
+            }
+            
+            .horizontal-system-card {
+                width: 140px;
+                height: 130px;
+            }
+            
+            .user-info {
+                justify-content: center;
+                margin-top: 8px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .horizontal-system-card {
+                width: 130px;
+                height: 125px;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .quick-action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .clauses-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .clause-item {
+                margin-bottom: 0;
+            }
         }
     </style>
 </head>
@@ -645,24 +983,23 @@
     <!-- Export Progress Modal -->
     <div class="export-progress" id="exportProgress">
         <div class="export-modal">
-            <h4 class="text-center mb-3">
+            <h5 class="text-center mb-3">
                 <i class="fas fa-file-export me-2"></i>
                 جاري تصدير البيانات
-            </h4>
+            </h5>
             <div class="text-center mb-3" id="exportFolderName">
                 مجلد: Records_----/--/--
             </div>
-            <div class="export-progress-bar">
-                <div class="export-progress-fill" id="exportProgressFill"></div>
+            <div class="progress mb-3" style="height: 8px;">
+                <div class="progress-bar" id="exportProgressFill" style="width: 0%"></div>
             </div>
             <div class="text-center mb-2">
                 <span id="exportProgressText">0%</span>
                 <span> - </span>
                 <span id="exportCurrentFile">جاري الإعداد...</span>
             </div>
-            <div class="export-file-list" id="exportFileList"></div>
-            <div class="text-center mt-4">
-                <button class="btn btn-secondary" onclick="cancelExport()">
+            <div class="text-center mt-3">
+                <button class="btn btn-sm btn-secondary" onclick="cancelExport()">
                     <i class="fas fa-times me-1"></i>
                     إلغاء
                 </button>
@@ -678,356 +1015,82 @@
     
     <!-- Main Container -->
     <div class="main-container">
-        <!-- Header -->
-        <div class="main-header">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1><i class="fas fa-tasks me-3"></i> نظام إدارة السجلات المتكامل</h1>
-                    <p class="lead">
-                        إدارة 15 نظام متكاملة لمعمل كواليتك إنترناشيونال. نظام شامل لإدارة سجلات السرية، الحيادية، العقود، الموردين، المعايرة، الصيانة، الأجهزة، المخاطر، الإجراءات التصحيحية، الظروف البيئية، التدريب، تفويض الصلاحيات، الشكاوى، تقييم الموظفين، وعدم المطابقة.
-                    </p>
-                </div>
-                <div class="col-lg-4 text-lg-end text-center mt-4 mt-lg-0">
-                    <div class="d-flex flex-column flex-md-row justify-content-lg-end gap-3">
-                        <div class="d-inline-flex align-items-center bg-primary text-white px-3 py-2 rounded-pill">
-                            <i class="fas fa-calendar-alt me-2"></i>
-                            <span id="currentDate">--/--/----</span>
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="main-header">
+                <div class="d-flex justify-content-between align-items-start flex-wrap">
+                    <div style="flex: 1; min-width: 250px;">
+                        <h1><i class="fas fa-tasks me-2"></i>نظام إدارة السجلات المتكامل</h1>
+                        <p class="lead">
+                            إدارة 15 نظام متكاملة لمعمل كواليتك إنترناشيونال. نظام شامل لإدارة سجلات السرية، الحيادية، العقود، الموردين، المعايرة، الصيانة، الأجهزة، المخاطر، الإجراءات التصحيحية، الظروف البيئية، التدريب، تفويض الصلاحيات، الشكاوى، تقييم الموظفين، وعدم المطابقة.
+                        </p>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-date">
+                            <i class="fas fa-calendar-alt me-1"></i>
+                            <span id="currentDate">12/01/2026</span>
                         </div>
-                        <div class="d-inline-flex align-items-center bg-success text-white px-3 py-2 rounded-pill">
-                            <i class="fas fa-user-shield me-2"></i>
+                        <div class="user-role">
+                            <i class="fas fa-user-shield me-1"></i>
                             <span>مدير النظام</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Search Bar -->
-        <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن النظام المطلوب...">
-            <i class="fas fa-search search-icon"></i>
-        </div>
-        
-        <!-- Stats Overview -->
-        <div class="stats-container">
-            <div class="row text-center">
-                <div class="col-md-4 col-6 mb-4">
-                    <div class="stat-card">
+            
+            <!-- Search and Stats Row -->
+            <div class="search-stats-row">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="ابحث في جميع الأنظمة...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-item">
                         <i class="fas fa-database stat-icon"></i>
-                        <div class="stat-number" id="totalRecords">0</div>
-                        <div class="stat-label">إجمالي السجلات</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="totalRecords">٦١</div>
+                            <div class="stat-label">إجمالي السجلات</div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4 col-6 mb-4">
-                    <div class="stat-card">
+                    <div class="stat-item">
                         <i class="fas fa-check-circle stat-icon"></i>
-                        <div class="stat-number" id="activeSystems">15</div>
-                        <div class="stat-label">نظام نشط</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="activeSystems">15</div>
+                            <div class="stat-label">نظام نشط</div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4 col-12 mb-4">
-                    <div class="stat-card">
+                    <div class="stat-item">
                         <i class="fas fa-sync-alt stat-icon"></i>
-                        <div class="stat-number" id="lastUpdate">اليوم</div>
-                        <div class="stat-label">آخر تحديث</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="lastUpdate">اليوم</div>
+                            <div class="stat-label">آخر تحديث</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Systems Grid -->
-        <div class="systems-grid" id="systemsGrid">
-            <!-- System 1: Calibration (سرية) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%A9.html" class="system-card" data-system="calibration" data-shortcut="A">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-file-contract card-icon text-white"></i>
-                    <span class="card-count" id="count-calibration">0</span>
-                    <span class="shortcut-key">A</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة سجلات السرية</h3>
-                    <p class="card-description">
-                        إدارة سجلات السرية والاتفاقيات الوظيفية للموظفين
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
             
-            <!-- System 2: Impartiality (حيادية) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A5%D9%81%D8%B5%D8%A7%D8%AD%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AD%D9%8A%D8%A7%D8%AF%D9%8A%D8%A9.html" class="system-card" data-system="impartiality" data-shortcut="B">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-balance-scale card-icon text-white"></i>
-                    <span class="card-count" id="count-impartiality">0</span>
-                    <span class="shortcut-key">B</span>
+            <!-- Horizontal Systems Container -->
+            <div class="horizontal-systems-container">
+                <h3 class="systems-title" id="systemsTitle">جميع الأنظمة</h3>
+                
+                <!-- Navigation Arrows for Horizontal Slider -->
+                <div class="slider-nav left" onclick="scrollSlider('left')">
+                    <i class="fas fa-chevron-right"></i>
                 </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إفصاحات الحيادية</h3>
-                    <p class="card-description">
-                        إدارة إفصاحات وتعريفات مصالح ومخاطر الحيادية
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
+                <div class="slider-nav right" onclick="scrollSlider('right')">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                
+                <div class="systems-scroll-wrapper" id="systemsScrollWrapper">
+                    <div class="horizontal-systems-slider" id="horizontalSystemsSlider">
+                        <!-- All systems will be dynamically added here -->
                     </div>
                 </div>
-            </a>
+            </div>
             
-            <!-- System 3: Contract (عقود) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B9%D9%82%D9%88%D8%AF.html" class="system-card" data-system="contract" data-shortcut="C">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-file-signature card-icon text-white"></i>
-                    <span class="card-count" id="count-contract">0</span>
-                    <span class="shortcut-key">C</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة العقود</h3>
-                    <p class="card-description">
-                        إدارة عقود العملاء والاتفاقيات والالتزامات
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- System 4: Supplier (موردين) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D9%88%D8%AA%D9%82%D9%8A%D9%8A%D9%85%20%D8%A7%D9%84%D9%85%D9%88%D8%B1%D8%AF%D9%8A%D9%86.html" class="system-card" data-system="supplier" data-shortcut="D">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-truck card-icon text-white"></i>
-                    <span class="card-count" id="count-supplier">0</span>
-                    <span class="shortcut-key">D</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة وتقييم الموردين</h3>
-                    <p class="card-description">
-                        إدارة وتقييم الموردين والاعتمادات والمتابعة
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- System 5: Calibration Management (معايرة) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D8%B1%D8%A9.html" class="system-card" data-system="calibration-mgmt" data-shortcut="E">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-tools card-icon text-white"></i>
-                    <span class="card-count" id="count-calibration-mgmt">0</span>
-                    <span class="shortcut-key">E</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة سجلات المعايرة</h3>
-                    <p class="card-description">
-                        إدارة شهادات المعايرة والتتبع والاستحقاق
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- System 6: Maintenance (صيانة) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9.html" class="system-card" data-system="maintenance" data-shortcut="F">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-wrench card-icon text-white"></i>
-                    <span class="card-count" id="count-maintenance">0</span>
-                    <span class="shortcut-key">F</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة سجلات الصيانة</h3>
-                    <p class="card-description">
-                        إدارة سجلات الصيانة الوقائية والتصحيحية للأجهزة
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- System 7: Devices (أجهزة) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A3%D8%AC%D9%87%D8%B2%D8%A9%20%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%8A%D8%B1%D8%A9.html" class="system-card" data-system="devices" data-shortcut="G">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-microchip card-icon text-white"></i>
-                    <span class="card-count" id="count-devices">0</span>
-                    <span class="shortcut-key">G</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة أجهزة المعايرة</h3>
-                    <p class="card-description">
-                        إدارة سجل الأجهزة والمواصفات والتتبع
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- System 8: FMEA (مخاطر) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%AA%D8%AD%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D9%85%D8%AE%D8%A7%D8%B7%D8%B1.html" class="system-card" data-system="fmea" data-shortcut="H">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-exclamation-triangle card-icon text-white"></i>
-                    <span class="card-count" id="count-fmea">0</span>
-                    <span class="shortcut-key">H</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام تحليل المخاطر (FMEA)</h3>
-                    <p class="card-description">
-                        تحليل وتقييم المخاطر والإجراءات الوقائية
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- System 9: Corrective Actions (تصحيحية) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%B5%D8%AD%D9%8A%D8%AD%D9%8A%D8%A9.html" class="system-card" data-system="corrective" data-shortcut="I">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-clipboard-check card-icon text-white"></i>
-                    <span class="card-count" id="count-corrective">0</span>
-                    <span class="shortcut-key">I</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام السجلات التصحيحية (CAPA/NCR)</h3>
-                    <p class="card-description">
-                        إدارة الإجراءات التصحيحية والوقائية
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- System 10: Environmental (بيئية) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B8%D8%B1%D9%88%D9%81%20%D8%A7%D9%84%D8%A8%D9%8A%D8%A6%D9%8A%D8%A9.html" class="system-card" data-system="environmental" data-shortcut="J">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-temperature-high card-icon text-white"></i>
-                    <span class="card-count" id="count-environmental">0</span>
-                    <span class="shortcut-key">J</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام متابعة الظروف البيئية</h3>
-                    <p class="card-description">
-                        متابعة ومراقبة الظروف البيئية للمعامل
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- System 11: Training (تدريب) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8.html" class="system-card" data-system="training" data-shortcut="K">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-graduation-cap card-icon text-white"></i>
-                    <span class="card-count" id="count-training">0</span>
-                    <span class="shortcut-key">K</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة التدريب</h3>
-                    <p class="card-description">
-                        إدارة سجلات التدريب والتطوير والتأهيل
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- النظام 12: تفويض الصلاحيات (جديد) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D8%B3%D8%AC%D9%84%20%D8%AA%D9%81%D9%88%D9%8A%D8%B6%20%D8%A7%D9%84%D9%85%D9%88%D8%B8%D9%81%D9%8A%D9%86.html" class="system-card" data-system="delegation" data-shortcut="L">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-user-shield card-icon text-white"></i>
-                    <span class="card-count" id="count-delegation">0</span>
-                    <span class="shortcut-key">L</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة تفويض الصلاحيات</h3>
-                    <p class="card-description">
-                        إدارة تفويض الصلاحيات والتوقيعات والقيود ومراجعة التفويض
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- النظام 13: إدارة الشكاوى (جديد) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A7%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B4%D9%83%D8%A7%D9%88%D9%89.html" class="system-card" data-system="complaints" data-shortcut="M">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-clipboard-list card-icon text-white"></i>
-                    <span class="card-count" id="count-complaints">0</span>
-                    <span class="shortcut-key">M</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة سجلات الشكاوى</h3>
-                    <p class="card-description">
-                        إدارة وتتبع جميع الشكاوى المقدمة من العملاء وحل المشكلات
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- النظام 14: تقييم مهارات الموظفين (جديد) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%AA%D9%82%D9%8A%D9%8A%D9%85%20%D8%A7%D9%84%D9%85%D9%88%D8%B8%D9%81%D9%8A%D9%86.html" class="system-card" data-system="employee-skills" data-shortcut="N">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-user-tie card-icon text-white"></i>
-                    <span class="card-count" id="count-employee-skills">0</span>
-                    <span class="shortcut-key">N</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام تقييم مهارات الموظفين</h3>
-                    <p class="card-description">
-                        إدارة وتقييم كفاءات الموظفين وتحديد فجوات التدريب والمهارات
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-            
-            <!-- النظام 15: سجلات عدم المطابقة (جديد) -->
-            <a href="https://qualinova7.github.io/QualiNova/%D9%86%D8%B8%D8%A7%D9%85%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%B3%D8%AC%D9%84%D8%A7%D8%AA%20%D8%B9%D8%AF%D9%85%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D8%A8%D9%82%D8%A9.html" class="system-card" data-system="ncr" data-shortcut="O">
-                <div class="card-icon-wrapper">
-                    <i class="fas fa-ban card-icon text-white"></i>
-                    <span class="card-count" id="count-ncr">0</span>
-                    <span class="shortcut-key">O</span>
-                </div>
-                <div class="card-body-custom">
-                    <h3 class="card-title">نظام إدارة سجلات عدم المطابقة</h3>
-                    <p class="card-description">
-                        إدارة سجلات عدم المطابقة والمراجعة والتحكم في العملية التصحيحية
-                    </p>
-                    <div class="card-action-btn">
-                        <i class="fas fa-external-link-alt"></i>
-                        فتح النظام
-                    </div>
-                </div>
-            </a>
-        </div>
-        
-        <!-- Quick Actions -->
-        <div class="text-center mb-5">
-            <h3 class="text-white mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
-                <i class="fas fa-bolt me-2"></i>إجراءات سريعة
-            </h3>
+            <!-- Quick Actions -->
             <div class="quick-actions">
                 <button class="quick-action-btn" onclick="loadAllRecords()">
                     <i class="fas fa-sync-alt"></i>
@@ -1046,20 +1109,18 @@
                     المساعدة والدعم
                 </button>
             </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="main-footer">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-md-start text-center mb-3 mb-md-0">
-                    <p class="mb-0">
-                        <i class="fas fa-copyright me-1"></i>
-                        جميع الحقوق محفوظة © معمل كواليتك إنترناشيونال 
-                        <span id="currentYear"></span>
-                    </p>
-                </div>
-                <div class="col-md-6 text-md-end text-center">
-                    <div class="d-flex justify-content-center justify-content-md-end gap-3">
+            
+            <!-- Footer -->
+            <div class="main-footer">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="mb-2 mb-md-0">
+                        <p class="mb-0">
+                            <i class="fas fa-copyright me-1"></i>
+                            جميع الحقوق محفوظة © معمل كواليتك إنترناشيونال 
+                            <span id="currentYear"></span>
+                        </p>
+                    </div>
+                    <div class="d-flex gap-3">
                         <span class="text-light">
                             <i class="fas fa-code me-1"></i>
                             الإصدار 15.0
@@ -1073,6 +1134,120 @@
                             آمن ومشفّر
                         </span>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar - Clauses -->
+        <div class="clauses-sidebar">
+            <div class="clauses-header">
+                <h3>بنود ISO/IEC 17025</h3>
+                <div class="subtitle">اختر البند لعرض أنظمته</div>
+            </div>
+            
+            <div class="clauses-list">
+                <!-- Clause 1 -->
+                <div class="clause-item" data-clause="1" onclick="selectClause(1)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 1</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المجال</div>
+                    <div class="clause-description">نطاق تطبيق المواصفة القياسية</div>
+                    <span class="clause-count" id="clause1-count">0</span>
+                </div>
+                
+                <!-- Clause 2 -->
+                <div class="clause-item" data-clause="2" onclick="selectClause(2)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 2</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المراجع المعيارية</div>
+                    <div class="clause-description">الوثائق المرجعية المعيارية</div>
+                    <span class="clause-count" id="clause2-count">0</span>
+                </div>
+                
+                <!-- Clause 3 -->
+                <div class="clause-item" data-clause="3" onclick="selectClause(3)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 3</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-language"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المصطلحات والتعاريف</div>
+                    <div class="clause-description">تعريفات المصطلحات المستخدمة</div>
+                    <span class="clause-count" id="clause3-count">0</span>
+                </div>
+                
+                <!-- Clause 4 -->
+                <div class="clause-item" data-clause="4" onclick="selectClause(4)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 4</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المتطلبات العامة</div>
+                    <div class="clause-description">الحيادية والسرية</div>
+                    <span class="clause-count" id="clause4-count">0</span>
+                </div>
+                
+                <!-- Clause 5 -->
+                <div class="clause-item" data-clause="5" onclick="selectClause(5)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 5</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">المتطلبات الهيكلية</div>
+                    <div class="clause-description">الهيكل التنظيمي والإدارة</div>
+                    <span class="clause-count" id="clause5-count">0</span>
+                </div>
+                
+                <!-- Clause 6 -->
+                <div class="clause-item" data-clause="6" onclick="selectClause(6)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 6</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">متطلبات الموارد</div>
+                    <div class="clause-description">الكوادر، المرافق، المعدات</div>
+                    <span class="clause-count" id="clause6-count">0</span>
+                </div>
+                
+                <!-- Clause 7 -->
+                <div class="clause-item active" data-clause="7" onclick="selectClause(7)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 7</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">متطلبات العمليات</div>
+                    <div class="clause-description">الاختبار، المعايرة، التقارير</div>
+                    <span class="clause-count" id="clause7-count">0</span>
+                </div>
+                
+                <!-- Clause 8 -->
+                <div class="clause-item" data-clause="8" onclick="selectClause(8)">
+                    <div class="clause-header">
+                        <div class="clause-number">البند 8</div>
+                        <div class="clause-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="clause-title">متطلبات نظام الإدارة</div>
+                    <div class="clause-description">التحسين، المراجعة، التصحيح</div>
+                    <span class="clause-count" id="clause8-count">0</span>
                 </div>
             </div>
         </div>
@@ -1120,6 +1295,84 @@
             ncr: "https://script.google.com/macros/s/AKfycbzljEO6Cc7ZuLQOJrBygcGqJA4IrZKf_YgkqT0A02BnhL7bzilYQER2NRiRIPLudQ5mzA/exec"
         };
         
+        // Mapping of systems to clauses
+        const CLAUSE_SYSTEMS = {
+            1: [],
+            2: [],
+            3: [],
+            4: ['calibration', 'impartiality'],
+            5: ['delegation'],
+            6: ['employee-skills', 'training', 'environmental', 'devices', 'calibration-mgmt', 'maintenance', 'supplier'],
+            7: ['contract', 'complaints', 'ncr', 'corrective', 'fmea'],
+            8: ['fmea', 'corrective']
+        };
+        
+        // Arabic names
+        const CLAUSE_NAMES = {
+            1: "المجال",
+            2: "المراجع المعيارية",
+            3: "المصطلحات والتعاريف",
+            4: "المتطلبات العامة",
+            5: "المتطلبات الهيكلية",
+            6: "متطلبات الموارد",
+            7: "متطلبات العمليات",
+            8: "متطلبات نظام الإدارة"
+        };
+        
+        const SYSTEM_NAMES = {
+            calibration: 'السرية',
+            impartiality: 'الحيادية',
+            contract: 'العقود',
+            supplier: 'الموردين',
+            'calibration-mgmt': 'المعايرة',
+            maintenance: 'الصيانة',
+            devices: 'الأجهزة',
+            fmea: 'المخاطر',
+            corrective: 'التصحيحية',
+            environmental: 'البيئية',
+            training: 'التدريب',
+            delegation: 'تفويض الصلاحيات',
+            complaints: 'الشكاوى',
+            'employee-skills': 'تقييم الموظفين',
+            ncr: 'عدم المطابقة'
+        };
+        
+        const SYSTEM_ICONS = {
+            calibration: 'fa-file-contract',
+            impartiality: 'fa-balance-scale',
+            contract: 'fa-file-signature',
+            supplier: 'fa-truck',
+            'calibration-mgmt': 'fa-tools',
+            maintenance: 'fa-wrench',
+            devices: 'fa-microchip',
+            fmea: 'fa-exclamation-triangle',
+            corrective: 'fa-clipboard-check',
+            environmental: 'fa-temperature-high',
+            training: 'fa-graduation-cap',
+            delegation: 'fa-user-shield',
+            complaints: 'fa-clipboard-list',
+            'employee-skills': 'fa-user-tie',
+            ncr: 'fa-ban'
+        };
+        
+        const SHORTCUT_KEYS = {
+            calibration: 'A',
+            impartiality: 'B',
+            contract: 'C',
+            supplier: 'D',
+            'calibration-mgmt': 'E',
+            maintenance: 'F',
+            devices: 'G',
+            fmea: 'H',
+            corrective: 'I',
+            environmental: 'J',
+            training: 'K',
+            delegation: 'L',
+            complaints: 'M',
+            'employee-skills': 'N',
+            ncr: 'O'
+        };
+        
         // Global variables
         let systemRecords = {
             calibration: 0,
@@ -1139,32 +1392,30 @@
             ncr: 0
         };
         
-        let systemData = {}; // لتخزين البيانات الفعلية من الأنظمة
+        let systemData = {};
         let exportInProgress = false;
         let exportCancelled = false;
+        let currentClause = 7;
+        let allSystems = [];
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current date and year
             setCurrentDate();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // Set up search functionality
             setupSearch();
-            
-            // Load initial data in background (no loading screen)
-            setTimeout(() => {
-                loadAllRecords(true); // true = background mode
-            }, 500);
-            
-            // Add keyboard shortcuts (A-Z)
             setupKeyboardShortcuts();
+            setupClauseInteractions();
             
-            // Add system card animations
-            animateSystemCards();
+            // Create list of all systems
+            allSystems = Object.keys(SYSTEM_NAMES);
             
-            // Add click event listeners to system cards
-            setupSystemCardLinks();
+            // Load initial data
+            setTimeout(() => {
+                loadAllRecords(true);
+                loadAllSystems(); // Load all systems initially
+                selectClause(currentClause);
+            }, 500);
         });
         
         // Set current date
@@ -1176,80 +1427,159 @@
             document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
         }
         
-        // Setup search functionality
+        // Setup search functionality for all systems
         function setupSearch() {
             const searchInput = document.getElementById('searchInput');
-            const systemCards = document.querySelectorAll('.system-card');
             
             searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
+                const searchTerm = this.value.toLowerCase().trim();
+                const systemsGrid = document.getElementById('horizontalSystemsSlider');
                 
-                systemCards.forEach(card => {
-                    const title = card.querySelector('.card-title').textContent.toLowerCase();
-                    const description = card.querySelector('.card-description').textContent.toLowerCase();
-                    const system = card.getAttribute('data-system');
-                    
-                    if (title.includes(searchTerm) || 
-                        description.includes(searchTerm) || 
-                        getSystemArabicName(system).toLowerCase().includes(searchTerm)) {
-                        card.style.display = 'block';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, 10);
-                    } else {
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(20px)';
-                        setTimeout(() => {
-                            card.style.display = 'none';
-                        }, 300);
-                    }
+                if (searchTerm === '') {
+                    // If no search term, show current clause systems
+                    selectClause(currentClause);
+                    return;
+                }
+                
+                // Search in all systems
+                const filteredSystems = allSystems.filter(system => {
+                    const systemName = SYSTEM_NAMES[system];
+                    return systemName.toLowerCase().includes(searchTerm);
                 });
+                
+                // Update title
+                document.getElementById('systemsTitle').textContent = `نتائج البحث: "${searchTerm}"`;
+                
+                // Display filtered systems
+                displaySystems(filteredSystems);
             });
         }
         
-        // Get Arabic name for system
-        function getSystemArabicName(system) {
-            const names = {
-                calibration: 'السرية',
-                impartiality: 'الحيادية',
-                contract: 'العقود',
-                supplier: 'الموردين',
-                'calibration-mgmt': 'المعايرة',
-                maintenance: 'الصيانة',
-                devices: 'الأجهزة',
-                fmea: 'المخاطر',
-                corrective: 'التصحيحية',
-                environmental: 'البيئية',
-                training: 'التدريب',
-                delegation: 'تفويض الصلاحيات',
-                complaints: 'الشكاوى',
-                'employee-skills': 'تقييم الموظفين',
-                ncr: 'عدم المطابقة'
-            };
-            return names[system] || system;
+        // Load all systems initially
+        function loadAllSystems() {
+            displaySystems(allSystems);
         }
         
-        // Setup system card links with loading indicator
-        function setupSystemCardLinks() {
-            const systemCards = document.querySelectorAll('.system-card');
+        // Display systems in horizontal slider
+        function displaySystems(systems) {
+            const systemsSlider = document.getElementById('horizontalSystemsSlider');
+            const scrollWrapper = document.getElementById('systemsScrollWrapper');
             
-            systemCards.forEach(card => {
-                card.addEventListener('click', function(e) {
+            systemsSlider.innerHTML = '';
+            
+            if (systems.length === 0) {
+                // Add center-content class to center the message
+                scrollWrapper.classList.add('center-content');
+                
+                systemsSlider.innerHTML = `
+                    <div class="no-systems-message">
+                        <i class="fas fa-search"></i>
+                        <h5>لم يتم العثور على أنظمة</h5>
+                        <p>حاول البحث بكلمات أخرى أو اختر بندًا مختلفًا</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Remove center-content class when there are systems
+            scrollWrapper.classList.remove('center-content');
+            
+            systems.forEach((system, index) => {
+                const systemName = SYSTEM_NAMES[system];
+                const systemIcon = SYSTEM_ICONS[system];
+                const shortcutKey = SHORTCUT_KEYS[system];
+                const count = systemRecords[system] || 0;
+                
+                // Find which clause this system belongs to
+                let clause = 0;
+                for (let c = 1; c <= 8; c++) {
+                    if (CLAUSE_SYSTEMS[c] && CLAUSE_SYSTEMS[c].includes(system)) {
+                        clause = c;
+                        break;
+                    }
+                }
+                
+                const systemCard = document.createElement('a');
+                systemCard.className = 'horizontal-system-card';
+                systemCard.setAttribute('data-system', system);
+                systemCard.setAttribute('data-clause', clause);
+                systemCard.setAttribute('data-shortcut', shortcutKey);
+                systemCard.href = SYSTEM_URLS[system];
+                systemCard.target = '_blank';
+                
+                systemCard.innerHTML = `
+                    <div class="horizontal-card-icon-wrapper">
+                        <i class="fas ${systemIcon} horizontal-card-icon text-white"></i>
+                        <span class="horizontal-card-count" id="hcount-${system}">${count.toLocaleString('ar-SA')}</span>
+                        <span class="horizontal-shortcut-key">${shortcutKey}</span>
+                    </div>
+                    <div class="horizontal-card-body">
+                        <h3 class="horizontal-card-title">${systemName}</h3>
+                    </div>
+                `;
+                
+                systemCard.addEventListener('click', function(e) {
                     const system = this.getAttribute('data-system');
-                    const systemName = getSystemArabicName(system);
-                    
-                    // Show a quick notification instead of loading screen
+                    const systemName = SYSTEM_NAMES[system];
                     showNotification(`🚀 جاري تحميل نظام ${systemName}...`, 'info', 1500);
-                    
-                    // Let the anchor tag handle the navigation
+                });
+                
+                systemsSlider.appendChild(systemCard);
+            });
+        }
+        
+        // Scroll the horizontal slider
+        function scrollSlider(direction) {
+            const scrollWrapper = document.getElementById('systemsScrollWrapper');
+            const scrollAmount = 300; // Adjust scroll amount as needed
+            
+            if (direction === 'left') {
+                scrollWrapper.scrollLeft += scrollAmount;
+            } else if (direction === 'right') {
+                scrollWrapper.scrollLeft -= scrollAmount;
+            }
+        }
+        
+        // Select a clause
+        function selectClause(clause) {
+            // Update UI
+            document.querySelectorAll('.clause-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const selectedClause = document.querySelector(`.clause-item[data-clause="${clause}"]`);
+            if (selectedClause) {
+                selectedClause.classList.add('active');
+            }
+            
+            // Update current clause
+            currentClause = clause;
+            
+            // Clear search
+            document.getElementById('searchInput').value = '';
+            
+            // Update title
+            document.getElementById('systemsTitle').textContent = `أنظمة ${CLAUSE_NAMES[clause]} (البند ${clause})`;
+            
+            // Display systems for this clause
+            const systems = CLAUSE_SYSTEMS[clause] || [];
+            displaySystems(systems);
+        }
+        
+        // Setup clause interactions
+        function setupClauseInteractions() {
+            const clauseItems = document.querySelectorAll('.clause-item');
+            
+            clauseItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const clause = parseInt(this.getAttribute('data-clause'));
+                    selectClause(clause);
                 });
             });
         }
         
         // Load all records from all systems
         async function loadAllRecords(backgroundMode = false) {
-            // Show background update indicator instead of blocking loading screen
             if (!backgroundMode) {
                 showUpdateIndicator('جاري تحديث البيانات...', true);
                 showNotification('🔄 جاري تحديث البيانات من جميع الأنظمة...', 'info');
@@ -1261,12 +1591,11 @@
                         const result = await callGoogleScript(url, 'getAll');
                         if (result.status === 'success') {
                             systemRecords[system] = result.data.length;
-                            systemData[system] = result.data; // حفظ البيانات الفعلية
+                            systemData[system] = result.data;
                             updateSystemCount(system, result.data.length);
                         }
                     } catch (error) {
                         console.error(`Error loading ${system}:`, error);
-                        // إنشاء بيانات افتراضية للاختبار إذا فشل الاتصال
                         systemRecords[system] = Math.floor(Math.random() * 50) + 10;
                         systemData[system] = generateSampleData(system, systemRecords[system]);
                         updateSystemCount(system, systemRecords[system]);
@@ -1281,17 +1610,19 @@
                 
                 // Update individual counts
                 Object.keys(systemRecords).forEach(system => {
-                    const countElement = document.getElementById(`count-${system}`);
+                    const countElement = document.getElementById(`hcount-${system}`);
                     if (countElement) {
                         countElement.textContent = systemRecords[system].toLocaleString('ar-SA');
                     }
                 });
                 
+                // Update clause counts
+                updateClauseCounts();
+                
                 if (!backgroundMode) {
                     showNotification(`✅ تم تحديث ${total} سجل من 15 نظام`, 'success');
                     showUpdateIndicator('تم تحديث البيانات بنجاح', false);
                     
-                    // Hide update indicator after 3 seconds
                     setTimeout(() => {
                         hideUpdateIndicator();
                     }, 3000);
@@ -1308,25 +1639,41 @@
             }
         }
         
-        // Generate sample data for testing
+        // Update clause counts
+        function updateClauseCounts() {
+            for (let clause = 1; clause <= 8; clause++) {
+                const systems = CLAUSE_SYSTEMS[clause] || [];
+                let totalCount = 0;
+                
+                systems.forEach(system => {
+                    totalCount += systemRecords[system] || 0;
+                });
+                
+                const countElement = document.getElementById(`clause${clause}-count`);
+                if (countElement) {
+                    countElement.textContent = totalCount.toLocaleString('ar-SA');
+                }
+            }
+        }
+        
+        // Generate sample data
         function generateSampleData(system, count) {
             const data = [];
-            const systemName = getSystemArabicName(system);
+            const systemName = SYSTEM_NAMES[system];
             
             for (let i = 1; i <= count; i++) {
                 data.push({
                     id: i,
                     name: `سجل ${i} في نظام ${systemName}`,
                     date: new Date().toLocaleDateString('ar-SA'),
-                    status: i % 3 === 0 ? 'مكتمل' : i % 3 === 1 ? 'قيد التنفيذ' : 'معلق',
-                    description: `وصف لسجل ${i} في نظام ${systemName}`
+                    status: i % 3 === 0 ? 'مكتمل' : i % 3 === 1 ? 'قيد التنفيذ' : 'معلق'
                 });
             }
             
             return data;
         }
         
-        // Call Google Apps Script via JSONP
+        // Call Google Apps Script
         function callGoogleScript(scriptUrl, action, data = {}) {
             return new Promise((resolve, reject) => {
                 const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
@@ -1373,11 +1720,9 @@
         
         // Update system count display
         function updateSystemCount(system, count) {
-            const countElement = document.getElementById(`count-${system}`);
+            const countElement = document.getElementById(`hcount-${system}`);
             if (countElement) {
                 countElement.textContent = count.toLocaleString('ar-SA');
-                
-                // Add subtle animation
                 countElement.style.transform = 'scale(1.1)';
                 setTimeout(() => {
                     countElement.style.transform = 'scale(1)';
@@ -1419,13 +1764,6 @@
             const messageElement = document.getElementById('updateMessage');
             
             messageElement.textContent = message;
-            
-            if (updating) {
-                indicator.classList.add('updating');
-            } else {
-                indicator.classList.remove('updating');
-            }
-            
             indicator.classList.add('show');
         }
         
@@ -1434,59 +1772,41 @@
             indicator.classList.remove('show');
         }
         
-        // Setup keyboard shortcuts (A-Z)
+        // Setup keyboard shortcuts
         function setupKeyboardShortcuts() {
             document.addEventListener('keydown', function(e) {
-                // Ctrl + R: Refresh all data
                 if (e.ctrlKey && e.key === 'r') {
                     e.preventDefault();
                     loadAllRecords();
                 }
                 
-                // Esc: Clear search
                 if (e.key === 'Escape') {
                     document.getElementById('searchInput').value = '';
-                    document.getElementById('searchInput').dispatchEvent(new Event('input'));
+                    selectClause(currentClause);
                 }
                 
-                // Letters A-O: Open specific system
+                if (e.key >= '1' && e.key <= '8') {
+                    const clause = parseInt(e.key);
+                    selectClause(clause);
+                }
+                
                 const key = e.key.toUpperCase();
                 if (key >= 'A' && key <= 'O') {
-                    const systemCard = document.querySelector(`.system-card[data-shortcut="${key}"]`);
-                    if (systemCard) {
-                        systemCard.click();
+                    const systemEntry = Object.entries(SHORTCUT_KEYS).find(([system, shortcut]) => shortcut === key);
+                    if (systemEntry) {
+                        const [system] = systemEntry;
+                        const systemName = SYSTEM_NAMES[system];
+                        showNotification(`🚀 جاري تحميل نظام ${systemName}...`, 'info', 1500);
+                        window.open(SYSTEM_URLS[system], '_blank');
                     }
                 }
-            });
-        }
-        
-        // Animate system cards on scroll
-        function animateSystemCards() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-            
-            document.querySelectorAll('.system-card').forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                card.style.transitionDelay = `${index * 0.1}s`;
-                
-                observer.observe(card);
             });
         }
         
         // Show all statistics
         function showAllStats() {
             let statsHTML = `
-                <div class="modal-header modal-header-custom" style="background: linear-gradient(135deg, var(--primary-color), #34495e);">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-color), #34495e);">
                     <h5 class="modal-title text-white">
                         <i class="fas fa-chart-bar me-2"></i>
                         إحصائيات كاملة لجميع الأنظمة
@@ -1500,9 +1820,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>النظام</th>
+                                    <th>البند</th>
                                     <th>عدد السجلات</th>
-                                    <th>النسبة</th>
-                                    <th>الحالة</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1513,31 +1832,24 @@
             
             systems.forEach((system, index) => {
                 const count = systemRecords[system];
-                const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                let clause = '-';
                 
-                let status = '<span class="badge bg-success">نشط</span>';
-                if (count === 0) {
-                    status = '<span class="badge bg-warning text-dark">لا توجد سجلات</span>';
-                } else if (count > 100) {
-                    status = '<span class="badge bg-info">كبير</span>';
+                for (let c = 1; c <= 8; c++) {
+                    if (CLAUSE_SYSTEMS[c] && CLAUSE_SYSTEMS[c].includes(system)) {
+                        clause = c;
+                        break;
+                    }
                 }
                 
                 statsHTML += `
-                    <tr onclick="document.querySelector('.system-card[data-system=\\'${system}\\']').click()" style="cursor: pointer;">
+                    <tr style="cursor: pointer;" onclick="window.open('${SYSTEM_URLS[system]}', '_blank')">
                         <td>${index + 1}</td>
                         <td>
-                            <i class="fas fa-${getSystemIcon(system)} me-2"></i>
-                            ${getSystemArabicName(system)}
+                            <i class="fas ${SYSTEM_ICONS[system]} me-2"></i>
+                            ${SYSTEM_NAMES[system]}
                         </td>
+                        <td>${clause !== '-' ? `البند ${clause}` : '-'}</td>
                         <td><strong>${count.toLocaleString('ar-SA')}</strong></td>
-                        <td>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar" style="width: ${percentage}%; background: ${getSystemColor(system)};">
-                                    ${percentage}%
-                                </div>
-                            </div>
-                        </td>
-                        <td>${status}</td>
                     </tr>
                 `;
             });
@@ -1546,8 +1858,8 @@
                             </tbody>
                             <tfoot style="background: #f1f2f6;">
                                 <tr>
-                                    <th colspan="2">الإجمالي</th>
-                                    <th colspan="3" class="text-success">
+                                    <th colspan="3">الإجمالي</th>
+                                    <th class="text-success">
                                         <strong>${total.toLocaleString('ar-SA')} سجل</strong>
                                     </th>
                                 </tr>
@@ -1565,50 +1877,6 @@
             `;
             
             showModal('إحصائيات كاملة', statsHTML, 'modal-lg');
-        }
-        
-        // Get system icon
-        function getSystemIcon(system) {
-            const icons = {
-                calibration: 'file-contract',
-                impartiality: 'balance-scale',
-                contract: 'file-signature',
-                supplier: 'truck',
-                'calibration-mgmt': 'tools',
-                maintenance: 'wrench',
-                devices: 'microchip',
-                fmea: 'exclamation-triangle',
-                corrective: 'clipboard-check',
-                environmental: 'temperature-high',
-                training: 'graduation-cap',
-                delegation: 'user-shield',
-                complaints: 'clipboard-list',
-                'employee-skills': 'user-tie',
-                ncr: 'ban'
-            };
-            return icons[system] || 'cube';
-        }
-        
-        // Get system color
-        function getSystemColor(system) {
-            const colors = {
-                calibration: '#3498db',
-                impartiality: '#9b59b6',
-                contract: '#e74c3c',
-                supplier: '#2ecc71',
-                'calibration-mgmt': '#1abc9c',
-                maintenance: '#e67e22',
-                devices: '#8e44ad',
-                fmea: '#7d3c98',
-                corrective: '#c0392b',
-                environmental: '#16a085',
-                training: '#8e44ad',
-                delegation: '#8e44ad',
-                complaints: '#e74c3c',
-                'employee-skills': '#2ecc71',
-                ncr: '#e67e22'
-            };
-            return colors[system] || '#3498db';
         }
         
         // Show modal
@@ -1634,14 +1902,13 @@
             modal.show();
         }
         
-        // Export all Excel sheets from actual data
+        // Export all Excel sheets
         async function exportAllExcelSheets() {
             if (exportInProgress) {
                 showNotification('⚠️ جارٍ تصدير البيانات بالفعل، يرجى الانتظار', 'warning');
                 return;
             }
             
-            // تحقق من وجود بيانات للتصدير
             const totalRecords = Object.values(systemRecords).reduce((a, b) => a + b, 0);
             if (totalRecords === 0) {
                 showNotification('⚠️ لا توجد بيانات للتصدير. يرجى تحديث البيانات أولاً.', 'warning');
@@ -1659,92 +1926,52 @@
             document.getElementById('exportProgressFill').style.width = '0%';
             document.getElementById('exportProgressText').textContent = '0%';
             document.getElementById('exportCurrentFile').textContent = 'جاري الإعداد...';
-            document.getElementById('exportFileList').innerHTML = '';
             
-            // Show export progress modal
             document.getElementById('exportProgress').classList.add('active');
             
             const systems = Object.keys(systemData);
             const totalSystems = systems.length;
+            let completed = 0;
             
             for (let i = 0; i < totalSystems; i++) {
                 if (exportCancelled) break;
                 
                 const system = systems[i];
-                const systemName = getSystemArabicName(system);
+                const systemName = SYSTEM_NAMES[system];
                 const data = systemData[system] || [];
                 
                 if (!data || data.length === 0) {
-                    // Add file to list as skipped
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'export-file-item error';
-                    fileItem.innerHTML = `
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span>${systemName} (لا توجد بيانات)</span>
-                    `;
-                    document.getElementById('exportFileList').appendChild(fileItem);
+                    completed++;
                     continue;
                 }
                 
-                // Update progress
-                const progress = Math.round(((i + 1) / totalSystems) * 100);
+                completed++;
+                const progress = Math.round((completed / totalSystems) * 100);
                 document.getElementById('exportProgressFill').style.width = `${progress}%`;
                 document.getElementById('exportProgressText').textContent = `${progress}%`;
                 document.getElementById('exportCurrentFile').textContent = `جارٍ تصدير: ${systemName}`;
                 
-                // Add file to list
-                const fileItem = document.createElement('div');
-                    fileItem.className = 'export-file-item pending';
-                    fileItem.innerHTML = `
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <span>${systemName}</span>
-                    `;
-                    document.getElementById('exportFileList').appendChild(fileItem);
-                
                 try {
-                    // تحويل البيانات إلى CSV
                     const csvData = convertToCSV(data);
-                    
-                    // إنشاء ملف CSV للتنزيل
                     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
                     const url = URL.createObjectURL(blob);
                     
                     const link = document.createElement('a');
                     link.href = url;
-                    link.download = `${folderName}/${systemName}_${dateStr}.csv`;
+                    link.download = `${systemName}_${dateStr}.csv`;
                     link.style.display = 'none';
                     
-                    // Append to body and trigger download
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                     
-                    // Clean up URL object
                     setTimeout(() => URL.revokeObjectURL(url), 100);
-                    
-                    // Update file item status
-                    fileItem.className = 'export-file-item completed';
-                    fileItem.innerHTML = `
-                        <i class="fas fa-check-circle"></i>
-                        <span>${systemName} (${data.length} سجل)</span>
-                    `;
-                    
-                    // Scroll to the latest file
-                    fileItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     
                 } catch (error) {
                     console.error(`Error exporting ${system}:`, error);
-                    
-                    // Update file item status to error
-                    fileItem.className = 'export-file-item error';
-                    fileItem.innerHTML = `
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span>${systemName} (خطأ)</span>
-                    `;
                 }
                 
-                // Add a small delay between downloads
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
             
             if (exportCancelled) {
@@ -1752,9 +1979,8 @@
                 document.getElementById('exportProgress').classList.remove('active');
             } else {
                 document.getElementById('exportCurrentFile').textContent = 'اكتمل التصدير بنجاح!';
-                showNotification(`✅ تم تصدير البيانات إلى مجلد ${folderName}`, 'success');
+                showNotification(`✅ تم تصدير البيانات بنجاح`, 'success');
                 
-                // Hide export progress modal after 3 seconds
                 setTimeout(() => {
                     document.getElementById('exportProgress').classList.remove('active');
                 }, 3000);
@@ -1763,21 +1989,16 @@
             exportInProgress = false;
         }
         
-        // Convert data to CSV format
+        // Convert data to CSV
         function convertToCSV(data) {
             if (!data || data.length === 0) return '';
             
-            // الحصول على عناوين الأعمدة
             const headers = Object.keys(data[0]);
-            
-            // إنشاء سطر العناوين
             let csv = headers.join(',') + '\n';
             
-            // إضافة البيانات
             data.forEach(row => {
                 const values = headers.map(header => {
                     const value = row[header];
-                    // معالجة القيم الخاصة (الفاصلات، فواصل الأسطر، إلخ)
                     if (typeof value === 'string' && (value.includes(',') || value.includes('\n') || value.includes('"'))) {
                         return '"' + value.replace(/"/g, '""') + '"';
                     }
@@ -1796,114 +2017,48 @@
             showNotification('تم إلغاء عملية التصدير', 'warning');
         }
         
-        // Export all data (CSV - للتوافق مع الوظيفة القديمة)
-        function exportAllData() {
-            showNotification('📊 جاري تجهيز البيانات للتصدير...', 'info');
-            
-            // Simulate export process
-            setTimeout(() => {
-                const dataStr = "data:text/csv;charset=utf-8,";
-                const rows = [];
-                
-                // Add header
-                rows.push(['النظام', 'عدد السجلات', 'آخر تحديث']);
-                
-                // Add data rows
-                Object.keys(systemRecords).forEach(system => {
-                    rows.push([
-                        getSystemArabicName(system),
-                        systemRecords[system],
-                        new Date().toLocaleDateString('ar-SA')
-                    ]);
-                });
-                
-                const csvContent = rows.map(e => e.join(",")).join("\n");
-                const encodedUri = encodeURI(dataStr + csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `export_all_systems_${new Date().toISOString().slice(0,10)}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                showNotification('✅ تم تصدير البيانات بنجاح', 'success');
-            }, 1500);
-        }
-        
         // Open help
         function openHelp() {
             const helpContent = `
-                <div class="modal-header modal-header-custom" style="background: linear-gradient(135deg, var(--primary-color), #34495e);">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-color), #34495e);">
                     <h5 class="modal-title text-white">
                         <i class="fas fa-question-circle me-2"></i>
-                        المساعدة والدعم - نظام إدارة السجلات المتكامل
+                        المساعدة والدعم
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-primary">
-                                        <i class="fas fa-play-circle me-2"></i>
-                                        كيف تبدأ؟
-                                    </h5>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>انقر على أيقونة النظام للدخول</li>
-                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>استخدم شريط البحث للعثور على النظام</li>
-                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>انقر على "تحديث جميع البيانات"</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-primary">
-                                        <i class="fas fa-keyboard me-2"></i>
-                                        اختصارات لوحة المفاتيح
-                                    </h5>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2"><kbd>Ctrl</kbd> + <kbd>R</kbd> تحديث البيانات</li>
-                                        <li class="mb-2"><kbd>Esc</kbd> مسح البحث</li>
-                                        <li class="mb-2"><kbd>A-O</kbd> فتح أنظمة سريعة</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h6 class="text-primary mb-3">
+                        <i class="fas fa-play-circle me-2"></i>
+                        كيف تبدأ؟
+                    </h6>
+                    <ul class="mb-4">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>ابحث مباشرة أو اختر بندًا من القائمة</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>انقر على أيقونة النظام للدخول</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>استخدم الاختصارات A-O للوصول السريع</li>
+                    </ul>
                     
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary">
-                                <i class="fas fa-headset me-2"></i>
-                                الدعم الفني
-                            </h5>
-                            <p>للدعم الفني أو الإبلاغ عن مشاكل:</p>
-                            <div class="d-flex gap-3">
-                                <a href="mailto:support@qualitylab.com" class="btn btn-outline-primary">
-                                    <i class="fas fa-envelope me-1"></i>
-                                    البريد الإلكتروني
-                                </a>
-                                <a href="tel:+966500000000" class="btn btn-outline-success">
-                                    <i class="fas fa-phone me-1"></i>
-                                    الدعم الهاتفي
-                                </a>
-                            </div>
+                    <h6 class="text-primary mb-3">
+                        <i class="fas fa-keyboard me-2"></i>
+                        اختصارات لوحة المفاتيح
+                    </h6>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <p><kbd>1-8</kbd> اختيار البند</p>
+                            <p><kbd>Esc</kbd> مسح البحث</p>
+                        </div>
+                        <div class="col-6">
+                            <p><kbd>Ctrl</kbd> + <kbd>R</kbd> تحديث</p>
+                            <p><kbd>A-O</kbd> فتح الأنظمة</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-                    <button type="button" class="btn btn-primary" onclick="window.open('manual.pdf', '_blank')">
-                        <i class="fas fa-book me-1"></i>
-                        تحميل الدليل الكامل
-                    </button>
                 </div>
             `;
             
-            showModal('المساعدة والدعم', helpContent, 'modal-lg');
+            showModal('المساعدة والدعم', helpContent);
         }
     </script>
 </body>
