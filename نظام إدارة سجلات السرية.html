@@ -43,7 +43,7 @@
             padding: 0 15px;
         }
         
-        /* Header Styles */
+        /* Header Styles - Updated to match second code layout */
         .main-header {
             background: linear-gradient(135deg, var(--primary-color), #1a2530);
             color: white;
@@ -75,7 +75,7 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Home Button */
+        /* Home Button - Updated position to match second code */
         .home-button {
             position: absolute;
             top: 20px;
@@ -90,6 +90,7 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             z-index: 10;
+            white-space: nowrap;
         }
         
         .home-button:hover {
@@ -100,6 +101,20 @@
         
         .home-button i {
             margin-right: 5px;
+        }
+        
+        /* Header adjustments for home button - Added from second code */
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Ensure the date badge doesn't overlap with home button - Added from second code */
+        @media (min-width: 769px) {
+            .header-badge-container {
+                position: relative;
+                padding-left: 130px; /* Space for home button */
+            }
         }
         
         /* Card Styles */
@@ -439,6 +454,7 @@
                 min-width: 60px;
             }
             
+            /* Home Button Responsive Styles - Updated to match second code */
             .home-button {
                 position: relative;
                 top: 0;
@@ -449,6 +465,14 @@
             
             .main-header {
                 padding-top: 60px;
+            }
+            
+            /* Header badge container responsive - Added from second code */
+            .header-badge-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
             }
             
             .table-custom {
@@ -482,6 +506,12 @@
         .btn-close-white {
             filter: invert(1) grayscale(100%) brightness(200%);
         }
+        
+        /* Modal Fix - Prevent background scroll - Added from second code */
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
+        }
     </style>
 </head>
 <body>
@@ -490,26 +520,28 @@
     
     <!-- Main Container -->
     <div class="container-fluid main-container">
-        <!-- Main Header -->
+        <!-- Main Header - Updated to match second code layout -->
         <div class="main-header fade-in">
             <!-- Return to Home Button -->
             <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
             
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-file-contract me-2"></i> نظام إدارة سجلات السرية - معمل كواليتك إنترناشيونال</h1>
-                    <p class="lead mb-0">نظام متكامل لإدارة سجلات السرية للموظفين والعقود والالتزامات القانونية</p>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <div class="header-badge d-inline-block me-3">
-                        <i class="fas fa-database me-2"></i>
-                        <span id="totalRecords">0</span> سجلات
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1><i class="fas fa-file-contract me-2"></i> نظام إدارة سجلات السرية - معمل كواليتك إنترناشيونال</h1>
+                        <p class="lead mb-0">نظام متكامل لإدارة سجلات السرية للموظفين والعقود والالتزامات القانونية</p>
                     </div>
-                    <div class="header-badge d-inline-block">
-                        <i class="fas fa-calendar me-2"></i>
-                        <span id="currentDate">--/--/----</span>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
+                        <div class="header-badge d-inline-block me-3">
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> سجلات
+                        </div>
+                        <div class="header-badge d-inline-block">
+                            <i class="fas fa-calendar me-2"></i>
+                            <span id="currentDate">--/--/----</span>
+                        </div>
                     </div>
                 </div>
             </div>
