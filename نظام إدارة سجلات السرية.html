@@ -23,6 +23,7 @@
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
             --calibration-color: #3498db;
+            --file-color: #9b59b6;
         }
         
         * {
@@ -125,6 +126,14 @@
             background: linear-gradient(135deg, var(--calibration-color), #2980b9);
         }
         
+        .card-header-agreement {
+            background: linear-gradient(135deg, #27ae60, #219653);
+        }
+        
+        .card-header-file {
+            background: linear-gradient(135deg, var(--file-color), #8e44ad);
+        }
+        
         /* Form Styles */
         .form-control-custom, .form-select-custom, .form-textarea-custom {
             border: 2px solid #e0e0e0;
@@ -151,6 +160,119 @@
             color: var(--dark-color);
             margin-bottom: 6px;
             font-size: 0.9rem;
+        }
+        
+        /* Agreement Checkboxes Styles */
+        .agreement-container {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .agreement-checkbox {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .agreement-checkbox:hover {
+            background: rgba(52, 152, 219, 0.05);
+        }
+        
+        .agreement-checkbox .form-check-input {
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .agreement-checkbox .form-check-label {
+            cursor: pointer;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .agreement-checkbox .form-check-input:checked {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+        
+        /* Upload File Button Styles */
+        .upload-container {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .upload-container:hover {
+            background: #e9ecef;
+            border-color: var(--secondary-color);
+        }
+        
+        .upload-container.dragover {
+            background: #e3f2fd;
+            border-color: var(--secondary-color);
+            border-style: solid;
+        }
+        
+        .upload-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background: #5a6268;
+        }
+        
+        .upload-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        .upload-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+        
+        .upload-status.success {
+            color: var(--success-color);
+        }
+        
+        .upload-status.error {
+            color: var(--danger-color);
+        }
+        
+        .upload-status.loading {
+            color: var(--secondary-color);
+        }
+        
+        .file-link-btn {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .file-link-btn:hover {
+            background: #219653;
+            color: white;
+            text-decoration: none;
         }
         
         /* Date Input Styling */
@@ -202,7 +324,7 @@
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 0;
-            min-width: 1200px;
+            min-width: 1300px;
             width: 100%;
         }
         
@@ -328,6 +450,10 @@
             .main-header {
                 padding-top: 60px;
             }
+            
+            .table-custom {
+                min-width: 1100px;
+            }
         }
         
         /* Custom Scrollbar */
@@ -398,6 +524,41 @@
                     </div>
                     <div class="card-body">
                         <form id="calibrationForm">
+                            <!-- File Upload Section -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="upload-container" id="uploadContainer">
+                                        <h6><i class="fas fa-cloud-upload-alt me-2"></i>رفع ملف السرية (PDF أو صورة)</h6>
+                                        <p class="text-muted mb-2" style="font-size: 0.85rem;">الحد الأقصى لحجم الملف: 10 ميجابايت. الأنواع المسموحة: PNG, JPG, JPEG, PDF</p>
+                                        
+                                        <input type="file" id="fileInput" 
+                                               accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                                               style="display: none">
+                                        <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                                            <i class="fas fa-folder-open me-1"></i> اختر ملف للرفع
+                                        </button>
+                                        <button type="button" class="upload-btn" onclick="uploadFile()" id="uploadBtn">
+                                            <i class="fas fa-upload me-1"></i> رفع الملف
+                                        </button>
+                                        
+                                        <div class="upload-status" id="uploadStatus"></div>
+                                        
+                                        <div id="uploadedFileInfo" style="display: none; margin-top: 10px;">
+                                            <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                                <div>
+                                                    <i class="fas fa-file me-2"></i>
+                                                    <span id="uploadedFileName"></span>
+                                                    <span class="badge bg-success ms-2" id="uploadedFileSize"></span>
+                                                </div>
+                                                <a href="#" target="_blank" class="file-link-btn" id="uploadedFileLink" style="display: none;">
+                                                    <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">رقم سجل السرية *</label>
@@ -450,6 +611,75 @@
                                 </div>
                             </div>
                             
+                            <!-- Confidentiality Agreement Section -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="custom-card">
+                                        <div class="card-header-custom card-header-agreement">
+                                            <i class="fas fa-shield-alt me-2"></i> بنود السرية والالتزامات
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="agreement-container">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="agreement-checkbox">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="calibration_confidentiality" checked>
+                                                                <label class="form-check-label" for="calibration_confidentiality">
+                                                                    عدم إفشاء المعلومات السرية
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="agreement-checkbox">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="calibration_officialUse" checked>
+                                                                <label class="form-check-label" for="calibration_officialUse">
+                                                                    استخدام المعلومات للأغراض الرسمية فقط
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="agreement-checkbox">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="calibration_accessProtection" checked>
+                                                                <label class="form-check-label" for="calibration_accessProtection">
+                                                                    حماية المعلومات من الوصول غير المصرح به
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="agreement-checkbox">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="calibration_breachReporting" checked>
+                                                                <label class="form-check-label" for="calibration_breachReporting">
+                                                                    الإبلاغ الفوري عن خروقات السرية
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="agreement-checkbox">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="calibration_passwordProtection" checked>
+                                                                <label class="form-check-label" for="calibration_passwordProtection">
+                                                                    حماية أجهزة الحاسب بكلمات مرور قوية
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="agreement-checkbox">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="calibration_noSocialMedia" checked>
+                                                                <label class="form-check-label" for="calibration_noSocialMedia">
+                                                                    عدم نشر المعلومات على وسائل التواصل
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-12 mb-2">
                                     <label class="form-label-custom">ملاحظات</label>
@@ -474,6 +704,7 @@
                             </div>
                             <input type="hidden" id="calibration_editingId">
                             <input type="hidden" id="calibration_recordId">
+                            <input type="hidden" id="calibration_fileLink">
                         </form>
                     </div>
                 </div>
@@ -522,7 +753,7 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة سجلال السرية 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 1.0</span>
+                    <span id="appVersion" class="text-info">الإصدار 1.1 (مع بنود السرية)</span>
                 </p>
             </div>
         </div>
@@ -586,8 +817,9 @@
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const CALIBRATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxzUljzgWR0jBrrp61DWBUxVB-Ku5bH3I736KHlrpJAHaQlPOAaklbswpPOi1Wut14/exec";
+        const CALIBRATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb3OzEoKoOhmXlyar5Lxk0Ku_Nj7UjLBoUmbneiKWKdlYgxAphcgzgvnGa5g0iK5_tYQ/exec";
         const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
+        const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyAAiQ7MyV68RWvAzborRzTC77kfe8NjpJHT98WQhxIVRaJAbeVVmTAsjMhYrMQaphuNw/exec";
         
         // ================ GLOBAL VARIABLES ================
         let calibrationRecords = [];
@@ -597,6 +829,155 @@
         let flatpickrInstances = {};
         let deleteModalInstance = null;
         let detailsModalInstance = null;
+        let selectedFile = null;
+        let uploadedFileUrl = '';
+        
+        // ================ FILE UPLOAD FUNCTIONS ================
+        function initializeFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadContainer = document.getElementById('uploadContainer');
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            
+            // Drag and drop functionality
+            uploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.add('dragover');
+            });
+            
+            uploadContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+            });
+            
+            uploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+        }
+        
+        function handleFileSelect(file) {
+            const allowedTypes = [
+                "image/png",
+                "image/jpeg",
+                "application/pdf"
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                showNotification("❌ فقط ملفات PNG, JPG, JPEG أو PDF مسموحة", "error");
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification("❌ حجم الملف كبير جداً (الحد الأقصى 10MB)", "error");
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Display file info
+            document.getElementById('uploadedFileName').textContent = file.name;
+            document.getElementById('uploadedFileSize').textContent = formatFileSize(file.size);
+            document.getElementById('uploadedFileInfo').style.display = 'block';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            
+            // Reset upload status
+            const uploadStatus = document.getElementById('uploadStatus');
+            uploadStatus.textContent = '';
+            uploadStatus.className = 'upload-status';
+            
+            showNotification(`✅ تم اختيار الملف: ${file.name}`, 'success', 3000);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' بايت';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
+            else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
+        }
+        
+        async function uploadFile() {
+            if (!selectedFile) {
+                showNotification("⚠️ يرجى اختيار ملف أولاً", "warning");
+                return;
+            }
+            
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadStatus = document.getElementById('uploadStatus');
+            
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الرفع...';
+            uploadStatus.textContent = 'جاري رفع الملف... ⏳';
+            uploadStatus.className = 'upload-status loading';
+            
+            try {
+                const reader = new FileReader();
+                
+                reader.onload = async function() {
+                    const base64 = reader.result.split(",")[1];
+                    
+                    const response = await fetch(UPLOAD_WEB_APP_URL, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            fileName: selectedFile.name,
+                            mimeType: selectedFile.type,
+                            fileData: base64
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        uploadedFileUrl = data.url;
+                        
+                        // Update the hidden field
+                        document.getElementById('calibration_fileLink').value = uploadedFileUrl;
+                        
+                        // Display success message and file link
+                        uploadStatus.textContent = '✅ تم رفع الملف بنجاح';
+                        uploadStatus.className = 'upload-status success';
+                        
+                        // Show the file link button
+                        const fileLinkBtn = document.getElementById('uploadedFileLink');
+                        fileLinkBtn.href = uploadedFileUrl;
+                        fileLinkBtn.style.display = 'inline-block';
+                        
+                        showNotification(`✅ تم رفع الملف بنجاح: ${selectedFile.name}`, 'success');
+                    } else {
+                        uploadStatus.textContent = '❌ فشل في رفع الملف: ' + (data.message || 'خطأ غير معروف');
+                        uploadStatus.className = 'upload-status error';
+                        showNotification(`❌ فشل في رفع الملف: ${data.message || 'خطأ غير معروف'}`, 'error');
+                    }
+                    
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                };
+                
+                reader.onerror = function() {
+                    uploadStatus.textContent = '❌ خطأ في قراءة الملف';
+                    uploadStatus.className = 'upload-status error';
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                    showNotification('❌ خطأ في قراءة الملف', 'error');
+                };
+                
+                reader.readAsDataURL(selectedFile);
+                
+            } catch (error) {
+                uploadStatus.textContent = '❌ فشل في رفع الملف: ' + error;
+                uploadStatus.className = 'upload-status error';
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                showNotification('❌ فشل في رفع الملف: ' + error, 'error');
+            }
+        }
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
@@ -610,6 +991,9 @@
             
             // Initialize calendar pickers
             initializeDatePickers();
+            
+            // Initialize file upload
+            initializeFileUpload();
             
             // Load data
             setTimeout(() => {
@@ -1202,13 +1586,15 @@
             const table = document.getElementById('calibrationDataTable');
             
             let html = '<thead><tr>';
-            const headers = ['رقم سجل السرية', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد', 'تاريخ التوقيع', 'اسم المراجع', 'الإجراءات'];
+            const headers = ['رقم سجل السرية', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد', 'تاريخ التوقيع', 'اسم المراجع', 'الملف المرفوع', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
             html += '</tr></thead><tbody>';
             
             records.forEach((record) => {
+                const fileLink = record[17] || ''; // Column 18 (0-based index 17) is the file link
+                
                 html += '<tr>';
                 
                 html += `<td><strong>${escapeHtml(record[15] || '')}</strong></td>`;
@@ -1218,6 +1604,17 @@
                 html += `<td>${escapeHtml(record[4] || '')}</td>`;
                 html += `<td>${formatDateForDisplay(record[6] || '')}</td>`;
                 html += `<td>${escapeHtml(record[14] || '')}</td>`;
+                
+                // File link column
+                if (fileLink && fileLink.trim() !== '') {
+                    html += `<td>
+                        <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn">
+                            <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                        </a>
+                    </td>`;
+                } else {
+                    html += `<td><span class="text-muted">لا يوجد ملف</span></td>`;
+                }
                 
                 html += `<td class="action-buttons">
                     <button onclick="editCalibrationRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
@@ -1287,6 +1684,17 @@
             const recordId = 'CAL-' + Date.now();
             document.getElementById('calibration_recordId').value = recordId;
             
+            // Get file link from hidden field
+            const fileLink = document.getElementById('calibration_fileLink').value;
+            
+            // Get confidentiality agreement checkbox values (نعم/لا)
+            const confidentiality = document.getElementById('calibration_confidentiality').checked ? 'نعم' : 'لا';
+            const officialUse = document.getElementById('calibration_officialUse').checked ? 'نعم' : 'لا';
+            const accessProtection = document.getElementById('calibration_accessProtection').checked ? 'نعم' : 'لا';
+            const breachReporting = document.getElementById('calibration_breachReporting').checked ? 'نعم' : 'لا';
+            const passwordProtection = document.getElementById('calibration_passwordProtection').checked ? 'نعم' : 'لا';
+            const noSocialMedia = document.getElementById('calibration_noSocialMedia').checked ? 'نعم' : 'لا';
+            
             // Build query string like training system
             const fields = [
                 'calibration_secretRecordNumber',
@@ -1305,6 +1713,15 @@
             
             q += `&startDate=${encodeURIComponent(startDate)}`;
             q += `&signDate=${encodeURIComponent(signDate)}`;
+            q += `&fileLink=${encodeURIComponent(fileLink || '')}`;
+            
+            // Add confidentiality agreement values
+            q += `&confidentiality=${encodeURIComponent(confidentiality)}`;
+            q += `&officialUse=${encodeURIComponent(officialUse)}`;
+            q += `&accessProtection=${encodeURIComponent(accessProtection)}`;
+            q += `&breachReporting=${encodeURIComponent(breachReporting)}`;
+            q += `&passwordProtection=${encodeURIComponent(passwordProtection)}`;
+            q += `&noSocialMedia=${encodeURIComponent(noSocialMedia)}`;
             
             try {
                 const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=add&${q}`);
@@ -1350,6 +1767,36 @@
             document.getElementById('calibration_contractType').value = record[4] || '';
             document.getElementById('calibration_notes').value = record[13] || '';
             document.getElementById('calibration_reviewerName').value = record[14] || '';
+            
+            // Set the file link
+            const fileLink = record[17] || '';
+            document.getElementById('calibration_fileLink').value = fileLink;
+            
+            // Set confidentiality agreement checkboxes (نعم/لا)
+            // Note: These should be in columns 7-12 (0-based indices)
+            document.getElementById('calibration_confidentiality').checked = record[7] === 'نعم';
+            document.getElementById('calibration_officialUse').checked = record[8] === 'نعم';
+            document.getElementById('calibration_accessProtection').checked = record[9] === 'نعم';
+            document.getElementById('calibration_breachReporting').checked = record[10] === 'نعم';
+            document.getElementById('calibration_passwordProtection').checked = record[11] === 'نعم';
+            document.getElementById('calibration_noSocialMedia').checked = record[12] === 'نعم';
+            
+            // Display file info if there's a file link
+            if (fileLink && fileLink.trim() !== '') {
+                // Try to extract filename from URL or use a generic name
+                const fileName = 'ملف مرفق';
+                document.getElementById('uploadedFileName').textContent = fileName;
+                document.getElementById('uploadedFileSize').textContent = '';
+                document.getElementById('uploadedFileInfo').style.display = 'block';
+                
+                const fileLinkBtn = document.getElementById('uploadedFileLink');
+                fileLinkBtn.href = fileLink;
+                fileLinkBtn.style.display = 'inline-block';
+                
+                const uploadStatus = document.getElementById('uploadStatus');
+                uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                uploadStatus.className = 'upload-status success';
+            }
             
             // Set date values - FIXED: Use exact date from record without changes
             const startDateFormatted = formatDateForInput(record[5] || '');
@@ -1443,6 +1890,17 @@
                 return;
             }
             
+            // Get file link from hidden field
+            const fileLink = document.getElementById('calibration_fileLink').value;
+            
+            // Get confidentiality agreement checkbox values (نعم/لا)
+            const confidentiality = document.getElementById('calibration_confidentiality').checked ? 'نعم' : 'لا';
+            const officialUse = document.getElementById('calibration_officialUse').checked ? 'نعم' : 'لا';
+            const accessProtection = document.getElementById('calibration_accessProtection').checked ? 'نعم' : 'لا';
+            const breachReporting = document.getElementById('calibration_breachReporting').checked ? 'نعم' : 'لا';
+            const passwordProtection = document.getElementById('calibration_passwordProtection').checked ? 'نعم' : 'لا';
+            const noSocialMedia = document.getElementById('calibration_noSocialMedia').checked ? 'نعم' : 'لا';
+            
             // Build query string like training system
             const fields = [
                 'calibration_secretRecordNumber',
@@ -1461,6 +1919,15 @@
             
             q += `&startDate=${encodeURIComponent(startDate)}`;
             q += `&signDate=${encodeURIComponent(signDate)}`;
+            q += `&fileLink=${encodeURIComponent(fileLink || '')}`;
+            
+            // Add confidentiality agreement values
+            q += `&confidentiality=${encodeURIComponent(confidentiality)}`;
+            q += `&officialUse=${encodeURIComponent(officialUse)}`;
+            q += `&accessProtection=${encodeURIComponent(accessProtection)}`;
+            q += `&breachReporting=${encodeURIComponent(breachReporting)}`;
+            q += `&passwordProtection=${encodeURIComponent(passwordProtection)}`;
+            q += `&noSocialMedia=${encodeURIComponent(noSocialMedia)}`;
             
             try {
                 const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=update&${q}`);
@@ -1485,11 +1952,29 @@
             document.getElementById('calibrationForm').reset();
             document.getElementById('calibration_editingId').value = '';
             document.getElementById('calibration_recordId').value = '';
+            document.getElementById('calibration_fileLink').value = '';
             document.getElementById('calibration_addBtn').style.display = 'inline-block';
             document.getElementById('calibration_updateBtn').style.display = 'none';
             document.querySelectorAll('#calibrationForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
+            
+            // Reset confidentiality agreement checkboxes to checked
+            document.getElementById('calibration_confidentiality').checked = true;
+            document.getElementById('calibration_officialUse').checked = true;
+            document.getElementById('calibration_accessProtection').checked = true;
+            document.getElementById('calibration_breachReporting').checked = true;
+            document.getElementById('calibration_passwordProtection').checked = true;
+            document.getElementById('calibration_noSocialMedia').checked = true;
+            
+            // Reset file upload section
+            selectedFile = null;
+            uploadedFileUrl = '';
+            document.getElementById('uploadedFileInfo').style.display = 'none';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            document.getElementById('uploadStatus').textContent = '';
+            document.getElementById('uploadStatus').className = 'upload-status';
+            document.getElementById('fileInput').value = '';
             
             if (flatpickrInstances.startDate) flatpickrInstances.startDate.clear();
             if (flatpickrInstances.signDate) flatpickrInstances.signDate.clear();
@@ -1506,8 +1991,10 @@
             try {
                 const headers = [
                     'رقم سجل السرية', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد',
-                    'تاريخ بدء العمل', 'تاريخ التوقيع', 'ملاحظات',
-                    'اسم المراجع'
+                    'تاريخ بدء العمل', 'تاريخ التوقيع', 'عدم إفشاء المعلومات السرية',
+                    'استخدام المعلومات للأغراض الرسمية فقط', 'حماية المعلومات من الوصول غير المصرح به',
+                    'الإبلاغ الفوري عن خروقات السرية', 'حماية أجهزة الحاسب بكلمات مرور قوية',
+                    'عدم نشر المعلومات على وسائل التواصل', 'ملاحظات', 'اسم المراجع', 'لينك الملف'
                 ];
                 
                 let csvContent = '\uFEFF';
@@ -1525,8 +2012,15 @@
                         record[4] || '',
                         startDateDisplay,
                         signDateDisplay,
+                        record[7] || '', // confidentiality
+                        record[8] || '', // officialUse
+                        record[9] || '', // accessProtection
+                        record[10] || '', // breachReporting
+                        record[11] || '', // passwordProtection
+                        record[12] || '', // noSocialMedia
                         record[13] || '',
-                        record[14] || ''
+                        record[14] || '',
+                        record[17] || '' // File link
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -1564,6 +2058,24 @@
                 return;
             }
             
+            const fileLink = record[17] || '';
+            
+            // Create agreement items list
+            const agreementItems = [
+                { label: 'عدم إفشاء المعلومات السرية', value: record[7] || 'لا' },
+                { label: 'استخدام المعلومات للأغراض الرسمية فقط', value: record[8] || 'لا' },
+                { label: 'حماية المعلومات من الوصول غير المصرح به', value: record[9] || 'لا' },
+                { label: 'الإبلاغ الفوري عن خروقات السرية', value: record[10] || 'لا' },
+                { label: 'حماية أجهزة الحاسب بكلمات مرور قوية', value: record[11] || 'لا' },
+                { label: 'عدم نشر المعلومات على وسائل التواصل', value: record[12] || 'لا' }
+            ];
+            
+            let agreementHTML = '';
+            agreementItems.forEach(item => {
+                const icon = item.value === 'نعم' ? '✅' : '❌';
+                agreementHTML += `<p>${icon} ${item.label}: <strong>${item.value}</strong></p>`;
+            });
+            
             const detailsHTML = `
                 <div class="row">
                     <div class="col-md-6">
@@ -1579,6 +2091,21 @@
                         <p><strong>اسم المراجع:</strong> ${escapeHtml(record[14])}</p>
                     </div>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <h5><i class="fas fa-shield-alt me-2"></i> بنود السرية والالتزامات:</h5>
+                        ${agreementHTML}
+                    </div>
+                </div>
+                ${fileLink ? `<div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>الملف المرفوع:</strong> 
+                            <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn ms-2">
+                                <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                            </a>
+                        </p>
+                    </div>
+                </div>` : ''}
                 ${record[13] ? `<div class="row mt-3">
                     <div class="col-md-12">
                         <p><strong>ملاحظات:</strong> ${escapeHtml(record[13])}</p>
