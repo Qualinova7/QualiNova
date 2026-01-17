@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة إفصاحات الحيادية</title>
+    <title>نظام إدارة إفصاحات الحيادية - معمل كواليتك إنترناشيونال</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -37,12 +37,12 @@
         }
         
         .main-container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
             padding: 0 15px;
         }
         
-        /* Header Styles */
+        /* Header Styles - Updated to match first code layout */
         .main-header {
             background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
             color: white;
@@ -74,7 +74,7 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Home Button */
+        /* Home Button - Updated position to match first code */
         .home-button {
             position: absolute;
             top: 20px;
@@ -89,6 +89,7 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             z-index: 10;
+            white-space: nowrap;
         }
         
         .home-button:hover {
@@ -99,6 +100,115 @@
         
         .home-button i {
             margin-right: 5px;
+        }
+        
+        /* Header adjustments for home button - Added from first code */
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Ensure the date badge doesn't overlap with home button - Added from first code */
+        @media (min-width: 769px) {
+            .header-badge-container {
+                position: relative;
+                padding-left: 130px; /* Space for home button */
+            }
+        }
+        
+        /* PDF Buttons Container - NEW from first code */
+        .pdf-buttons-container {
+            margin-bottom: 25px;
+        }
+        
+        .pdf-card {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .pdf-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .pdf-card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .pdf-icon {
+            font-size: 2rem;
+            color: var(--impartiality-color);
+            margin-bottom: 15px;
+        }
+        
+        .pdf-card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            min-height: 50px;
+        }
+        
+        .pdf-card-description {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .pdf-buttons-group {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+        
+        .btn-view-pdf {
+            background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            flex-grow: 1;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-view-pdf:hover {
+            background: linear-gradient(135deg, #8e44ad, #7d3c98);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+        }
+        
+        .btn-download-pdf {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-download-pdf:hover {
+            background: linear-gradient(135deg, #219653, #1e8449);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
         }
         
         /* Card Styles */
@@ -122,6 +232,14 @@
         }
         
         .card-header-impartiality {
+            background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
+        }
+        
+        .card-header-agreement {
+            background: linear-gradient(135deg, #27ae60, #219653);
+        }
+        
+        .card-header-file {
             background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
         }
         
@@ -151,6 +269,119 @@
             color: var(--dark-color);
             margin-bottom: 6px;
             font-size: 0.9rem;
+        }
+        
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section-title {
+            color: var(--impartiality-color);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Risk Item Container */
+        .risk-item-container {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        
+        .risk-item-container:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Additional Info Section */
+        .additional-info-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        /* Upload File Button Styles - FROM FIRST CODE */
+        .upload-container {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .upload-container:hover {
+            background: #e9ecef;
+            border-color: var(--impartiality-color);
+        }
+        
+        .upload-container.dragover {
+            background: #e3f2fd;
+            border-color: var(--impartiality-color);
+            border-style: solid;
+        }
+        
+        .upload-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background: #5a6268;
+        }
+        
+        .upload-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        .upload-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+        
+        .upload-status.success {
+            color: var(--success-color);
+        }
+        
+        .upload-status.error {
+            color: var(--danger-color);
+        }
+        
+        .upload-status.loading {
+            color: var(--impartiality-color);
+        }
+        
+        .file-link-btn {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .file-link-btn:hover {
+            background: #219653;
+            color: white;
+            text-decoration: none;
         }
         
         /* Date Input Styling */
@@ -202,7 +433,7 @@
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 0;
-            min-width: 1000px;
+            min-width: 1300px;
             width: 100%;
         }
         
@@ -242,7 +473,7 @@
             min-width: 70px;
         }
         
-        /* Notification Styles */
+        /* Notification Styles - FROM FIRST CODE */
         .notification {
             position: fixed;
             top: 20px;
@@ -274,7 +505,7 @@
         }
         
         .notification.info {
-            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
         }
         
         .notification.warning {
@@ -296,22 +527,18 @@
             border-width: 0.2rem;
         }
         
-        /* Status Message */
-        .status-message {
-            padding: 10px;
-            border-radius: 10px;
-            margin-top: 10px;
-            font-weight: bold;
-            text-align: center;
-            display: none;
-        }
-        
-        /* FIX FOR ENGLISH DATE DISPLAY IN RTL CONTEXT */
+        /* FIX FOR ENGLISH DATE DISPLAY IN RTL CONTEXT - FROM FIRST CODE */
         .english-date {
             direction: ltr !important;
             text-align: left !important;
             unicode-bidi: embed !important;
             display: inline-block;
+        }
+        
+        /* Duplicate Record Warning - FROM FIRST CODE */
+        .duplicate-warning {
+            display: none;
+            font-size: 0.85rem;
         }
         
         /* Responsive */
@@ -327,11 +554,7 @@
                 min-width: 60px;
             }
             
-            .table-custom {
-                min-width: 800px;
-            }
-            
-            /* Home Button Responsive Styles */
+            /* Home Button Responsive Styles - Updated to match first code */
             .home-button {
                 position: relative;
                 top: 0;
@@ -343,23 +566,28 @@
             .main-header {
                 padding-top: 60px;
             }
-        }
-        
-        /* Form Sections */
-        .form-section {
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .form-section-title {
-            color: var(--impartiality-color);
-            font-weight: 700;
-            margin-bottom: 12px;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            
+            /* Header badge container responsive - Added from first code */
+            .header-badge-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
+            
+            .table-custom {
+                min-width: 1100px;
+            }
+            
+            /* PDF Buttons Responsive - FROM FIRST CODE */
+            .pdf-buttons-group {
+                flex-direction: column;
+            }
+            
+            .btn-download-pdf {
+                width: 100%;
+                padding: 10px;
+            }
         }
         
         /* Custom Scrollbar */
@@ -378,79 +606,102 @@
             border-radius: 10px;
         }
         
-        /* Badge Styles */
-        .badge {
-            font-size: 0.75em;
-            padding: 4px 8px;
-            border-radius: 10px;
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--impartiality-color), #8e44ad);
+            color: white;
+            border-radius: 15px 15px 0 0;
         }
         
-        /* Risk Item Container */
-        .risk-item-container {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
         }
         
-        .risk-item-container:last-child {
-            margin-bottom: 0;
-        }
-        
-        /* Additional Info Section */
-        .additional-info-section {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-        
-        /* Status Colors */
-        .status-success {
-            background-color: rgba(39, 174, 96, 0.1);
-            border: 1px solid var(--success-color);
-            color: var(--success-color);
-        }
-        
-        .status-error {
-            background-color: rgba(231, 76, 60, 0.1);
-            border: 1px solid var(--danger-color);
-            color: var(--danger-color);
-        }
-        
-        .status-info {
-            background-color: rgba(52, 152, 219, 0.1);
-            border: 1px solid var(--secondary-color);
-            color: var(--secondary-color);
+        /* Modal Fix - Prevent background scroll - Added from first code */
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
         }
     </style>
 </head>
 <body>
-    <!-- Notification Container -->
+    <!-- Notification Container - FROM FIRST CODE -->
     <div id="notificationContainer"></div>
     
     <!-- Main Container -->
     <div class="container-fluid main-container">
-        <!-- Main Header -->
+        <!-- Main Header - Updated to match first code layout -->
         <div class="main-header fade-in">
             <!-- Return to Home Button -->
             <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
             
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-balance-scale me-2"></i> نظام الإفصاح عن تضارب المصالح</h1>
-                    <p class="lead mb-0">نظام متكامل لتسجيل وإدارة إفصاحات الحيادية لموظفي معمل كواليتك إنترناشيونال</p>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <div class="header-badge d-inline-block me-3">
-                        <i class="fas fa-database me-2"></i>
-                        <span id="totalRecords">0</span> إفصاح
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1><i class="fas fa-balance-scale me-2"></i> نظام إدارة إفصاحات الحيادية - معمل كواليتك إنترناشيونال</h1>
+                        <p class="lead mb-0">نظام متكامل لتسجيل وإدارة إفصاحات الحيادية للموظفين والعقود والالتزامات القانونية</p>
                     </div>
-                    <div class="header-badge d-inline-block">
-                        <i class="fas fa-calendar me-2"></i>
-                        <span id="currentDate">--/--/----</span>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
+                        <div class="header-badge d-inline-block me-3">
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> إفصاح
+                        </div>
+                        <div class="header-badge d-inline-block">
+                            <i class="fas fa-calendar me-2"></i>
+                            <span id="currentDate">--/--/----</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PDF Documents Section - NEW FROM FIRST CODE -->
+        <div class="row mb-4 pdf-buttons-container">
+            <div class="col-md-6 mb-3">
+                <div class="pdf-card">
+                    <div class="pdf-card-body">
+                        <div class="pdf-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <h5 class="pdf-card-title">نموذج إفصاح الحيادية</h5>
+                        <p class="pdf-card-description">نموذج إفصاح الحيادية الرسمي للموظفين الجدد، يحتوي على جميع البنود والشروط المتعلقة بتضارب المصالح والالتزامات القانونية.</p>
+                        <div class="pdf-buttons-group">
+                            <a href="https://drive.google.com/file/d/1rQi0qD9LpmJuGxOdgqdon5Z2C2A9yg16/view?usp=drive_link" 
+                               target="_blank" 
+                               class="btn-view-pdf">
+                                <i class="fas fa-eye me-1"></i> عرض النموذج
+                            </a>
+                            <a href="https://drive.google.com/file/d/1rQi0qD9LpmJuGxOdgqdon5Z2C2A9yg16/view?usp=drive_link" 
+                               class="btn-download-pdf" 
+                               download="نموذج_إفصاح_الحيادية.pdf">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="pdf-card">
+                    <div class="pdf-card-body">
+                        <div class="pdf-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h5 class="pdf-card-title">سياسة الحيادية</h5>
+                        <p class="pdf-card-description">السياسة الكاملة للحيادية في المؤسسة، توضح القواعد والإجراءات المتعلقة بحماية النزاهة والحيادية والعقوبات المترتبة على الإفشاء.</p>
+                        <div class="pdf-buttons-group">
+                            <a href="https://drive.google.com/file/d/1V6xmzUAEtzsW2NaFU-WEv2pL9C1xmvQ7/view?usp=drive_link" 
+                               target="_blank" 
+                               class="btn-view-pdf">
+                                <i class="fas fa-eye me-1"></i> عرض السياسة
+                            </a>
+                            <a href="https://drive.google.com/file/d/1V6xmzUAEtzsW2NaFU-WEv2pL9C1xmvQ7/view?usp=drive_link" 
+                               class="btn-download-pdf" 
+                               download="سياسة_الحيادية.pdf">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -465,6 +716,41 @@
                     </div>
                     <div class="card-body">
                         <form id="impartialityForm">
+                            <!-- File Upload Section - FROM FIRST CODE -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="upload-container" id="uploadContainer">
+                                        <h6><i class="fas fa-cloud-upload-alt me-2"></i>رفع ملف الإفصاح (PDF أو صورة)</h6>
+                                        <p class="text-muted mb-2" style="font-size: 0.85rem;">الحد الأقصى لحجم الملف: 10 ميجابايت. الأنواع المسموحة: PNG, JPG, JPEG, PDF</p>
+                                        
+                                        <input type="file" id="fileInput" 
+                                               accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                                               style="display: none">
+                                        <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                                            <i class="fas fa-folder-open me-1"></i> اختر ملف للرفع
+                                        </button>
+                                        <button type="button" class="upload-btn" onclick="uploadFile()" id="uploadBtn">
+                                            <i class="fas fa-upload me-1"></i> رفع الملف
+                                        </button>
+                                        
+                                        <div class="upload-status" id="uploadStatus"></div>
+                                        
+                                        <div id="uploadedFileInfo" style="display: none; margin-top: 10px;">
+                                            <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                                <div>
+                                                    <i class="fas fa-file me-2"></i>
+                                                    <span id="uploadedFileName"></span>
+                                                    <span class="badge bg-success ms-2" id="uploadedFileSize"></span>
+                                                </div>
+                                                <a href="#" target="_blank" class="file-link-btn" id="uploadedFileLink" style="display: none;">
+                                                    <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="form-section">
                                 <div class="form-section-title">
                                     <i class="fas fa-user-tie"></i> المعلومات الأساسية
@@ -472,23 +758,28 @@
                                 <div class="row">
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">رقم السجل *</label>
-                                        <input type="text" class="form-control form-control-custom" id="recordId" placeholder="رقم السجل" required>
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_recordId" placeholder="رقم السجل" required oninput="checkDuplicateRecordNumber()">
+                                        <div class="form-text text-danger duplicate-warning" id="duplicateRecordNumberWarning">
+                                            <i class="fas fa-exclamation-triangle me-1"></i> هذا الرقم موجود مسبقاً في النظام!
+                                        </div>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">اسم الموظف *</label>
-                                        <input type="text" class="form-control form-control-custom" id="employeeName" placeholder="اسم الموظف" required list="employeeNameList">
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_employeeName" placeholder="اسم الموظف" required list="employeeNameList">
                                         <datalist id="employeeNameList"></datalist>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">الرقم الوظيفي *</label>
-                                        <input type="text" class="form-control form-control-custom" id="employeeNumber" placeholder="الرقم الوظيفي" required list="employeeNumberList">
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_employeeNumber" placeholder="الرقم الوظيفي" required list="employeeNumberList">
                                         <datalist id="employeeNumberList"></datalist>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">نوع العقد</label>
-                                        <input type="text" class="form-control form-control-custom" id="contractType" placeholder="اختر نوع العقد" list="contractTypeList">
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_contractType" placeholder="اختر نوع العقد" list="contractTypeList">
                                         <datalist id="contractTypeList">
-                                            <!-- سيتم تعبئته تلقائياً من بيانات الموظفين -->
+                                            <option value="دائم">دائم</option>
+                                            <option value="مؤقت">مؤقت</option>
+                                            <option value="تدريب">تدريب</option>
                                         </datalist>
                                     </div>
                                 </div>
@@ -497,20 +788,27 @@
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">تاريخ بدء العمل</label>
                                         <div class="date-input-wrapper">
-                                            <input type="text" class="form-control form-control-custom date-picker" id="startDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <input type="text" class="form-control form-control-custom date-picker" id="impartiality_startDate" placeholder="يوم/شهر/سنة" readonly>
                                             <i class="fas fa-calendar-alt date-icon"></i>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">تاريخ التوقيع *</label>
                                         <div class="date-input-wrapper">
-                                            <input type="text" class="form-control form-control-custom date-picker" id="signDate" placeholder="يوم/شهر/سنة" readonly required>
+                                            <input type="text" class="form-control form-control-custom date-picker" id="impartiality_signDate" placeholder="يوم/شهر/سنة" readonly required>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ الإدخال</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="impartiality_entryDate" placeholder="يوم/شهر/سنة" readonly>
                                             <i class="fas fa-calendar-alt date-icon"></i>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">رقم سجل مخاطر الحيادية</label>
-                                        <input type="text" class="form-control form-control-custom" id="neutralityRiskNumber" placeholder="رقم سجل مخاطر الحيادية">
+                                        <input type="text" class="form-control form-control-custom" id="impartiality_neutralityRiskNumber" placeholder="رقم سجل مخاطر الحيادية">
                                     </div>
                                 </div>
                             </div>
@@ -525,7 +823,7 @@
                                     <div class="row mb-2">
                                         <div class="col-md-6">
                                             <label class="form-label-custom">المصادر المالية</label>
-                                            <select class="form-select form-select-custom" id="financialSources">
+                                            <select class="form-select form-select-custom" id="impartiality_financialSources">
                                                 <option value="لا يوجد">لا يوجد</option>
                                                 <option value="نعم يوجد">نعم يوجد</option>
                                             </select>
@@ -534,7 +832,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="form-label-custom">تفاصيل المصادر المالية</label>
-                                            <textarea class="form-control form-textarea-custom" id="financialDetails" placeholder="تفاصيل المصادر المالية" rows="2"></textarea>
+                                            <textarea class="form-control form-textarea-custom" id="impartiality_financialDetails" placeholder="تفاصيل المصادر المالية" rows="2"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -544,7 +842,7 @@
                                     <div class="row mb-2">
                                         <div class="col-md-6">
                                             <label class="form-label-custom">العلاقات الشخصية</label>
-                                            <select class="form-select form-select-custom" id="personalRelations">
+                                            <select class="form-select form-select-custom" id="impartiality_personalRelations">
                                                 <option value="لا يوجد">لا يوجد</option>
                                                 <option value="نعم يوجد">نعم يوجد</option>
                                             </select>
@@ -553,7 +851,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="form-label-custom">تفاصيل العلاقات الشخصية</label>
-                                            <textarea class="form-control form-textarea-custom" id="personalRelationsDetails" placeholder="تفاصيل العلاقات الشخصية (أقارب، أصدقاء، معارف)" rows="2"></textarea>
+                                            <textarea class="form-control form-textarea-custom" id="impartiality_personalRelationsDetails" placeholder="تفاصيل العلاقات الشخصية (أقارب، أصدقاء، معارف)" rows="2"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -563,7 +861,7 @@
                                     <div class="row mb-2">
                                         <div class="col-md-6">
                                             <label class="form-label-custom">الأنشطة الخارجية</label>
-                                            <select class="form-select form-select-custom" id="externalActivities">
+                                            <select class="form-select form-select-custom" id="impartiality_externalActivities">
                                                 <option value="لا يوجد">لا يوجد</option>
                                                 <option value="نعم يوجد">نعم يوجد</option>
                                             </select>
@@ -572,7 +870,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="form-label-custom">تفاصيل الأنشطة الخارجية</label>
-                                            <textarea class="form-control form-textarea-custom" id="externalActivitiesDetails" placeholder="تفاصيل الأنشطة الخارجية (عمل آخر، عضوية في مجالس)" rows="2"></textarea>
+                                            <textarea class="form-control form-textarea-custom" id="impartiality_externalActivitiesDetails" placeholder="تفاصيل الأنشطة الخارجية (عمل آخر، عضوية في مجالس)" rows="2"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -582,7 +880,7 @@
                                     <div class="row mb-2">
                                         <div class="col-md-6">
                                             <label class="form-label-custom">الهدايا والضيافة</label>
-                                            <select class="form-select form-select-custom" id="giftsHospitality">
+                                            <select class="form-select form-select-custom" id="impartiality_giftsHospitality">
                                                 <option value="لا يوجد">لا يوجد</option>
                                                 <option value="نعم يوجد">نعم يوجد</option>
                                             </select>
@@ -591,7 +889,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="form-label-custom">تفاصيل الهدايا</label>
-                                            <textarea class="form-control form-textarea-custom" id="giftsDetails" placeholder="تفاصيل الهدايا والضيافة (هدايا، تذاكر، دعوات)" rows="2"></textarea>
+                                            <textarea class="form-control form-textarea-custom" id="impartiality_giftsDetails" placeholder="تفاصيل الهدايا والضيافة (هدايا، تذاكر، دعوات)" rows="2"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -605,38 +903,38 @@
                                     <div class="row mb-3">
                                         <div class="col-md-12">
                                             <label class="form-label-custom">أي إفصاح آخر</label>
-                                            <textarea class="form-control form-textarea-custom" id="otherDisclosure" placeholder="أي إفصاح آخر" rows="2"></textarea>
+                                            <textarea class="form-control form-textarea-custom" id="impartiality_otherDisclosure" placeholder="أي إفصاح آخر" rows="2"></textarea>
                                         </div>
                                     </div>
                                     
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="form-label-custom">اسم المراجع</label>
-                                            <input type="text" class="form-control form-control-custom" id="reviewerName" placeholder="اسم المراجع">
+                                            <input type="text" class="form-control form-control-custom" id="impartiality_reviewerName" placeholder="اسم المراجع" list="reviewerNameList">
+                                            <datalist id="reviewerNameList"></datalist>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Status Message -->
-                            <div id="status" class="status-message"></div>
-                            
                             <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-between">
-                                    <button type="button" onclick="resetForm()" class="btn btn-outline-secondary">
+                                    <button type="button" onclick="resetImpartialityForm()" class="btn btn-outline-secondary">
                                         <i class="fas fa-redo me-1"></i> مسح النموذج
                                     </button>
                                     <div>
-                                        <button type="button" onclick="addRecord()" class="btn btn-success me-2" id="addBtn">
+                                        <button type="button" onclick="addImpartialityRecord()" class="btn btn-success me-2" id="impartiality_addBtn">
                                             <i class="fas fa-plus me-1"></i> إضافة جديد
                                         </button>
-                                        <button type="button" onclick="updateRecord()" class="btn btn-primary" id="updateBtn" style="display: none;">
+                                        <button type="button" onclick="updateImpartialityRecord()" class="btn btn-primary" id="impartiality_updateBtn" style="display: none;">
                                             <i class="fas fa-save me-1"></i> تحديث السجل
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" id="editingId">
+                            <input type="hidden" id="impartiality_editingId">
+                            <input type="hidden" id="impartiality_internalRecordId">
+                            <input type="hidden" id="impartiality_fileLink">
                         </form>
                     </div>
                 </div>
@@ -650,27 +948,27 @@
                     <div class="card-header-custom card-header-impartiality d-flex justify-content-between align-items-center">
                         <span><i class="fas fa-list me-2"></i> قائمة إفصاحات الحيادية</span>
                         <div>
-                            <button onclick="loadData()" class="btn btn-light btn-sm me-2">
+                            <button onclick="loadImpartialityData()" class="btn btn-light btn-sm me-2">
                                 <i class="fas fa-sync-alt"></i> تحديث
                             </button>
-                            <button onclick="exportCSV()" class="btn btn-light btn-sm">
+                            <button onclick="exportImpartialityCSV()" class="btn btn-light btn-sm">
                                 <i class="fas fa-download"></i> تصدير
                             </button>
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+                        <div class="loading-spinner" id="impartialityLoadingSpinner">
                             <div class="spinner-border text-primary spinner-border-custom" role="status">
                                 <span class="visually-hidden">جاري التحميل...</span>
                             </div>
                         </div>
                         
-                        <div class="table-responsive" id="dataTableContainer">
-                            <table class="table table-custom table-hover" id="dataTable">
+                        <div class="table-responsive" id="impartialityTableContainer" style="display: none;">
+                            <table class="table table-custom table-hover" id="impartialityDataTable">
                             </table>
                         </div>
                         
-                        <div id="noRecords" class="text-center py-5" style="display: none;">
+                        <div id="impartialityNoRecords" class="text-center py-5" style="display: none;">
                             <i class="fas fa-balance-scale fa-4x text-muted mb-4"></i>
                             <h4 class="text-muted">لا توجد إفصاحات لعرضها</h4>
                         </div>
@@ -685,19 +983,19 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة إفصاحات الحيادية 
                     <span id="currentYear"></span> | 
-                    <span class="text-info">الإصدار 1.0</span>
+                    <span id="appVersion" class="text-info">الإصدار 1.4 (مع منع تكرار أرقام السجلات)</span>
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
+    <!-- Delete Confirmation Modal - FIXED FROM FIRST CODE -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title">تأكيد الحذف</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
@@ -705,7 +1003,7 @@
                         <h5 class="alert-heading">تحذير!</h5>
                         <p>هل أنت متأكد من حذف هذا الإفصاح؟ هذا الإجراء لا يمكن التراجع عنه.</p>
                         <hr>
-                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">إفصاح الحيادية</span></p>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">إفصاحات الحيادية</span></p>
                         <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
                         <p class="mb-0"><strong>اسم الموظف:</strong> <span id="deleteRecordName">غير معروف</span></p>
                     </div>
@@ -723,12 +1021,12 @@
     </div>
 
     <!-- Details Modal -->
-    <div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title">تفاصيل إفصاح الحيادية</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="detailsModalBody">
                     <!-- Details will be loaded here -->
@@ -746,11 +1044,12 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
     
-    <!-- Main JavaScript -->
+    <!-- Main JavaScript - UPDATED WITH ALL FEATURES FROM FIRST CODE -->
     <script>
         // ================ CONFIGURATION ================
-        const IMPARTIALITY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXbv_kRECCylUqVlaWrSXrd8iSUAsEBL9CufhuDOw7DMsLASZgpwknpUcCfdq5irO3/exec";
+        const IMPARTIALITY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqw-nQrXx259Eg8PAxFd22h4CmbbYKXDFzWUa7rCSiXBH_2Y31W3ZLuu0A8HHVWmbN/exec";
         const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
+        const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwXvto7c9CUzSMggyJlH-ofBbnsGnBQ5AMKTTB741eCHyhxsvctJbWWj7SPk9UIMZwosQ/exec";
         
         // ================ GLOBAL VARIABLES ================
         let impartialityRecords = [];
@@ -758,8 +1057,327 @@
         let deleteRecordId = '';
         let deleteRecordName = '';
         let flatpickrInstances = {};
-        let employeeDataLoaded = false;
         let deleteModalInstance = null;
+        let detailsModalInstance = null;
+        let selectedFile = null;
+        let uploadedFileUrl = '';
+        let isDuplicateRecordNumber = false;
+        
+        // ================ PDF DOCUMENTS INFO - NEW FROM FIRST CODE ================
+        const pdfDocuments = {
+            impartialityForm: {
+                viewUrl: "https://drive.google.com/drive/folders/1I1MY4pDGSUIJbNfQNtnKkXZQDf5uCwLb?usp=drive_link",
+                downloadUrl: "https://drive.google.com/drive/folders/1I1MY4pDGSUIJbNfQNtnKkXZQDf5uCwLb?usp=drive_link",
+                fileName: "نموذج_إفصاح_الحيادية.pdf",
+                title: "نموذج إفصاح الحيادية",
+                description: "نموذج إفصاح الحيادية الرسمي للموظفين الجدد"
+            },
+            impartialityPolicy: {
+                viewUrl: "https://drive.google.com/file/d/1V6xmzUAEtzsW2NaFU-WEv2pL9C1xmvQ7/view?usp=drive_link",
+                downloadUrl: "https://drive.google.com/file/d/1V6xmzUAEtzsW2NaFU-WEv2pL9C1xmvQ7/view?usp=drive_link",
+                fileName: "سياسة_الحيادية.pdf",
+                title: "سياسة الحيادية",
+                description: "السياسة الكاملة للحيادية في المؤسسة"
+            }
+        };
+        
+        // ================ NEW DATE SYSTEM WITH D, M, Y SIGNS FROM FIRST CODE ================
+        function formatDateToDMY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `D${day} M${month} Y${year}`;
+        }
+        
+        function parseDateFromDMY(dmyString) {
+            if (!dmyString) return null;
+            
+            // Clean the string
+            dmyString = dmyString.toString().trim();
+            
+            // Try to match the pattern: D{day} M{month} Y{year}
+            const match = dmyString.match(/^D(\d+)\s+M(\d+)\s+Y(\d+)$/);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1; // JavaScript months are 0-indexed
+                const year = parseInt(match[3], 10);
+                
+                // Validate date
+                if (day < 1 || day > 31) return null;
+                if (month < 0 || month > 11) return null;
+                if (year < 1900 || year > 2100) return null;
+                
+                // Check if day is valid for the month
+                const dateObj = new Date(year, month, day);
+                if (dateObj.getDate() !== day || dateObj.getMonth() !== month || dateObj.getFullYear() !== year) {
+                    return null;
+                }
+                
+                return dateObj;
+            }
+            
+            return null;
+        }
+        
+        // ================ UPDATED: Display date as "31 January 2025" FROM FIRST CODE ================
+        function formatDMYForDisplay(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // If not in D M Y format, try to parse as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return `<span class="english-date">${formatDateToDayMonthYear(regularDate)}</span>`;
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return `<span class="english-date">${dmyString}</span>`;
+            }
+            
+            const formattedDate = formatDateToDayMonthYear(dateObj);
+            return `<span class="english-date">${formattedDate}</span>`;
+        }
+        
+        // ================ NEW FUNCTION: Format date as "31 January 2025" FROM FIRST CODE ================
+        function formatDateToDayMonthYear(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            
+            const day = date.getDate();
+            const monthIndex = date.getMonth();
+            const year = date.getFullYear();
+            
+            // Month names in English
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            return `${day} ${monthNames[monthIndex]} ${year}`;
+        }
+        
+        function formatDMYForInput(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // If not in D M Y format, try to parse as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return formatDateToDDMMYYYY(regularDate);
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return '';
+            }
+            
+            return formatDateToDDMMYYYY(dateObj);
+        }
+        
+        function validateDMYDate(dmyString) {
+            if (!dmyString) return true;
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // Try to validate as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    return !isNaN(regularDate.getTime());
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // ================ NEW FUNCTION: Check for duplicate record number FROM FIRST CODE ================
+        function checkDuplicateRecordNumber() {
+            const recordNumberInput = document.getElementById('impartiality_recordId');
+            const recordNumber = recordNumberInput.value.trim();
+            const editingId = document.getElementById('impartiality_editingId').value;
+            const warningElement = document.getElementById('duplicateRecordNumberWarning');
+            
+            if (!recordNumber) {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+            
+            // Check if this record number already exists in impartialityRecords
+            const duplicateRecord = impartialityRecords.find(record => {
+                // Skip the current record if we're in edit mode
+                if (editingId && record[0] === editingId) {
+                    return false;
+                }
+                return record[1] && record[1].toString().trim() === recordNumber;
+            });
+            
+            if (duplicateRecord) {
+                warningElement.style.display = 'block';
+                recordNumberInput.classList.add('is-invalid');
+                isDuplicateRecordNumber = true;
+                return true;
+            } else {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+        }
+        
+        // ================ FILE UPLOAD FUNCTIONS - FROM FIRST CODE ================
+        function initializeFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadContainer = document.getElementById('uploadContainer');
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            
+            // Drag and drop functionality
+            uploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.add('dragover');
+            });
+            
+            uploadContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+            });
+            
+            uploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+        }
+        
+        function handleFileSelect(file) {
+            const allowedTypes = [
+                "image/png",
+                "image/jpeg",
+                "application/pdf"
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                showNotification("❌ فقط ملفات PNG, JPG, JPEG أو PDF مسموحة", "error");
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification("❌ حجم الملف كبير جداً (الحد الأقصى 10MB)", "error");
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Display file info
+            document.getElementById('uploadedFileName').textContent = file.name;
+            document.getElementById('uploadedFileSize').textContent = formatFileSize(file.size);
+            document.getElementById('uploadedFileInfo').style.display = 'block';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            
+            // Reset upload status
+            const uploadStatus = document.getElementById('uploadStatus');
+            uploadStatus.textContent = '';
+            uploadStatus.className = 'upload-status';
+            
+            showNotification(`✅ تم اختيار الملف: ${file.name}`, 'success', 3000);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' بايت';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
+            else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
+        }
+        
+        async function uploadFile() {
+            if (!selectedFile) {
+                showNotification("⚠️ يرجى اختيار ملف أولاً", "warning");
+                return;
+            }
+            
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadStatus = document.getElementById('uploadStatus');
+            
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الرفع...';
+            uploadStatus.textContent = 'جاري رفع الملف... ⏳';
+            uploadStatus.className = 'upload-status loading';
+            
+            try {
+                const reader = new FileReader();
+                
+                reader.onload = async function() {
+                    const base64 = reader.result.split(",")[1];
+                    
+                    const response = await fetch(UPLOAD_WEB_APP_URL, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            fileName: selectedFile.name,
+                            mimeType: selectedFile.type,
+                            fileData: base64
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        uploadedFileUrl = data.url;
+                        
+                        // Update the hidden field
+                        document.getElementById('impartiality_fileLink').value = uploadedFileUrl;
+                        
+                        // Display success message and file link
+                        uploadStatus.textContent = '✅ تم رفع الملف بنجاح';
+                        uploadStatus.className = 'upload-status success';
+                        
+                        // Show the file link button
+                        const fileLinkBtn = document.getElementById('uploadedFileLink');
+                        fileLinkBtn.href = uploadedFileUrl;
+                        fileLinkBtn.style.display = 'inline-block';
+                        
+                        showNotification(`✅ تم رفع الملف بنجاح: ${selectedFile.name}`, 'success');
+                    } else {
+                        uploadStatus.textContent = '❌ فشل في رفع الملف: ' + (data.message || 'خطأ غير معروف');
+                        uploadStatus.className = 'upload-status error';
+                        showNotification(`❌ فشل في رفع الملف: ${data.message || 'خطأ غير معروف'}`, 'error');
+                    }
+                    
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                };
+                
+                reader.onerror = function() {
+                    uploadStatus.textContent = '❌ خطأ في قراءة الملف';
+                    uploadStatus.className = 'upload-status error';
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                    showNotification('❌ خطأ في قراءة الملف', 'error');
+                };
+                
+                reader.readAsDataURL(selectedFile);
+                
+            } catch (error) {
+                uploadStatus.textContent = '❌ فشل في رفع الملف: ' + error;
+                uploadStatus.className = 'upload-status error';
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                showNotification('❌ فشل في رفع الملف: ' + error, 'error');
+            }
+        }
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
@@ -767,34 +1385,47 @@
             setCurrentDate();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // Initialize calendar pickers with the SAME procedure as calibration system
+            // Initialize modals
+            deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
+            
+            // Initialize calendar pickers
             initializeDatePickers();
             
-            // Initialize delete modal
-            const deleteModalElement = document.getElementById('deleteModal');
-            if (deleteModalElement) {
-                deleteModalInstance = new bootstrap.Modal(deleteModalElement);
-            }
+            // Initialize file upload
+            initializeFileUpload();
             
-            // Load data - تحميل بيانات الإفصاحات وبيانات الموظفين
+            // Load data
             setTimeout(() => {
-                loadData(); // تحميل بيانات الإفصاحات
-                loadEmployeeData(); // تحميل بيانات الموظفين للقوائم المنسدلة
+                loadImpartialityData();
+                loadEmployeeData();
             }, 500);
             
-            // إضافة event listeners للحقول
-            setupEmployeeAutocomplete();
+            // Fix modal backdrop issue
+            document.getElementById('deleteModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            });
+            
+            document.getElementById('detailsModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            });
+            
+            // Add event listener for record number field to check for duplicates as user types
+            document.getElementById('impartiality_recordId').addEventListener('input', checkDuplicateRecordNumber);
         });
         
-        // ================ DATE PICKER INITIALIZATION - SAME AS CALIBRATION SYSTEM ================
+        // ================ FIXED DATE PICKER INITIALIZATION FROM FIRST CODE ================
         function initializeDatePickers() {
             // Destroy existing instances if any
-            if (flatpickrInstances.startDate) {
-                flatpickrInstances.startDate.destroy();
-            }
-            if (flatpickrInstances.signDate) {
-                flatpickrInstances.signDate.destroy();
-            }
+            if (flatpickrInstances.startDate) flatpickrInstances.startDate.destroy();
+            if (flatpickrInstances.signDate) flatpickrInstances.signDate.destroy();
+            if (flatpickrInstances.entryDate) flatpickrInstances.entryDate.destroy();
             
             const dateOptions = {
                 locale: 'ar',
@@ -811,7 +1442,9 @@
                 weekNumbers: false,
                 disableMobile: true,
                 onChange: function(selectedDates, dateStr, instance) {
-                    validateSignDateNotOlder();
+                    if (instance.input.id === 'impartiality_signDate') {
+                        validateSignDateNotOlder();
+                    }
                     
                     if (selectedDates.length > 0) {
                         const date = selectedDates[0];
@@ -821,22 +1454,24 @@
                 }
             };
             
-            // Initialize start date picker
-            flatpickrInstances.startDate = flatpickr('#startDate', dateOptions);
+            flatpickrInstances.startDate = flatpickr('#impartiality_startDate', dateOptions);
+            flatpickrInstances.signDate = flatpickr('#impartiality_signDate', dateOptions);
+            flatpickrInstances.entryDate = flatpickr('#impartiality_entryDate', dateOptions);
             
-            // Initialize sign date picker
-            flatpickrInstances.signDate = flatpickr('#signDate', dateOptions);
+            if (flatpickrInstances.startDate) flatpickrInstances.startDate.set('locale', 'ar');
+            if (flatpickrInstances.signDate) flatpickrInstances.signDate.set('locale', 'ar');
+            if (flatpickrInstances.entryDate) flatpickrInstances.entryDate.set('locale', 'ar');
             
-            // Force Arabic locale on both instances
-            if (flatpickrInstances.startDate) {
-                flatpickrInstances.startDate.set('locale', 'ar');
-            }
-            if (flatpickrInstances.signDate) {
-                flatpickrInstances.signDate.set('locale', 'ar');
+            // Set entry date to current date by default
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            document.getElementById('impartiality_entryDate').value = todayFormatted;
+            if (flatpickrInstances.entryDate) {
+                flatpickrInstances.entryDate.setDate(today, false);
             }
         }
         
-        // ================ DATE FORMATTING FUNCTIONS - SAME AS CALIBRATION SYSTEM ================
+        // ================ DATE FORMATTING FUNCTIONS FROM FIRST CODE ================
         function formatDateToDDMMYYYY(date) {
             if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
             const day = date.getDate().toString().padStart(2, '0');
@@ -866,143 +1501,10 @@
             return null;
         }
         
-        function formatDateForDisplay(dateString) {
-            if (!dateString || dateString.trim() === '') return '';
-            
-            // If already in dd/mm/yyyy format
-            if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString.trim())) {
-                return `<span class="english-date">${dateString}</span>`;
-            }
-            
-            // Try to parse the date
-            let dateObj = null;
-            
-            // Format YYYY/MM/DD (Google Sheets format)
-            if (dateString.includes('/') && dateString.split('/')[0].length === 4) {
-                const parts = dateString.split('/');
-                if (parts.length === 3) {
-                    const year = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const day = parseInt(parts[2], 10);
-                    dateObj = new Date(year, month, day);
-                }
-            }
-            // Format DD/MM/YYYY
-            else if (dateString.includes('/') && dateString.split('/')[2].length === 4) {
-                const parts = dateString.split('/');
-                if (parts.length === 3) {
-                    const day = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const year = parseInt(parts[2], 10);
-                    dateObj = new Date(year, month, day);
-                }
-            }
-            // Try other formats
-            else {
-                dateObj = new Date(dateString);
-            }
-            
-            if (!dateObj || isNaN(dateObj.getTime())) {
-                return `<span class="english-date">${dateString}</span>`;
-            }
-            
-            const formattedDate = formatDateToDDMMYYYY(dateObj);
-            return `<span class="english-date">${formattedDate}</span>`;
-        }
-        
-        function formatDateForInput(dateString) {
-            if (!dateString || dateString.trim() === '') return '';
-            
-            const cleanDateString = dateString.replace(/<[^>]*>/g, '');
-            
-            // If already in dd/mm/yyyy format
-            if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(cleanDateString.trim())) {
-                return cleanDateString;
-            }
-            
-            // Try to parse "30 September 2026" format
-            const parts = cleanDateString.split(' ');
-            if (parts.length === 3 && isNaN(parts[1])) {
-                const day = parseInt(parts[0], 10);
-                const monthNames = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
-                const monthIndex = monthNames.findIndex(name => 
-                    name.toLowerCase() === parts[1].toLowerCase()
-                );
-                
-                if (monthIndex !== -1) {
-                    const month = (monthIndex + 1).toString().padStart(2, '0');
-                    const year = parts[2];
-                    return `${day.toString().padStart(2, '0')}/${month}/${year}`;
-                }
-            }
-            
-            // Try to parse as date
-            try {
-                const dateObj = new Date(cleanDateString);
-                if (!isNaN(dateObj.getTime())) {
-                    return formatDateToDDMMYYYY(dateObj);
-                }
-            } catch (e) {
-                console.error('Error parsing date for input:', e);
-            }
-            
-            return '';
-        }
-        
-        function validateDate(dateString) {
-            if (!dateString) return true;
-            
-            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-            const displayFormatRegex = /^(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})$/i;
-            
-            if (ddMMyyyyRegex.test(dateString)) {
-                const match = dateString.match(ddMMyyyyRegex);
-                const day = parseInt(match[1], 10);
-                const month = parseInt(match[2], 10);
-                const year = parseInt(match[3], 10);
-                
-                if (year < 1900 || year > 2100) return false;
-                if (month < 1 || month > 12) return false;
-                if (day < 1 || day > 31) return false;
-                
-                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
-                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                return day <= daysInMonth[month - 1];
-            }
-            
-            if (displayFormatRegex.test(dateString)) {
-                const match = dateString.match(displayFormatRegex);
-                const day = parseInt(match[1], 10);
-                const monthName = match[2];
-                const year = parseInt(match[3], 10);
-                
-                const monthNames = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
-                const month = monthNames.findIndex(name => 
-                    name.toLowerCase() === monthName.toLowerCase()
-                ) + 1;
-                
-                if (month === 0) return false;
-                if (year < 1900 || year > 2100) return false;
-                if (day < 1 || day > 31) return false;
-                
-                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
-                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                return day <= daysInMonth[month - 1];
-            }
-            
-            return false;
-        }
-        
-        // ================ DATE VALIDATION - SAME AS CALIBRATION SYSTEM ================
+        // ================ DATE VALIDATION FROM FIRST CODE ================
         function validateSignDateNotOlder() {
-            const startDateStr = document.getElementById('startDate').value;
-            const signDateStr = document.getElementById('signDate').value;
+            const startDateStr = document.getElementById('impartiality_startDate').value;
+            const signDateStr = document.getElementById('impartiality_signDate').value;
             
             if (!startDateStr || !signDateStr) return;
             
@@ -1015,7 +1517,7 @@
                     if (flatpickrInstances.signDate) {
                         flatpickrInstances.signDate.clear();
                     }
-                    document.getElementById('signDate').value = '';
+                    document.getElementById('impartiality_signDate').value = '';
                 }
             } catch (e) {
                 console.error('Error validating dates:', e);
@@ -1030,7 +1532,7 @@
             document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
         }
         
-        // ================ NOTIFICATION SYSTEM ================
+        // ================ NOTIFICATION SYSTEM FROM FIRST CODE ================
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notificationContainer');
             
@@ -1075,7 +1577,17 @@
             }
         }
         
-        // ================ JSONP FUNCTION - SAME AS CALIBRATION SYSTEM ================
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // ================ JSONP FUNCTION FROM FIRST CODE ================
         function jsonp(url, callbackParam = 'callback') {
             return new Promise((resolve, reject) => {
                 const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
@@ -1099,37 +1611,95 @@
             });
         }
         
-        // ================ UTILITY FUNCTIONS ================
-        function escapeHtml(unsafe) {
-            if (unsafe === null || unsafe === undefined) return '';
-            return unsafe.toString()
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-        
-        // ================ STATUS MESSAGE FUNCTIONS ================
-        function setStatus(msg, type = 'info') {
-            const statusDiv = document.getElementById("status");
-            statusDiv.innerHTML = msg;
-            statusDiv.className = `status-message status-${type}`;
-            statusDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                if (statusDiv.innerHTML === msg) {
-                    statusDiv.style.display = 'none';
+        // ================ VALIDATION HELPER FROM FIRST CODE ================
+        function validateForm(requiredFields) {
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
                 }
-            }, 5000);
+            });
+            
+            const startDate = document.getElementById('impartiality_startDate').value;
+            const signDate = document.getElementById('impartiality_signDate').value;
+            const entryDate = document.getElementById('impartiality_entryDate').value;
+            
+            if (startDate && !validateDate(startDate)) {
+                document.getElementById('impartiality_startDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ بدء العمل غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('impartiality_startDate').classList.remove('is-invalid');
+            }
+            
+            if (signDate && !validateDate(signDate)) {
+                document.getElementById('impartiality_signDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ التوقيع غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('impartiality_signDate').classList.remove('is-invalid');
+            }
+            
+            if (entryDate && !validateDate(entryDate)) {
+                document.getElementById('impartiality_entryDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('impartiality_entryDate').classList.remove('is-invalid');
+            }
+            
+            if (startDate && signDate) {
+                try {
+                    const startDateObj = parseDateDDMMYYYY(startDate);
+                    const signDateObj = parseDateDDMMYYYY(signDate);
+                    
+                    if (startDateObj && signDateObj && signDateObj < startDateObj) {
+                        showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
+                        document.getElementById('impartiality_signDate').classList.add('is-invalid');
+                        isValid = false;
+                    }
+                } catch (e) {
+                    console.error('Error comparing dates:', e);
+                }
+            }
+            
+            return isValid;
         }
         
-        // ================ EMPLOYEE DATA FUNCTIONS - SAME AS CALIBRATION SYSTEM ================
+        function validateDate(dateString) {
+            if (!dateString) return true;
+            
+            // First try to parse as D M Y format
+            if (validateDMYDate(dateString)) {
+                return true;
+            }
+            
+            // Then try dd/mm/yyyy format
+            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                const match = dateString.match(ddMMyyyyRegex);
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
+                
+                if (year < 1900 || year > 2100) return false;
+                if (month < 1 || month > 12) return false;
+                if (day < 1 || day > 31) return false;
+                
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
+                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            return false;
+        }
+        
+        // ================ EMPLOYEE DATA FUNCTIONS FROM FIRST CODE ================
         async function loadEmployeeData() {
-            if (employeeDataLoaded) return;
-            
-            showNotification('📥 جاري تحميل بيانات الموظفين...', 'info', 3000);
-            
             try {
                 const res = await jsonp(`${EMPLOYEE_SCRIPT_URL}?action=getAll`);
                 
@@ -1145,16 +1715,14 @@
                     }
                     
                     employeeRecords = records;
-                    employeeDataLoaded = true;
-                    
                     populateEmployeeDatalists();
                     setupEmployeeAutocomplete();
-                    showNotification('✅ تم تحميل بيانات الموظفين بنجاح (' + employeeRecords.length + ' موظف)', 'success', 3000);
+                    showNotification(`✅ تم تحميل ${employeeRecords.length} موظف`, 'success', 3000);
                 } else {
-                    showNotification('❌ فشل في تحميل بيانات الموظفين. تأكد من صحة سكريبت الويب', 'error');
-                    console.error('Employee data response:', res);
+                    showNotification('❌ فشل في تحميل بيانات الموظفين', 'error');
                 }
             } catch (error) {
+                console.error('Error loading employee data:', error);
                 showNotification('❌ خطأ في تحميل بيانات الموظفين', 'error');
             }
         }
@@ -1163,10 +1731,12 @@
             const nameList = document.getElementById('employeeNameList');
             const numberList = document.getElementById('employeeNumberList');
             const contractList = document.getElementById('contractTypeList');
+            const reviewerNameList = document.getElementById('reviewerNameList');
             
             nameList.innerHTML = '';
             numberList.innerHTML = '';
             contractList.innerHTML = '';
+            reviewerNameList.innerHTML = '';
             
             const names = new Set();
             const numbers = new Set();
@@ -1178,9 +1748,9 @@
             
             employeeRecords.forEach(record => {
                 if (record && record.length > 1) {
-                    if (record[1] && String(record[1]).trim() !== '') names.add(String(record[1]).trim());
-                    if (record[2] && String(record[2]).trim() !== '') numbers.add(String(record[2]).trim());
-                    if (record[5] && String(record[5]).trim() !== '') contracts.add(String(record[5]).trim());
+                    if (record[1]) names.add(String(record[1]).trim());
+                    if (record[2]) numbers.add(String(record[2]).trim());
+                    if (record[5]) contracts.add(String(record[5]).trim());
                 }
             });
             
@@ -1188,6 +1758,13 @@
                 const option = document.createElement('option');
                 option.value = name;
                 nameList.appendChild(option);
+            });
+            
+            // Populate reviewer name list with the same employee names
+            names.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                reviewerNameList.appendChild(option);
             });
             
             numbers.forEach(number => {
@@ -1204,8 +1781,8 @@
         }
         
         function setupEmployeeAutocomplete() {
-            const employeeNameField = document.getElementById('employeeName');
-            const employeeNumberField = document.getElementById('employeeNumber');
+            const employeeNameField = document.getElementById('impartiality_employeeName');
+            const employeeNumberField = document.getElementById('impartiality_employeeNumber');
             
             employeeNameField.addEventListener('change', function() {
                 autoFillFromEmployee('name', this.value);
@@ -1214,22 +1791,10 @@
             employeeNumberField.addEventListener('change', function() {
                 autoFillFromEmployee('number', this.value);
             });
-            
-            employeeNameField.addEventListener('input', function() {
-                if (this.value.length > 2) {
-                    autoFillFromEmployee('name', this.value);
-                }
-            });
-            
-            employeeNumberField.addEventListener('input', function() {
-                if (this.value.length > 2) {
-                    autoFillFromEmployee('number', this.value);
-                }
-            });
         }
         
         function autoFillFromEmployee(fieldType, value) {
-            if (!value || !employeeDataLoaded || employeeRecords.length === 0) return;
+            if (!value || !employeeRecords.length) return;
             
             let record = null;
             
@@ -1239,7 +1804,7 @@
                 );
                 
                 if (record && record[2]) {
-                    document.getElementById('employeeNumber').value = record[2] || '';
+                    document.getElementById('impartiality_employeeNumber').value = record[2] || '';
                 }
             } else if (fieldType === 'number') {
                 record = employeeRecords.find(r => 
@@ -1247,17 +1812,18 @@
                 );
                 
                 if (record && record[1]) {
-                    document.getElementById('employeeName').value = record[1] || '';
+                    document.getElementById('impartiality_employeeName').value = record[1] || '';
                 }
             }
             
             if (record) {
-                document.getElementById('contractType').value = record[5] || '';
+                document.getElementById('impartiality_contractType').value = record[5] || '';
                 
+                // Set start date if available
                 if (record[6]) {
-                    const startDateFormatted = formatDateForInput(record[6]);
+                    const startDateFormatted = formatDMYForInput(record[6]);
                     if (startDateFormatted) {
-                        document.getElementById('startDate').value = startDateFormatted;
+                        document.getElementById('impartiality_startDate').value = startDateFormatted;
                         
                         if (flatpickrInstances.startDate) {
                             try {
@@ -1280,13 +1846,11 @@
             }
         }
         
-        // ================ LOAD DATA - UPDATED WITH ASYNC/AWAIT ================
-        async function loadData() {
-            setStatus("جاري تحميل البيانات...", 'info');
-            
-            const spinner = document.getElementById('loadingSpinner');
-            const tableContainer = document.getElementById('dataTableContainer');
-            const noRecords = document.getElementById('noRecords');
+        // ================ IMPARTIALITY SYSTEM FUNCTIONS ================
+        async function loadImpartialityData() {
+            const spinner = document.getElementById('impartialityLoadingSpinner');
+            const tableContainer = document.getElementById('impartialityTableContainer');
+            const noRecords = document.getElementById('impartialityNoRecords');
             
             spinner.style.display = 'flex';
             tableContainer.style.display = 'none';
@@ -1299,34 +1863,27 @@
                 
                 let records = [];
                 let responseStatus = 'error';
-                let responseMessage = 'خطأ غير معروف';
                 
-                if (res && res.status) {
-                    responseStatus = res.status;
-                    responseMessage = res.message || 'بدون رسالة';
-                    
-                    if (responseStatus === 'success') {
-                        if (Array.isArray(res.records)) {
-                            records = res.records;
-                        } else if (Array.isArray(res.data)) {
-                            records = res.data;
-                        } else if (res.records && typeof res.records === 'object') {
-                            const keys = Object.keys(res.records);
-                            if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
-                                records = res.records[keys[0]];
-                            }
+                if (res && res.status === 'success') {
+                    responseStatus = 'success';
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (res.records && typeof res.records === 'object') {
+                        const keys = Object.keys(res.records);
+                        if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
+                            records = res.records[keys[0]];
                         }
                     }
                 } else if (Array.isArray(res)) {
                     records = res;
                     responseStatus = 'success';
-                    responseMessage = 'تم تحميل البيانات بنجاح';
                 }
                 
                 if (responseStatus !== 'success') {
                     noRecords.style.display = 'block';
-                    showNotification(`❌ ${responseMessage}`, 'error');
-                    setStatus(responseMessage, 'error');
+                    showNotification('❌ فشل في تحميل إفصاحات الحيادية', 'error');
                     document.getElementById('totalRecords').textContent = '0';
                     return;
                 }
@@ -1334,65 +1891,73 @@
                 impartialityRecords = records;
                 
                 if (impartialityRecords.length > 0) {
-                    displayRecords(impartialityRecords);
+                    displayImpartialityRecords(impartialityRecords);
                     tableContainer.style.display = 'block';
                     document.getElementById('totalRecords').textContent = impartialityRecords.length.toLocaleString('ar-SA');
                 } else {
                     noRecords.style.display = 'block';
                     document.getElementById('totalRecords').textContent = '0';
                 }
-                
-                setStatus("تم تحميل البيانات بنجاح ✅", 'success');
-                showNotification(`✅ تم تحميل ${impartialityRecords.length} سجل إفصاح`, 'success', 3000);
             } catch (error) {
                 spinner.style.display = 'none';
                 noRecords.style.display = 'block';
-                showNotification('❌ خطأ في تحميل البيانات', 'error');
-                setStatus('خطأ في تحميل البيانات', 'error');
+                showNotification('❌ خطأ في تحميل إفصاحات الحيادية', 'error');
                 document.getElementById('totalRecords').textContent = '0';
             }
         }
         
-        function displayRecords(records) {
-            const table = document.getElementById('dataTable');
+        function displayImpartialityRecords(records) {
+            const table = document.getElementById('impartialityDataTable');
             
             let html = '<thead><tr>';
-            const headers = ['رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'نوع العقد', 'تاريخ بدء العمل', 
-                           'تاريخ التوقيع', 'المصادر المالية', 'رقم المخاطر', 'الإجراءات'];
+            const headers = ['رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'نوع العقد', 'تاريخ التوقيع', 'تاريخ الإدخال', 'المصادر المالية', 'رقم المخاطر', 'اسم المراجع', 'الملف المرفوع', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
             html += '</tr></thead><tbody>';
             
-            records.forEach((record, index) => {
+            records.forEach((record) => {
+                // Column mapping based on original impartiality system:
+                // 0: ID, 1: recordId, 2: employeeName, 3: employeeNumber, 4: contractType,
+                // 5: startDate, 6: signDate, 7: financialSources, 8: financialDetails,
+                // 9: personalRelations, 10: personalRelationsDetails, 11: externalActivities,
+                // 12: externalActivitiesDetails, 13: giftsHospitality, 14: giftsDetails,
+                // 15: otherDisclosure, 16: neutralityRiskNumber, 17: reviewerName, 18: entryDate, 19: fileLink
+                
+                const fileLink = record[19] || '';
+                const entryDate = record[18] || '';
+                
                 html += '<tr>';
                 
-                const recordId = record[0] || record.id || record.recordId || '';
-                const employeeName = record[1] || record.name || record.employeeName || '';
-                const employeeNumber = record[2] || record.empNo || record.employeeNumber || '';
-                const contractType = record[3] || record.contract || record.contractType || '';
-                const startDate = record[4] || record.startDate || '';
-                const signDate = record[5] || record.signDate || '';
-                const financialSources = record[6] || record.financialSources || '';
-                const riskNumber = record[15] || record.neutralityRiskNumber || '';
+                html += `<td><strong>${escapeHtml(record[1] || '')}</strong></td>`;
+                html += `<td>${escapeHtml(record[2] || '')}</td>`;
+                html += `<td>${escapeHtml(record[3] || '')}</td>`;
+                html += `<td>${escapeHtml(record[4] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(record[6] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(entryDate)}</td>`;
+                html += `<td>${escapeHtml(record[7] || '')}</td>`;
+                html += `<td>${escapeHtml(record[16] || '')}</td>`;
+                html += `<td>${escapeHtml(record[17] || '')}</td>`;
                 
-                html += `<td><strong>${escapeHtml(recordId)}</strong></td>`;
-                html += `<td>${escapeHtml(employeeName)}</td>`;
-                html += `<td>${escapeHtml(employeeNumber)}</td>`;
-                html += `<td>${escapeHtml(contractType)}</td>`;
-                html += `<td>${formatDateForDisplay(startDate)}</td>`;
-                html += `<td>${formatDateForDisplay(signDate)}</td>`;
-                html += `<td>${escapeHtml(financialSources)}</td>`;
-                html += `<td>${escapeHtml(riskNumber)}</td>`;
+                // File link column
+                if (fileLink && fileLink.trim() !== '') {
+                    html += `<td>
+                        <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn">
+                            <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                        </a>
+                    </td>`;
+                } else {
+                    html += `<td><span class="text-muted">لا يوجد ملف</span></td>`;
+                }
                 
                 html += `<td class="action-buttons">
-                    <button onclick="editRecord('${escapeHtml(recordId)}')" class="btn btn-sm btn-primary" title="تعديل">
+                    <button onclick="editImpartialityRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
                         <i class="fas fa-edit"></i> تعديل
                     </button>
-                    <button onclick="showDeleteModal('${escapeHtml(recordId)}', '${escapeHtml(employeeName)}')" class="btn btn-sm btn-danger" title="حذف">
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[2])}', '${escapeHtml(record[1] || '')}')" class="btn btn-sm btn-danger" title="حذف">
                         <i class="fas fa-trash"></i> حذف
                     </button>
-                    <button onclick="viewDetails('${escapeHtml(recordId)}')" class="btn btn-sm btn-info" title="عرض">
+                    <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
                         <i class="fas fa-eye"></i> عرض
                     </button>
                 </td>`;
@@ -1404,317 +1969,211 @@
             table.innerHTML = html;
         }
         
-        // ================ CRUD OPERATIONS - UPDATED WITH ASYNC/AWAIT ================
-        async function addRecord() { 
-            const requiredFields = ['recordId', 'employeeName', 'employeeNumber', 'signDate'];
-            let isValid = true;
-            
-            requiredFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (!field.value.trim()) {
-                    field.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    field.classList.remove('is-invalid');
-                }
-            });
-            
-            if (!isValid) {
-                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+async function addImpartialityRecord() {
+    // Check for duplicate record number first
+    if (checkDuplicateRecordNumber()) {
+        showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+        return;
+    }
+
+    const requiredFields = ['impartiality_recordId', 'impartiality_employeeName', 'impartiality_employeeNumber', 'impartiality_signDate'];
+    if (!validateForm(requiredFields)) {
+        showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+        return;
+    }
+
+    const startDate = document.getElementById('impartiality_startDate').value;
+    const signDate = document.getElementById('impartiality_signDate').value;
+    const entryDate = document.getElementById('impartiality_entryDate').value;
+
+    if (startDate && signDate) {
+        try {
+            const startDateObj = parseDateDDMMYYYY(startDate);
+            const signDateObj = parseDateDDMMYYYY(signDate);
+
+            if (startDateObj && signDateObj && signDateObj < startDateObj) {
+                showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
                 return;
             }
-            
-            // Check if record ID already exists
-            const recordId = document.getElementById('recordId').value.trim();
-            const existingRecord = impartialityRecords.find(r => {
-                const id = r[0] || r.id || r.recordId || '';
-                return String(id).trim() === recordId;
-            });
-            
-            if (existingRecord) {
-                showNotification('❌ رقم السجل موجود بالفعل. الرجاء استخدام رقم سجل مختلف', 'error');
-                document.getElementById('recordId').classList.add('is-invalid');
-                return;
-            }
-            
-            // Validate dates - SAME AS CALIBRATION SYSTEM
-            const startDate = document.getElementById('startDate').value;
-            const signDate = document.getElementById('signDate').value;
-            
-            if (startDate && !validateDate(startDate)) {
-                document.getElementById('startDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ بدء العمل غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('startDate').classList.remove('is-invalid');
-            }
-            
-            if (signDate && !validateDate(signDate)) {
-                document.getElementById('signDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ التوقيع غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('signDate').classList.remove('is-invalid');
-            }
-            
-            // Validate sign date is not older than start date - SAME AS CALIBRATION SYSTEM
-            if (startDate && signDate) {
-                try {
-                    const startDateObj = parseDateDDMMYYYY(startDate);
-                    const signDateObj = parseDateDDMMYYYY(signDate);
-                    
-                    if (startDateObj && signDateObj && signDateObj < startDateObj) {
-                        showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
-                        document.getElementById('signDate').classList.add('is-invalid');
-                        return;
-                    }
-                } catch (e) {
-                    console.error('Error comparing dates:', e);
-                }
-            }
-            
-            setStatus("جاري الإرسال...", 'info');
-            
-            const button = document.getElementById('addBtn');
-            const originalHtml = button.innerHTML;
-            
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
-            
-            const fields = [
-                'recordId',
-                'employeeName',
-                'employeeNumber',
-                'contractType',
-                'financialSources',
-                'financialDetails',
-                'personalRelations',
-                'personalRelationsDetails',
-                'externalActivities',
-                'externalActivitiesDetails',
-                'giftsHospitality',
-                'giftsDetails',
-                'otherDisclosure',
-                'neutralityRiskNumber',
-                'reviewerName'
-            ];
-            
-            let q = fields.map(f =>
-                `${f}=${encodeURIComponent(document.getElementById(f).value || '')}`
-            ).join('&');
-            
-            // Add dates - SAME AS CALIBRATION SYSTEM
-            q += `&startDate=${encodeURIComponent(startDate)}`;
-            q += `&signDate=${encodeURIComponent(signDate)}`;
-            
-            try {
-                const res = await jsonp(`${IMPARTIALITY_SCRIPT_URL}?action=add&${q}`);
-                
-                if (res && res.status === 'success') {
-                    showNotification(`✅ ${res.message}`, 'success');
-                    setStatus(res.message, 'success');
-                    resetForm();
-                    await loadData();
-                } else {
-                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
-                    showNotification(`❌ ${errorMsg}`, 'error');
-                    setStatus(errorMsg, 'error');
-                }
-            } catch (error) {
-                showNotification('❌ خطأ في الإضافة', 'error');
-                setStatus('خطأ في الإضافة', 'error');
-            } finally {
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-            }
+        } catch (e) {
+            console.error('Error comparing dates:', e);
         }
-        
-        async function updateRecord() { 
-            const requiredFields = ['recordId', 'employeeName', 'employeeNumber', 'signDate'];
-            let isValid = true;
-            
-            requiredFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (!field.value.trim()) {
-                    field.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    field.classList.remove('is-invalid');
-                }
-            });
-            
-            if (!isValid) {
-                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
-                return;
-            }
-            
-            // Validate dates - SAME AS CALIBRATION SYSTEM
-            const startDate = document.getElementById('startDate').value;
-            const signDate = document.getElementById('signDate').value;
-            
-            if (startDate && !validateDate(startDate)) {
-                document.getElementById('startDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ بدء العمل غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('startDate').classList.remove('is-invalid');
-            }
-            
-            if (signDate && !validateDate(signDate)) {
-                document.getElementById('signDate').classList.add('is-invalid');
-                showNotification('❌ تاريخ التوقيع غير صحيح', 'error');
-                return;
-            } else {
-                document.getElementById('signDate').classList.remove('is-invalid');
-            }
-            
-            // Validate sign date is not older than start date - SAME AS CALIBRATION SYSTEM
-            if (startDate && signDate) {
-                try {
-                    const startDateObj = parseDateDDMMYYYY(startDate);
-                    const signDateObj = parseDateDDMMYYYY(signDate);
-                    
-                    if (startDateObj && signDateObj && signDateObj < startDateObj) {
-                        showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
-                        document.getElementById('signDate').classList.add('is-invalid');
-                        return;
-                    }
-                } catch (e) {
-                    console.error('Error comparing dates:', e);
-                }
-            }
-            
-            setStatus("جاري الإرسال...", 'info');
-            
-            const editingId = document.getElementById('editingId').value;
-            if (!editingId) {
-                showNotification('❌ خطأ: لا يوجد سجل للتحديث', 'error');
-                return;
-            }
-            
-            const button = document.getElementById('updateBtn');
-            const originalHtml = button.innerHTML;
-            
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
-            
-            const fields = [
-                'recordId',
-                'employeeName',
-                'employeeNumber',
-                'contractType',
-                'financialSources',
-                'financialDetails',
-                'personalRelations',
-                'personalRelationsDetails',
-                'externalActivities',
-                'externalActivitiesDetails',
-                'giftsHospitality',
-                'giftsDetails',
-                'otherDisclosure',
-                'neutralityRiskNumber',
-                'reviewerName'
-            ];
-            
-            let q = fields.map(f =>
-                `${f}=${encodeURIComponent(document.getElementById(f).value || '')}`
-            ).join('&');
-            
-            // Add dates - SAME AS CALIBRATION SYSTEM
-            q += `&startDate=${encodeURIComponent(startDate)}`;
-            q += `&signDate=${encodeURIComponent(signDate)}`;
-            q += `&editingId=${encodeURIComponent(editingId)}`;
-            
-            try {
-                const res = await jsonp(`${IMPARTIALITY_SCRIPT_URL}?action=update&${q}`);
-                
-                if (res && res.status === 'success') {
-                    showNotification(`✅ ${res.message}`, 'success');
-                    setStatus(res.message, 'success');
-                    resetForm();
-                    await loadData();
-                } else {
-                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
-                    showNotification(`❌ ${errorMsg}`, 'error');
-                    setStatus(errorMsg, 'error');
-                }
-            } catch (error) {
-                showNotification('❌ خطأ في التحديث', 'error');
-                setStatus('خطأ في التحديث', 'error');
-            } finally {
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-            }
+    }
+
+    const button = document.getElementById('impartiality_addBtn');
+    const originalHtml = button.innerHTML;
+
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
+
+    // Validate dates
+    if (startDate && !validateDate(startDate)) {
+        showNotification('❌ تاريخ بدء العمل غير صحيح', 'error');
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+        return;
+    }
+
+    if (signDate && !validateDate(signDate)) {
+        showNotification('❌ تاريخ التوقيع غير صحيح', 'error');
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+        return;
+    }
+
+    if (entryDate && !validateDate(entryDate)) {
+        showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+        return;
+    }
+
+    // Generate internal recordId
+    const internalRecordId = 'IMP-' + Date.now();
+    document.getElementById('impartiality_internalRecordId').value = internalRecordId;
+
+    // Get file link from hidden field
+    const fileLink = document.getElementById('impartiality_fileLink').value;
+
+    // Convert dates to D M Y format
+    const startDateDMY = startDate ? formatDateToDMY(parseDateDDMMYYYY(startDate)) : '';
+    const signDateDMY = signDate ? formatDateToDMY(parseDateDDMMYYYY(signDate)) : '';
+    const entryDateDMY = entryDate ? formatDateToDMY(parseDateDDMMYYYY(entryDate)) : '';
+
+    // Build query string
+    const fields = [
+        'impartiality_recordId',
+        'impartiality_employeeName',
+        'impartiality_employeeNumber',
+        'impartiality_contractType',
+        'impartiality_financialSources',
+        'impartiality_financialDetails',
+        'impartiality_personalRelations',
+        'impartiality_personalRelationsDetails',
+        'impartiality_externalActivities',
+        'impartiality_externalActivitiesDetails',
+        'impartiality_giftsHospitality',
+        'impartiality_giftsDetails',
+        'impartiality_otherDisclosure',
+        'impartiality_neutralityRiskNumber',
+        'impartiality_reviewerName'
+    ];
+
+    // Map form field names to Google Apps Script parameter names
+    const paramMap = {
+        'impartiality_recordId': 'recordId',
+        'impartiality_employeeName': 'employeeName',
+        'impartiality_employeeNumber': 'employeeNumber',
+        'impartiality_contractType': 'contractType',
+        'impartiality_financialSources': 'financialSources',
+        'impartiality_financialDetails': 'financialDetails',
+        'impartiality_personalRelations': 'personalRelations',
+        'impartiality_personalRelationsDetails': 'personalRelationsDetails',
+        'impartiality_externalActivities': 'externalActivities',
+        'impartiality_externalActivitiesDetails': 'externalActivitiesDetails',
+        'impartiality_giftsHospitality': 'giftsHospitality',
+        'impartiality_giftsDetails': 'giftsDetails',
+        'impartiality_otherDisclosure': 'otherDisclosure',
+        'impartiality_neutralityRiskNumber': 'neutralityRiskNumber',
+        'impartiality_reviewerName': 'reviewerName'
+    };
+
+    let q = '';
+    
+    fields.forEach(f => {
+        const paramName = paramMap[f];
+        q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+    });
+
+    q += `startDate=${encodeURIComponent(startDateDMY)}&`;
+    q += `signDate=${encodeURIComponent(signDateDMY)}&`;
+    q += `entryDate=${encodeURIComponent(entryDateDMY)}&`;
+    q += `fileLink=${encodeURIComponent(fileLink || '')}`;
+
+    try {
+        const res = await jsonp(`${IMPARTIALITY_SCRIPT_URL}?action=add&${q}`);
+
+        if (res && res.status === 'success') {
+            showNotification(`✅ ${res.message}`, 'success');
+            resetImpartialityForm();
+            await loadImpartialityData();
+        } else {
+            const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+            showNotification(`❌ ${errorMsg}`, 'error');
         }
+    } catch (error) {
+        showNotification('❌ خطأ في الإضافة', 'error');
+    } finally {
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+    }
+}
         
-        function editRecord(recordId) {
-            setStatus('🔍 جاري تحميل بيانات الإفصاح...', 'info');
+        async function editImpartialityRecord(recordId) {
+            showNotification('🔍 جاري تحميل بيانات الإفصاح...', 'info');
             
-            const record = impartialityRecords.find(r => {
-                const id = r[0] || r.id || r.recordId || '';
-                return String(id).trim() === String(recordId).trim();
-            });
+            const record = impartialityRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
             
             if (record) {
-                fillForm(record);
-                document.getElementById('updateBtn').style.display = 'inline-block';
-                document.getElementById('addBtn').style.display = 'none';
+                fillImpartialityForm(record);
+                document.getElementById('impartiality_updateBtn').style.display = 'inline-block';
+                document.getElementById('impartiality_addBtn').style.display = 'none';
                 showNotification('✅ تم تحميل بيانات الإفصاح', 'success');
-                setStatus('تم تحميل بيانات الإفصاح', 'success');
             } else {
                 showNotification('❌ لم يتم العثور على الإفصاح', 'error');
-                setStatus('لم يتم العثور على الإفصاح', 'error');
             }
         }
         
-        function fillForm(record) {
-            const recordId = record[0] || record.id || record.recordId || '';
-            const employeeName = record[1] || record.name || record.employeeName || '';
-            const employeeNumber = record[2] || record.empNo || record.employeeNumber || '';
-            const contractType = record[3] || record.contract || record.contractType || '';
-            const startDate = record[4] || record.startDate || '';
-            const signDate = record[5] || record.signDate || '';
-            const financialSources = record[6] || record.financialSources || '';
-            const financialDetails = record[7] || record.financialDetails || '';
-            const personalRelations = record[8] || record.personalRelations || '';
-            const personalRelationsDetails = record[9] || record.personalRelationsDetails || '';
-            const externalActivities = record[10] || record.externalActivities || '';
-            const externalActivitiesDetails = record[11] || record.externalActivitiesDetails || '';
-            const giftsHospitality = record[12] || record.giftsHospitality || '';
-            const giftsDetails = record[13] || record.giftsDetails || '';
-            const otherDisclosure = record[14] || record.otherDisclosure || '';
-            const neutralityRiskNumber = record[15] || record.neutralityRiskNumber || '';
-            const reviewerName = record[16] || record.reviewerName || '';
+        function fillImpartialityForm(record) {
+            document.getElementById('impartiality_recordId').value = record[1] || '';
+            document.getElementById('impartiality_employeeName').value = record[2] || '';
+            document.getElementById('impartiality_employeeNumber').value = record[3] || '';
+            document.getElementById('impartiality_contractType').value = record[4] || '';
+            document.getElementById('impartiality_financialSources').value = record[7] || 'لا يوجد';
+            document.getElementById('impartiality_financialDetails').value = record[8] || '';
+            document.getElementById('impartiality_personalRelations').value = record[9] || 'لا يوجد';
+            document.getElementById('impartiality_personalRelationsDetails').value = record[10] || '';
+            document.getElementById('impartiality_externalActivities').value = record[11] || 'لا يوجد';
+            document.getElementById('impartiality_externalActivitiesDetails').value = record[12] || '';
+            document.getElementById('impartiality_giftsHospitality').value = record[13] || 'لا يوجد';
+            document.getElementById('impartiality_giftsDetails').value = record[14] || '';
+            document.getElementById('impartiality_otherDisclosure').value = record[15] || '';
+            document.getElementById('impartiality_neutralityRiskNumber').value = record[16] || '';
+            document.getElementById('impartiality_reviewerName').value = record[17] || '';
             
-            document.getElementById('recordId').value = recordId;
-            document.getElementById('employeeName').value = employeeName;
-            document.getElementById('employeeNumber').value = employeeNumber;
-            document.getElementById('contractType').value = contractType;
+            // Set the file link
+            const fileLink = record[19] || '';
+            document.getElementById('impartiality_fileLink').value = fileLink;
             
-            document.getElementById('financialSources').value = financialSources || 'لا يوجد';
-            document.getElementById('financialDetails').value = financialDetails || '';
+            // Display file info if there's a file link
+            if (fileLink && fileLink.trim() !== '') {
+                // Try to extract filename from URL or use a generic name
+                const fileName = 'ملف مرفق';
+                document.getElementById('uploadedFileName').textContent = fileName;
+                document.getElementById('uploadedFileSize').textContent = '';
+                document.getElementById('uploadedFileInfo').style.display = 'block';
+                
+                const fileLinkBtn = document.getElementById('uploadedFileLink');
+                fileLinkBtn.href = fileLink;
+                fileLinkBtn.style.display = 'inline-block';
+                
+                const uploadStatus = document.getElementById('uploadStatus');
+                uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                uploadStatus.className = 'upload-status success';
+            }
             
-            document.getElementById('personalRelations').value = personalRelations || 'لا يوجد';
-            document.getElementById('personalRelationsDetails').value = personalRelationsDetails || '';
+            // Set date values using the new D M Y format
+            const startDateFormatted = formatDMYForInput(record[5] || '');
+            const signDateFormatted = formatDMYForInput(record[6] || '');
+            const entryDateFormatted = formatDMYForInput(record[18] || '');
             
-            document.getElementById('externalActivities').value = externalActivities || 'لا يوجد';
-            document.getElementById('externalActivitiesDetails').value = externalActivitiesDetails || '';
+            document.getElementById('impartiality_startDate').value = startDateFormatted;
+            document.getElementById('impartiality_signDate').value = signDateFormatted;
+            document.getElementById('impartiality_entryDate').value = entryDateFormatted;
             
-            document.getElementById('giftsHospitality').value = giftsHospitality || 'لا يوجد';
-            document.getElementById('giftsDetails').value = giftsDetails || '';
-            
-            document.getElementById('otherDisclosure').value = otherDisclosure || '';
-            document.getElementById('neutralityRiskNumber').value = neutralityRiskNumber || '';
-            document.getElementById('reviewerName').value = reviewerName || '';
-            
-            // Set date values - SAME AS CALIBRATION SYSTEM
-            const startDateFormatted = formatDateForInput(startDate);
-            const signDateFormatted = formatDateForInput(signDate);
-            
-            document.getElementById('startDate').value = startDateFormatted;
-            document.getElementById('signDate').value = signDateFormatted;
-            
-            // Update Flatpickr instances - SAME AS CALIBRATION SYSTEM
+            // Update Flatpickr instances
             if (flatpickrInstances.startDate && startDateFormatted) {
                 try {
                     const parts = startDateFormatted.split('/');
@@ -1745,144 +2204,215 @@
                 }
             }
             
-            document.getElementById('editingId').value = recordId;
+            if (flatpickrInstances.entryDate && entryDateFormatted) {
+                try {
+                    const parts = entryDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.entryDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting entry date:', e);
+                }
+            }
+            
+            document.getElementById('impartiality_editingId').value = record[0];
+            document.getElementById('impartiality_internalRecordId').value = record[0];
+            
+            // Check for duplicate record number after filling the form (but exclude current record)
+            setTimeout(() => {
+                checkDuplicateRecordNumber();
+            }, 100);
         }
         
-        function resetForm() {
+ async function updateImpartialityRecord() {
+    // Check for duplicate record number first (excluding current record)
+    if (checkDuplicateRecordNumber()) {
+        showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+        return;
+    }
+
+    const recordId = document.getElementById('impartiality_editingId').value;
+    if (!recordId) {
+        showNotification('❌ لم يتم تحديد إفصاح للتحديث', 'error');
+        return;
+    }
+
+    const requiredFields = ['impartiality_recordId', 'impartiality_employeeName', 'impartiality_employeeNumber', 'impartiality_signDate'];
+    if (!validateForm(requiredFields)) {
+        showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+        return;
+    }
+
+    const startDate = document.getElementById('impartiality_startDate').value;
+    const signDate = document.getElementById('impartiality_signDate').value;
+    const entryDate = document.getElementById('impartiality_entryDate').value;
+
+    if (startDate && signDate) {
+        try {
+            const startDateObj = parseDateDDMMYYYY(startDate);
+            const signDateObj = parseDateDDMMYYYY(signDate);
+
+            if (startDateObj && signDateObj && signDateObj < startDateObj) {
+                showNotification('❌ تاريخ التوقيع يجب أن يكون بعد تاريخ بدء العمل أو مساوياً له', 'error');
+                return;
+            }
+        } catch (e) {
+            console.error('Error comparing dates:', e);
+        }
+    }
+
+    const button = document.getElementById('impartiality_updateBtn');
+    const originalHtml = button.innerHTML;
+
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
+
+    if (startDate && !validateDate(startDate)) {
+        showNotification('❌ تاريخ بدء العمل غير صحيح', 'error');
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+        return;
+    }
+
+    if (signDate && !validateDate(signDate)) {
+        showNotification('❌ تاريخ التوقيع غير صحيح', 'error');
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+        return;
+    }
+
+    if (entryDate && !validateDate(entryDate)) {
+        showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+        return;
+    }
+
+    // Get file link from hidden field
+    const fileLink = document.getElementById('impartiality_fileLink').value;
+
+    // Convert dates to D M Y format
+    const startDateDMY = startDate ? formatDateToDMY(parseDateDDMMYYYY(startDate)) : '';
+    const signDateDMY = signDate ? formatDateToDMY(parseDateDDMMYYYY(signDate)) : '';
+    const entryDateDMY = entryDate ? formatDateToDMY(parseDateDDMMYYYY(entryDate)) : '';
+
+    // Build query string
+    const fields = [
+        'impartiality_recordId',
+        'impartiality_employeeName',
+        'impartiality_employeeNumber',
+        'impartiality_contractType',
+        'impartiality_financialSources',
+        'impartiality_financialDetails',
+        'impartiality_personalRelations',
+        'impartiality_personalRelationsDetails',
+        'impartiality_externalActivities',
+        'impartiality_externalActivitiesDetails',
+        'impartiality_giftsHospitality',
+        'impartiality_giftsDetails',
+        'impartiality_otherDisclosure',
+        'impartiality_neutralityRiskNumber',
+        'impartiality_reviewerName'
+    ];
+
+    // Map form field names to Google Apps Script parameter names for update
+    const paramMap = {
+        'impartiality_recordId': 'recordId',
+        'impartiality_employeeName': 'employeeName',
+        'impartiality_employeeNumber': 'employeeNumber',
+        'impartiality_contractType': 'contractType',
+        'impartiality_financialSources': 'financialSources',
+        'impartiality_financialDetails': 'financialDetails',
+        'impartiality_personalRelations': 'personalRelations',
+        'impartiality_personalRelationsDetails': 'personalRelationsDetails',
+        'impartiality_externalActivities': 'externalActivities',
+        'impartiality_externalActivitiesDetails': 'externalActivitiesDetails',
+        'impartiality_giftsHospitality': 'giftsHospitality',
+        'impartiality_giftsDetails': 'giftsDetails',
+        'impartiality_otherDisclosure': 'otherDisclosure',
+        'impartiality_neutralityRiskNumber': 'neutralityRiskNumber',
+        'impartiality_reviewerName': 'reviewerName'
+    };
+
+    let q = `internalRecordId=${encodeURIComponent(recordId)}&`;
+
+    fields.forEach(f => {
+        const paramName = paramMap[f];
+        q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+    });
+
+    q += `startDate=${encodeURIComponent(startDateDMY)}&`;
+    q += `signDate=${encodeURIComponent(signDateDMY)}&`;
+    q += `entryDate=${encodeURIComponent(entryDateDMY)}&`;
+    q += `fileLink=${encodeURIComponent(fileLink || '')}`;
+
+    try {
+        const res = await jsonp(`${IMPARTIALITY_SCRIPT_URL}?action=update&${q}`);
+
+        if (res && res.status === 'success') {
+            showNotification(`✅ ${res.message}`, 'success');
+            resetImpartialityForm();
+            await loadImpartialityData();
+        } else {
+            const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+            showNotification(`❌ ${errorMsg}`, 'error');
+        }
+    } catch (error) {
+        showNotification('❌ خطأ في التحديث', 'error');
+        console.error('Update error:', error);
+    } finally {
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+    }
+}
+        
+        function resetImpartialityForm() {
             document.getElementById('impartialityForm').reset();
-            document.getElementById('editingId').value = '';
-            document.getElementById('addBtn').style.display = 'inline-block';
-            document.getElementById('updateBtn').style.display = 'none';
+            document.getElementById('impartiality_editingId').value = '';
+            document.getElementById('impartiality_internalRecordId').value = '';
+            document.getElementById('impartiality_fileLink').value = '';
+            document.getElementById('impartiality_addBtn').style.display = 'inline-block';
+            document.getElementById('impartiality_updateBtn').style.display = 'none';
             document.querySelectorAll('#impartialityForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
             
+            // Reset duplicate record number warning
+            document.getElementById('duplicateRecordNumberWarning').style.display = 'none';
+            isDuplicateRecordNumber = false;
+            
             // Reset dropdowns to default "لا يوجد"
-            document.getElementById('financialSources').value = 'لا يوجد';
-            document.getElementById('personalRelations').value = 'لا يوجد';
-            document.getElementById('externalActivities').value = 'لا يوجد';
-            document.getElementById('giftsHospitality').value = 'لا يوجد';
+            document.getElementById('impartiality_financialSources').value = 'لا يوجد';
+            document.getElementById('impartiality_personalRelations').value = 'لا يوجد';
+            document.getElementById('impartiality_externalActivities').value = 'لا يوجد';
+            document.getElementById('impartiality_giftsHospitality').value = 'لا يوجد';
             
-            // Clear Flatpickr instances
-            if (flatpickrInstances.startDate) {
-                flatpickrInstances.startDate.clear();
-            }
-            if (flatpickrInstances.signDate) {
-                flatpickrInstances.signDate.clear();
-            }
+            // Reset file upload section
+            selectedFile = null;
+            uploadedFileUrl = '';
+            document.getElementById('uploadedFileInfo').style.display = 'none';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            document.getElementById('uploadStatus').textContent = '';
+            document.getElementById('uploadStatus').className = 'upload-status';
+            document.getElementById('fileInput').value = '';
             
-            setStatus('تم مسح النموذج', 'success');
-        }
-        
-        function showDeleteModal(recordId, recordName) {
-            deleteRecordId = recordId;
-            deleteRecordName = recordName;
-            
-            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
-            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
-            
-            if (deleteModalInstance) {
-                deleteModalInstance.show();
+            // Reset dates
+            if (flatpickrInstances.startDate) flatpickrInstances.startDate.clear();
+            if (flatpickrInstances.signDate) flatpickrInstances.signDate.clear();
+            if (flatpickrInstances.entryDate) {
+                // Set entry date to current date
+                const today = new Date();
+                const todayFormatted = formatDateToDDMMYYYY(today);
+                document.getElementById('impartiality_entryDate').value = todayFormatted;
+                flatpickrInstances.entryDate.setDate(today, false);
             }
         }
         
-        // ================ DELETE FUNCTION - UPDATED WITH ASYNC/AWAIT ================
-        async function confirmDelete() {
-            if (!deleteRecordId) {
-                showNotification('❌ لا يوجد سجل محدد للحذف', 'error');
-                return;
-            }
-            
-            const button = document.getElementById('confirmDeleteBtn');
-            const originalText = button.innerHTML;
-            
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
-            
-            setStatus("جاري الحذف...", 'info');
-            
-            try {
-                const res = await jsonp(`${IMPARTIALITY_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}`);
-                
-                button.disabled = false;
-                button.innerHTML = originalText;
-                
-                if (res && res.status === 'success') {
-                    showNotification(`✅ ${res.message}`, 'success');
-                    setStatus(res.message, 'success');
-                    
-                    if (deleteModalInstance) {
-                        deleteModalInstance.hide();
-                    }
-                    
-                    deleteRecordId = '';
-                    deleteRecordName = '';
-                    
-                    await loadData();
-                } else {
-                    const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
-                    showNotification(`❌ ${errorMsg}`, 'error');
-                    setStatus(errorMsg, 'error');
-                }
-            } catch (error) {
-                button.disabled = false;
-                button.innerHTML = originalText;
-                showNotification('❌ خطأ في الاتصال بالخادم', 'error');
-                setStatus('خطأ في الاتصال بالخادم', 'error');
-            }
-        }
-        
-        // ================ DETAILS VIEW FUNCTION ================
-        function viewDetails(recordId) {
-            const record = impartialityRecords.find(r => {
-                const id = r[0] || r.id || r.recordId || '';
-                return String(id).trim() === String(recordId).trim();
-            });
-            
-            if (!record) {
-                showNotification('❌ لم يتم العثور على الإفصاح', 'error');
-                return;
-            }
-            
-            const detailsHTML = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[0] || record.id || record.recordId || '')}</p>
-                        <p><strong>اسم الموظف:</strong> ${escapeHtml(record[1] || record.name || record.employeeName || '')}</p>
-                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[2] || record.empNo || record.employeeNumber || '')}</p>
-                        <p><strong>نوع العقد:</strong> ${escapeHtml(record[3] || record.contract || record.contractType || '')}</p>
-                        <p><strong>تاريخ بدء العمل:</strong> <span class="english-date">${formatDateForDisplay(record[4] || record.startDate || '').replace(/<[^>]*>/g, '')}</span></p>
-                        <p><strong>تاريخ التوقيع:</strong> <span class="english-date">${formatDateForDisplay(record[5] || record.signDate || '').replace(/<[^>]*>/g, '')}</span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>المصادر المالية:</strong> ${escapeHtml(record[6] || record.financialSources || '')}</p>
-                        <p><strong>تفاصيل المصادر المالية:</strong> ${escapeHtml(record[7] || record.financialDetails || '')}</p>
-                        <p><strong>العلاقات الشخصية:</strong> ${escapeHtml(record[8] || record.personalRelations || '')}</p>
-                        <p><strong>تفاصيل العلاقات الشخصية:</strong> ${escapeHtml(record[9] || record.personalRelationsDetails || '')}</p>
-                        <p><strong>رقم مخاطر الحيادية:</strong> ${escapeHtml(record[15] || record.neutralityRiskNumber || '')}</p>
-                        <p><strong>اسم المراجع:</strong> ${escapeHtml(record[16] || record.reviewerName || '')}</p>
-                    </div>
-                </div>
-                
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <p><strong>الأنشطة الخارجية:</strong> ${escapeHtml(record[10] || record.externalActivities || '')}</p>
-                        <p><strong>تفاصيل الأنشطة الخارجية:</strong> ${escapeHtml(record[11] || record.externalActivitiesDetails || '')}</p>
-                        <p><strong>الهدايا والضيافة:</strong> ${escapeHtml(record[12] || record.giftsHospitality || '')}</p>
-                        <p><strong>تفاصيل الهدايا:</strong> ${escapeHtml(record[13] || record.giftsDetails || '')}</p>
-                        <p><strong>أي إفصاح آخر:</strong> ${escapeHtml(record[14] || record.otherDisclosure || '')}</p>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('detailsModalBody').innerHTML = detailsHTML;
-            
-            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-            detailsModal.show();
-        }
-        
-        // ================ EXPORT FUNCTION ================
-        function exportCSV() {
+        function exportImpartialityCSV() {
             if (impartialityRecords.length === 0) {
                 showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
                 return;
@@ -1892,39 +2422,48 @@
             
             try {
                 const headers = [
-                    'رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'نوع العقد', 'تاريخ بدء العمل',
-                    'تاريخ التوقيع', 'المصادر المالية', 'تفاصيل المصادر المالية',
+                    'رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'نوع العقد',
+                    'تاريخ بدء العمل', 'تاريخ التوقيع', 'تاريخ الإدخال',
+                    'المصادر المالية', 'تفاصيل المصادر المالية',
                     'العلاقات الشخصية', 'تفاصيل العلاقات الشخصية',
                     'الأنشطة الخارجية', 'تفاصيل الأنشطة الخارجية',
                     'الهدايا والضيافة', 'تفاصيل الهدايا',
-                    'أي إفصاح آخر', 'رقم سجل مخاطر الحيادية', 'اسم المراجع'
+                    'أي إفصاح آخر', 'رقم سجل مخاطر الحيادية', 'اسم المراجع', 'لينك الملف'
                 ];
                 
                 let csvContent = '\uFEFF';
                 csvContent += headers.join(",") + "\r\n";
                 
                 impartialityRecords.forEach(record => {
-                    const startDateDisplay = formatDateForDisplay(record[4] || record.startDate || '').replace(/<[^>]*>/g, '');
-                    const signDateDisplay = formatDateForDisplay(record[5] || record.signDate || '').replace(/<[^>]*>/g, '');
+                    // Convert D M Y format to readable date for CSV export
+                    const startDateObj = parseDateFromDMY(record[5] || '');
+                    const signDateObj = parseDateFromDMY(record[6] || '');
+                    const entryDateObj = parseDateFromDMY(record[18] || '');
+                    
+                    const startDateDisplay = startDateObj ? formatDateToDayMonthYear(startDateObj) : '';
+                    const signDateDisplay = signDateObj ? formatDateToDayMonthYear(signDateObj) : '';
+                    const entryDateDisplay = entryDateObj ? formatDateToDayMonthYear(entryDateObj) : '';
                     
                     const row = [
-                        record[0] || record.id || record.recordId || '',
-                        record[1] || record.name || record.employeeName || '',
-                        record[2] || record.empNo || record.employeeNumber || '',
-                        record[3] || record.contract || record.contractType || '',
+                        record[1] || '',
+                        record[2] || '',
+                        record[3] || '',
+                        record[4] || '',
                         startDateDisplay,
                         signDateDisplay,
-                        record[6] || record.financialSources || '',
-                        record[7] || record.financialDetails || '',
-                        record[8] || record.personalRelations || '',
-                        record[9] || record.personalRelationsDetails || '',
-                        record[10] || record.externalActivities || '',
-                        record[11] || record.externalActivitiesDetails || '',
-                        record[12] || record.giftsHospitality || '',
-                        record[13] || record.giftsDetails || '',
-                        record[14] || record.otherDisclosure || '',
-                        record[15] || record.neutralityRiskNumber || '',
-                        record[16] || record.reviewerName || ''
+                        entryDateDisplay,
+                        record[7] || '',
+                        record[8] || '',
+                        record[9] || '',
+                        record[10] || '',
+                        record[11] || '',
+                        record[12] || '',
+                        record[13] || '',
+                        record[14] || '',
+                        record[15] || '',
+                        record[16] || '',
+                        record[17] || '',
+                        record[19] || '' // File link
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -1947,7 +2486,123 @@
                 
                 showNotification(`✅ تم تصدير ${impartialityRecords.length} إفصاح`, 'success');
             } catch (error) {
-                showNotification(`❌ خطأ في التصدير`, 'error');
+                showNotification('❌ خطأ في التصدير', 'error');
+            }
+        }
+        
+        // ================ DETAILS VIEW FUNCTION ================
+        function viewDetails(recordId) {
+            const record = impartialityRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (!record) {
+                showNotification('❌ لم يتم العثور على الإفصاح', 'error');
+                return;
+            }
+            
+            const fileLink = record[19] || '';
+            const entryDate = record[18] || '';
+            
+            // Convert dates to display format
+            const startDateObj = parseDateFromDMY(record[5] || '');
+            const signDateObj = parseDateFromDMY(record[6] || '');
+            const entryDateObj = parseDateFromDMY(entryDate);
+            
+            const startDateDisplay = startDateObj ? formatDateToDayMonthYear(startDateObj) : '';
+            const signDateDisplay = signDateObj ? formatDateToDayMonthYear(signDateObj) : '';
+            const entryDateDisplay = entryDateObj ? formatDateToDayMonthYear(entryDateObj) : '';
+            
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[1] || '')}</p>
+                        <p><strong>اسم الموظف:</strong> ${escapeHtml(record[2])}</p>
+                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[3])}</p>
+                        <p><strong>نوع العقد:</strong> ${escapeHtml(record[4])}</p>
+                        <p><strong>تاريخ بدء العمل:</strong> <span class="english-date">${startDateDisplay}</span></p>
+                        <p><strong>تاريخ التوقيع:</strong> <span class="english-date">${signDateDisplay}</span></p>
+                        <p><strong>تاريخ الإدخال:</strong> <span class="english-date">${entryDateDisplay}</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>المصادر المالية:</strong> ${escapeHtml(record[7] || '')}</p>
+                        <p><strong>تفاصيل المصادر المالية:</strong> ${escapeHtml(record[8] || '')}</p>
+                        <p><strong>العلاقات الشخصية:</strong> ${escapeHtml(record[9] || '')}</p>
+                        <p><strong>تفاصيل العلاقات الشخصية:</strong> ${escapeHtml(record[10] || '')}</p>
+                        <p><strong>رقم مخاطر الحيادية:</strong> ${escapeHtml(record[16] || '')}</p>
+                        <p><strong>اسم المراجع:</strong> ${escapeHtml(record[17] || '')}</p>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <p><strong>الأنشطة الخارجية:</strong> ${escapeHtml(record[11] || '')}</p>
+                        <p><strong>تفاصيل الأنشطة الخارجية:</strong> ${escapeHtml(record[12] || '')}</p>
+                        <p><strong>الهدايا والضيافة:</strong> ${escapeHtml(record[13] || '')}</p>
+                        <p><strong>تفاصيل الهدايا:</strong> ${escapeHtml(record[14] || '')}</p>
+                        <p><strong>أي إفصاح آخر:</strong> ${escapeHtml(record[15] || '')}</p>
+                    </div>
+                </div>
+                
+                ${fileLink ? `<div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>الملف المرفوع:</strong> 
+                            <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn ms-2">
+                                <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                            </a>
+                        </p>
+                    </div>
+                </div>` : ''}
+            `;
+            
+            document.getElementById('detailsModalBody').innerHTML = detailsHTML;
+            detailsModalInstance.show();
+        }
+        
+        // ================ FIXED DELETE FUNCTIONALITY FROM FIRST CODE ================
+        function showDeleteModal(recordId, recordName, recordNumber = '') {
+            deleteRecordId = recordId;
+            deleteRecordName = recordName;
+            
+            document.getElementById('deleteRecordId').textContent = recordNumber || 'غير معروف';
+            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
+            
+            deleteModalInstance.show();
+        }
+        
+        async function confirmDelete() {
+            if (!deleteRecordId) return;
+            
+            const button = document.getElementById('confirmDeleteBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
+            
+            try {
+                const res = await jsonp(`${IMPARTIALITY_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}`);
+                
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
+                    
+                    deleteModalInstance.hide();
+                    
+                    deleteRecordId = '';
+                    deleteRecordName = '';
+                    
+                    loadImpartialityData();
+                } else {
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting record:', error);
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                showNotification('❌ خطأ في الاتصال بالخادم', 'error');
             }
         }
     </script>
