@@ -117,6 +117,101 @@
             }
         }
         
+        /* PDF Buttons Container - NEW */
+        .pdf-buttons-container {
+            margin-bottom: 25px;
+        }
+        
+        .pdf-card {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .pdf-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .pdf-card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .pdf-icon {
+            font-size: 2rem;
+            color: var(--danger-color);
+            margin-bottom: 15px;
+        }
+        
+        .pdf-card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            min-height: 50px;
+        }
+        
+        .pdf-card-description {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .pdf-buttons-group {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+        
+        .btn-view-pdf {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            flex-grow: 1;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-view-pdf:hover {
+            background: linear-gradient(135deg, #2980b9, #1a5276);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-download-pdf {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-download-pdf:hover {
+            background: linear-gradient(135deg, #219653, #1e8449);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+        
         /* Card Styles */
         .custom-card {
             background: white;
@@ -478,6 +573,16 @@
             .table-custom {
                 min-width: 1100px;
             }
+            
+            /* PDF Buttons Responsive */
+            .pdf-buttons-group {
+                flex-direction: column;
+            }
+            
+            .btn-download-pdf {
+                width: 100%;
+                padding: 10px;
+            }
         }
         
         /* Custom Scrollbar */
@@ -547,6 +652,56 @@
             </div>
         </div>
         
+        <!-- PDF Documents Section - NEW -->
+        <div class="row mb-4 pdf-buttons-container">
+            <div class="col-md-6 mb-3">
+                <div class="pdf-card">
+                    <div class="pdf-card-body">
+                        <div class="pdf-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <h5 class="pdf-card-title">نموذج اتفاقية السرية</h5>
+                        <p class="pdf-card-description">نموذج اتفاقية السرية الرسمي للموظفين الجدد، يحتوي على جميع البنود والشروط المتعلقة بالمعلومات السرية والالتزامات القانونية.</p>
+                        <div class="pdf-buttons-group">
+                            <a href="https://drive.google.com/file/d/1gYhoEz69BbT9L4qsf10k-semsOaI_o_8/view?usp=drive_link" 
+                               target="_blank" 
+                               class="btn-view-pdf">
+                                <i class="fas fa-eye me-1"></i> عرض النموذج
+                            </a>
+                            <a href="https://drive.google.com/uc?export=download&id=1gYhoEz69BbT9L4qsf10k-semsOaI_o_8" 
+                               class="btn-download-pdf" 
+                               download="نموذج_اتفاقية_السرية.pdf">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="pdf-card">
+                    <div class="pdf-card-body">
+                        <div class="pdf-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h5 class="pdf-card-title">سياسة السرية</h5>
+                        <p class="pdf-card-description">السياسة الكاملة للسرية في المؤسسة، توضح القواعد والإجراءات المتعلقة بحماية المعلومات السرية والعقوبات المترتبة على الإفشاء.</p>
+                        <div class="pdf-buttons-group">
+                            <a href="https://drive.google.com/file/d/1T9SIswJuboNpBt2TCsfI1jTuxzpEPMNw/view?usp=drive_link" 
+                               target="_blank" 
+                               class="btn-view-pdf">
+                                <i class="fas fa-eye me-1"></i> عرض السياسة
+                            </a>
+                            <a href="https://drive.google.com/uc?export=download&id=1T9SIswJuboNpBt2TCsfI1jTuxzpEPMNw" 
+                               class="btn-download-pdf" 
+                               download="سياسة_السرية.pdf">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Form Section -->
         <div class="row mb-4">
             <div class="col-12">
@@ -594,7 +749,10 @@
                             <div class="row">
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">رقم سجل السرية *</label>
-                                    <input type="text" class="form-control form-control-custom" id="calibration_secretRecordNumber" placeholder="رقم سجل السرية" required>
+                                    <input type="text" class="form-control form-control-custom" id="calibration_secretRecordNumber" placeholder="رقم سجل السرية" required oninput="checkDuplicateRecordNumber()">
+                                    <div class="form-text text-danger" id="duplicateRecordNumberWarning" style="display: none; font-size: 0.85rem;">
+                                        <i class="fas fa-exclamation-triangle me-1"></i> هذا الرقم موجود مسبقاً في النظام!
+                                    </div>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">اسم الموظف *</label>
@@ -639,8 +797,20 @@
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">اسم المراجع</label>
-                                    <input type="text" class="form-control form-control-custom" id="calibration_reviewerName" placeholder="اسم المراجع">
+                                    <input type="text" class="form-control form-control-custom" id="calibration_reviewerName" placeholder="اسم المراجع" list="reviewerNameList">
+                                    <datalist id="reviewerNameList"></datalist>
                                 </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label-custom">تاريخ الإدخال</label>
+                                    <div class="date-input-wrapper">
+                                        <input type="text" class="form-control form-control-custom date-picker" id="calibration_entryDate" placeholder="يوم/شهر/سنة" readonly>
+                                        <i class="fas fa-calendar-alt date-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9 mb-2"></div>
                             </div>
                             
                             <!-- Confidentiality Agreement Section -->
@@ -783,9 +953,9 @@
         <div class="row mt-4 fade-in">
             <div class="col-12 text-center">
                 <p class="text-muted">
-                    <i class="fas fa-copyright me-1"></i> نظام إدارة سجلال السرية 
+                    <i class="fas fa-copyright me-1"></i> نظام إدارة سجلات السرية 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 1.1 (مع بنود السرية)</span>
+                    <span id="appVersion" class="text-info">الإصدار 1.4 (مع منع تكرار أرقام السجلات)</span>
                 </p>
             </div>
         </div>
@@ -805,7 +975,7 @@
                         <h5 class="alert-heading">تحذير!</h5>
                         <p>هل أنت متأكد من حذف هذا السجل؟ هذا الإجراء لا يمكن التراجع عنه.</p>
                         <hr>
-                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">سجلال السرية</span></p>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">سجلات السرية</span></p>
                         <p class="mb-0"><strong>رقم سجل السرية:</strong> <span id="deleteRecordId">غير معروف</span></p>
                         <p class="mb-0"><strong>الاسم:</strong> <span id="deleteRecordName">غير معروف</span></p>
                     </div>
@@ -849,9 +1019,9 @@
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const CALIBRATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb3OzEoKoOhmXlyar5Lxk0Ku_Nj7UjLBoUmbneiKWKdlYgxAphcgzgvnGa5g0iK5_tYQ/exec";
+        const CALIBRATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztfGuGj9Vdq24GmqSRXoojbcz3Vdg2754FhIkyqRHwN537KEAigcwFRnwdSQeSZCnR8A/exec";
         const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
-        const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyAAiQ7MyV68RWvAzborRzTC77kfe8NjpJHT98WQhxIVRaJAbeVVmTAsjMhYrMQaphuNw/exec";
+        const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx7EFj4jh9PiJdx5YmbsHtaALOuKed7d0765XPZ0TBcrRjm4RWsRMTW9dAs2Jop4myRTA/exec";
         
         // ================ GLOBAL VARIABLES ================
         let calibrationRecords = [];
@@ -863,6 +1033,177 @@
         let detailsModalInstance = null;
         let selectedFile = null;
         let uploadedFileUrl = '';
+        let isDuplicateRecordNumber = false;
+        
+        // ================ PDF DOCUMENTS INFO - NEW ================
+        const pdfDocuments = {
+            confidentialityForm: {
+                viewUrl: "https://drive.google.com/file/d/1gYhoEz69BbT9L4qsf10k-semsOaI_o_8/view?usp=drive_link",
+                downloadUrl: "https://drive.google.com/uc?export=download&id=1gYhoEz69BbT9L4qsf10k-semsOaI_o_8",
+                fileName: "نموذج_اتفاقية_السرية.pdf",
+                title: "نموذج اتفاقية السرية",
+                description: "نموذج اتفاقية السرية الرسمي للموظفين الجدد"
+            },
+            confidentialityPolicy: {
+                viewUrl: "https://drive.google.com/file/d/1T9SIswJuboNpBt2TCsfI1jTuxzpEPMNw/view?usp=drive_link",
+                downloadUrl: "https://drive.google.com/uc?export=download&id=1T9SIswJuboNpBt2TCsfI1jTuxzpEPMNw",
+                fileName: "سياسة_السرية.pdf",
+                title: "سياسة السرية",
+                description: "السياسة الكاملة للسرية في المؤسسة"
+            }
+        };
+        
+        // ================ NEW DATE SYSTEM WITH D, M, Y SIGNS ================
+        function formatDateToDMY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `D${day} M${month} Y${year}`;
+        }
+        
+        function parseDateFromDMY(dmyString) {
+            if (!dmyString) return null;
+            
+            // Clean the string
+            dmyString = dmyString.toString().trim();
+            
+            // Try to match the pattern: D{day} M{month} Y{year}
+            const match = dmyString.match(/^D(\d+)\s+M(\d+)\s+Y(\d+)$/);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1; // JavaScript months are 0-indexed
+                const year = parseInt(match[3], 10);
+                
+                // Validate date
+                if (day < 1 || day > 31) return null;
+                if (month < 0 || month > 11) return null;
+                if (year < 1900 || year > 2100) return null;
+                
+                // Check if day is valid for the month
+                const dateObj = new Date(year, month, day);
+                if (dateObj.getDate() !== day || dateObj.getMonth() !== month || dateObj.getFullYear() !== year) {
+                    return null;
+                }
+                
+                return dateObj;
+            }
+            
+            return null;
+        }
+        
+        // ================ UPDATED: Display date as "31 January 2025" ================
+        function formatDMYForDisplay(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // If not in D M Y format, try to parse as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return `<span class="english-date">${formatDateToDayMonthYear(regularDate)}</span>`;
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return `<span class="english-date">${dmyString}</span>`;
+            }
+            
+            const formattedDate = formatDateToDayMonthYear(dateObj);
+            return `<span class="english-date">${formattedDate}</span>`;
+        }
+        
+        // ================ NEW FUNCTION: Format date as "31 January 2025" ================
+        function formatDateToDayMonthYear(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            
+            const day = date.getDate();
+            const monthIndex = date.getMonth();
+            const year = date.getFullYear();
+            
+            // Month names in English
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            return `${day} ${monthNames[monthIndex]} ${year}`;
+        }
+        
+        function formatDMYForInput(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // If not in D M Y format, try to parse as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return formatDateToDDMMYYYY(regularDate);
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return '';
+            }
+            
+            return formatDateToDDMMYYYY(dateObj);
+        }
+        
+        function validateDMYDate(dmyString) {
+            if (!dmyString) return true;
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // Try to validate as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    return !isNaN(regularDate.getTime());
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // ================ NEW FUNCTION: Check for duplicate record number ================
+        function checkDuplicateRecordNumber() {
+            const recordNumberInput = document.getElementById('calibration_secretRecordNumber');
+            const recordNumber = recordNumberInput.value.trim();
+            const editingId = document.getElementById('calibration_editingId').value;
+            const warningElement = document.getElementById('duplicateRecordNumberWarning');
+            
+            if (!recordNumber) {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+            
+            // Check if this record number already exists in calibrationRecords
+            // Column 15 is the secretRecordNumber
+            const duplicateRecord = calibrationRecords.find(record => {
+                // Skip the current record if we're in edit mode
+                if (editingId && record[0] === editingId) {
+                    return false;
+                }
+                return record[15] && record[15].toString().trim() === recordNumber;
+            });
+            
+            if (duplicateRecord) {
+                warningElement.style.display = 'block';
+                recordNumberInput.classList.add('is-invalid');
+                isDuplicateRecordNumber = true;
+                return true;
+            } else {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+        }
         
         // ================ FILE UPLOAD FUNCTIONS ================
         function initializeFileUpload() {
@@ -1047,6 +1388,9 @@
                 const backdrop = document.querySelector('.modal-backdrop');
                 if (backdrop) backdrop.remove();
             });
+            
+            // Add event listener for record number field to check for duplicates as user types
+            document.getElementById('calibration_secretRecordNumber').addEventListener('input', checkDuplicateRecordNumber);
         });
         
         // ================ FIXED DATE PICKER INITIALIZATION ================
@@ -1054,6 +1398,7 @@
             // Destroy existing instances if any
             if (flatpickrInstances.startDate) flatpickrInstances.startDate.destroy();
             if (flatpickrInstances.signDate) flatpickrInstances.signDate.destroy();
+            if (flatpickrInstances.entryDate) flatpickrInstances.entryDate.destroy();
             
             const dateOptions = {
                 locale: 'ar',
@@ -1070,7 +1415,9 @@
                 weekNumbers: false,
                 disableMobile: true,
                 onChange: function(selectedDates, dateStr, instance) {
-                    validateSignDateNotOlder();
+                    if (instance.input.id === 'calibration_signDate') {
+                        validateSignDateNotOlder();
+                    }
                     
                     if (selectedDates.length > 0) {
                         const date = selectedDates[0];
@@ -1082,9 +1429,19 @@
             
             flatpickrInstances.startDate = flatpickr('#calibration_startDate', dateOptions);
             flatpickrInstances.signDate = flatpickr('#calibration_signDate', dateOptions);
+            flatpickrInstances.entryDate = flatpickr('#calibration_entryDate', dateOptions);
             
             if (flatpickrInstances.startDate) flatpickrInstances.startDate.set('locale', 'ar');
             if (flatpickrInstances.signDate) flatpickrInstances.signDate.set('locale', 'ar');
+            if (flatpickrInstances.entryDate) flatpickrInstances.entryDate.set('locale', 'ar');
+            
+            // Set entry date to current date by default
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            document.getElementById('calibration_entryDate').value = todayFormatted;
+            if (flatpickrInstances.entryDate) {
+                flatpickrInstances.entryDate.setDate(today, false);
+            }
         }
         
         // ================ DATE FORMATTING FUNCTIONS ================
@@ -1115,139 +1472,6 @@
             }
             
             return null;
-        }
-        
-        function formatDateForDisplay(dateString) {
-            if (!dateString || dateString.trim() === '') return '';
-            
-            // If already in dd/mm/yyyy format
-            if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString.trim())) {
-                return `<span class="english-date">${dateString}</span>`;
-            }
-            
-            // Try to parse the date
-            let dateObj = null;
-            
-            // Format YYYY/MM/DD (Google Sheets format)
-            if (dateString.includes('/') && dateString.split('/')[0].length === 4) {
-                const parts = dateString.split('/');
-                if (parts.length === 3) {
-                    const year = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const day = parseInt(parts[2], 10);
-                    dateObj = new Date(year, month, day);
-                }
-            }
-            // Format DD/MM/YYYY
-            else if (dateString.includes('/') && dateString.split('/')[2].length === 4) {
-                const parts = dateString.split('/');
-                if (parts.length === 3) {
-                    const day = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const year = parseInt(parts[2], 10);
-                    dateObj = new Date(year, month, day);
-                }
-            }
-            // Try other formats
-            else {
-                dateObj = new Date(dateString);
-            }
-            
-            if (!dateObj || isNaN(dateObj.getTime())) {
-                return `<span class="english-date">${dateString}</span>`;
-            }
-            
-            const formattedDate = formatDateToDDMMYYYY(dateObj);
-            return `<span class="english-date">${formattedDate}</span>`;
-        }
-        
-        function formatDateForInput(dateString) {
-            if (!dateString || dateString.trim() === '') return '';
-            
-            const cleanDateString = dateString.replace(/<[^>]*>/g, '');
-            
-            // If already in dd/mm/yyyy format
-            if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(cleanDateString.trim())) {
-                return cleanDateString;
-            }
-            
-            // Try to parse "30 September 2026" format
-            const parts = cleanDateString.split(' ');
-            if (parts.length === 3 && isNaN(parts[1])) {
-                const day = parseInt(parts[0], 10);
-                const monthNames = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
-                const monthIndex = monthNames.findIndex(name => 
-                    name.toLowerCase() === parts[1].toLowerCase()
-                );
-                
-                if (monthIndex !== -1) {
-                    const month = (monthIndex + 1).toString().padStart(2, '0');
-                    const year = parts[2];
-                    return `${day.toString().padStart(2, '0')}/${month}/${year}`;
-                }
-            }
-            
-            // Try to parse as date
-            try {
-                const dateObj = new Date(cleanDateString);
-                if (!isNaN(dateObj.getTime())) {
-                    return formatDateToDDMMYYYY(dateObj);
-                }
-            } catch (e) {
-                console.error('Error parsing date for input:', e);
-            }
-            
-            return '';
-        }
-        
-        function validateDate(dateString) {
-            if (!dateString) return true;
-            
-            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-            const displayFormatRegex = /^(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})$/i;
-            
-            if (ddMMyyyyRegex.test(dateString)) {
-                const match = dateString.match(ddMMyyyyRegex);
-                const day = parseInt(match[1], 10);
-                const month = parseInt(match[2], 10);
-                const year = parseInt(match[3], 10);
-                
-                if (year < 1900 || year > 2100) return false;
-                if (month < 1 || month > 12) return false;
-                if (day < 1 || day > 31) return false;
-                
-                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
-                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                return day <= daysInMonth[month - 1];
-            }
-            
-            if (displayFormatRegex.test(dateString)) {
-                const match = dateString.match(displayFormatRegex);
-                const day = parseInt(match[1], 10);
-                const monthName = match[2];
-                const year = parseInt(match[3], 10);
-                
-                const monthNames = [
-                    'January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'
-                ];
-                const month = monthNames.findIndex(name => 
-                    name.toLowerCase() === monthName.toLowerCase()
-                ) + 1;
-                
-                if (month === 0) return false;
-                if (year < 1900 || year > 2100) return false;
-                if (day < 1 || day > 31) return false;
-                
-                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
-                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                return day <= daysInMonth[month - 1];
-            }
-            
-            return false;
         }
         
         // ================ DATE VALIDATION ================
@@ -1375,6 +1599,7 @@
             
             const startDate = document.getElementById('calibration_startDate').value;
             const signDate = document.getElementById('calibration_signDate').value;
+            const entryDate = document.getElementById('calibration_entryDate').value;
             
             if (startDate && !validateDate(startDate)) {
                 document.getElementById('calibration_startDate').classList.add('is-invalid');
@@ -1390,6 +1615,14 @@
                 isValid = false;
             } else {
                 document.getElementById('calibration_signDate').classList.remove('is-invalid');
+            }
+            
+            if (entryDate && !validateDate(entryDate)) {
+                document.getElementById('calibration_entryDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('calibration_entryDate').classList.remove('is-invalid');
             }
             
             if (startDate && signDate) {
@@ -1408,6 +1641,34 @@
             }
             
             return isValid;
+        }
+        
+        function validateDate(dateString) {
+            if (!dateString) return true;
+            
+            // First try to parse as D M Y format
+            if (validateDMYDate(dateString)) {
+                return true;
+            }
+            
+            // Then try dd/mm/yyyy format
+            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                const match = dateString.match(ddMMyyyyRegex);
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
+                
+                if (year < 1900 || year > 2100) return false;
+                if (month < 1 || month > 12) return false;
+                if (day < 1 || day > 31) return false;
+                
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
+                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            return false;
         }
         
         // ================ EMPLOYEE DATA FUNCTIONS ================
@@ -1444,10 +1705,12 @@
             const numberList = document.getElementById('employeeNumberList');
             const deptList = document.getElementById('departmentList');
             const contractList = document.getElementById('contractTypeList');
+            const reviewerNameList = document.getElementById('reviewerNameList'); // NEW: Reviewer name datalist
             
             nameList.innerHTML = '';
             numberList.innerHTML = '';
             deptList.innerHTML = '';
+            reviewerNameList.innerHTML = ''; // NEW: Clear reviewer name list
             
             const names = new Set();
             const numbers = new Set();
@@ -1465,6 +1728,13 @@
                 const option = document.createElement('option');
                 option.value = name;
                 nameList.appendChild(option);
+            });
+            
+            // NEW: Populate reviewer name list with the same employee names
+            names.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                reviewerNameList.appendChild(option);
             });
             
             numbers.forEach(number => {
@@ -1529,7 +1799,7 @@
                 
                 // Set start date if available
                 if (record[6]) {
-                    const startDateFormatted = formatDateForInput(record[6]);
+                    const startDateFormatted = formatDMYForInput(record[6]);
                     if (startDateFormatted) {
                         document.getElementById('calibration_startDate').value = startDateFormatted;
                         
@@ -1591,7 +1861,7 @@
                 
                 if (responseStatus !== 'success') {
                     noRecords.style.display = 'block';
-                    showNotification('❌ فشل في تحميل سجلال السرية', 'error');
+                    showNotification('❌ فشل في تحميل سجلات السرية', 'error');
                     document.getElementById('totalRecords').textContent = '0';
                     return;
                 }
@@ -1609,7 +1879,7 @@
             } catch (error) {
                 spinner.style.display = 'none';
                 noRecords.style.display = 'block';
-                showNotification('❌ خطأ في تحميل سجلال السرية', 'error');
+                showNotification('❌ خطأ في تحميل سجلات السرية', 'error');
                 document.getElementById('totalRecords').textContent = '0';
             }
         }
@@ -1618,14 +1888,19 @@
             const table = document.getElementById('calibrationDataTable');
             
             let html = '<thead><tr>';
-            const headers = ['رقم سجل السرية', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد', 'تاريخ التوقيع', 'اسم المراجع', 'الملف المرفوع', 'الإجراءات'];
+            const headers = ['رقم سجل السرية', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد', 'تاريخ التوقيع', 'تاريخ الإدخال', 'اسم المراجع', 'الملف المرفوع', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
             html += '</tr></thead><tbody>';
             
             records.forEach((record) => {
-                const fileLink = record[17] || ''; // Column 18 (0-based index 17) is the file link
+                // Column mapping: 
+                // 0: ID, 1: employeeName, 2: employeeNumber, 3: department, 4: contractType, 
+                // 5: startDate, 6: signDate, 7-12: agreement checkboxes, 13: notes, 
+                // 14: reviewerName, 15: secretRecordNumber, 16: entryDate, 17: fileLink
+                const fileLink = record[17] || '';
+                const entryDate = record[16] || '';
                 
                 html += '<tr>';
                 
@@ -1634,7 +1909,8 @@
                 html += `<td>${escapeHtml(record[2] || '')}</td>`;
                 html += `<td>${escapeHtml(record[3] || '')}</td>`;
                 html += `<td>${escapeHtml(record[4] || '')}</td>`;
-                html += `<td>${formatDateForDisplay(record[6] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(record[6] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(entryDate)}</td>`;
                 html += `<td>${escapeHtml(record[14] || '')}</td>`;
                 
                 // File link column
@@ -1668,6 +1944,12 @@
         }
         
         async function addCalibrationRecord() {
+            // Check for duplicate record number first
+            if (checkDuplicateRecordNumber()) {
+                showNotification('❌ رقم سجل السرية هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+            
             const requiredFields = ['calibration_secretRecordNumber', 'calibration_employeeName', 'calibration_employeeNumber', 'calibration_department'];
             if (!validateForm(requiredFields)) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
@@ -1676,6 +1958,7 @@
             
             const startDate = document.getElementById('calibration_startDate').value;
             const signDate = document.getElementById('calibration_signDate').value;
+            const entryDate = document.getElementById('calibration_entryDate').value;
             
             if (startDate && signDate) {
                 try {
@@ -1712,6 +1995,13 @@
                 return;
             }
             
+            if (entryDate && !validateDate(entryDate)) {
+                showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+            
             // Generate internal recordId
             const recordId = 'CAL-' + Date.now();
             document.getElementById('calibration_recordId').value = recordId;
@@ -1727,7 +2017,12 @@
             const passwordProtection = document.getElementById('calibration_passwordProtection').checked ? 'نعم' : 'لا';
             const noSocialMedia = document.getElementById('calibration_noSocialMedia').checked ? 'نعم' : 'لا';
             
-            // Build query string like training system
+            // Convert dates to D M Y format
+            const startDateDMY = startDate ? formatDateToDMY(parseDateDDMMYYYY(startDate)) : '';
+            const signDateDMY = signDate ? formatDateToDMY(parseDateDDMMYYYY(signDate)) : '';
+            const entryDateDMY = entryDate ? formatDateToDMY(parseDateDDMMYYYY(entryDate)) : '';
+            
+            // Build query string - FIXED: Use proper parameter names that match Google Apps Script
             const fields = [
                 'calibration_secretRecordNumber',
                 'calibration_employeeName',
@@ -1743,8 +2038,9 @@
                 `${f.replace('calibration_', '')}=${encodeURIComponent(document.getElementById(f).value || '')}`
             ).join('&');
             
-            q += `&startDate=${encodeURIComponent(startDate)}`;
-            q += `&signDate=${encodeURIComponent(signDate)}`;
+            q += `&startDate=${encodeURIComponent(startDateDMY)}`;
+            q += `&signDate=${encodeURIComponent(signDateDMY)}`;
+            q += `&entryDate=${encodeURIComponent(entryDateDMY)}`;
             q += `&fileLink=${encodeURIComponent(fileLink || '')}`;
             
             // Add confidentiality agreement values
@@ -1805,7 +2101,6 @@
             document.getElementById('calibration_fileLink').value = fileLink;
             
             // Set confidentiality agreement checkboxes (نعم/لا)
-            // Note: These should be in columns 7-12 (0-based indices)
             document.getElementById('calibration_confidentiality').checked = record[7] === 'نعم';
             document.getElementById('calibration_officialUse').checked = record[8] === 'نعم';
             document.getElementById('calibration_accessProtection').checked = record[9] === 'نعم';
@@ -1830,12 +2125,14 @@
                 uploadStatus.className = 'upload-status success';
             }
             
-            // Set date values - FIXED: Use exact date from record without changes
-            const startDateFormatted = formatDateForInput(record[5] || '');
-            const signDateFormatted = formatDateForInput(record[6] || '');
+            // Set date values using the new D M Y format
+            const startDateFormatted = formatDMYForInput(record[5] || '');
+            const signDateFormatted = formatDMYForInput(record[6] || '');
+            const entryDateFormatted = formatDMYForInput(record[16] || '');
             
             document.getElementById('calibration_startDate').value = startDateFormatted;
             document.getElementById('calibration_signDate').value = signDateFormatted;
+            document.getElementById('calibration_entryDate').value = entryDateFormatted;
             
             // Update Flatpickr instances
             if (flatpickrInstances.startDate && startDateFormatted) {
@@ -1868,11 +2165,37 @@
                 }
             }
             
+            if (flatpickrInstances.entryDate && entryDateFormatted) {
+                try {
+                    const parts = entryDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.entryDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting entry date:', e);
+                }
+            }
+            
             document.getElementById('calibration_editingId').value = record[0];
             document.getElementById('calibration_recordId').value = record[0];
+            
+            // Check for duplicate record number after filling the form (but exclude current record)
+            setTimeout(() => {
+                checkDuplicateRecordNumber();
+            }, 100);
         }
         
         async function updateCalibrationRecord() {
+            // Check for duplicate record number first (excluding current record)
+            if (checkDuplicateRecordNumber()) {
+                showNotification('❌ رقم سجل السرية هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+            
             const recordId = document.getElementById('calibration_editingId').value;
             if (!recordId) {
                 showNotification('❌ لم يتم تحديد سجل للتحديث', 'error');
@@ -1887,6 +2210,7 @@
             
             const startDate = document.getElementById('calibration_startDate').value;
             const signDate = document.getElementById('calibration_signDate').value;
+            const entryDate = document.getElementById('calibration_entryDate').value;
             
             if (startDate && signDate) {
                 try {
@@ -1922,6 +2246,13 @@
                 return;
             }
             
+            if (entryDate && !validateDate(entryDate)) {
+                showNotification('❌ تاريخ الإدخال غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+            
             // Get file link from hidden field
             const fileLink = document.getElementById('calibration_fileLink').value;
             
@@ -1933,7 +2264,13 @@
             const passwordProtection = document.getElementById('calibration_passwordProtection').checked ? 'نعم' : 'لا';
             const noSocialMedia = document.getElementById('calibration_noSocialMedia').checked ? 'نعم' : 'لا';
             
-            // Build query string like training system
+            // Convert dates to D M Y format
+            const startDateDMY = startDate ? formatDateToDMY(parseDateDDMMYYYY(startDate)) : '';
+            const signDateDMY = signDate ? formatDateToDMY(parseDateDDMMYYYY(signDate)) : '';
+            const entryDateDMY = entryDate ? formatDateToDMY(parseDateDDMMYYYY(entryDate)) : '';
+            
+            // Build query string - FIXED: Use proper parameter names that match Google Apps Script
+            // The parameter names must match exactly what the Google Apps Script expects
             const fields = [
                 'calibration_secretRecordNumber',
                 'calibration_employeeName',
@@ -1944,24 +2281,43 @@
                 'calibration_notes'
             ];
             
+            // Use camelCase parameter names that Google Apps Script expects
             let q = `recordId=${encodeURIComponent(recordId)}&`;
-            q += fields.map(f =>
-                `${f.replace('calibration_', '')}=${encodeURIComponent(document.getElementById(f).value || '')}`
-            ).join('&');
             
-            q += `&startDate=${encodeURIComponent(startDate)}`;
-            q += `&signDate=${encodeURIComponent(signDate)}`;
-            q += `&fileLink=${encodeURIComponent(fileLink || '')}`;
+            // Map form field names to Google Apps Script parameter names
+            const paramMap = {
+                'calibration_secretRecordNumber': 'secretRecordNumber',
+                'calibration_employeeName': 'employeeName',
+                'calibration_employeeNumber': 'employeeNumber',
+                'calibration_department': 'department',
+                'calibration_contractType': 'contractType',
+                'calibration_reviewerName': 'reviewerName',
+                'calibration_notes': 'notes'
+            };
+            
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+            
+            q += `startDate=${encodeURIComponent(startDateDMY)}&`;
+            q += `signDate=${encodeURIComponent(signDateDMY)}&`;
+            q += `entryDate=${encodeURIComponent(entryDateDMY)}&`;
+            q += `fileLink=${encodeURIComponent(fileLink || '')}&`;
             
             // Add confidentiality agreement values
-            q += `&confidentiality=${encodeURIComponent(confidentiality)}`;
-            q += `&officialUse=${encodeURIComponent(officialUse)}`;
-            q += `&accessProtection=${encodeURIComponent(accessProtection)}`;
-            q += `&breachReporting=${encodeURIComponent(breachReporting)}`;
-            q += `&passwordProtection=${encodeURIComponent(passwordProtection)}`;
-            q += `&noSocialMedia=${encodeURIComponent(noSocialMedia)}`;
+            q += `confidentiality=${encodeURIComponent(confidentiality)}&`;
+            q += `officialUse=${encodeURIComponent(officialUse)}&`;
+            q += `accessProtection=${encodeURIComponent(accessProtection)}&`;
+            q += `breachReporting=${encodeURIComponent(breachReporting)}&`;
+            q += `passwordProtection=${encodeURIComponent(passwordProtection)}&`;
+            q += `noSocialMedia=${encodeURIComponent(noSocialMedia)}`;
+            
+            // Remove trailing '&' if exists
+            q = q.replace(/&$/, '');
             
             try {
+                // IMPORTANT: The Google Apps Script needs to be updated to handle the entryDate parameter
                 const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=update&${q}`);
                 
                 if (res && res.status === 'success') {
@@ -1974,6 +2330,7 @@
                 }
             } catch (error) {
                 showNotification('❌ خطأ في التحديث', 'error');
+                console.error('Update error:', error);
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
@@ -1990,6 +2347,10 @@
             document.querySelectorAll('#calibrationForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
+            
+            // Reset duplicate record number warning
+            document.getElementById('duplicateRecordNumberWarning').style.display = 'none';
+            isDuplicateRecordNumber = false;
             
             // Reset confidentiality agreement checkboxes to checked
             document.getElementById('calibration_confidentiality').checked = true;
@@ -2008,8 +2369,16 @@
             document.getElementById('uploadStatus').className = 'upload-status';
             document.getElementById('fileInput').value = '';
             
+            // Reset dates
             if (flatpickrInstances.startDate) flatpickrInstances.startDate.clear();
             if (flatpickrInstances.signDate) flatpickrInstances.signDate.clear();
+            if (flatpickrInstances.entryDate) {
+                // Set entry date to current date
+                const today = new Date();
+                const todayFormatted = formatDateToDDMMYYYY(today);
+                document.getElementById('calibration_entryDate').value = todayFormatted;
+                flatpickrInstances.entryDate.setDate(today, false);
+            }
         }
         
         function exportCalibrationCSV() {
@@ -2018,12 +2387,13 @@
                 return;
             }
             
-            showNotification('📥 جاري تصدير سجلال السرية...', 'info');
+            showNotification('📥 جاري تصدير سجلات السرية...', 'info');
             
             try {
                 const headers = [
                     'رقم سجل السرية', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'نوع العقد',
-                    'تاريخ بدء العمل', 'تاريخ التوقيع', 'عدم إفشاء المعلومات السرية',
+                    'تاريخ بدء العمل', 'تاريخ التوقيع', 'تاريخ الإدخال',
+                    'عدم إفشاء المعلومات السرية',
                     'استخدام المعلومات للأغراض الرسمية فقط', 'حماية المعلومات من الوصول غير المصرح به',
                     'الإبلاغ الفوري عن خروقات السرية', 'حماية أجهزة الحاسب بكلمات مرور قوية',
                     'عدم نشر المعلومات على وسائل التواصل', 'ملاحظات', 'اسم المراجع', 'لينك الملف'
@@ -2033,8 +2403,14 @@
                 csvContent += headers.join(",") + "\r\n";
                 
                 calibrationRecords.forEach(record => {
-                    const startDateDisplay = formatDateForDisplay(record[5] || '').replace(/<[^>]*>/g, '');
-                    const signDateDisplay = formatDateForDisplay(record[6] || '').replace(/<[^>]*>/g, '');
+                    // Convert D M Y format to readable date for CSV export
+                    const startDateObj = parseDateFromDMY(record[5] || '');
+                    const signDateObj = parseDateFromDMY(record[6] || '');
+                    const entryDateObj = parseDateFromDMY(record[16] || '');
+                    
+                    const startDateDisplay = startDateObj ? formatDateToDayMonthYear(startDateObj) : '';
+                    const signDateDisplay = signDateObj ? formatDateToDayMonthYear(signDateObj) : '';
+                    const entryDateDisplay = entryDateObj ? formatDateToDayMonthYear(entryDateObj) : '';
                     
                     const row = [
                         record[15] || '',
@@ -2044,6 +2420,7 @@
                         record[4] || '',
                         startDateDisplay,
                         signDateDisplay,
+                        entryDateDisplay,
                         record[7] || '', // confidentiality
                         record[8] || '', // officialUse
                         record[9] || '', // accessProtection
@@ -2065,7 +2442,7 @@
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.setAttribute("href", url);
-                link.setAttribute("download", `سجلال السرية_${new Date().toISOString().slice(0,10)}.csv`);
+                link.setAttribute("download", `سجلات السرية_${new Date().toISOString().slice(0,10)}.csv`);
                 
                 document.body.appendChild(link);
                 link.click();
@@ -2091,6 +2468,7 @@
             }
             
             const fileLink = record[17] || '';
+            const entryDate = record[16] || '';
             
             // Create agreement items list
             const agreementItems = [
@@ -2108,6 +2486,15 @@
                 agreementHTML += `<p>${icon} ${item.label}: <strong>${item.value}</strong></p>`;
             });
             
+            // Convert dates to display format
+            const startDateObj = parseDateFromDMY(record[5] || '');
+            const signDateObj = parseDateFromDMY(record[6] || '');
+            const entryDateObj = parseDateFromDMY(entryDate);
+            
+            const startDateDisplay = startDateObj ? formatDateToDayMonthYear(startDateObj) : '';
+            const signDateDisplay = signDateObj ? formatDateToDayMonthYear(signDateObj) : '';
+            const entryDateDisplay = entryDateObj ? formatDateToDayMonthYear(entryDateObj) : '';
+            
             const detailsHTML = `
                 <div class="row">
                     <div class="col-md-6">
@@ -2118,8 +2505,9 @@
                         <p><strong>نوع العقد:</strong> ${escapeHtml(record[4])}</p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>تاريخ بدء العمل:</strong> <span class="english-date">${formatDateForDisplay(record[5]).replace(/<[^>]*>/g, '')}</span></p>
-                        <p><strong>تاريخ التوقيع:</strong> <span class="english-date">${formatDateForDisplay(record[6]).replace(/<[^>]*>/g, '')}</span></p>
+                        <p><strong>تاريخ بدء العمل:</strong> <span class="english-date">${startDateDisplay}</span></p>
+                        <p><strong>تاريخ التوقيع:</strong> <span class="english-date">${signDateDisplay}</span></p>
+                        <p><strong>تاريخ الإدخال:</strong> <span class="english-date">${entryDateDisplay}</span></p>
                         <p><strong>اسم المراجع:</strong> ${escapeHtml(record[14])}</p>
                     </div>
                 </div>
