@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام تقييم مهارات الموظفين</title>
+    <title>نظام تقييم كفاءة الموظفين - معمل كواليتك إنترناشيونال</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr Calendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -41,7 +44,7 @@
         
         /* Header Styles */
         .main-header {
-            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            background: linear-gradient(135deg, var(--skills-color), #1a5276);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -99,6 +102,115 @@
             margin-right: 5px;
         }
         
+        /* Header adjustments for home button */
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Ensure the date badge doesn't overlap with home button */
+        @media (min-width: 769px) {
+            .header-badge-container {
+                position: relative;
+                padding-left: 130px; /* Space for home button */
+            }
+        }
+        
+        /* PDF Buttons Container */
+        .pdf-buttons-container {
+            margin-bottom: 25px;
+        }
+        
+        .pdf-card {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .pdf-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .pdf-card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .pdf-icon {
+            font-size: 2rem;
+            color: var(--skills-color);
+            margin-bottom: 15px;
+        }
+        
+        .pdf-card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            min-height: 50px;
+        }
+        
+        .pdf-card-description {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .pdf-buttons-group {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+        
+        .btn-view-pdf {
+            background: linear-gradient(135deg, var(--skills-color), #1a5276);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            flex-grow: 1;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-view-pdf:hover {
+            background: linear-gradient(135deg, #1a5276, #154360);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(41, 128, 185, 0.3);
+        }
+        
+        .btn-download-pdf {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-download-pdf:hover {
+            background: linear-gradient(135deg, #219653, #1e8449);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+        
         /* Card Styles */
         .custom-card {
             background: white;
@@ -120,7 +232,7 @@
         }
         
         .card-header-skills {
-            background: linear-gradient(135deg, var(--skills-color), #3498db);
+            background: linear-gradient(135deg, var(--skills-color), #1a5276);
         }
         
         /* Form Styles */
@@ -134,8 +246,8 @@
         }
         
         .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            border-color: var(--skills-color);
+            box-shadow: 0 0 0 0.25rem rgba(41, 128, 185, 0.25);
             background: white;
         }
         
@@ -151,42 +263,151 @@
             font-size: 0.9rem;
         }
         
-        /* Custom Date Input */
-        .date-input-group {
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section-title {
+            color: var(--skills-color);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
         
-        .date-input-group .form-control-custom {
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .skill-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        /* Upload File Button Styles */
+        .upload-container {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
             text-align: center;
-            padding: 0.375rem 0.25rem;
-            flex: 1;
+            margin-bottom: 15px;
+            transition: all 0.3s;
         }
         
-        .date-input-group .date-day {
-            max-width: 60px;
+        .upload-container:hover {
+            background: #e9ecef;
+            border-color: var(--skills-color);
         }
         
-        .date-input-group .date-month {
-            max-width: 60px;
+        .upload-container.dragover {
+            background: #e3f2fd;
+            border-color: var(--skills-color);
+            border-style: solid;
         }
         
-        .date-input-group .date-year {
-            max-width: 80px;
+        .upload-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .date-input-group .date-separator {
-            font-size: 1.2rem;
-            color: #6c757d;
-            font-weight: bold;
-            min-width: 10px;
+        .upload-btn:hover {
+            background: #5a6268;
         }
         
-        .date-input-group input::placeholder {
-            color: #adb5bd;
-            text-align: center;
-            font-size: 0.9rem;
+        .upload-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        .upload-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+        
+        .upload-status.success {
+            color: var(--success-color);
+        }
+        
+        .upload-status.error {
+            color: var(--danger-color);
+        }
+        
+        .upload-status.loading {
+            color: var(--skills-color);
+        }
+        
+        .file-link-btn {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .file-link-btn:hover {
+            background: #219653;
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Date Input Styling */
+        .date-input-wrapper {
+            position: relative;
+        }
+        
+        .date-input-wrapper .date-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--skills-color);
+            pointer-events: none;
+        }
+        
+        .date-input-wrapper .form-control-custom {
+            padding-right: 40px;
+            direction: ltr;
+            text-align: right;
+        }
+        
+        /* Flatpickr Customization */
+        .flatpickr-calendar {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+        
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+            background: var(--skills-color);
+            border-color: var(--skills-color);
+        }
+        
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .flatpickr-weekdays {
+            font-family: 'Cairo', sans-serif;
         }
         
         /* Table Styles */
@@ -199,11 +420,12 @@
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 0;
+            min-width: 1500px;
             width: 100%;
         }
         
         .table-custom thead th {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            background: linear-gradient(135deg, var(--skills-color), #1a5276);
             color: white;
             border: none;
             padding: 15px 12px;
@@ -219,7 +441,7 @@
         }
         
         .table-custom tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.08);
+            background-color: rgba(41, 128, 185, 0.08);
         }
         
         .table-custom tbody td {
@@ -270,7 +492,7 @@
         }
         
         .notification.info {
-            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            background: linear-gradient(135deg, var(--skills-color), #1a5276);
         }
         
         .notification.warning {
@@ -292,39 +514,29 @@
             border-width: 0.2rem;
         }
         
-        /* Badge Status */
-        .badge-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        
-        /* Skill Badges */
-        .skill-badge {
+        /* FIX FOR ENGLISH DATE DISPLAY IN RTL CONTEXT */
+        .english-date {
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: embed !important;
             display: inline-block;
-            background: #e3f2fd;
-            color: #1976d2;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin: 2px;
         }
         
-        /* Competency Levels */
-        .competency-high {
-            background-color: #d4edda !important;
-            color: #155724 !important;
+        /* Duplicate Record Warning */
+        .duplicate-warning {
+            display: none;
+            font-size: 0.85rem;
         }
         
-        .competency-medium {
-            background-color: #fff3cd !important;
-            color: #856404 !important;
+        /* Score Input Styles */
+        .score-input {
+            max-width: 80px;
+            text-align: center;
         }
         
-        .competency-low {
-            background-color: #f8d7da !important;
-            color: #721c24 !important;
+        .competency-input {
+            max-width: 120px;
+            text-align: center;
         }
         
         /* Responsive */
@@ -340,10 +552,7 @@
                 min-width: 60px;
             }
             
-            .table-custom {
-                min-width: 1000px;
-            }
-            
+            /* Home Button Responsive Styles */
             .home-button {
                 position: relative;
                 top: 0;
@@ -356,11 +565,30 @@
                 padding-top: 60px;
             }
             
+            /* Header badge container responsive */
             .header-badge-container {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;
                 gap: 10px;
+            }
+            
+            .table-custom {
+                min-width: 1300px;
+            }
+            
+            /* PDF Buttons Responsive */
+            .pdf-buttons-group {
+                flex-direction: column;
+            }
+            
+            .btn-download-pdf {
+                width: 100%;
+                padding: 10px;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -376,43 +604,47 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
+            background: var(--skills-color);
             border-radius: 10px;
         }
         
         /* Modal Custom */
         .modal-header-custom {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            background: linear-gradient(135deg, var(--skills-color), #1a5276);
             color: white;
             border-radius: 15px 15px 0 0;
         }
         
-        /* Header adjustments for home button */
-        .header-content {
-            position: relative;
-            z-index: 1;
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
         }
         
-        /* Ensure the date badge doesn't overlap with home button */
-        @media (min-width: 769px) {
-            .header-badge-container {
-                position: relative;
-                padding-left: 130px; /* Space for home button */
-            }
+        /* Modal Fix - Prevent background scroll */
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
         }
         
-        /* Skill progress bars */
-        .skill-progress {
-            height: 8px;
-            border-radius: 4px;
-            margin-top: 5px;
-            background: #e9ecef;
+        /* Competency Badge */
+        .competency-badge {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 20px;
         }
         
-        .skill-progress-bar {
-            height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+        .competency-high {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+        }
+        
+        .competency-medium {
+            background-color: #fff3cd !important;
+            color: #856404 !important;
+        }
+        
+        .competency-low {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
         }
     </style>
 </head>
@@ -432,17 +664,67 @@
             <div class="header-content">
                 <div class="row align-items-center">
                     <div class="col-md-8">
-                        <h1><i class="fas fa-user-tie me-2"></i> نظام تقييم مهارات الموظفين</h1>
-                        <p class="lead mb-0">إدارة وتقييم كفاءات الموظفين وتحديد فجوات التدريب والمهارات</p>
+                        <h1><i class="fas fa-user-tie me-2"></i> نظام تقييم كفاءة الموظفين - معمل كواليتك إنترناشيونال</h1>
+                        <p class="lead mb-0">نظام متكامل لتقييم كفاءة الموظفين وتحديد فجوات المهارات وخطط التدريب</p>
                     </div>
                     <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
                         <div class="header-badge d-inline-block me-3">
-                            <i class="fas fa-users me-2"></i>
-                            <span id="totalRecords">0</span> موظفين
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> تقييم
                         </div>
                         <div class="header-badge d-inline-block">
                             <i class="fas fa-calendar me-2"></i>
                             <span id="currentDate">--/--/----</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PDF Documents Section -->
+        <div class="row mb-4 pdf-buttons-container">
+            <div class="col-md-6 mb-3">
+                <div class="pdf-card">
+                    <div class="pdf-card-body">
+                        <div class="pdf-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h5 class="pdf-card-title">نموذج تقييم الموظفين</h5>
+                        <p class="pdf-card-description">نموذج تقييم الموظفين الرسمي، يحتوي على جميع المعايير والمهارات المطلوبة لتقييم أداء الموظفين.</p>
+                        <div class="pdf-buttons-group">
+                            <a href="https://docs.google.com/spreadsheets/d/1h0s1GrwiWZwHmgGbUNpmNfgCXJ4JckdD/edit?usp=drive_link&ouid=118223468395814327095&rtpof=true&sd=true" 
+                               target="_blank" 
+                               class="btn-view-pdf">
+                                <i class="fas fa-eye me-1"></i> عرض النموذج
+                            </a>
+                            <a href="https://docs.google.com/spreadsheets/d/1h0s1GrwiWZwHmgGbUNpmNfgCXJ4JckdD/edit?usp=drive_link&ouid=118223468395814327095&rtpof=true&sd=true" 
+                               class="btn-download-pdf" 
+                               download="نموذج_تقييم_الموظفين.pdf">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="pdf-card">
+                    <div class="pdf-card-body">
+                        <div class="pdf-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5 class="pdf-card-title">دليل معايير التقييم</h5>
+                        <p class="pdf-card-description">الدليل الكامل لمعايير التقييم، يوضح كيفية تقييم المهارات والكفاءات والمستويات المطلوبة لكل وظيفة.</p>
+                        <div class="pdf-buttons-group">
+                            <a href="https://drive.google.com/file/d/1GfOjS6HoVg6ECYTtIvLFqDpTLm3ddCp2/view?usp=drive_link" 
+                               target="_blank" 
+                               class="btn-view-pdf">
+                                <i class="fas fa-eye me-1"></i> عرض الدليل
+                            </a>
+                            <a href="https://drive.google.com/file/d/1GfOjS6HoVg6ECYTtIvLFqDpTLm3ddCp2/view?usp=drive_link" 
+                               class="btn-download-pdf" 
+                               download="دليل_معايير_التقييم.pdf">
+                                <i class="fas fa-download"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -454,113 +736,262 @@
             <div class="col-12">
                 <div class="custom-card">
                     <div class="card-header-custom card-header-skills">
-                        <i class="fas fa-user-edit me-2"></i> إضافة / تعديل سجل تقييم الموظف
+                        <i class="fas fa-user-tie me-2"></i> إدارة تقييمات الموظفين
                     </div>
                     <div class="card-body">
-                        <form id="employeeForm">
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label-custom">اسم الموظف *</label>
-                                    <input type="text" class="form-control form-control-custom" id="employeeName" placeholder="اسم الموظف الكامل" required>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label-custom">الرقم الوظيفي *</label>
-                                    <input type="text" class="form-control form-control-custom" id="recordId" placeholder="الرقم الوظيفي" required>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label-custom">القسم *</label>
-                                    <input type="text" class="form-control form-control-custom" id="department" placeholder="القسم / الإدارة" required>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
+                        <form id="evaluationForm">
+                            <!-- File Upload Section -->
+                            <div class="row mb-3">
                                 <div class="col-12">
-                                    <h6 class="mt-3 mb-3 text-primary"><i class="fas fa-star me-2"></i>تقييم المهارات (من 1 إلى 10)</h6>
+                                    <div class="upload-container" id="uploadContainer">
+                                        <h6><i class="fas fa-cloud-upload-alt me-2"></i>رفع ملف التقييم (PDF أو صورة)</h6>
+                                        <p class="text-muted mb-2" style="font-size: 0.85rem;">الحد الأقصى لحجم الملف: 10 ميجابايت. الأنواع المسموحة: PNG, JPG, JPEG, PDF</p>
+                                        
+                                        <input type="file" id="fileInput" 
+                                               accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                                               style="display: none">
+                                        <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                                            <i class="fas fa-folder-open me-1"></i> اختر ملف للرفع
+                                        </button>
+                                        <button type="button" class="upload-btn" onclick="uploadFile()" id="uploadBtn">
+                                            <i class="fas fa-upload me-1"></i> رفع الملف
+                                        </button>
+                                        
+                                        <div class="upload-status" id="uploadStatus"></div>
+                                        
+                                        <div id="uploadedFileInfo" style="display: none; margin-top: 10px;">
+                                            <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                                <div>
+                                                    <i class="fas fa-file me-2"></i>
+                                                    <span id="uploadedFileName"></span>
+                                                    <span class="badge bg-success ms-2" id="uploadedFileSize"></span>
+                                                </div>
+                                                <a href="#" target="_blank" class="file-link-btn" id="uploadedFileLink" style="display: none;">
+                                                    <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-user-circle"></i> المعلومات الأساسية
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم السجل *</label>
+                                        <input type="text" class="form-control form-control-custom" id="evaluation_recordId" placeholder="رقم السجل" required oninput="checkDuplicateRecordNumber()">
+                                        <div class="form-text text-danger duplicate-warning" id="duplicateRecordNumberWarning">
+                                            <i class="fas fa-exclamation-triangle me-1"></i> هذا الرقم موجود مسبقاً في النظام!
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اسم الموظف *</label>
+                                        <input type="text" class="form-control form-control-custom" id="evaluation_employeeName" placeholder="اسم الموظف" required list="employeeNameList">
+                                        <datalist id="employeeNameList"></datalist>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الرقم الوظيفي *</label>
+                                        <input type="text" class="form-control form-control-custom" id="evaluation_employeeNumber" placeholder="الرقم الوظيفي" required list="employeeNumberList">
+                                        <datalist id="employeeNumberList"></datalist>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">القسم *</label>
+                                        <input type="text" class="form-control form-control-custom" id="evaluation_department" placeholder="القسم" required list="departmentList">
+                                        <datalist id="departmentList">
+                                            <option value="الإدارة">الإدارة</option>
+                                            <option value="المختبر">المختبر</option>
+                                            <option value="الجودة">الجودة</option>
+                                            <option value="التدريب">التدريب</option>
+                                            <option value="الدعم الفني">الدعم الفني</option>
+                                        </datalist>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-brain"></i> تقييم المهارات (1-10 نقاط لكل مهارة)
                                 </div>
                                 
-                                <div class="col-md-2 mb-3">
-                                    <label class="form-label-custom">المهارة 1</label>
-                                    <input type="number" class="form-control form-control-custom" id="skill1" placeholder="1-10" min="1" max="10">
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label class="form-label-custom">المهارة 2</label>
-                                    <input type="number" class="form-control form-control-custom" id="skill2" placeholder="1-10" min="1" max="10">
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label class="form-label-custom">المهارة 3</label>
-                                    <input type="number" class="form-control form-control-custom" id="skill3" placeholder="1-10" min="1" max="10">
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label class="form-label-custom">المهارة 4</label>
-                                    <input type="number" class="form-control form-control-custom" id="skill4" placeholder="1-10" min="1" max="10">
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label class="form-label-custom">المهارة 5</label>
-                                    <input type="number" class="form-control form-control-custom" id="skill5" placeholder="1-10" min="1" max="10">
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label class="form-label-custom">الكفاءة الكلية %</label>
-                                    <input type="number" class="form-control form-control-custom" id="totalCompetency" placeholder="0-100%" min="0" max="100">
-                                    <div class="skill-progress">
-                                        <div class="skill-progress-bar" id="competencyProgress"></div>
+                                <div class="skills-grid">
+                                    <!-- Skill 1 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة الأولى</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill1" placeholder="اسم المهارة (مثال: العمل الجماعي)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill1Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 2 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة الثانية</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill2" placeholder="اسم المهارة (مثال: التواصل)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill2Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 3 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة الثالثة</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill3" placeholder="اسم المهارة (مثال: حل المشكلات)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill3Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 4 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة الرابعة</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill4" placeholder="اسم المهارة (مثال: الإبداع)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill4Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 5 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة الخامسة</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill5" placeholder="اسم المهارة (مثال: القيادة)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill5Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 6 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة السادسة</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill6" placeholder="اسم المهارة (مثال: إدارة الوقت)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill6Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 7 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة السابعة</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill7" placeholder="اسم المهارة (مثال: المهارات التقنية)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill7Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 8 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة الثامنة</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill8" placeholder="اسم المهارة (مثال: المرونة)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill8Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 9 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة التاسعة</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill9" placeholder="اسم المهارة (مثال: الالتزام)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill9Score" placeholder="1-10" min="1" max="10">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Skill 10 -->
+                                    <div class="skill-item">
+                                        <label class="form-label-custom">المهارة العاشرة</label>
+                                        <input type="text" class="form-control form-control-custom mb-2" id="evaluation_skill10" placeholder="اسم المهارة (مثال: التعلم المستمر)">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2" style="font-size: 0.9rem;">التقييم:</span>
+                                            <input type="number" class="form-control form-control-custom score-input" id="evaluation_skill10Score" placeholder="1-10" min="1" max="10">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label-custom">تاريخ التقييم الأخير *</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center date-day" id="lastEvaluationDate_day" placeholder="يوم" min="1" max="31" required>
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-month" id="lastEvaluationDate_month" placeholder="شهر" min="1" max="12" required>
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-year" id="lastEvaluationDate_year" placeholder="سنة" min="1900" max="2100" required>
-                                    </div>
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-chart-bar"></i> ملخص التقييم
                                 </div>
                                 
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label-custom">تاريخ التقييم القادم *</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center date-day" id="nextEvaluationDate_day" placeholder="يوم" min="1" max="31" required>
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-month" id="nextEvaluationDate_month" placeholder="شهر" min="1" max="12" required>
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-year" id="nextEvaluationDate_year" placeholder="سنة" min="1900" max="2100" required>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label-custom">الكفاءة الكلية (0-100%) *</label>
+                                        <input type="number" class="form-control form-control-custom competency-input" id="evaluation_overallCompetency" placeholder="0-100" min="0" max="100" required oninput="updateCompetencyBadge()">
+                                        <div class="mt-2" id="competencyBadgeContainer">
+                                            <span class="badge competency-badge competency-high" id="competencyBadge">عالية</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label-custom">تاريخ التقييم *</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_evaluationDate" placeholder="يوم/شهر/سنة" readonly required>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label-custom">تاريخ آخر تقييم</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_lastEvaluationDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label-custom">تاريخ التقييم القادم</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_nextEvaluationDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label-custom">فجوات الكفاءة</label>
+                                        <textarea class="form-control form-textarea-custom" id="evaluation_competencyGaps" placeholder="وصف فجوات الكفاءة والاحتياجات التدريبية" rows="3"></textarea>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label-custom">خطة التدريب</label>
+                                        <textarea class="form-control form-textarea-custom" id="evaluation_trainingPlan" placeholder="خطة التدريب المقترحة لتحسين الكفاءة" rows="3"></textarea>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-4">
+                                        <label class="form-label-custom">سجل التقييم</label>
+                                        <textarea class="form-control form-textarea-custom" id="evaluation_evaluationNotes" placeholder="ملاحظات إضافية حول التقييم والتوصيات" rows="3"></textarea>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label-custom">فجوات الكفاءة</label>
-                                    <textarea class="form-control form-textarea-custom" id="competencyGaps" placeholder="فجوات المهارات والكفاءات التي تحتاج إلى تطوير" rows="2"></textarea>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label-custom">خطة التدريب</label>
-                                    <textarea class="form-control form-textarea-custom" id="trainingPlan" placeholder="خطة التدريب والتطوير المقترحة" rows="2"></textarea>
-                                </div>
-                            </div>
-                            
-                            <div class="row mt-4">
+                            <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-between">
-                                    <button type="button" onclick="resetEmployeeForm()" class="btn btn-outline-secondary">
+                                    <button type="button" onclick="resetEvaluationForm()" class="btn btn-outline-secondary">
                                         <i class="fas fa-redo me-1"></i> مسح النموذج
                                     </button>
                                     <div>
-                                        <button type="button" onclick="addRecord()" class="btn btn-success me-2" id="addBtn">
+                                        <button type="button" onclick="addEvaluationRecord()" class="btn btn-success me-2" id="evaluation_addBtn">
                                             <i class="fas fa-plus me-1"></i> إضافة جديد
                                         </button>
-                                        <button type="button" onclick="updateRecord()" class="btn btn-primary" id="updateBtn" style="display: none;">
+                                        <button type="button" onclick="updateEvaluationRecord()" class="btn btn-primary" id="evaluation_updateBtn" style="display: none;">
                                             <i class="fas fa-save me-1"></i> تحديث السجل
-                                        </button>
-                                        <button type="button" onclick="loadData()" class="btn btn-info me-2">
-                                            <i class="fas fa-sync-alt me-1"></i> تحديث الجدول
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" id="editingId">
+                            <input type="hidden" id="evaluation_editingId">
+                            <input type="hidden" id="evaluation_internalRecordId">
+                            <input type="hidden" id="evaluation_fileLink">
                         </form>
                     </div>
                 </div>
@@ -574,31 +1005,29 @@
                     <div class="card-header-custom card-header-skills d-flex justify-content-between align-items-center">
                         <span><i class="fas fa-list me-2"></i> قائمة تقييمات الموظفين</span>
                         <div>
-                            <button onclick="loadData()" class="btn btn-light btn-sm me-2">
-                                <i class="fas fa-sync-alt"></i> تحديث القائمة
+                            <button onclick="loadEvaluationData()" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-sync-alt"></i> تحديث
                             </button>
-                            <button onclick="exportCSV()" class="btn btn-light btn-sm">
-                                <i class="fas fa-download"></i> تصدير CSV
+                            <button onclick="exportEvaluationCSV()" class="btn btn-light btn-sm">
+                                <i class="fas fa-download"></i> تصدير
                             </button>
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <div class="loading-spinner" id="loadingSpinner">
+                        <div class="loading-spinner" id="evaluationLoadingSpinner">
                             <div class="spinner-border text-primary spinner-border-custom" role="status">
                                 <span class="visually-hidden">جاري التحميل...</span>
                             </div>
                         </div>
                         
-                        <div class="table-responsive" id="tableContainer" style="display: none;">
-                            <table class="table table-custom table-hover" id="dataTable">
-                                <!-- Table content will be loaded dynamically -->
+                        <div class="table-responsive" id="evaluationTableContainer" style="display: none;">
+                            <table class="table table-custom table-hover" id="evaluationDataTable">
                             </table>
                         </div>
                         
-                        <div id="noRecords" class="text-center py-5" style="display: none;">
+                        <div id="evaluationNoRecords" class="text-center py-5" style="display: none;">
                             <i class="fas fa-user-tie fa-4x text-muted mb-4"></i>
-                            <h4 class="text-muted">لا توجد سجلات تقييم لعرضها</h4>
-                            <p class="text-muted">ابدأ بإضافة سجل تقييم جديد باستخدام النموذج أعلاه</p>
+                            <h4 class="text-muted">لا توجد تقييمات لعرضها</h4>
                         </div>
                     </div>
                 </div>
@@ -609,31 +1038,31 @@
         <div class="row mt-4 fade-in">
             <div class="col-12 text-center">
                 <p class="text-muted">
-                    <i class="fas fa-copyright me-1"></i> نظام تقييم مهارات الموظفين
+                    <i class="fas fa-copyright me-1"></i> نظام تقييم كفاءة الموظفين 
                     <span id="currentYear"></span> | 
-                    <span class="text-info">الإصدار 2.0</span>
+                    <span id="appVersion" class="text-info">الإصدار 2.0 (مع منع تكرار أرقام السجلات)</span>
                 </p>
             </div>
         </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title">تأكيد الحذف</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle fa-2x float-start me-3"></i>
                         <h5 class="alert-heading">تحذير!</h5>
-                        <p>هل أنت متأكد من حذف سجل تقييم هذا الموظف؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+                        <p>هل أنت متأكد من حذف هذا التقييم؟ هذا الإجراء لا يمكن التراجع عنه.</p>
                         <hr>
-                        <p class="mb-0"><strong>اسم الموظف:</strong> <span id="deleteEmployeeName">غير معروف</span></p>
-                        <p class="mb-0"><strong>الرقم الوظيفي:</strong> <span id="deleteRecordId">غير معروف</span></p>
-                        <p class="mb-0"><strong>القسم:</strong> <span id="deleteDepartment">غير معروف</span></p>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">تقييمات الموظفين</span></p>
+                        <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
+                        <p class="mb-0"><strong>اسم الموظف:</strong> <span id="deleteRecordName">غير معروف</span></p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -649,15 +1078,15 @@
     </div>
 
     <!-- Details Modal -->
-    <div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
-                    <h5 class="modal-title" id="detailsModalTitle">تفاصيل سجل تقييم الموظف</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title">تفاصيل تقييم الموظف</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="detailsModalBody">
-                    <!-- Details will be loaded dynamically -->
+                    <!-- Details will be loaded here -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
@@ -668,17 +1097,332 @@
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr Calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
     
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwwXD8i0dgJhfpixMYvdxKx_e7_fZ5KZqFTek97DUvxyfsBvIv5DK2YtL0OOWWCif8/exec";
+        const EVALUATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYHp8xQGrSQEtt-rym06-Dc1izKcfxnp0XDLMglVQnMfrweUV1qzfpiyrHYKZit5ag/exec"; // Replace with your Google Script URL
+        const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
+        const UPLOAD_WEB_APP_URL = EVALUATION_SCRIPT_URL;
         
         // ================ GLOBAL VARIABLES ================
+        let evaluationRecords = [];
         let employeeRecords = [];
         let deleteRecordId = '';
-        let deleteEmployeeName = '';
-        let deleteDepartment = '';
+        let deleteRecordName = '';
+        let flatpickrInstances = {};
+        let deleteModalInstance = null;
+        let detailsModalInstance = null;
+        let selectedFile = null;
+        let uploadedFileUrl = '';
+        let isDuplicateRecordNumber = false;
+        
+        // ================ NEW DATE SYSTEM WITH D, M, Y SIGNS ================
+        function formatDateToDMY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `D${day} M${month} Y${year}`;
+        }
+        
+        function parseDateFromDMY(dmyString) {
+            if (!dmyString) return null;
+            
+            // Clean the string
+            dmyString = dmyString.toString().trim();
+            
+            // Try to match the pattern: D{day} M{month} Y{year}
+            const match = dmyString.match(/^D(\d+)\s+M(\d+)\s+Y(\d+)$/);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1; // JavaScript months are 0-indexed
+                const year = parseInt(match[3], 10);
+                
+                // Validate date
+                if (day < 1 || day > 31) return null;
+                if (month < 0 || month > 11) return null;
+                if (year < 1900 || year > 2100) return null;
+                
+                // Check if day is valid for the month
+                const dateObj = new Date(year, month, day);
+                if (dateObj.getDate() !== day || dateObj.getMonth() !== month || dateObj.getFullYear() !== year) {
+                    return null;
+                }
+                
+                return dateObj;
+            }
+            
+            return null;
+        }
+        
+        // ================ Display date as "31 January 2025" ================
+        function formatDMYForDisplay(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // If not in D M Y format, try to parse as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return `<span class="english-date">${formatDateToDayMonthYear(regularDate)}</span>`;
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return `<span class="english-date">${dmyString}</span>`;
+            }
+            
+            const formattedDate = formatDateToDayMonthYear(dateObj);
+            return `<span class="english-date">${formattedDate}</span>`;
+        }
+        
+        // ================ Format date as "31 January 2025" ================
+        function formatDateToDayMonthYear(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            
+            const day = date.getDate();
+            const monthIndex = date.getMonth();
+            const year = date.getFullYear();
+            
+            // Month names in English
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            return `${day} ${monthNames[monthIndex]} ${year}`;
+        }
+        
+        function formatDMYForInput(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // If not in D M Y format, try to parse as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return formatDateToDDMMYYYY(regularDate);
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return '';
+            }
+            
+            return formatDateToDDMMYYYY(dateObj);
+        }
+        
+        // ================ NEW FUNCTION: Check for duplicate record number ================
+        function checkDuplicateRecordNumber() {
+            const recordNumberInput = document.getElementById('evaluation_recordId');
+            const recordNumber = recordNumberInput.value.trim();
+            const editingId = document.getElementById('evaluation_editingId').value;
+            const warningElement = document.getElementById('duplicateRecordNumberWarning');
+            
+            if (!recordNumber) {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+            
+            // Check if this record number already exists in evaluationRecords
+            const duplicateRecord = evaluationRecords.find(record => {
+                // Skip the current record if we're in edit mode
+                if (editingId && record[0] === editingId) {
+                    return false;
+                }
+                return record[1] && record[1].toString().trim() === recordNumber;
+            });
+            
+            if (duplicateRecord) {
+                warningElement.style.display = 'block';
+                recordNumberInput.classList.add('is-invalid');
+                isDuplicateRecordNumber = true;
+                return true;
+            } else {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+        }
+        
+        // ================ COMPETENCY BADGE FUNCTION ================
+        function updateCompetencyBadge() {
+            const competencyInput = document.getElementById('evaluation_overallCompetency');
+            const competency = parseInt(competencyInput.value) || 0;
+            const badgeContainer = document.getElementById('competencyBadgeContainer');
+            
+            let badgeClass = '';
+            let badgeText = '';
+            
+            if (competency >= 80) {
+                badgeClass = 'competency-high';
+                badgeText = 'عالية';
+            } else if (competency >= 60) {
+                badgeClass = 'competency-medium';
+                badgeText = 'متوسطة';
+            } else {
+                badgeClass = 'competency-low';
+                badgeText = 'منخفضة';
+            }
+            
+            badgeContainer.innerHTML = `<span class="badge competency-badge ${badgeClass}">${badgeText}</span>`;
+        }
+        
+        // ================ FILE UPLOAD FUNCTIONS ================
+        function initializeFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadContainer = document.getElementById('uploadContainer');
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            
+            // Drag and drop functionality
+            uploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.add('dragover');
+            });
+            
+            uploadContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+            });
+            
+            uploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+        }
+        
+        function handleFileSelect(file) {
+            const allowedTypes = [
+                "image/png",
+                "image/jpeg",
+                "application/pdf"
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                showNotification("❌ فقط ملفات PNG, JPG, JPEG أو PDF مسموحة", "error");
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification("❌ حجم الملف كبير جداً (الحد الأقصى 10MB)", "error");
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Display file info
+            document.getElementById('uploadedFileName').textContent = file.name;
+            document.getElementById('uploadedFileSize').textContent = formatFileSize(file.size);
+            document.getElementById('uploadedFileInfo').style.display = 'block';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            
+            // Reset upload status
+            const uploadStatus = document.getElementById('uploadStatus');
+            uploadStatus.textContent = '';
+            uploadStatus.className = 'upload-status';
+            
+            showNotification(`✅ تم اختيار الملف: ${file.name}`, 'success', 3000);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' بايت';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
+            else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
+        }
+        
+        async function uploadFile() {
+            if (!selectedFile) {
+                showNotification("⚠️ يرجى اختيار ملف أولاً", "warning");
+                return;
+            }
+            
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadStatus = document.getElementById('uploadStatus');
+            
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الرفع...';
+            uploadStatus.textContent = 'جاري رفع الملف... ⏳';
+            uploadStatus.className = 'upload-status loading';
+            
+            try {
+                const reader = new FileReader();
+                
+                reader.onload = async function() {
+                    const base64 = reader.result.split(",")[1];
+                    
+                    const response = await fetch(UPLOAD_WEB_APP_URL, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            fileName: selectedFile.name,
+                            mimeType: selectedFile.type,
+                            fileData: base64
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        uploadedFileUrl = data.url;
+                        
+                        // Update the hidden field
+                        document.getElementById('evaluation_fileLink').value = uploadedFileUrl;
+                        
+                        // Display success message and file link
+                        uploadStatus.textContent = '✅ تم رفع الملف بنجاح';
+                        uploadStatus.className = 'upload-status success';
+                        
+                        // Show the file link button
+                        const fileLinkBtn = document.getElementById('uploadedFileLink');
+                        fileLinkBtn.href = uploadedFileUrl;
+                        fileLinkBtn.style.display = 'inline-block';
+                        
+                        showNotification(`✅ تم رفع الملف بنجاح: ${selectedFile.name}`, 'success');
+                    } else {
+                        uploadStatus.textContent = '❌ فشل في رفع الملف: ' + (data.message || 'خطأ غير معروف');
+                        uploadStatus.className = 'upload-status error';
+                        showNotification(`❌ فشل في رفع الملف: ${data.message || 'خطأ غير معروف'}`, 'error');
+                    }
+                    
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                };
+                
+                reader.onerror = function() {
+                    uploadStatus.textContent = '❌ خطأ في قراءة الملف';
+                    uploadStatus.className = 'upload-status error';
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                    showNotification('❌ خطأ في قراءة الملف', 'error');
+                };
+                
+                reader.readAsDataURL(selectedFile);
+                
+            } catch (error) {
+                uploadStatus.textContent = '❌ فشل في رفع الملف: ' + error;
+                uploadStatus.className = 'upload-status error';
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                showNotification('❌ فشل في رفع الملف: ' + error, 'error');
+            }
+        }
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
@@ -686,103 +1430,122 @@
             setCurrentDate();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // Load data on page load
+            // Initialize modals
+            deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
+            
+            // Initialize calendar pickers
+            initializeDatePickers();
+            
+            // Initialize file upload
+            initializeFileUpload();
+            
+            // Initialize competency badge
+            updateCompetencyBadge();
+            
+            // Load data
             setTimeout(() => {
-                loadData();
+                loadEvaluationData();
+                loadEmployeeData();
             }, 500);
             
-            // Add keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Ctrl + S to save
-                if (e.ctrlKey && e.key === 's') {
-                    e.preventDefault();
-                    if (document.getElementById('updateBtn').style.display !== 'none') {
-                        updateRecord();
-                    } else {
-                        addRecord();
-                    }
-                }
-                
-                // Escape to clear form
-                if (e.key === 'Escape') {
-                    resetEmployeeForm();
-                }
+            // Fix modal backdrop issue
+            document.getElementById('deleteModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
             });
             
-            // Update competency progress bar
-            document.getElementById('totalCompetency').addEventListener('input', function() {
-                updateCompetencyProgress(this.value);
+            document.getElementById('detailsModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
             });
+            
+            // Add event listener for record number field to check for duplicates as user types
+            document.getElementById('evaluation_recordId').addEventListener('input', checkDuplicateRecordNumber);
+            
+            // Add event listener for competency input
+            document.getElementById('evaluation_overallCompetency').addEventListener('input', updateCompetencyBadge);
         });
         
-        // ================ DATE FORMAT FUNCTIONS ================
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            try {
-                // Handle dd/mm/yyyy format
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        const day = parts[0].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[2];
-                        return `${day}/${month}/${year}`;
+        // ================ FIXED DATE PICKER INITIALIZATION ================
+        function initializeDatePickers() {
+            // Destroy existing instances if any
+            if (flatpickrInstances.evaluationDate) flatpickrInstances.evaluationDate.destroy();
+            if (flatpickrInstances.lastEvaluationDate) flatpickrInstances.lastEvaluationDate.destroy();
+            if (flatpickrInstances.nextEvaluationDate) flatpickrInstances.nextEvaluationDate.destroy();
+            
+            const dateOptions = {
+                locale: 'ar',
+                dateFormat: "d/m/Y",
+                altFormat: "d/m/Y",
+                altInput: false,
+                allowInput: true,
+                clickOpens: true,
+                position: 'auto',
+                monthSelectorType: 'static',
+                yearSelectorType: 'scrolling',
+                prevArrow: '<i class="fas fa-chevron-right"></i>',
+                nextArrow: '<i class="fas fa-chevron-left"></i>',
+                weekNumbers: false,
+                disableMobile: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const formattedDate = formatDateToDDMMYYYY(date);
+                        instance.input.value = formattedDate;
                     }
                 }
-                
-                // Handle yyyy-mm-dd format
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        const day = parts[2].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[0];
-                        return `${day}/${month}/${year}`;
-                    }
-                }
-                
-                return dateString;
-            } catch (e) {
-                return dateString;
+            };
+            
+            flatpickrInstances.evaluationDate = flatpickr('#evaluation_evaluationDate', dateOptions);
+            flatpickrInstances.lastEvaluationDate = flatpickr('#evaluation_lastEvaluationDate', dateOptions);
+            flatpickrInstances.nextEvaluationDate = flatpickr('#evaluation_nextEvaluationDate', dateOptions);
+            
+            if (flatpickrInstances.evaluationDate) flatpickrInstances.evaluationDate.set('locale', 'ar');
+            if (flatpickrInstances.lastEvaluationDate) flatpickrInstances.lastEvaluationDate.set('locale', 'ar');
+            if (flatpickrInstances.nextEvaluationDate) flatpickrInstances.nextEvaluationDate.set('locale', 'ar');
+            
+            // Set evaluation date to current date by default
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            document.getElementById('evaluation_evaluationDate').value = todayFormatted;
+            if (flatpickrInstances.evaluationDate) {
+                flatpickrInstances.evaluationDate.setDate(today, false);
             }
         }
         
-        function formatDateForInput(dateString) {
-            if (!dateString) return {day: '', month: '', year: ''};
-            try {
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[0],
-                            month: parts[1],
-                            year: parts[2]
-                        };
-                    }
-                }
-                
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[2],
-                            month: parts[1],
-                            year: parts[0]
-                        };
-                    }
-                }
-                
-                return {day: '', month: '', year: ''};
-            } catch (e) {
-                return {day: '', month: '', year: ''};
-            }
+        // ================ DATE FORMATTING FUNCTIONS ================
+        function formatDateToDDMMYYYY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
         }
         
-        function getDateString(day, month, year) {
-            if (!day || !month || !year) return '';
-            const formattedDay = day.toString().padStart(2, '0');
-            const formattedMonth = month.toString().padStart(2, '0');
-            return `${formattedDay}/${formattedMonth}/${year}`;
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
+            
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    if (day < 1 || day > 31) return null;
+                    if (month < 0 || month > 11) return null;
+                    if (year < 1900 || year > 2100) return null;
+                    
+                    return new Date(year, month, day);
+                }
+            }
+            
+            return null;
         }
         
         function setCurrentDate() {
@@ -793,7 +1556,7 @@
             document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
         }
         
-        // ================ NOTIFICATION FUNCTIONS ================
+        // ================ NOTIFICATION SYSTEM ================
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notificationContainer');
             
@@ -838,51 +1601,38 @@
             }
         }
         
-        // ================ API COMMUNICATION FUNCTIONS ================
-        function jsonp(url) {
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // ================ JSONP FUNCTION ================
+        function jsonp(url, callbackParam = 'callback') {
             return new Promise((resolve, reject) => {
-                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
-                const timeout = 60000;
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
                 
-                const timeoutId = setTimeout(() => {
-                    cleanup();
-                    reject(new Error('Request timeout'));
-                }, timeout);
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + callbackParam + '=' + callbackName;
                 
-                function cleanup() {
-                    clearTimeout(timeoutId);
+                window[callbackName] = function(data) {
                     delete window[callbackName];
-                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
-                    if (script) script.remove();
-                }
-                
-                window[callbackName] = function(response) {
-                    cleanup();
-                    resolve(response);
+                    document.body.removeChild(script);
+                    resolve(data);
                 };
                 
-                const script = document.createElement('script');
-                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
-                script.setAttribute('data-callback', callbackName);
                 script.onerror = function() {
-                    cleanup();
-                    reject(new Error('Failed to load script'));
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
                 };
                 
                 document.body.appendChild(script);
             });
-        }
-        
-        function callGoogleScript(scriptUrl, action, data = {}) {
-            let url = scriptUrl + '?action=' + action;
-            
-            for (const key in data) {
-                if (data[key] !== undefined && data[key] !== null) {
-                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
-                }
-            }
-            
-            return jsonp(url);
         }
         
         // ================ VALIDATION HELPER ================
@@ -897,131 +1647,328 @@
                     field.classList.remove('is-invalid');
                 }
             });
+            
+            // Validate competency score (0-100)
+            const competency = document.getElementById('evaluation_overallCompetency').value;
+            if (competency && (competency < 0 || competency > 100)) {
+                document.getElementById('evaluation_overallCompetency').classList.add('is-invalid');
+                showNotification('❌ الكفاءة الكلية يجب أن تكون بين 0 و 100', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('evaluation_overallCompetency').classList.remove('is-invalid');
+            }
+            
+            // Validate skill scores (1-10)
+            for (let i = 1; i <= 10; i++) {
+                const skillScore = document.getElementById(`evaluation_skill${i}Score`).value;
+                if (skillScore && (skillScore < 1 || skillScore > 10)) {
+                    document.getElementById(`evaluation_skill${i}Score`).classList.add('is-invalid');
+                    showNotification(`❌ تقييم المهارة ${i} يجب أن يكون بين 1 و 10`, 'error');
+                    isValid = false;
+                } else {
+                    document.getElementById(`evaluation_skill${i}Score`).classList.remove('is-invalid');
+                }
+            }
+            
+            // Validate dates
+            const evaluationDate = document.getElementById('evaluation_evaluationDate').value;
+            const lastEvaluationDate = document.getElementById('evaluation_lastEvaluationDate').value;
+            const nextEvaluationDate = document.getElementById('evaluation_nextEvaluationDate').value;
+            
+            if (evaluationDate && !validateDate(evaluationDate)) {
+                document.getElementById('evaluation_evaluationDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ التقييم غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('evaluation_evaluationDate').classList.remove('is-invalid');
+            }
+            
+            if (lastEvaluationDate && !validateDate(lastEvaluationDate)) {
+                document.getElementById('evaluation_lastEvaluationDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ آخر تقييم غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('evaluation_lastEvaluationDate').classList.remove('is-invalid');
+            }
+            
+            if (nextEvaluationDate && !validateDate(nextEvaluationDate)) {
+                document.getElementById('evaluation_nextEvaluationDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ التقييم القادم غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('evaluation_nextEvaluationDate').classList.remove('is-invalid');
+            }
+            
             return isValid;
         }
         
-        // ================ COMPETENCY PROGRESS BAR ================
-        function updateCompetencyProgress(value) {
-            const progressBar = document.getElementById('competencyProgress');
-            if (!value || isNaN(value)) {
-                progressBar.style.width = '0%';
-            } else {
-                const percentage = Math.min(100, Math.max(0, value));
-                progressBar.style.width = percentage + '%';
+        function validateDate(dateString) {
+            if (!dateString) return true;
+            
+            // First try to parse as D M Y format
+            const dmyDate = parseDateFromDMY(dateString);
+            if (dmyDate) return true;
+            
+            // Then try dd/mm/yyyy format
+            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                const match = dateString.match(ddMMyyyyRegex);
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
                 
-                if (percentage >= 80) {
-                    progressBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
-                } else if (percentage >= 60) {
-                    progressBar.style.background = 'linear-gradient(90deg, #FFC107, #FF9800)';
+                if (year < 1900 || year > 2100) return false;
+                if (month < 1 || month > 12) return false;
+                if (day < 1 || day > 31) return false;
+                
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
+                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            return false;
+        }
+        
+        // ================ EMPLOYEE DATA FUNCTIONS ================
+        async function loadEmployeeData() {
+            try {
+                const res = await jsonp(`${EMPLOYEE_SCRIPT_URL}?action=getAll`);
+                
+                if (res && res.status === 'success') {
+                    let records = [];
+                    
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (Array.isArray(res)) {
+                        records = res;
+                    }
+                    
+                    employeeRecords = records;
+                    populateEmployeeDatalists();
+                    setupEmployeeAutocomplete();
+                    showNotification(`✅ تم تحميل ${employeeRecords.length} موظف`, 'success', 3000);
                 } else {
-                    progressBar.style.background = 'linear-gradient(90deg, #F44336, #E91E63)';
+                    showNotification('❌ فشل في تحميل بيانات الموظفين', 'error');
                 }
+            } catch (error) {
+                console.error('Error loading employee data:', error);
+                showNotification('❌ خطأ في تحميل بيانات الموظفين', 'error');
             }
         }
         
-        // ================ EMPLOYEE SKILLS FUNCTIONS ================
-        async function loadData() {
-            const spinner = document.getElementById('loadingSpinner');
-            const tableContainer = document.getElementById('tableContainer');
-            const noRecords = document.getElementById('noRecords');
+        function populateEmployeeDatalists() {
+            const nameList = document.getElementById('employeeNameList');
+            const numberList = document.getElementById('employeeNumberList');
+            const departmentList = document.getElementById('departmentList');
+            
+            nameList.innerHTML = '';
+            numberList.innerHTML = '';
+            departmentList.innerHTML = '';
+            
+            const names = new Set();
+            const numbers = new Set();
+            const departments = new Set(['الإدارة', 'المختبر', 'الجودة', 'التدريب', 'الدعم الفني']);
+            
+            employeeRecords.forEach(record => {
+                if (record && record.length > 1) {
+                    if (record[1]) names.add(String(record[1]).trim());
+                    if (record[2]) numbers.add(String(record[2]).trim());
+                    if (record[4]) departments.add(String(record[4]).trim());
+                }
+            });
+            
+            names.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                nameList.appendChild(option);
+            });
+            
+            numbers.forEach(number => {
+                const option = document.createElement('option');
+                option.value = number;
+                numberList.appendChild(option);
+            });
+            
+            departments.forEach(department => {
+                const option = document.createElement('option');
+                option.value = department;
+                departmentList.appendChild(option);
+            });
+        }
+        
+        function setupEmployeeAutocomplete() {
+            const employeeNameField = document.getElementById('evaluation_employeeName');
+            const employeeNumberField = document.getElementById('evaluation_employeeNumber');
+            
+            employeeNameField.addEventListener('change', function() {
+                autoFillFromEmployee('name', this.value);
+            });
+            
+            employeeNumberField.addEventListener('change', function() {
+                autoFillFromEmployee('number', this.value);
+            });
+        }
+        
+        function autoFillFromEmployee(fieldType, value) {
+            if (!value || !employeeRecords.length) return;
+            
+            let record = null;
+            
+            if (fieldType === 'name') {
+                record = employeeRecords.find(r => 
+                    r && r[1] && String(r[1]).trim().toLowerCase() === String(value).trim().toLowerCase()
+                );
+                
+                if (record && record[2]) {
+                    document.getElementById('evaluation_employeeNumber').value = record[2] || '';
+                }
+            } else if (fieldType === 'number') {
+                record = employeeRecords.find(r => 
+                    r && r[2] && String(r[2]).trim() === String(value).trim()
+                );
+                
+                if (record && record[1]) {
+                    document.getElementById('evaluation_employeeName').value = record[1] || '';
+                }
+            }
+            
+            if (record) {
+                document.getElementById('evaluation_department').value = record[4] || '';
+                showNotification(`✅ تم تحميل بيانات الموظف: ${record[1] || ''}`, 'success', 2000);
+            }
+        }
+        
+        // ================ EVALUATION SYSTEM FUNCTIONS ================
+        async function loadEvaluationData() {
+            const spinner = document.getElementById('evaluationLoadingSpinner');
+            const tableContainer = document.getElementById('evaluationTableContainer');
+            const noRecords = document.getElementById('evaluationNoRecords');
             
             spinner.style.display = 'flex';
             tableContainer.style.display = 'none';
             noRecords.style.display = 'none';
             
             try {
-                const result = await callGoogleScript(SCRIPT_URL, 'getAll');
+                const res = await jsonp(`${EVALUATION_SCRIPT_URL}?action=getAll&t=${Date.now()}`);
                 
                 spinner.style.display = 'none';
                 
-                if (result.status === 'success') {
-                    employeeRecords = result.data;
-                    
-                    if (employeeRecords.length > 0) {
-                        displayRecords(employeeRecords);
-                        tableContainer.style.display = 'block';
-                        updateTotalRecordsCount();
-                        showNotification(`✅ تم تحميل ${employeeRecords.length} سجل تقييم`, 'success', 3000);
-                    } else {
-                        noRecords.style.display = 'block';
+                let records = [];
+                let responseStatus = 'error';
+                
+                if (res && res.status === 'success') {
+                    responseStatus = 'success';
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (res.records && typeof res.records === 'object') {
+                        const keys = Object.keys(res.records);
+                        if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
+                            records = res.records[keys[0]];
+                        }
                     }
+                } else if (Array.isArray(res)) {
+                    records = res;
+                    responseStatus = 'success';
+                }
+                
+                if (responseStatus !== 'success') {
+                    noRecords.style.display = 'block';
+                    showNotification('❌ فشل في تحميل التقييمات', 'error');
+                    document.getElementById('totalRecords').textContent = '0';
+                    return;
+                }
+                
+                evaluationRecords = records;
+                
+                if (evaluationRecords.length > 0) {
+                    displayEvaluationRecords(evaluationRecords);
+                    tableContainer.style.display = 'block';
+                    document.getElementById('totalRecords').textContent = evaluationRecords.length.toLocaleString('ar-SA');
                 } else {
                     noRecords.style.display = 'block';
-                    showNotification(`❌ ${result.message}`, 'error');
+                    document.getElementById('totalRecords').textContent = '0';
                 }
             } catch (error) {
-                console.error('Error loading records:', error);
                 spinner.style.display = 'none';
                 noRecords.style.display = 'block';
-                showNotification(`❌ خطأ في تحميل سجلات التقييم`, 'error');
+                showNotification('❌ خطأ في تحميل التقييمات', 'error');
+                document.getElementById('totalRecords').textContent = '0';
             }
         }
         
-        function displayRecords(records) {
-            const table = document.getElementById('dataTable');
+        function displayEvaluationRecords(records) {
+            const table = document.getElementById('evaluationDataTable');
             
             let html = '<thead><tr>';
-            const headers = ['الاسم', 'الرقم الوظيفي', 'القسم', 'المهارات', 'الكفاءة الكلية', 'تاريخ التقييم', 'التقييم القادم', 'فجوات الكفاءة', 'خطة التدريب', 'الإجراءات'];
+            const headers = ['رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'الكفاءة الكلية', 'تاريخ التقييم', 'تاريخ آخر تقييم', 'تاريخ التقييم القادم', 'المهارات المقيّمة', 'الملف المرفوع', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
             html += '</tr></thead><tbody>';
             
-            records.forEach((record, index) => {
+            records.forEach((record) => {
+                // Column mapping based on evaluation system:
+                // 0: ID, 1: recordId, 2: employeeName, 3: employeeNumber, 4: department,
+                // 5-24: Skills and scores, 25: overallCompetency, 26: evaluationDate,
+                // 27: lastEvaluationDate, 28: nextEvaluationDate, 29: competencyGaps,
+                // 30: trainingPlan, 31: evaluationNotes, 32: fileLink
+                
+                const fileLink = record[32] || '';
+                const evaluationDate = record[26] || '';
+                const lastEvaluationDate = record[27] || '';
+                const nextEvaluationDate = record[28] || '';
+                const overallCompetency = record[25] || 0;
+                
+                // Calculate how many skills are evaluated
+                let evaluatedSkills = 0;
+                for (let i = 5; i <= 23; i += 2) {
+                    if (record[i] && record[i].toString().trim() !== '') {
+                        evaluatedSkills++;
+                    }
+                }
+                
+                // Determine competency badge class
+                let competencyClass = '';
+                if (overallCompetency >= 80) competencyClass = 'competency-high';
+                else if (overallCompetency >= 60) competencyClass = 'competency-medium';
+                else competencyClass = 'competency-low';
+                
                 html += '<tr>';
                 
-                // Employee Name
-                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
-                
-                // Record ID
-                html += `<td>${escapeHtml(record[1] || '')}</td>`;
-                
-                // Department
+                html += `<td><strong>${escapeHtml(record[1] || '')}</strong></td>`;
                 html += `<td>${escapeHtml(record[2] || '')}</td>`;
+                html += `<td>${escapeHtml(record[3] || '')}</td>`;
+                html += `<td>${escapeHtml(record[4] || '')}</td>`;
+                html += `<td><span class="badge competency-badge ${competencyClass}">${overallCompetency}%</span></td>`;
+                html += `<td>${formatDMYForDisplay(evaluationDate)}</td>`;
+                html += `<td>${formatDMYForDisplay(lastEvaluationDate)}</td>`;
+                html += `<td>${formatDMYForDisplay(nextEvaluationDate)}</td>`;
+                html += `<td><span class="badge bg-secondary">${evaluatedSkills} مهارة</span></td>`;
                 
-                // Skills
-                let skillsHtml = '';
-                if (record[3]) skillsHtml += `<span class="skill-badge">${escapeHtml(record[3])}</span>`;
-                if (record[4]) skillsHtml += `<span class="skill-badge">${escapeHtml(record[4])}</span>`;
-                if (record[5]) skillsHtml += `<span class="skill-badge">${escapeHtml(record[5])}</span>`;
-                if (record[6]) skillsHtml += `<span class="skill-badge">${escapeHtml(record[6])}</span>`;
-                if (record[7]) skillsHtml += `<span class="skill-badge">${escapeHtml(record[7])}</span>`;
-                html += `<td>${skillsHtml}</td>`;
-                
-                // Total Competency with badge color
-                let competencyClass = 'badge bg-secondary';
-                const competency = parseInt(record[8]) || 0;
-                if (competency >= 80) {
-                    competencyClass = 'badge bg-success competency-high';
-                } else if (competency >= 60) {
-                    competencyClass = 'badge bg-warning text-dark competency-medium';
-                } else if (competency > 0) {
-                    competencyClass = 'badge bg-danger competency-low';
+                // File link column
+                if (fileLink && fileLink.trim() !== '') {
+                    html += `<td>
+                        <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn">
+                            <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                        </a>
+                    </td>`;
+                } else {
+                    html += `<td><span class="text-muted">لا يوجد ملف</span></td>`;
                 }
-                html += `<td><span class="badge-status ${competencyClass}">${competency}%</span></td>`;
                 
-                // Last Evaluation Date
-                html += `<td>${formatDate(record[9] || '')}</td>`;
-                
-                // Next Evaluation Date
-                html += `<td>${formatDate(record[12] || '')}</td>`;
-                
-                // Competency Gaps (truncated)
-                html += `<td>${escapeHtml(record[10] || '').substring(0, 20)}${escapeHtml(record[10] || '').length > 20 ? '...' : ''}</td>`;
-                
-                // Training Plan (truncated)
-                html += `<td>${escapeHtml(record[11] || '').substring(0, 20)}${escapeHtml(record[11] || '').length > 20 ? '...' : ''}</td>`;
-                
-                // Action Buttons
                 html += `<td class="action-buttons">
-                    <button onclick="editRecord('${escapeHtml(record[1])}')" class="btn btn-sm btn-primary" title="تعديل">
-                        <i class="fas fa-edit"></i>
+                    <button onclick="editEvaluationRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                        <i class="fas fa-edit"></i> تعديل
                     </button>
-                    <button onclick="showDeleteModal('${escapeHtml(record[1])}', '${escapeHtml(record[0])}', '${escapeHtml(record[2])}')" class="btn btn-sm btn-danger" title="حذف">
-                        <i class="fas fa-trash"></i>
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[2])}', '${escapeHtml(record[1] || '')}')" class="btn btn-sm btn-danger" title="حذف">
+                        <i class="fas fa-trash"></i> حذف
                     </button>
-                    <button onclick="viewEmployeeDetails('${escapeHtml(record[1])}')" class="btn btn-sm btn-info" title="عرض التفاصيل">
-                        <i class="fas fa-eye"></i>
+                    <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
+                        <i class="fas fa-eye"></i> عرض
                     </button>
                 </td>`;
                 
@@ -1032,209 +1979,530 @@
             table.innerHTML = html;
         }
         
-        async function addRecord() {
-            const requiredFields = ['employeeName', 'recordId', 'department', 'lastEvaluationDate_day', 
-                                  'lastEvaluationDate_month', 'lastEvaluationDate_year',
-                                  'nextEvaluationDate_day', 'nextEvaluationDate_month', 'nextEvaluationDate_year'];
-            if (!validateForm(requiredFields)) {
-                showNotification('⚠️ يرجى ملء جميع الحقول المطلوبة', 'warning');
+        async function addEvaluationRecord() {
+            // Check for duplicate record number first
+            if (checkDuplicateRecordNumber()) {
+                showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
                 return;
             }
+
+            const requiredFields = [
+                'evaluation_recordId', 'evaluation_employeeName', 'evaluation_employeeNumber', 
+                'evaluation_department', 'evaluation_overallCompetency', 'evaluation_evaluationDate'
+            ];
             
-            const button = document.getElementById('addBtn');
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+
+            const evaluationDate = document.getElementById('evaluation_evaluationDate').value;
+            const lastEvaluationDate = document.getElementById('evaluation_lastEvaluationDate').value;
+            const nextEvaluationDate = document.getElementById('evaluation_nextEvaluationDate').value;
+
+            const button = document.getElementById('evaluation_addBtn');
             const originalHtml = button.innerHTML;
-            
+
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
-            
-            const lastEvaluationDate = getDateString(
-                document.getElementById('lastEvaluationDate_day').value,
-                document.getElementById('lastEvaluationDate_month').value,
-                document.getElementById('lastEvaluationDate_year').value
-            );
-            
-            const nextEvaluationDate = getDateString(
-                document.getElementById('nextEvaluationDate_day').value,
-                document.getElementById('nextEvaluationDate_month').value,
-                document.getElementById('nextEvaluationDate_year').value
-            );
-            
-            const formData = {
-                employeeName: document.getElementById('employeeName').value,
-                recordId: document.getElementById('recordId').value,
-                department: document.getElementById('department').value,
-                skill1: document.getElementById('skill1').value,
-                skill2: document.getElementById('skill2').value,
-                skill3: document.getElementById('skill3').value,
-                skill4: document.getElementById('skill4').value,
-                skill5: document.getElementById('skill5').value,
-                totalCompetency: document.getElementById('totalCompetency').value,
-                lastEvaluationDate: lastEvaluationDate,
-                competencyGaps: document.getElementById('competencyGaps').value,
-                trainingPlan: document.getElementById('trainingPlan').value,
-                nextEvaluationDate: nextEvaluationDate
+
+            // Validate dates
+            if (evaluationDate && !validateDate(evaluationDate)) {
+                showNotification('❌ تاريخ التقييم غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (lastEvaluationDate && !validateDate(lastEvaluationDate)) {
+                showNotification('❌ تاريخ آخر تقييم غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (nextEvaluationDate && !validateDate(nextEvaluationDate)) {
+                showNotification('❌ تاريخ التقييم القادم غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            // Generate internal recordId
+            const internalRecordId = 'EVAL-' + Date.now();
+            document.getElementById('evaluation_internalRecordId').value = internalRecordId;
+
+            // Get file link from hidden field
+            const fileLink = document.getElementById('evaluation_fileLink').value;
+
+            // Convert dates to D M Y format
+            const evaluationDateDMY = evaluationDate ? formatDateToDMY(parseDateDDMMYYYY(evaluationDate)) : '';
+            const lastEvaluationDateDMY = lastEvaluationDate ? formatDateToDMY(parseDateDDMMYYYY(lastEvaluationDate)) : '';
+            const nextEvaluationDateDMY = nextEvaluationDate ? formatDateToDMY(parseDateDDMMYYYY(nextEvaluationDate)) : '';
+
+            // Build query string
+            const fields = [
+                'evaluation_recordId',
+                'evaluation_employeeName',
+                'evaluation_employeeNumber',
+                'evaluation_department',
+                'evaluation_skill1',
+                'evaluation_skill1Score',
+                'evaluation_skill2',
+                'evaluation_skill2Score',
+                'evaluation_skill3',
+                'evaluation_skill3Score',
+                'evaluation_skill4',
+                'evaluation_skill4Score',
+                'evaluation_skill5',
+                'evaluation_skill5Score',
+                'evaluation_skill6',
+                'evaluation_skill6Score',
+                'evaluation_skill7',
+                'evaluation_skill7Score',
+                'evaluation_skill8',
+                'evaluation_skill8Score',
+                'evaluation_skill9',
+                'evaluation_skill9Score',
+                'evaluation_skill10',
+                'evaluation_skill10Score',
+                'evaluation_overallCompetency',
+                'evaluation_competencyGaps',
+                'evaluation_trainingPlan',
+                'evaluation_evaluationNotes'
+            ];
+
+            // Map form field names to Google Apps Script parameter names
+            const paramMap = {
+                'evaluation_recordId': 'recordId',
+                'evaluation_employeeName': 'employeeName',
+                'evaluation_employeeNumber': 'employeeNumber',
+                'evaluation_department': 'department',
+                'evaluation_skill1': 'skill1',
+                'evaluation_skill1Score': 'skill1Score',
+                'evaluation_skill2': 'skill2',
+                'evaluation_skill2Score': 'skill2Score',
+                'evaluation_skill3': 'skill3',
+                'evaluation_skill3Score': 'skill3Score',
+                'evaluation_skill4': 'skill4',
+                'evaluation_skill4Score': 'skill4Score',
+                'evaluation_skill5': 'skill5',
+                'evaluation_skill5Score': 'skill5Score',
+                'evaluation_skill6': 'skill6',
+                'evaluation_skill6Score': 'skill6Score',
+                'evaluation_skill7': 'skill7',
+                'evaluation_skill7Score': 'skill7Score',
+                'evaluation_skill8': 'skill8',
+                'evaluation_skill8Score': 'skill8Score',
+                'evaluation_skill9': 'skill9',
+                'evaluation_skill9Score': 'skill9Score',
+                'evaluation_skill10': 'skill10',
+                'evaluation_skill10Score': 'skill10Score',
+                'evaluation_overallCompetency': 'overallCompetency',
+                'evaluation_competencyGaps': 'competencyGaps',
+                'evaluation_trainingPlan': 'trainingPlan',
+                'evaluation_evaluationNotes': 'evaluationNotes'
             };
+
+            let q = '';
             
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+
+            q += `evaluationDate=${encodeURIComponent(evaluationDateDMY)}&`;
+            q += `lastEvaluationDate=${encodeURIComponent(lastEvaluationDateDMY)}&`;
+            q += `nextEvaluationDate=${encodeURIComponent(nextEvaluationDateDMY)}&`;
+            q += `fileLink=${encodeURIComponent(fileLink || '')}`;
+
             try {
-                const result = await callGoogleScript(SCRIPT_URL, 'add', formData);
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
-                    resetEmployeeForm();
-                    await loadData();
+                const res = await jsonp(`${EVALUATION_SCRIPT_URL}?action=add&${q}`);
+
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
+                    resetEvaluationForm();
+                    await loadEvaluationData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                console.error('Error adding record:', error);
-                showNotification(`❌ خطأ في إضافة سجل التقييم`, 'error');
+                showNotification('❌ خطأ في الإضافة', 'error');
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
             }
         }
         
-        async function editRecord(recordId) {
-            showNotification('🔍 جاري تحميل بيانات السجل...', 'info');
+        async function editEvaluationRecord(recordId) {
+            showNotification('🔍 جاري تحميل بيانات التقييم...', 'info');
             
-            const record = employeeRecords.find(r => 
-                String(r[1] || '').trim() === String(recordId).trim()
+            const record = evaluationRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
             );
             
             if (record) {
-                fillEmployeeForm(record);
-                document.getElementById('updateBtn').style.display = 'inline-block';
-                document.getElementById('addBtn').style.display = 'none';
-                showNotification('✅ تم تحميل بيانات السجل', 'success');
+                fillEvaluationForm(record);
+                document.getElementById('evaluation_updateBtn').style.display = 'inline-block';
+                document.getElementById('evaluation_addBtn').style.display = 'none';
+                showNotification('✅ تم تحميل بيانات التقييم', 'success');
             } else {
-                showNotification('❌ لم يتم العثور على السجل', 'error');
+                showNotification('❌ لم يتم العثور على التقييم', 'error');
             }
         }
         
-        function fillEmployeeForm(record) {
-            document.getElementById('employeeName').value = record[0] || '';
-            document.getElementById('recordId').value = record[1] || '';
-            document.getElementById('department').value = record[2] || '';
-            document.getElementById('skill1').value = record[3] || '';
-            document.getElementById('skill2').value = record[4] || '';
-            document.getElementById('skill3').value = record[5] || '';
-            document.getElementById('skill4').value = record[6] || '';
-            document.getElementById('skill5').value = record[7] || '';
-            document.getElementById('totalCompetency').value = record[8] || '';
+        function fillEvaluationForm(record) {
+            document.getElementById('evaluation_recordId').value = record[1] || '';
+            document.getElementById('evaluation_employeeName').value = record[2] || '';
+            document.getElementById('evaluation_employeeNumber').value = record[3] || '';
+            document.getElementById('evaluation_department').value = record[4] || '';
             
-            // Update competency progress bar
-            updateCompetencyProgress(record[8]);
+            // Fill skills
+            document.getElementById('evaluation_skill1').value = record[5] || '';
+            document.getElementById('evaluation_skill1Score').value = record[6] || '';
+            document.getElementById('evaluation_skill2').value = record[7] || '';
+            document.getElementById('evaluation_skill2Score').value = record[8] || '';
+            document.getElementById('evaluation_skill3').value = record[9] || '';
+            document.getElementById('evaluation_skill3Score').value = record[10] || '';
+            document.getElementById('evaluation_skill4').value = record[11] || '';
+            document.getElementById('evaluation_skill4Score').value = record[12] || '';
+            document.getElementById('evaluation_skill5').value = record[13] || '';
+            document.getElementById('evaluation_skill5Score').value = record[14] || '';
+            document.getElementById('evaluation_skill6').value = record[15] || '';
+            document.getElementById('evaluation_skill6Score').value = record[16] || '';
+            document.getElementById('evaluation_skill7').value = record[17] || '';
+            document.getElementById('evaluation_skill7Score').value = record[18] || '';
+            document.getElementById('evaluation_skill8').value = record[19] || '';
+            document.getElementById('evaluation_skill8Score').value = record[20] || '';
+            document.getElementById('evaluation_skill9').value = record[21] || '';
+            document.getElementById('evaluation_skill9Score').value = record[22] || '';
+            document.getElementById('evaluation_skill10').value = record[23] || '';
+            document.getElementById('evaluation_skill10Score').value = record[24] || '';
             
-            const lastEvaluationDate = formatDateForInput(record[9] || '');
-            document.getElementById('lastEvaluationDate_day').value = lastEvaluationDate.day;
-            document.getElementById('lastEvaluationDate_month').value = lastEvaluationDate.month;
-            document.getElementById('lastEvaluationDate_year').value = lastEvaluationDate.year;
+            document.getElementById('evaluation_overallCompetency').value = record[25] || '';
+            updateCompetencyBadge();
             
-            document.getElementById('competencyGaps').value = record[10] || '';
-            document.getElementById('trainingPlan').value = record[11] || '';
+            document.getElementById('evaluation_competencyGaps').value = record[29] || '';
+            document.getElementById('evaluation_trainingPlan').value = record[30] || '';
+            document.getElementById('evaluation_evaluationNotes').value = record[31] || '';
             
-            const nextEvaluationDate = formatDateForInput(record[12] || '');
-            document.getElementById('nextEvaluationDate_day').value = nextEvaluationDate.day;
-            document.getElementById('nextEvaluationDate_month').value = nextEvaluationDate.month;
-            document.getElementById('nextEvaluationDate_year').value = nextEvaluationDate.year;
+            // Set the file link
+            const fileLink = record[32] || '';
+            document.getElementById('evaluation_fileLink').value = fileLink;
             
-            document.getElementById('editingId').value = record[1];
+            // Display file info if there's a file link
+            if (fileLink && fileLink.trim() !== '') {
+                const fileName = 'ملف التقييم';
+                document.getElementById('uploadedFileName').textContent = fileName;
+                document.getElementById('uploadedFileSize').textContent = '';
+                document.getElementById('uploadedFileInfo').style.display = 'block';
+                
+                const fileLinkBtn = document.getElementById('uploadedFileLink');
+                fileLinkBtn.href = fileLink;
+                fileLinkBtn.style.display = 'inline-block';
+                
+                const uploadStatus = document.getElementById('uploadStatus');
+                uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                uploadStatus.className = 'upload-status success';
+            }
+            
+            // Set date values using the new D M Y format
+            const evaluationDateFormatted = formatDMYForInput(record[26] || '');
+            const lastEvaluationDateFormatted = formatDMYForInput(record[27] || '');
+            const nextEvaluationDateFormatted = formatDMYForInput(record[28] || '');
+            
+            document.getElementById('evaluation_evaluationDate').value = evaluationDateFormatted;
+            document.getElementById('evaluation_lastEvaluationDate').value = lastEvaluationDateFormatted;
+            document.getElementById('evaluation_nextEvaluationDate').value = nextEvaluationDateFormatted;
+            
+            // Update Flatpickr instances
+            if (flatpickrInstances.evaluationDate && evaluationDateFormatted) {
+                try {
+                    const parts = evaluationDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.evaluationDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting evaluation date:', e);
+                }
+            }
+            
+            if (flatpickrInstances.lastEvaluationDate && lastEvaluationDateFormatted) {
+                try {
+                    const parts = lastEvaluationDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.lastEvaluationDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting last evaluation date:', e);
+                }
+            }
+            
+            if (flatpickrInstances.nextEvaluationDate && nextEvaluationDateFormatted) {
+                try {
+                    const parts = nextEvaluationDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.nextEvaluationDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting next evaluation date:', e);
+                }
+            }
+            
+            document.getElementById('evaluation_editingId').value = record[0];
+            document.getElementById('evaluation_internalRecordId').value = record[0];
+            
+            // Check for duplicate record number after filling the form (but exclude current record)
+            setTimeout(() => {
+                checkDuplicateRecordNumber();
+            }, 100);
         }
         
-        async function updateRecord() {
-            const recordId = document.getElementById('editingId').value;
-            if (!recordId) {
-                showNotification('❌ لم يتم تحديد سجل للتحديث', 'error');
+        async function updateEvaluationRecord() {
+            // Check for duplicate record number first (excluding current record)
+            if (checkDuplicateRecordNumber()) {
+                showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
                 return;
             }
+
+            const recordId = document.getElementById('evaluation_editingId').value;
+            if (!recordId) {
+                showNotification('❌ لم يتم تحديد تقييم للتحديث', 'error');
+                return;
+            }
+
+            const requiredFields = [
+                'evaluation_recordId', 'evaluation_employeeName', 'evaluation_employeeNumber', 
+                'evaluation_department', 'evaluation_overallCompetency', 'evaluation_evaluationDate'
+            ];
             
-            const button = document.getElementById('updateBtn');
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+
+            const evaluationDate = document.getElementById('evaluation_evaluationDate').value;
+            const lastEvaluationDate = document.getElementById('evaluation_lastEvaluationDate').value;
+            const nextEvaluationDate = document.getElementById('evaluation_nextEvaluationDate').value;
+
+            const button = document.getElementById('evaluation_updateBtn');
             const originalHtml = button.innerHTML;
-            
+
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
-            
-            const lastEvaluationDate = getDateString(
-                document.getElementById('lastEvaluationDate_day').value,
-                document.getElementById('lastEvaluationDate_month').value,
-                document.getElementById('lastEvaluationDate_year').value
-            );
-            
-            const nextEvaluationDate = getDateString(
-                document.getElementById('nextEvaluationDate_day').value,
-                document.getElementById('nextEvaluationDate_month').value,
-                document.getElementById('nextEvaluationDate_year').value
-            );
-            
-            const formData = {
-                employeeName: document.getElementById('employeeName').value,
-                recordId: document.getElementById('recordId').value,
-                department: document.getElementById('department').value,
-                skill1: document.getElementById('skill1').value,
-                skill2: document.getElementById('skill2').value,
-                skill3: document.getElementById('skill3').value,
-                skill4: document.getElementById('skill4').value,
-                skill5: document.getElementById('skill5').value,
-                totalCompetency: document.getElementById('totalCompetency').value,
-                lastEvaluationDate: lastEvaluationDate,
-                competencyGaps: document.getElementById('competencyGaps').value,
-                trainingPlan: document.getElementById('trainingPlan').value,
-                nextEvaluationDate: nextEvaluationDate
+
+            // Validate dates
+            if (evaluationDate && !validateDate(evaluationDate)) {
+                showNotification('❌ تاريخ التقييم غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (lastEvaluationDate && !validateDate(lastEvaluationDate)) {
+                showNotification('❌ تاريخ آخر تقييم غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (nextEvaluationDate && !validateDate(nextEvaluationDate)) {
+                showNotification('❌ تاريخ التقييم القادم غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            // Get file link from hidden field
+            const fileLink = document.getElementById('evaluation_fileLink').value;
+
+            // Convert dates to D M Y format
+            const evaluationDateDMY = evaluationDate ? formatDateToDMY(parseDateDDMMYYYY(evaluationDate)) : '';
+            const lastEvaluationDateDMY = lastEvaluationDate ? formatDateToDMY(parseDateDDMMYYYY(lastEvaluationDate)) : '';
+            const nextEvaluationDateDMY = nextEvaluationDate ? formatDateToDMY(parseDateDDMMYYYY(nextEvaluationDate)) : '';
+
+            // Build query string
+            const fields = [
+                'evaluation_recordId',
+                'evaluation_employeeName',
+                'evaluation_employeeNumber',
+                'evaluation_department',
+                'evaluation_skill1',
+                'evaluation_skill1Score',
+                'evaluation_skill2',
+                'evaluation_skill2Score',
+                'evaluation_skill3',
+                'evaluation_skill3Score',
+                'evaluation_skill4',
+                'evaluation_skill4Score',
+                'evaluation_skill5',
+                'evaluation_skill5Score',
+                'evaluation_skill6',
+                'evaluation_skill6Score',
+                'evaluation_skill7',
+                'evaluation_skill7Score',
+                'evaluation_skill8',
+                'evaluation_skill8Score',
+                'evaluation_skill9',
+                'evaluation_skill9Score',
+                'evaluation_skill10',
+                'evaluation_skill10Score',
+                'evaluation_overallCompetency',
+                'evaluation_competencyGaps',
+                'evaluation_trainingPlan',
+                'evaluation_evaluationNotes'
+            ];
+
+            // Map form field names to Google Apps Script parameter names for update
+            const paramMap = {
+                'evaluation_recordId': 'recordId',
+                'evaluation_employeeName': 'employeeName',
+                'evaluation_employeeNumber': 'employeeNumber',
+                'evaluation_department': 'department',
+                'evaluation_skill1': 'skill1',
+                'evaluation_skill1Score': 'skill1Score',
+                'evaluation_skill2': 'skill2',
+                'evaluation_skill2Score': 'skill2Score',
+                'evaluation_skill3': 'skill3',
+                'evaluation_skill3Score': 'skill3Score',
+                'evaluation_skill4': 'skill4',
+                'evaluation_skill4Score': 'skill4Score',
+                'evaluation_skill5': 'skill5',
+                'evaluation_skill5Score': 'skill5Score',
+                'evaluation_skill6': 'skill6',
+                'evaluation_skill6Score': 'skill6Score',
+                'evaluation_skill7': 'skill7',
+                'evaluation_skill7Score': 'skill7Score',
+                'evaluation_skill8': 'skill8',
+                'evaluation_skill8Score': 'skill8Score',
+                'evaluation_skill9': 'skill9',
+                'evaluation_skill9Score': 'skill9Score',
+                'evaluation_skill10': 'skill10',
+                'evaluation_skill10Score': 'skill10Score',
+                'evaluation_overallCompetency': 'overallCompetency',
+                'evaluation_competencyGaps': 'competencyGaps',
+                'evaluation_trainingPlan': 'trainingPlan',
+                'evaluation_evaluationNotes': 'evaluationNotes'
             };
-            
+
+            let q = `internalRecordId=${encodeURIComponent(recordId)}&`;
+
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+
+            q += `evaluationDate=${encodeURIComponent(evaluationDateDMY)}&`;
+            q += `lastEvaluationDate=${encodeURIComponent(lastEvaluationDateDMY)}&`;
+            q += `nextEvaluationDate=${encodeURIComponent(nextEvaluationDateDMY)}&`;
+            q += `fileLink=${encodeURIComponent(fileLink || '')}`;
+
             try {
-                const result = await callGoogleScript(SCRIPT_URL, 'update', formData);
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
-                    resetEmployeeForm();
-                    await loadData();
+                const res = await jsonp(`${EVALUATION_SCRIPT_URL}?action=update&${q}`);
+
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
+                    resetEvaluationForm();
+                    await loadEvaluationData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                console.error('Error updating record:', error);
-                showNotification(`❌ خطأ في تحديث سجل التقييم`, 'error');
+                showNotification('❌ خطأ في التحديث', 'error');
+                console.error('Update error:', error);
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
             }
         }
         
-        function resetEmployeeForm() {
-            document.getElementById('employeeForm').reset();
-            document.getElementById('editingId').value = '';
-            document.getElementById('addBtn').style.display = 'inline-block';
-            document.getElementById('updateBtn').style.display = 'none';
-            document.querySelectorAll('#employeeForm .is-invalid').forEach(el => {
+        function resetEvaluationForm() {
+            document.getElementById('evaluationForm').reset();
+            document.getElementById('evaluation_editingId').value = '';
+            document.getElementById('evaluation_internalRecordId').value = '';
+            document.getElementById('evaluation_fileLink').value = '';
+            document.getElementById('evaluation_addBtn').style.display = 'inline-block';
+            document.getElementById('evaluation_updateBtn').style.display = 'none';
+            document.querySelectorAll('#evaluationForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
-            updateCompetencyProgress(0);
-            showNotification('تم مسح النموذج', 'info', 2000);
+            
+            // Reset duplicate record number warning
+            document.getElementById('duplicateRecordNumberWarning').style.display = 'none';
+            isDuplicateRecordNumber = false;
+            
+            // Reset competency badge
+            updateCompetencyBadge();
+            
+            // Reset file upload section
+            selectedFile = null;
+            uploadedFileUrl = '';
+            document.getElementById('uploadedFileInfo').style.display = 'none';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            document.getElementById('uploadStatus').textContent = '';
+            document.getElementById('uploadStatus').className = 'upload-status';
+            document.getElementById('fileInput').value = '';
+            
+            // Reset dates
+            if (flatpickrInstances.evaluationDate) {
+                // Set evaluation date to current date
+                const today = new Date();
+                const todayFormatted = formatDateToDDMMYYYY(today);
+                document.getElementById('evaluation_evaluationDate').value = todayFormatted;
+                flatpickrInstances.evaluationDate.setDate(today, false);
+            }
+            if (flatpickrInstances.lastEvaluationDate) flatpickrInstances.lastEvaluationDate.clear();
+            if (flatpickrInstances.nextEvaluationDate) flatpickrInstances.nextEvaluationDate.clear();
         }
         
-        function exportCSV() {
-            if (employeeRecords.length === 0) {
+        function exportEvaluationCSV() {
+            if (evaluationRecords.length === 0) {
                 showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
                 return;
             }
             
-            showNotification('📥 جاري تصدير سجلات التقييم...', 'info');
+            showNotification('📥 جاري تصدير تقييمات الموظفين...', 'info');
             
             try {
                 const headers = [
-                    'اسم الموظف', 'الرقم الوظيفي', 'القسم', 'المهارة 1', 'المهارة 2',
-                    'المهارة 3', 'المهارة 4', 'المهارة 5', 'الكفاءة الكلية %',
-                    'تاريخ التقييم الأخير', 'فجوات الكفاءة', 'خطة التدريب',
-                    'تاريخ التقييم القادم'
+                    'رقم السجل', 'اسم الموظف', 'الرقم الوظيفي', 'القسم',
+                    'المهارة 1', 'تقييم المهارة 1', 'المهارة 2', 'تقييم المهارة 2',
+                    'المهارة 3', 'تقييم المهارة 3', 'المهارة 4', 'تقييم المهارة 4',
+                    'المهارة 5', 'تقييم المهارة 5', 'المهارة 6', 'تقييم المهارة 6',
+                    'المهارة 7', 'تقييم المهارة 7', 'المهارة 8', 'تقييم المهارة 8',
+                    'المهارة 9', 'تقييم المهارة 9', 'المهارة 10', 'تقييم المهارة 10',
+                    'الكفاءة الكلية', 'تاريخ التقييم', 'تاريخ آخر تقييم',
+                    'تاريخ التقييم القادم', 'فجوات الكفاءة', 'خطة التدريب', 'سجل التقييم', 'لينك الملف'
                 ];
                 
                 let csvContent = '\uFEFF';
                 csvContent += headers.join(",") + "\r\n";
                 
-                employeeRecords.forEach(record => {
+                evaluationRecords.forEach(record => {
+                    // Convert D M Y format to readable date for CSV export
+                    const evaluationDateObj = parseDateFromDMY(record[26] || '');
+                    const lastEvaluationDateObj = parseDateFromDMY(record[27] || '');
+                    const nextEvaluationDateObj = parseDateFromDMY(record[28] || '');
+                    
+                    const evaluationDateDisplay = evaluationDateObj ? formatDateToDayMonthYear(evaluationDateObj) : '';
+                    const lastEvaluationDateDisplay = lastEvaluationDateObj ? formatDateToDayMonthYear(lastEvaluationDateObj) : '';
+                    const nextEvaluationDateDisplay = nextEvaluationDateObj ? formatDateToDayMonthYear(nextEvaluationDateObj) : '';
+                    
                     const row = [
-                        record[0] || '',
                         record[1] || '',
                         record[2] || '',
                         record[3] || '',
@@ -1243,10 +2511,30 @@
                         record[6] || '',
                         record[7] || '',
                         record[8] || '',
-                        formatDate(record[9] || ''),
+                        record[9] || '',
                         record[10] || '',
                         record[11] || '',
-                        formatDate(record[12] || '')
+                        record[12] || '',
+                        record[13] || '',
+                        record[14] || '',
+                        record[15] || '',
+                        record[16] || '',
+                        record[17] || '',
+                        record[18] || '',
+                        record[19] || '',
+                        record[20] || '',
+                        record[21] || '',
+                        record[22] || '',
+                        record[23] || '',
+                        record[24] || '',
+                        record[25] || '',
+                        evaluationDateDisplay,
+                        lastEvaluationDateDisplay,
+                        nextEvaluationDateDisplay,
+                        record[29] || '',
+                        record[30] || '',
+                        record[31] || '',
+                        record[32] || ''
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -1259,7 +2547,7 @@
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.setAttribute("href", url);
-                link.setAttribute("download", `سجلات_تقييم_الموظفين_${new Date().toISOString().slice(0,10)}.csv`);
+                link.setAttribute("download", `تقييمات_الموظفين_${new Date().toISOString().slice(0,10)}.csv`);
                 
                 document.body.appendChild(link);
                 link.click();
@@ -1267,157 +2555,162 @@
                 
                 setTimeout(() => URL.revokeObjectURL(url), 100);
                 
-                showNotification(`✅ تم تصدير ${employeeRecords.length} سجل`, 'success');
+                showNotification(`✅ تم تصدير ${evaluationRecords.length} تقييم`, 'success');
             } catch (error) {
-                console.error('Error exporting CSV:', error);
-                showNotification(`❌ خطأ في التصدير`, 'error');
+                showNotification('❌ خطأ في التصدير', 'error');
             }
         }
         
         // ================ DETAILS VIEW FUNCTION ================
-        async function viewEmployeeDetails(recordId) {
-            const record = employeeRecords.find(r => 
-                String(r[1] || '').trim() === String(recordId).trim()
+        function viewDetails(recordId) {
+            const record = evaluationRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
             );
             
             if (!record) {
-                showNotification('❌ لم يتم العثور على السجل', 'error');
+                showNotification('❌ لم يتم العثور على التقييم', 'error');
                 return;
             }
             
-            let competencyClass = 'badge bg-secondary';
-            const competency = parseInt(record[8]) || 0;
-            if (competency >= 80) {
-                competencyClass = 'badge bg-success competency-high';
-            } else if (competency >= 60) {
-                competencyClass = 'badge bg-warning text-dark competency-medium';
-            } else if (competency > 0) {
-                competencyClass = 'badge bg-danger competency-low';
+            const fileLink = record[32] || '';
+            const overallCompetency = record[25] || 0;
+            
+            // Determine competency badge class
+            let competencyClass = '';
+            let competencyText = '';
+            if (overallCompetency >= 80) {
+                competencyClass = 'competency-high';
+                competencyText = 'عالية';
+            } else if (overallCompetency >= 60) {
+                competencyClass = 'competency-medium';
+                competencyText = 'متوسطة';
+            } else {
+                competencyClass = 'competency-low';
+                competencyText = 'منخفضة';
             }
             
-            document.getElementById('detailsModalTitle').textContent = `تفاصيل تقييم الموظف: ${escapeHtml(record[0])}`;
+            // Create skills list
+            let skillsHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const skillIndex = 4 + i * 2;
+                const scoreIndex = skillIndex + 1;
+                if (record[skillIndex] && record[skillIndex].toString().trim() !== '') {
+                    skillsHTML += `
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">${escapeHtml(record[skillIndex])}</h6>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-${record[scoreIndex] >= 7 ? 'success' : record[scoreIndex] >= 5 ? 'warning' : 'danger'}" 
+                                             role="progressbar" 
+                                             style="width: ${record[scoreIndex] * 10}%">
+                                            ${record[scoreIndex]}/10
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Convert dates to display format
+            const evaluationDateObj = parseDateFromDMY(record[26] || '');
+            const lastEvaluationDateObj = parseDateFromDMY(record[27] || '');
+            const nextEvaluationDateObj = parseDateFromDMY(record[28] || '');
+            
+            const evaluationDateDisplay = evaluationDateObj ? formatDateToDayMonthYear(evaluationDateObj) : '';
+            const lastEvaluationDateDisplay = lastEvaluationDateObj ? formatDateToDayMonthYear(lastEvaluationDateObj) : '';
+            const nextEvaluationDateDisplay = nextEvaluationDateObj ? formatDateToDayMonthYear(nextEvaluationDateObj) : '';
             
             const detailsHTML = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>اسم الموظف:</strong> ${escapeHtml(record[0])}</p>
-                        <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[1])}</p>
-                        <p><strong>القسم:</strong> ${escapeHtml(record[2])}</p>
-                        <p><strong>الكفاءة الكلية:</strong> <span class="badge-status ${competencyClass}">${competency}%</span></p>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">الكفاءة الكلية</h5>
+                                <div class="display-4 text-primary">${overallCompetency}%</div>
+                                <span class="badge competency-badge ${competencyClass}">${competencyText}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <p><strong>تاريخ التقييم الأخير:</strong> ${formatDate(record[9])}</p>
-                        <p><strong>تاريخ التقييم القادم:</strong> ${formatDate(record[12])}</p>
-                        <p><strong>تاريخ الإنشاء:</strong> ${new Date().toLocaleDateString('ar-SA')}</p>
-                    </div>
-                </div>
-                
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <h6 class="text-primary"><i class="fas fa-star me-2"></i>تفاصيل المهارات</h6>
+                    <div class="col-md-8">
                         <div class="row">
-                            <div class="col-md-2 mb-2">
-                                <div class="card text-center">
-                                    <div class="card-body p-2">
-                                        <h6 class="card-title text-muted mb-1">المهارة 1</h6>
-                                        <h4 class="text-primary">${record[3] || '0'}</h4>
-                                    </div>
-                                </div>
+                            <div class="col-md-6">
+                                <p><strong>اسم الموظف:</strong> ${escapeHtml(record[2])}</p>
+                                <p><strong>الرقم الوظيفي:</strong> ${escapeHtml(record[3])}</p>
+                                <p><strong>القسم:</strong> ${escapeHtml(record[4])}</p>
                             </div>
-                            <div class="col-md-2 mb-2">
-                                <div class="card text-center">
-                                    <div class="card-body p-2">
-                                        <h6 class="card-title text-muted mb-1">المهارة 2</h6>
-                                        <h4 class="text-primary">${record[4] || '0'}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <div class="card text-center">
-                                    <div class="card-body p-2">
-                                        <h6 class="card-title text-muted mb-1">المهارة 3</h6>
-                                        <h4 class="text-primary">${record[5] || '0'}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <div class="card text-center">
-                                    <div class="card-body p-2">
-                                        <h6 class="card-title text-muted mb-1">المهارة 4</h6>
-                                        <h4 class="text-primary">${record[6] || '0'}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <div class="card text-center">
-                                    <div class="card-body p-2">
-                                        <h6 class="card-title text-muted mb-1">المهارة 5</h6>
-                                        <h4 class="text-primary">${record[7] || '0'}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <div class="card text-center">
-                                    <div class="card-body p-2">
-                                        <h6 class="card-title text-muted mb-1">المعدل</h6>
-                                        <h4 class="text-success">${((parseInt(record[3] || 0) + parseInt(record[4] || 0) + parseInt(record[5] || 0) + parseInt(record[6] || 0) + parseInt(record[7] || 0)) / 5).toFixed(1)}</h4>
-                                    </div>
-                                </div>
+                            <div class="col-md-6">
+                                <p><strong>رقم السجل:</strong> ${escapeHtml(record[1])}</p>
+                                <p><strong>تاريخ التقييم:</strong> <span class="english-date">${evaluationDateDisplay}</span></p>
+                                <p><strong>تاريخ آخر تقييم:</strong> <span class="english-date">${lastEvaluationDateDisplay}</span></p>
+                                <p><strong>تاريخ التقييم القادم:</strong> <span class="english-date">${nextEvaluationDateDisplay}</span></p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                ${record[10] ? `
-                <div class="row mt-3">
+                <div class="row mb-4">
                     <div class="col-md-12">
-                        <p><strong>فجوات الكفاءة:</strong></p>
-                        <div class="alert alert-warning">${escapeHtml(record[10])}</div>
-                    </div>
-                </div>
-                ` : ''}
-                
-                ${record[11] ? `
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <p><strong>خطة التدريب:</strong></p>
-                        <div class="alert alert-info">${escapeHtml(record[11])}</div>
-                    </div>
-                </div>
-                ` : ''}
-                
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <div class="progress" style="height: 20px;">
-                            <div class="progress-bar ${competency >= 80 ? 'bg-success' : competency >= 60 ? 'bg-warning' : 'bg-danger'}" 
-                                 role="progressbar" style="width: ${competency}%;" 
-                                 aria-valuenow="${competency}" aria-valuemin="0" aria-valuemax="100">
-                                ${competency}%
-                            </div>
+                        <h6 class="border-bottom pb-2 mb-3">المهارات المقيمة</h6>
+                        <div class="row">
+                            ${skillsHTML || '<div class="col-12 text-muted text-center">لا توجد مهارات مسجلة</div>'}
                         </div>
-                        <p class="text-center mt-2 text-muted">مستوى الكفاءة الكلية</p>
                     </div>
                 </div>
+                
+                ${record[29] ? `
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6 class="border-bottom pb-2">فجوات الكفاءة</h6>
+                        <div class="alert alert-light">${escapeHtml(record[29])}</div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${record[30] ? `
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6 class="border-bottom pb-2">خطة التدريب</h6>
+                        <div class="alert alert-light">${escapeHtml(record[30])}</div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${record[31] ? `
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h6 class="border-bottom pb-2">سجل التقييم</h6>
+                        <div class="alert alert-light">${escapeHtml(record[31])}</div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${fileLink ? `<div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>الملف المرفوع:</strong> 
+                            <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn ms-2">
+                                <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                            </a>
+                        </p>
+                    </div>
+                </div>` : ''}
             `;
             
             document.getElementById('detailsModalBody').innerHTML = detailsHTML;
-            
-            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-            detailsModal.show();
+            detailsModalInstance.show();
         }
         
-        // ================ DELETE FUNCTIONALITY ================
-        function showDeleteModal(recordId, employeeName, department) {
+        // ================ FIXED DELETE FUNCTIONALITY ================
+        function showDeleteModal(recordId, recordName, recordNumber = '') {
             deleteRecordId = recordId;
-            deleteEmployeeName = employeeName;
-            deleteDepartment = department;
+            deleteRecordName = recordName;
             
-            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
-            document.getElementById('deleteEmployeeName').textContent = employeeName || 'غير معروف';
-            document.getElementById('deleteDepartment').textContent = department || 'غير معروف';
+            document.getElementById('deleteRecordId').textContent = recordNumber || 'غير معروف';
+            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
             
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
+            deleteModalInstance.show();
         }
         
         async function confirmDelete() {
@@ -1430,65 +2723,31 @@
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
             
             try {
-                const result = await callGoogleScript(SCRIPT_URL, 'delete', { recordId: deleteRecordId });
+                const res = await jsonp(`${EVALUATION_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}`);
                 
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     
-                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-                    deleteModal.hide();
+                    deleteModalInstance.hide();
                     
                     deleteRecordId = '';
-                    deleteEmployeeName = '';
-                    deleteDepartment = '';
+                    deleteRecordName = '';
                     
-                    await loadData();
+                    loadEvaluationData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
                 console.error('Error deleting record:', error);
-                showNotification(`❌ خطأ في حذف سجل التقييم`, 'error');
-            } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
+                showNotification('❌ خطأ في الاتصال بالخادم', 'error');
             }
         }
-        
-        // ================ HELPER FUNCTIONS ================
-        function escapeHtml(unsafe) {
-            if (unsafe === null || unsafe === undefined) return '';
-            return unsafe.toString()
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-        
-        function updateTotalRecordsCount() {
-            document.getElementById('totalRecords').textContent = employeeRecords.length.toLocaleString('ar-SA');
-        }
-        
-        // Keyboard navigation for date fields
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateFields = document.querySelectorAll('.date-day, .date-month, .date-year');
-            dateFields.forEach((field, index) => {
-                field.addEventListener('input', function(e) {
-                    if (this.value.length >= this.maxLength && index < dateFields.length - 1) {
-                        dateFields[index + 1].focus();
-                    }
-                });
-                
-                field.addEventListener('keydown', function(e) {
-                    if (e.key === 'ArrowLeft' && index > 0) {
-                        dateFields[index - 1].focus();
-                    } else if (e.key === 'ArrowRight' && index < dateFields.length - 1) {
-                        dateFields[index + 1].focus();
-                    }
-                });
-            });
-        });
     </script>
 </body>
 </html>
