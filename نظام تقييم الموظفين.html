@@ -539,6 +539,13 @@
             text-align: center;
         }
         
+        /* Date Validation Warning */
+        .date-validation-warning {
+            display: none;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .main-header h1 {
@@ -645,6 +652,28 @@
         .competency-low {
             background-color: #f8d7da !important;
             color: #721c24 !important;
+        }
+        
+        /* Skill Details in Modal */
+        .skill-detail-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+        }
+        
+        .skill-name {
+            font-weight: 600;
+            color: var(--skills-color);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .skill-score {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -927,7 +956,7 @@
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
                                         <label class="form-label-custom">الكفاءة الكلية (0-100%) *</label>
-                                        <input type="number" class="form-control form-control-custom competency-input" id="evaluation_overallCompetency" placeholder="0-100" min="0" max="100" required oninput="updateCompetencyBadge()">
+                                        <input type="number" class="form-control form-control-custom competency-input" id="evaluation_overallCompetency" placeholder="0-100" min="0" max="100" step="1" required oninput="updateCompetencyBadge()">
                                         <div class="mt-2" id="competencyBadgeContainer">
                                             <span class="badge competency-badge competency-high" id="competencyBadge">عالية</span>
                                         </div>
@@ -936,25 +965,28 @@
                                     <div class="col-md-3 mb-3">
                                         <label class="form-label-custom">تاريخ التقييم *</label>
                                         <div class="date-input-wrapper">
-                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_evaluationDate" placeholder="يوم/شهر/سنة" readonly required>
+                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_evaluationDate" placeholder="يوم/شهر/سنة" readonly required onchange="validateDatesOrder()">
                                             <i class="fas fa-calendar-alt date-icon"></i>
                                         </div>
+                                        <div class="form-text text-danger date-validation-warning" id="evaluationDateWarning"></div>
                                     </div>
                                     
                                     <div class="col-md-3 mb-3">
                                         <label class="form-label-custom">تاريخ آخر تقييم</label>
                                         <div class="date-input-wrapper">
-                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_lastEvaluationDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_lastEvaluationDate" placeholder="يوم/شهر/سنة" readonly onchange="validateDatesOrder()">
                                             <i class="fas fa-calendar-alt date-icon"></i>
                                         </div>
+                                        <div class="form-text text-danger date-validation-warning" id="lastEvaluationDateWarning"></div>
                                     </div>
                                     
                                     <div class="col-md-3 mb-3">
                                         <label class="form-label-custom">تاريخ التقييم القادم</label>
                                         <div class="date-input-wrapper">
-                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_nextEvaluationDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <input type="text" class="form-control form-control-custom date-picker" id="evaluation_nextEvaluationDate" placeholder="يوم/شهر/سنة" readonly onchange="validateDatesOrder()">
                                             <i class="fas fa-calendar-alt date-icon"></i>
                                         </div>
+                                        <div class="form-text text-danger date-validation-warning" id="nextEvaluationDateWarning"></div>
                                     </div>
                                     
                                     <div class="col-md-12 mb-3">
@@ -1040,7 +1072,7 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام تقييم كفاءة الموظفين 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 2.0 (مع منع تكرار أرقام السجلات)</span>
+                    <span id="appVersion" class="text-info">الإصدار 2.1 (مع إصلاح التواريخ والكفاءة)</span>
                 </p>
             </div>
         </div>
@@ -1104,7 +1136,7 @@
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const EVALUATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYHp8xQGrSQEtt-rym06-Dc1izKcfxnp0XDLMglVQnMfrweUV1qzfpiyrHYKZit5ag/exec"; // Replace with your Google Script URL
+        const EVALUATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOF6oTwK6chblvcQpb8IB6d7b6IG4ZDQ4v1cbirx0O_vONIbQsW8V0PTOlUaQT8lWDNQ/exec";
         const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
         const UPLOAD_WEB_APP_URL = EVALUATION_SCRIPT_URL;
         
@@ -1119,6 +1151,7 @@
         let selectedFile = null;
         let uploadedFileUrl = '';
         let isDuplicateRecordNumber = false;
+        let dateValidationError = false;
         
         // ================ NEW DATE SYSTEM WITH D, M, Y SIGNS ================
         function formatDateToDMY(date) {
@@ -1232,32 +1265,135 @@
                 return false;
             }
             
-            // Check if this record number already exists in evaluationRecords
-            const duplicateRecord = evaluationRecords.find(record => {
-                // Skip the current record if we're in edit mode
-                if (editingId && record[0] === editingId) {
-                    return false;
-                }
-                return record[1] && record[1].toString().trim() === recordNumber;
-            });
+            // Create JSONP URL with excludeRecordId parameter
+            const callbackName = 'checkDuplicateCallback_' + Date.now();
+            const url = `${EVALUATION_SCRIPT_URL}?action=checkDuplicate&recordId=${encodeURIComponent(recordNumber)}&excludeRecordId=${encodeURIComponent(editingId || '')}&callback=${callbackName}`;
             
-            if (duplicateRecord) {
-                warningElement.style.display = 'block';
-                recordNumberInput.classList.add('is-invalid');
-                isDuplicateRecordNumber = true;
-                return true;
-            } else {
-                warningElement.style.display = 'none';
-                recordNumberInput.classList.remove('is-invalid');
-                isDuplicateRecordNumber = false;
-                return false;
+            return new Promise((resolve) => {
+                // Define the callback function
+                window[callbackName] = function(data) {
+                    // Clean up
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    
+                    if (data.status === 'success') {
+                        if (data.isDuplicate) {
+                            warningElement.style.display = 'block';
+                            recordNumberInput.classList.add('is-invalid');
+                            isDuplicateRecordNumber = true;
+                            resolve(true);
+                        } else {
+                            warningElement.style.display = 'none';
+                            recordNumberInput.classList.remove('is-invalid');
+                            isDuplicateRecordNumber = false;
+                            resolve(false);
+                        }
+                    } else {
+                        console.error('Error checking duplicate:', data.message);
+                        isDuplicateRecordNumber = false;
+                        resolve(false);
+                    }
+                };
+                
+                // Create and append script tag for JSONP
+                const script = document.createElement('script');
+                script.src = url;
+                document.body.appendChild(script);
+            });
+        }
+        
+        // ================ NEW FUNCTION: Validate dates order ================
+        function validateDatesOrder() {
+            const evaluationDateInput = document.getElementById('evaluation_evaluationDate');
+            const lastEvaluationDateInput = document.getElementById('evaluation_lastEvaluationDate');
+            const nextEvaluationDateInput = document.getElementById('evaluation_nextEvaluationDate');
+            
+            const evaluationDate = parseDateDDMMYYYY(evaluationDateInput.value);
+            const lastEvaluationDate = parseDateDDMMYYYY(lastEvaluationDateInput.value);
+            const nextEvaluationDate = parseDateDDMMYYYY(nextEvaluationDateInput.value);
+            
+            // Reset warnings
+            document.getElementById('evaluationDateWarning').style.display = 'none';
+            document.getElementById('lastEvaluationDateWarning').style.display = 'none';
+            document.getElementById('nextEvaluationDateWarning').style.display = 'none';
+            
+            evaluationDateInput.classList.remove('is-invalid');
+            lastEvaluationDateInput.classList.remove('is-invalid');
+            nextEvaluationDateInput.classList.remove('is-invalid');
+            
+            dateValidationError = false;
+            
+            // If we have all three dates, validate the order
+            if (evaluationDate && lastEvaluationDate && nextEvaluationDate) {
+                if (lastEvaluationDate >= evaluationDate) {
+                    document.getElementById('lastEvaluationDateWarning').textContent = 'تاريخ آخر تقييم يجب أن يكون أقدم من تاريخ التقييم الحالي';
+                    document.getElementById('lastEvaluationDateWarning').style.display = 'block';
+                    lastEvaluationDateInput.classList.add('is-invalid');
+                    dateValidationError = true;
+                }
+                
+                if (evaluationDate >= nextEvaluationDate) {
+                    document.getElementById('evaluationDateWarning').textContent = 'تاريخ التقييم الحالي يجب أن يكون أقدم من تاريخ التقييم القادم';
+                    document.getElementById('evaluationDateWarning').style.display = 'block';
+                    evaluationDateInput.classList.add('is-invalid');
+                    dateValidationError = true;
+                }
+                
+                if (lastEvaluationDate >= nextEvaluationDate) {
+                    document.getElementById('nextEvaluationDateWarning').textContent = 'تاريخ التقييم القادم يجب أن يكون أحدث من تاريخ آخر تقييم';
+                    document.getElementById('nextEvaluationDateWarning').style.display = 'block';
+                    nextEvaluationDateInput.classList.add('is-invalid');
+                    dateValidationError = true;
+                }
+                
+                // Check the complete order: last < evaluation < next
+                if (!(lastEvaluationDate < evaluationDate && evaluationDate < nextEvaluationDate)) {
+                    if (!dateValidationError) {
+                        document.getElementById('evaluationDateWarning').textContent = 'التواريخ غير مرتبة بشكل صحيح: آخر تقييم ← التقييم الحالي ← التقييم القادم';
+                        document.getElementById('evaluationDateWarning').style.display = 'block';
+                        evaluationDateInput.classList.add('is-invalid');
+                        dateValidationError = true;
+                    }
+                }
             }
+            
+            // If we have only two dates, validate them
+            if (evaluationDate && lastEvaluationDate && !nextEvaluationDate) {
+                if (lastEvaluationDate >= evaluationDate) {
+                    document.getElementById('lastEvaluationDateWarning').textContent = 'تاريخ آخر تقييم يجب أن يكون أقدم من تاريخ التقييم الحالي';
+                    document.getElementById('lastEvaluationDateWarning').style.display = 'block';
+                    lastEvaluationDateInput.classList.add('is-invalid');
+                    dateValidationError = true;
+                }
+            }
+            
+            if (evaluationDate && !lastEvaluationDate && nextEvaluationDate) {
+                if (evaluationDate >= nextEvaluationDate) {
+                    document.getElementById('evaluationDateWarning').textContent = 'تاريخ التقييم الحالي يجب أن يكون أقدم من تاريخ التقييم القادم';
+                    document.getElementById('evaluationDateWarning').style.display = 'block';
+                    evaluationDateInput.classList.add('is-invalid');
+                    dateValidationError = true;
+                }
+            }
+            
+            if (!evaluationDate && lastEvaluationDate && nextEvaluationDate) {
+                if (lastEvaluationDate >= nextEvaluationDate) {
+                    document.getElementById('nextEvaluationDateWarning').textContent = 'تاريخ التقييم القادم يجب أن يكون أحدث من تاريخ آخر تقييم';
+                    document.getElementById('nextEvaluationDateWarning').style.display = 'block';
+                    nextEvaluationDateInput.classList.add('is-invalid');
+                    dateValidationError = true;
+                }
+            }
+            
+            return !dateValidationError;
         }
         
         // ================ COMPETENCY BADGE FUNCTION ================
         function updateCompetencyBadge() {
             const competencyInput = document.getElementById('evaluation_overallCompetency');
-            const competency = parseInt(competencyInput.value) || 0;
+            const competency = parseFloat(competencyInput.value) || 0;
             const badgeContainer = document.getElementById('competencyBadgeContainer');
             
             let badgeClass = '';
@@ -1465,10 +1601,17 @@
             });
             
             // Add event listener for record number field to check for duplicates as user types
-            document.getElementById('evaluation_recordId').addEventListener('input', checkDuplicateRecordNumber);
+            document.getElementById('evaluation_recordId').addEventListener('input', function() {
+                checkDuplicateRecordNumber();
+            });
             
             // Add event listener for competency input
             document.getElementById('evaluation_overallCompetency').addEventListener('input', updateCompetencyBadge);
+            
+            // Add event listeners for date validation
+            document.getElementById('evaluation_evaluationDate').addEventListener('change', validateDatesOrder);
+            document.getElementById('evaluation_lastEvaluationDate').addEventListener('change', validateDatesOrder);
+            document.getElementById('evaluation_nextEvaluationDate').addEventListener('change', validateDatesOrder);
         });
         
         // ================ FIXED DATE PICKER INITIALIZATION ================
@@ -1498,6 +1641,8 @@
                         const formattedDate = formatDateToDDMMYYYY(date);
                         instance.input.value = formattedDate;
                     }
+                    // Trigger date validation
+                    setTimeout(validateDatesOrder, 100);
                 }
             };
             
@@ -1697,6 +1842,14 @@
                 isValid = false;
             } else {
                 document.getElementById('evaluation_nextEvaluationDate').classList.remove('is-invalid');
+            }
+            
+            // Validate date order
+            if (!validateDatesOrder()) {
+                isValid = false;
+                if (dateValidationError) {
+                    showNotification('❌ تواريخ التقييم غير مرتبة بشكل صحيح. يجب أن يكون: آخر تقييم (أقدم) ← التقييم الحالي ← التقييم القادم (أحدث)', 'warning');
+                }
             }
             
             return isValid;
@@ -1911,12 +2064,6 @@
             html += '</tr></thead><tbody>';
             
             records.forEach((record) => {
-                // Column mapping based on evaluation system:
-                // 0: ID, 1: recordId, 2: employeeName, 3: employeeNumber, 4: department,
-                // 5-24: Skills and scores, 25: overallCompetency, 26: evaluationDate,
-                // 27: lastEvaluationDate, 28: nextEvaluationDate, 29: competencyGaps,
-                // 30: trainingPlan, 31: evaluationNotes, 32: fileLink
-                
                 const fileLink = record[32] || '';
                 const evaluationDate = record[26] || '';
                 const lastEvaluationDate = record[27] || '';
@@ -1981,8 +2128,15 @@
         
         async function addEvaluationRecord() {
             // Check for duplicate record number first
-            if (checkDuplicateRecordNumber()) {
+            const isDuplicate = await checkDuplicateRecordNumber();
+            if (isDuplicate) {
                 showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+
+            // Validate date order before proceeding
+            if (!validateDatesOrder() && dateValidationError) {
+                showNotification('❌ تواريخ التقييم غير مرتبة بشكل صحيح. يجب أن يكون: آخر تقييم (أقدم) ← التقييم الحالي ← التقييم القادم (أحدث)', 'warning');
                 return;
             }
 
@@ -2108,7 +2262,13 @@
             
             fields.forEach(f => {
                 const paramName = paramMap[f];
-                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+                const value = document.getElementById(f).value || '';
+                // For competency, ensure it's a number
+                if (f === 'evaluation_overallCompetency') {
+                    q += `${paramName}=${encodeURIComponent(parseFloat(value) || 0)}&`;
+                } else {
+                    q += `${paramName}=${encodeURIComponent(value)}&`;
+                }
             });
 
             q += `evaluationDate=${encodeURIComponent(evaluationDateDMY)}&`;
@@ -2180,7 +2340,9 @@
             document.getElementById('evaluation_skill10').value = record[23] || '';
             document.getElementById('evaluation_skill10Score').value = record[24] || '';
             
-            document.getElementById('evaluation_overallCompetency').value = record[25] || '';
+            // Fix competency value - ensure it's displayed correctly
+            const competencyValue = record[25] || 0;
+            document.getElementById('evaluation_overallCompetency').value = competencyValue;
             updateCompetencyBadge();
             
             document.getElementById('evaluation_competencyGaps').value = record[29] || '';
@@ -2265,22 +2427,27 @@
             document.getElementById('evaluation_editingId').value = record[0];
             document.getElementById('evaluation_internalRecordId').value = record[0];
             
-            // Check for duplicate record number after filling the form (but exclude current record)
-            setTimeout(() => {
-                checkDuplicateRecordNumber();
-            }, 100);
+            // Validate dates after loading
+            setTimeout(validateDatesOrder, 100);
         }
         
         async function updateEvaluationRecord() {
+            const recordId = document.getElementById('evaluation_editingId').value;
+            if (!recordId) {
+                showNotification('❌ لم يتم تحديد تقييم للتحديث', 'error');
+                return;
+            }
+
             // Check for duplicate record number first (excluding current record)
-            if (checkDuplicateRecordNumber()) {
+            const isDuplicate = await checkDuplicateRecordNumber();
+            if (isDuplicate) {
                 showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
                 return;
             }
 
-            const recordId = document.getElementById('evaluation_editingId').value;
-            if (!recordId) {
-                showNotification('❌ لم يتم تحديد تقييم للتحديث', 'error');
+            // Validate date order before proceeding
+            if (!validateDatesOrder() && dateValidationError) {
+                showNotification('❌ تواريخ التقييم غير مرتبة بشكل صحيح. يجب أن يكون: آخر تقييم (أقدم) ← التقييم الحالي ← التقييم القادم (أحدث)', 'warning');
                 return;
             }
 
@@ -2402,7 +2569,13 @@
 
             fields.forEach(f => {
                 const paramName = paramMap[f];
-                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+                const value = document.getElementById(f).value || '';
+                // For competency, ensure it's a number
+                if (f === 'evaluation_overallCompetency') {
+                    q += `${paramName}=${encodeURIComponent(parseFloat(value) || 0)}&`;
+                } else {
+                    q += `${paramName}=${encodeURIComponent(value)}&`;
+                }
             });
 
             q += `evaluationDate=${encodeURIComponent(evaluationDateDMY)}&`;
@@ -2456,6 +2629,12 @@
             document.getElementById('uploadStatus').textContent = '';
             document.getElementById('uploadStatus').className = 'upload-status';
             document.getElementById('fileInput').value = '';
+            
+            // Reset date warnings
+            document.getElementById('evaluationDateWarning').style.display = 'none';
+            document.getElementById('lastEvaluationDateWarning').style.display = 'none';
+            document.getElementById('nextEvaluationDateWarning').style.display = 'none';
+            dateValidationError = false;
             
             // Reset dates
             if (flatpickrInstances.evaluationDate) {
@@ -2561,7 +2740,7 @@
             }
         }
         
-        // ================ DETAILS VIEW FUNCTION ================
+        // ================ UPDATED DETAILS VIEW FUNCTION ================
         function viewDetails(recordId) {
             const record = evaluationRecords.find(r => 
                 String(r[0] || '').trim() === String(recordId).trim()
@@ -2589,23 +2768,25 @@
                 competencyText = 'منخفضة';
             }
             
-            // Create skills list
+            // Create skills list with BOTH skill name and score
             let skillsHTML = '';
             for (let i = 1; i <= 10; i++) {
                 const skillIndex = 4 + i * 2;
                 const scoreIndex = skillIndex + 1;
-                if (record[skillIndex] && record[skillIndex].toString().trim() !== '') {
+                const skillName = record[skillIndex] || '';
+                const skillScore = record[scoreIndex] || 0;
+                
+                if (skillName && skillName.toString().trim() !== '') {
                     skillsHTML += `
                         <div class="col-md-6 mb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">${escapeHtml(record[skillIndex])}</h6>
-                                    <div class="progress" style="height: 20px;">
-                                        <div class="progress-bar bg-${record[scoreIndex] >= 7 ? 'success' : record[scoreIndex] >= 5 ? 'warning' : 'danger'}" 
-                                             role="progressbar" 
-                                             style="width: ${record[scoreIndex] * 10}%">
-                                            ${record[scoreIndex]}/10
-                                        </div>
+                            <div class="skill-detail-card">
+                                <div class="skill-name">${escapeHtml(skillName)}</div>
+                                <div class="skill-score">التقييم: ${skillScore}/10</div>
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar bg-${skillScore >= 7 ? 'success' : skillScore >= 5 ? 'warning' : 'danger'}" 
+                                         role="progressbar" 
+                                         style="width: ${skillScore * 10}%">
+                                        ${skillScore}/10
                                     </div>
                                 </div>
                             </div>
