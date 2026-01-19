@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr Calendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -71,7 +74,7 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Home Button - تمت الإضافة */
+        /* Home Button */
         .home-button {
             position: absolute;
             top: 20px;
@@ -86,6 +89,7 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             z-index: 10;
+            white-space: nowrap;
         }
         
         .home-button:hover {
@@ -96,6 +100,96 @@
         
         .home-button i {
             margin-right: 5px;
+        }
+        
+        /* Header adjustments for home button */
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Ensure the date badge doesn't overlap with home button */
+        @media (min-width: 769px) {
+            .header-badge-container {
+                position: relative;
+                padding-left: 130px;
+            }
+        }
+        
+        /* Upload File Button Styles */
+        .upload-container {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .upload-container:hover {
+            background: #e9ecef;
+            border-color: var(--calibration-mgmt-color);
+        }
+        
+        .upload-container.dragover {
+            background: #e3f2fd;
+            border-color: var(--calibration-mgmt-color);
+            border-style: solid;
+        }
+        
+        .upload-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background: #5a6268;
+        }
+        
+        .upload-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        .upload-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+        
+        .upload-status.success {
+            color: var(--success-color);
+        }
+        
+        .upload-status.error {
+            color: var(--danger-color);
+        }
+        
+        .upload-status.loading {
+            color: var(--calibration-mgmt-color);
+        }
+        
+        .file-link-btn {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .file-link-btn:hover {
+            background: #219653;
+            color: white;
+            text-decoration: none;
         }
         
         /* Card Styles */
@@ -133,8 +227,8 @@
         }
         
         .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            border-color: var(--calibration-mgmt-color);
+            box-shadow: 0 0 0 0.25rem rgba(26, 188, 156, 0.25);
             background: white;
         }
         
@@ -150,19 +244,43 @@
             font-size: 0.9rem;
         }
         
-        /* Custom Date Input */
-        .date-input-group {
-            display: flex;
-            align-items: center;
+        /* Date Input Styling */
+        .date-input-wrapper {
+            position: relative;
         }
         
-        .date-input-group input {
-            text-align: center;
+        .date-input-wrapper .date-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--calibration-mgmt-color);
+            pointer-events: none;
         }
         
-        .date-separator {
-            padding: 0 5px;
-            font-weight: bold;
+        .date-input-wrapper .form-control-custom {
+            padding-right: 40px;
+            direction: ltr;
+            text-align: right;
+        }
+        
+        /* Flatpickr Customization */
+        .flatpickr-calendar {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+        
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+            background: var(--calibration-mgmt-color);
+            border-color: var(--calibration-mgmt-color);
+        }
+        
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .flatpickr-weekdays {
+            font-family: 'Cairo', sans-serif;
         }
         
         /* Table Styles */
@@ -175,12 +293,12 @@
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 0;
-            min-width: 1200px;
+            min-width: 1300px;
             width: 100%;
         }
         
         .table-custom thead th {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            background: linear-gradient(135deg, var(--calibration-mgmt-color), #16a085);
             color: white;
             border: none;
             padding: 15px 12px;
@@ -196,7 +314,7 @@
         }
         
         .table-custom tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.08);
+            background-color: rgba(26, 188, 156, 0.08);
         }
         
         .table-custom tbody td {
@@ -213,6 +331,12 @@
             border-radius: 6px;
             font-size: 0.8rem;
             min-width: 70px;
+        }
+        
+        /* Status Details Input */
+        .status-details {
+            margin-top: 8px;
+            display: none;
         }
         
         /* Notification Styles */
@@ -247,7 +371,7 @@
         }
         
         .notification.info {
-            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            background: linear-gradient(135deg, var(--calibration-mgmt-color), #16a085);
         }
         
         .notification.warning {
@@ -277,7 +401,7 @@
         }
         
         .form-section-title {
-            color: var(--primary-color);
+            color: var(--calibration-mgmt-color);
             font-weight: 700;
             margin-bottom: 12px;
             font-size: 1rem;
@@ -286,39 +410,49 @@
             gap: 8px;
         }
         
-        /* Scroll buttons */
-        .scroll-buttons {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
+        /* FIX FOR ENGLISH DATE DISPLAY IN RTL CONTEXT */
+        .english-date {
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: embed !important;
+            display: inline-block;
         }
         
-        .scroll-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--secondary-color);
-            color: white;
-            border: none;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-        }
-        
-        .scroll-btn:hover {
-            transform: scale(1.1);
-            background: var(--primary-color);
-        }
-        
-        /* Modal Custom */
-        .modal-header-custom {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
-            color: white;
-            border-radius: 15px 15px 0 0;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons .btn {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                margin: 1px;
+                min-width: 60px;
+            }
+            
+            .home-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+            
+            .main-header {
+                padding-top: 60px;
+            }
+            
+            .header-badge-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
+            
+            .table-custom {
+                min-width: 1100px;
+            }
         }
         
         /* Custom Scrollbar */
@@ -333,78 +467,111 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
+            background: var(--calibration-mgmt-color);
             border-radius: 10px;
         }
         
-        /* تنسيق مجموعة حقول التاريخ */
-        .date-input-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--calibration-mgmt-color), #16a085);
+            color: white;
+            border-radius: 15px 15px 0 0;
         }
         
-        .date-input-group .form-control-custom {
-            text-align: center;
-            padding: 0.375rem 0.25rem;
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        /* Modal Fix - Prevent background scroll */
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
+        }
+        
+        /* Frequency Input Group */
+        .frequency-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .frequency-input {
             flex: 1;
         }
         
-        .date-input-group .date-day {
-            max-width: 60px;
+        .frequency-options {
+            display: flex;
+            gap: 5px;
         }
         
-        .date-input-group .date-month {
-            max-width: 60px;
+        .frequency-btn {
+            padding: 5px 10px;
+            background: #e9ecef;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
         }
         
-        .date-input-group .date-year {
-            max-width: 80px;
+        .frequency-btn:hover {
+            background: #dee2e6;
         }
         
-        .date-input-group .date-separator {
-            font-size: 1.2rem;
+        .frequency-btn.active {
+            background: var(--calibration-mgmt-color);
+            color: white;
+            border-color: var(--calibration-mgmt-color);
+        }
+        
+        /* Status Dropdown Styling */
+        .status-select {
+            position: relative;
+        }
+        
+        .status-select select {
+            appearance: none;
+            padding-right: 40px;
+        }
+        
+        .status-select:after {
+            content: '\f0d7';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             color: #6c757d;
-            font-weight: bold;
-            min-width: 10px;
+            pointer-events: none;
         }
         
-        /* تنسيق placeholders داخل حقول التاريخ */
-        .date-input-group input::placeholder {
-            color: #adb5bd;
-            text-align: center;
-            font-size: 0.9rem;
+        /* Autofill dropdown styles */
+        .autofill-options {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            display: none;
         }
         
-        /* Responsive - تم تحديثه ليتضمن تعديلات زر العودة */
-        @media (max-width: 768px) {
-            .main-header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .action-buttons .btn {
-                padding: 4px 8px;
-                font-size: 0.75rem;
-                margin: 1px;
-                min-width: 60px;
-            }
-            
-            .table-custom {
-                min-width: 1000px;
-            }
-            
-            /* تعديلات زر العودة للرئيسية */
-            .home-button {
-                position: relative;
-                top: 0;
-                left: 0;
-                margin-bottom: 15px;
-                display: inline-block;
-            }
-            
-            .main-header {
-                padding-top: 60px;
-            }
+        .autofill-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .autofill-option:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .autofill-container {
+            position: relative;
         }
     </style>
 </head>
@@ -412,38 +579,30 @@
     <!-- Notification Container -->
     <div id="notificationContainer"></div>
     
-    <!-- Scroll Buttons -->
-    <div class="scroll-buttons">
-        <button class="scroll-btn mb-2" onclick="scrollTable('left')" title="تمرير لليسار">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="scroll-btn" onclick="scrollTable('right')" title="تمرير لليمين">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-    
     <!-- Main Container -->
     <div class="container-fluid main-container">
-        <!-- Main Header - تمت إضافة زر العودة هنا -->
+        <!-- Main Header -->
         <div class="main-header fade-in">
-            <!-- زر العودة للرئيسية - تمت إضافته -->
+            <!-- Return to Home Button -->
             <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
             
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-tools me-2"></i> نظام إدارة سجلات المعايرة - معمل كواليتك إنترناشيونال</h1>
-                    <p class="lead mb-0">نظام متكامل لإدارة سجلات المعايرة والأجهزة والمواعيد والشهادات والاعتمادات</p>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <div class="header-badge d-inline-block me-3">
-                        <i class="fas fa-database me-2"></i>
-                        <span id="totalRecords">0</span> سجلات
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1><i class="fas fa-tools me-2"></i> نظام إدارة سجلات المعايرة - معمل كواليتك إنترناشيونال</h1>
+                        <p class="lead mb-0">نظام متكامل لإدارة سجلات المعايرة والأجهزة والمواعيد والشهادات والاعتمادات</p>
                     </div>
-                    <div class="header-badge d-inline-block">
-                        <i class="fas fa-calendar me-2"></i>
-                        <span id="currentDate">--/--/----</span>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
+                        <div class="header-badge d-inline-block me-3">
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> سجلات
+                        </div>
+                        <div class="header-badge d-inline-block">
+                            <i class="fas fa-calendar me-2"></i>
+                            <span id="currentDate">--/--/----</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -460,106 +619,204 @@
                         </div>
                         <div class="card-body">
                             <form id="calibrationMgmtForm">
-                                <div class="row">
-                                    <div class="col-md-4 mb-2">
-                                        <label class="form-label-custom">رقم الشهادة *</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_certificateNumber" placeholder="رقم الشهادة" required>
-                                    </div>
-                                    <div class="col-md-4 mb-2">
-                                        <label class="form-label-custom">رقم الجهاز</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_deviceNumber" placeholder="رقم الجهاز">
-                                    </div>
-                                    <div class="col-md-4 mb-2">
-                                        <label class="form-label-custom">اسم الجهاز *</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_deviceName" placeholder="اسم الجهاز" required>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">تاريخ المعايرة</label>
-                                        <div class="date-input-group">
-                                            <input type="number" class="form-control form-control-custom text-center" id="calMgmt_calibrationDate_day" placeholder="يوم" min="1" max="31">
-                                            <span class="date-separator">/</span>
-                                            <input type="number" class="form-control form-control-custom text-center" id="calMgmt_calibrationDate_month" placeholder="شهر" min="1" max="12">
-                                            <span class="date-separator">/</span>
-                                            <input type="number" class="form-control form-control-custom text-center" id="calMgmt_calibrationDate_year" placeholder="سنة" min="1900" max="2100">
+                                <!-- File Upload Section -->
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="upload-container" id="uploadContainer">
+                                            <h6><i class="fas fa-cloud-upload-alt me-2"></i>رفع شهادة المعايرة (PDF أو صورة)</h6>
+                                            <p class="text-muted mb-2" style="font-size: 0.85rem;">الحد الأقصى لحجم الملف: 10 ميجابايت. الأنواع المسموحة: PNG, JPG, JPEG, PDF</p>
+                                            
+                                            <input type="file" id="fileInput" 
+                                                   accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                                                   style="display: none">
+                                            <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                                                <i class="fas fa-folder-open me-1"></i> اختر ملف للرفع
+                                            </button>
+                                            <button type="button" class="upload-btn" onclick="uploadFile()" id="uploadBtn">
+                                                <i class="fas fa-upload me-1"></i> رفع الملف
+                                            </button>
+                                            
+                                            <div class="upload-status" id="uploadStatus"></div>
+                                            
+                                            <div id="uploadedFileInfo" style="display: none; margin-top: 10px;">
+                                                <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                                    <div>
+                                                        <i class="fas fa-file me-2"></i>
+                                                        <span id="uploadedFileName"></span>
+                                                        <span class="badge bg-success ms-2" id="uploadedFileSize"></span>
+                                                    </div>
+                                                    <a href="#" target="_blank" class="file-link-btn" id="uploadedFileLink" style="display: none;">
+                                                        <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">تاريخ الاستحقاق</label>
-                                        <div class="date-input-group">
-                                            <input type="number" class="form-control form-control-custom text-center" id="calMgmt_dueDate_day" placeholder="يوم" min="1" max="31">
-                                            <span class="date-separator">/</span>
-                                            <input type="number" class="form-control form-control-custom text-center" id="calMgmt_dueDate_month" placeholder="شهر" min="1" max="12">
-                                            <span class="date-separator">/</span>
-                                            <input type="number" class="form-control form-control-custom text-center" id="calMgmt_dueDate_year" placeholder="سنة" min="1900" max="2100">
+                                </div>
+                                
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-info-circle"></i> المعلومات الأساسية
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">رقم الشهادة *</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_certificateNumber" placeholder="رقم الشهادة" required oninput="checkExistingCertificate()">
+                                        </div>
+                                        <div class="col-md-3 mb-2 autofill-container">
+                                            <label class="form-label-custom">العميل</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_client" placeholder="اسم العميل" list="clientList" oninput="filterClients()" onfocus="showClientDropdown()" onblur="hideClientDropdown()">
+                                            <datalist id="clientList"></datalist>
+                                            <div class="autofill-options" id="clientOptions"></div>
+                                        </div>
+                                        <div class="col-md-3 mb-2 autofill-container">
+                                            <label class="form-label-custom">رقم الجهاز *</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_deviceNumber" placeholder="رقم الجهاز" required list="deviceNumberList" oninput="filterDeviceNumbers()" onfocus="showDeviceNumberDropdown()" onblur="hideDeviceNumberDropdown()" onchange="autofillFromDevice()">
+                                            <datalist id="deviceNumberList"></datalist>
+                                            <div class="autofill-options" id="deviceNumberOptions"></div>
+                                        </div>
+                                        <div class="col-md-3 mb-2 autofill-container">
+                                            <label class="form-label-custom">اسم الجهاز *</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_deviceName" placeholder="اسم الجهاز" required list="deviceNameList" oninput="filterDeviceNames()" onfocus="showDeviceNameDropdown()" onblur="hideDeviceNameDropdown()" onchange="autofillFromDevice()">
+                                            <datalist id="deviceNameList"></datalist>
+                                            <div class="autofill-options" id="deviceNameOptions"></div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">مختبر المعايرة</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_calibrationLab" placeholder="مختبر المعايرة">
+                                </div>
+                                
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-calendar-alt"></i> مواعيد المعايرة
                                     </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">رقم الاعتماد (ISO 17025)</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_accreditationNumber" placeholder="رقم الاعتماد">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label-custom">تاريخ المعايرة</label>
+                                            <div class="date-input-wrapper">
+                                                <input type="text" class="form-control form-control-custom date-picker" id="calMgmt_calibrationDate" placeholder="يوم/شهر/سنة" readonly>
+                                                <i class="fas fa-calendar-alt date-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label-custom">التكرار (بالأيام)</label>
+                                            <div class="frequency-group">
+                                                <div class="frequency-input">
+                                                    <input type="number" class="form-control form-control-custom" id="calMgmt_frequency" placeholder="عدد الأيام" min="1" value="365" onchange="calculateDueDate()">
+                                                </div>
+                                                <div class="frequency-options">
+                                                    <button type="button" class="frequency-btn active" onclick="setFrequency(365)">365</button>
+                                                    <button type="button" class="frequency-btn" onclick="setFrequency(180)">180</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label-custom">تاريخ الاستحقاق</label>
+                                            <div class="date-input-wrapper">
+                                                <input type="text" class="form-control form-control-custom date-picker" id="calMgmt_dueDate" placeholder="يوم/شهر/سنة" readonly>
+                                                <i class="fas fa-calendar-alt date-icon"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="row">
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">قابلية التتبع إلى</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_traceability" placeholder="قابلية التتبع إلى">
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-flask"></i> تفاصيل المعايرة
                                     </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">عدم اليقين</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_uncertainty" placeholder="عدم اليقين">
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">الحالة عند الاستلام</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_statusBefore" placeholder="الحالة عند الاستلام">
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">الحالة بعد المعايرة</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_statusAfter" placeholder="الحالة بعد المعايرة">
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">موقع الملف</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_fileLocation" placeholder="موقع الملف (Google Drive)">
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">الفني المسؤول</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_technician" placeholder="الفني المسؤول">
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">تكلفة المعايرة</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_calibrationCost" placeholder="تكلفة المعايرة">
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">مدة التوقف</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_downtime" placeholder="مدة التوقف">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">مختبر المعايرة</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_calibrationLab" placeholder="مختبر المعايرة">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">رقم الاعتماد (ISO 17025)</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_accreditationNumber" placeholder="رقم الاعتماد">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">قابلية التتبع إلى</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_traceability" placeholder="قابلية التتبع إلى">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">عدم اليقين</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_uncertainty" placeholder="عدم اليقين">
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="row">
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">طريقة المعايرة</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_calibrationMethod" placeholder="طريقة المعايرة">
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-clipboard-check"></i> حالة الجهاز
                                     </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">مراجعة الجودة</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_qualityReview" placeholder="مراجعة الجودة">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">الحالة عند الاستلام</label>
+                                            <div class="status-select">
+                                                <select class="form-select form-select-custom" id="calMgmt_statusBefore" onchange="toggleStatusDetails('before')">
+                                                    <option value="سليم">سليم</option>
+                                                    <option value="معيب">معيب</option>
+                                                </select>
+                                            </div>
+                                            <div class="status-details" id="statusBeforeDetails">
+                                                <input type="text" class="form-control form-control-custom mt-2" id="calMgmt_statusBeforeDetails" placeholder="تفاصيل الحالة عند الاستلام">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">الحالة بعد المعايرة</label>
+                                            <div class="status-select">
+                                                <select class="form-select form-select-custom" id="calMgmt_statusAfter" onchange="toggleStatusDetails('after')">
+                                                    <option value="سليم">سليم</option>
+                                                    <option value="معيب">معيب</option>
+                                                </select>
+                                            </div>
+                                            <div class="status-details" id="statusAfterDetails">
+                                                <input type="text" class="form-control form-control-custom mt-2" id="calMgmt_statusAfterDetails" placeholder="تفاصيل الحالة بعد المعايرة">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">الفني المسؤول</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_technician" placeholder="الفني المسؤول" list="technicianList">
+                                            <datalist id="technicianList"></datalist>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">مراجعة الجودة</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_qualityReview" placeholder="مراجعة الجودة" list="qualityReviewerList">
+                                            <datalist id="qualityReviewerList"></datalist>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">المراجع</label>
-                                        <input type="text" class="form-control form-control-custom" id="calMgmt_reviewer" placeholder="المراجع">
+                                </div>
+                                
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-money-bill-wave"></i> معلومات إضافية
                                     </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">الملاحظات</label>
-                                        <textarea class="form-control form-textarea-custom" id="calMgmt_notes" placeholder="الملاحظات"></textarea>
+                                    <div class="row">
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">تكلفة المعايرة</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_calibrationCost" placeholder="تكلفة المعايرة">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">مدة التوقف</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_downtime" placeholder="مدة التوقف">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">طريقة المعايرة</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_calibrationMethod" placeholder="طريقة المعايرة">
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <label class="form-label-custom">المراجع</label>
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_reviewer" placeholder="المراجع" list="reviewerList">
+                                            <datalist id="reviewerList"></datalist>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <div class="form-section-title">
+                                        <i class="fas fa-sticky-note"></i> ملاحظات
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <textarea class="form-control form-textarea-custom" id="calMgmt_notes" placeholder="الملاحظات الإضافية" rows="3"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -579,6 +836,8 @@
                                     </div>
                                 </div>
                                 <input type="hidden" id="calibrationMgmt_editingId">
+                                <input type="hidden" id="calibrationMgmt_internalRecordId">
+                                <input type="hidden" id="calibrationMgmt_fileLink">
                             </form>
                         </div>
                     </div>
@@ -628,19 +887,19 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة سجلات المعايرة 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 1.0</span>
+                    <span id="appVersion" class="text-info">الإصدار 2.0 (مع رفع الملفات)</span>
                 </p>
             </div>
         </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title">تأكيد الحذف</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
@@ -648,6 +907,7 @@
                         <h5 class="alert-heading">تحذير!</h5>
                         <p>هل أنت متأكد من حذف هذا السجل؟ هذا الإجراء لا يمكن التراجع عنه.</p>
                         <hr>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">إدارة المعايرة</span></p>
                         <p class="mb-0"><strong>رقم الشهادة:</strong> <span id="deleteRecordId">غير معروف</span></p>
                         <p class="mb-0"><strong>اسم الجهاز:</strong> <span id="deleteRecordName">غير معروف</span></p>
                     </div>
@@ -664,100 +924,452 @@
         </div>
     </div>
 
-    <!-- Details Modal (Dynamic) -->
-    <div id="dynamicModalContainer"></div>
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تفاصيل سجل المعايرة</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr Calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
     
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const CALIBRATION_MGMT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxFjbZUmkSTYseIG5L_i49f7s-xNduqMxSVQzKBRoAI-zw1vMD9q71VSCtR0JPHQacT/exec";
+        const CALIBRATION_MGMT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzi3VyWxkd0HCGXDyt21grQ9IjSxLz4ooCSvvhZRbCcuynggxZOaKrq3J5RRG9VzkaH2w/exec";
+        const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
+        const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxHkCAAlvV2mSDofBL0TfZaSWQNWlsgpBdrue0Djny-mdZEqxpSzFsNP9NKYO6YdxUm/exec";
         
         // ================ GLOBAL VARIABLES ================
         let calibrationMgmtRecords = [];
+        let employeeRecords = [];
         let deleteRecordId = '';
         let deleteRecordName = '';
+        let flatpickrInstances = {};
+        let deleteModalInstance = null;
+        let detailsModalInstance = null;
+        let selectedFile = null;
+        let uploadedFileUrl = '';
+        let uniqueClients = new Set();
+        let uniqueDeviceNumbers = new Set();
+        let uniqueDeviceNames = new Set();
+        let filteredRecords = [];
+        
+        // ================ NEW DATE SYSTEM WITH D, M, Y SIGNS ================
+        function formatDateToDMY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `D${day} M${month} Y${year}`;
+        }
+        
+        function parseDateFromDMY(dmyString) {
+            if (!dmyString) return null;
+            
+            dmyString = dmyString.toString().trim();
+            
+            const match = dmyString.match(/^D(\d+)\s+M(\d+)\s+Y(\d+)$/);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1;
+                const year = parseInt(match[3], 10);
+                
+                if (day < 1 || day > 31) return null;
+                if (month < 0 || month > 11) return null;
+                if (year < 1900 || year > 2100) return null;
+                
+                const dateObj = new Date(year, month, day);
+                if (dateObj.getDate() !== day || dateObj.getMonth() !== month || dateObj.getFullYear() !== year) {
+                    return null;
+                }
+                
+                return dateObj;
+            }
+            
+            return null;
+        }
+        
+        function formatDMYForDisplay(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return `<span class="english-date">${formatDateToDayMonthYear(regularDate)}</span>`;
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return `<span class="english-date">${dmyString}</span>`;
+            }
+            
+            const formattedDate = formatDateToDayMonthYear(dateObj);
+            return `<span class="english-date">${formattedDate}</span>`;
+        }
+        
+        function formatDateToDayMonthYear(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            
+            const day = date.getDate();
+            const monthIndex = date.getMonth();
+            const year = date.getFullYear();
+            
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            return `${day} ${monthNames[monthIndex]} ${year}`;
+        }
+        
+        function formatDMYForInput(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return formatDateToDDMMYYYY(regularDate);
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return '';
+            }
+            
+            return formatDateToDDMMYYYY(dateObj);
+        }
+        
+        function validateDMYDate(dmyString) {
+            if (!dmyString) return true;
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                try {
+                    const regularDate = new Date(dmyString);
+                    return !isNaN(regularDate.getTime());
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // ================ FILE UPLOAD FUNCTIONS ================
+        function initializeFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadContainer = document.getElementById('uploadContainer');
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            
+            uploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.add('dragover');
+            });
+            
+            uploadContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+            });
+            
+            uploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+        }
+        
+        function handleFileSelect(file) {
+            const allowedTypes = [
+                "image/png",
+                "image/jpeg",
+                "application/pdf"
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                showNotification("❌ فقط ملفات PNG, JPG, JPEG أو PDF مسموحة", "error");
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification("❌ حجم الملف كبير جداً (الحد الأقصى 10MB)", "error");
+                return;
+            }
+            
+            selectedFile = file;
+            
+            document.getElementById('uploadedFileName').textContent = file.name;
+            document.getElementById('uploadedFileSize').textContent = formatFileSize(file.size);
+            document.getElementById('uploadedFileInfo').style.display = 'block';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            
+            const uploadStatus = document.getElementById('uploadStatus');
+            uploadStatus.textContent = '';
+            uploadStatus.className = 'upload-status';
+            
+            showNotification(`✅ تم اختيار الملف: ${file.name}`, 'success', 3000);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' بايت';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
+            else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
+        }
+        
+        async function uploadFile() {
+            if (!selectedFile) {
+                showNotification("⚠️ يرجى اختيار ملف أولاً", "warning");
+                return;
+            }
+            
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadStatus = document.getElementById('uploadStatus');
+            
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الرفع...';
+            uploadStatus.textContent = 'جاري رفع الملف... ⏳';
+            uploadStatus.className = 'upload-status loading';
+            
+            try {
+                const reader = new FileReader();
+                
+                reader.onload = async function() {
+                    const base64 = reader.result.split(",")[1];
+                    
+                    const response = await fetch(UPLOAD_WEB_APP_URL, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            fileName: selectedFile.name,
+                            mimeType: selectedFile.type,
+                            fileData: base64
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        uploadedFileUrl = data.url;
+                        
+                        document.getElementById('calibrationMgmt_fileLink').value = uploadedFileUrl;
+                        
+                        uploadStatus.textContent = '✅ تم رفع الملف بنجاح';
+                        uploadStatus.className = 'upload-status success';
+                        
+                        const fileLinkBtn = document.getElementById('uploadedFileLink');
+                        fileLinkBtn.href = uploadedFileUrl;
+                        fileLinkBtn.style.display = 'inline-block';
+                        
+                        showNotification(`✅ تم رفع الملف بنجاح: ${selectedFile.name}`, 'success');
+                    } else {
+                        uploadStatus.textContent = '❌ فشل في رفع الملف: ' + (data.message || 'خطأ غير معروف');
+                        uploadStatus.className = 'upload-status error';
+                        showNotification(`❌ فشل في رفع الملف: ${data.message || 'خطأ غير معروف'}`, 'error');
+                    }
+                    
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                };
+                
+                reader.onerror = function() {
+                    uploadStatus.textContent = '❌ خطأ في قراءة الملف';
+                    uploadStatus.className = 'upload-status error';
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                    showNotification('❌ خطأ في قراءة الملف', 'error');
+                };
+                
+                reader.readAsDataURL(selectedFile);
+                
+            } catch (error) {
+                uploadStatus.textContent = '❌ فشل في رفع الملف: ' + error;
+                uploadStatus.className = 'upload-status error';
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                showNotification('❌ فشل في رفع الملف: ' + error, 'error');
+            }
+        }
+        
+        // ================ FREQUENCY AND DATE FUNCTIONS ================
+        function setFrequency(days) {
+            const frequencyInput = document.getElementById('calMgmt_frequency');
+            frequencyInput.value = days;
+            
+            // Update active button
+            document.querySelectorAll('.frequency-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === days) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            calculateDueDate();
+        }
+        
+        function calculateDueDate() {
+            const calibrationDateInput = document.getElementById('calMgmt_calibrationDate');
+            const frequencyInput = document.getElementById('calMgmt_frequency');
+            const dueDateInput = document.getElementById('calMgmt_dueDate');
+            
+            if (!calibrationDateInput.value || !frequencyInput.value) return;
+            
+            try {
+                const calibrationDate = parseDateDDMMYYYY(calibrationDateInput.value);
+                if (!calibrationDate) return;
+                
+                const frequency = parseInt(frequencyInput.value) || 365;
+                const dueDate = new Date(calibrationDate);
+                dueDate.setDate(dueDate.getDate() + frequency);
+                
+                const formattedDueDate = formatDateToDDMMYYYY(dueDate);
+                dueDateInput.value = formattedDueDate;
+                
+                if (flatpickrInstances.dueDate) {
+                    flatpickrInstances.dueDate.setDate(dueDate, false);
+                }
+            } catch (e) {
+                console.error('Error calculating due date:', e);
+            }
+        }
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current date and year
             setCurrentDate();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // Load calibration management records
-            loadCalibrationMgmtData();
+            deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
+            
+            initializeDatePickers();
+            initializeFileUpload();
+            
+            setTimeout(() => {
+                loadCalibrationMgmtData();
+                loadEmployeeData();
+            }, 500);
+            
+            document.getElementById('deleteModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            });
+            
+            document.getElementById('detailsModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            });
+            
+            // Add event listener for certificate number to auto-fill
+            document.getElementById('calMgmt_certificateNumber').addEventListener('change', checkExistingCertificate);
         });
         
-        // ================ DATE FORMAT FUNCTIONS ================
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            try {
-                // Handle dd/mm/yyyy format
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        const day = parts[0].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[2];
-                        return `${day}/${month}/${year}`;
+        // ================ DATE PICKER INITIALIZATION ================
+        function initializeDatePickers() {
+            if (flatpickrInstances.calibrationDate) flatpickrInstances.calibrationDate.destroy();
+            if (flatpickrInstances.dueDate) flatpickrInstances.dueDate.destroy();
+            
+            const dateOptions = {
+                locale: 'ar',
+                dateFormat: "d/m/Y",
+                altFormat: "d/m/Y",
+                altInput: false,
+                allowInput: true,
+                clickOpens: true,
+                position: 'auto',
+                monthSelectorType: 'static',
+                yearSelectorType: 'scrolling',
+                prevArrow: '<i class="fas fa-chevron-right"></i>',
+                nextArrow: '<i class="fas fa-chevron-left"></i>',
+                weekNumbers: false,
+                disableMobile: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (instance.input.id === 'calMgmt_calibrationDate') {
+                        calculateDueDate();
+                    }
+                    
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const formattedDate = formatDateToDDMMYYYY(date);
+                        instance.input.value = formattedDate;
                     }
                 }
-                
-                // Handle yyyy-mm-dd format
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        const day = parts[2].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[0];
-                        return `${day}/${month}/${year}`;
-                    }
-                }
-                
-                return dateString;
-            } catch (e) {
-                return dateString;
+            };
+            
+            flatpickrInstances.calibrationDate = flatpickr('#calMgmt_calibrationDate', dateOptions);
+            flatpickrInstances.dueDate = flatpickr('#calMgmt_dueDate', dateOptions);
+            
+            if (flatpickrInstances.calibrationDate) flatpickrInstances.calibrationDate.set('locale', 'ar');
+            if (flatpickrInstances.dueDate) flatpickrInstances.dueDate.set('locale', 'ar');
+            
+            // Set calibration date to current date by default
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            document.getElementById('calMgmt_calibrationDate').value = todayFormatted;
+            if (flatpickrInstances.calibrationDate) {
+                flatpickrInstances.calibrationDate.setDate(today, false);
             }
+            
+            // Calculate initial due date
+            calculateDueDate();
         }
         
-        function formatDateForInput(dateString) {
-            if (!dateString) return {day: '', month: '', year: ''};
-            try {
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[0],
-                            month: parts[1],
-                            year: parts[2]
-                        };
-                    }
-                }
-                
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[2],
-                            month: parts[1],
-                            year: parts[0]
-                        };
-                    }
-                }
-                
-                return {day: '', month: '', year: ''};
-            } catch (e) {
-                return {day: '', month: '', year: ''};
-            }
+        // ================ DATE FORMATTING FUNCTIONS ================
+        function formatDateToDDMMYYYY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
         }
         
-        function getDateString(day, month, year) {
-            if (!day || !month || !year) return '';
-            const formattedDay = day.toString().padStart(2, '0');
-            const formattedMonth = month.toString().padStart(2, '0');
-            return `${formattedDay}/${formattedMonth}/${year}`;
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
+            
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    if (day < 1 || day > 31) return null;
+                    if (month < 0 || month > 11) return null;
+                    if (year < 1900 || year > 2100) return null;
+                    
+                    return new Date(year, month, day);
+                }
+            }
+            
+            return null;
         }
         
         function setCurrentDate() {
@@ -768,7 +1380,7 @@
             document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
         }
         
-        // ================ NOTIFICATION FUNCTIONS ================
+        // ================ NOTIFICATION SYSTEM ================
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notificationContainer');
             
@@ -823,64 +1435,28 @@
                 .replace(/'/g, "&#039;");
         }
         
-        function scrollTable(direction) {
-            const tableContainer = document.querySelector('#calibrationMgmtTableContainer .table-responsive');
-            
-            if (tableContainer) {
-                const scrollAmount = 300;
-                if (direction === 'left') {
-                    tableContainer.scrollLeft -= scrollAmount;
-                } else {
-                    tableContainer.scrollLeft += scrollAmount;
-                }
-            }
-        }
-        
-        // ================ API COMMUNICATION FUNCTIONS ================
-        function jsonp(url) {
+        // ================ JSONP FUNCTION ================
+        function jsonp(url, callbackParam = 'callback') {
             return new Promise((resolve, reject) => {
-                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
-                const timeout = 60000;
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
                 
-                const timeoutId = setTimeout(() => {
-                    cleanup();
-                    reject(new Error('Request timeout'));
-                }, timeout);
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + callbackParam + '=' + callbackName;
                 
-                function cleanup() {
-                    clearTimeout(timeoutId);
+                window[callbackName] = function(data) {
                     delete window[callbackName];
-                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
-                    if (script) script.remove();
-                }
-                
-                window[callbackName] = function(response) {
-                    cleanup();
-                    resolve(response);
+                    document.body.removeChild(script);
+                    resolve(data);
                 };
                 
-                const script = document.createElement('script');
-                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
-                script.setAttribute('data-callback', callbackName);
                 script.onerror = function() {
-                    cleanup();
-                    reject(new Error('Failed to load script'));
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
                 };
                 
                 document.body.appendChild(script);
             });
-        }
-        
-        function callGoogleScript(scriptUrl, action, data = {}) {
-            let url = scriptUrl + '?action=' + action;
-            
-            for (const key in data) {
-                if (data[key] !== undefined && data[key] !== null) {
-                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
-                }
-            }
-            
-            return jsonp(url);
         }
         
         // ================ VALIDATION HELPER ================
@@ -895,7 +1471,555 @@
                     field.classList.remove('is-invalid');
                 }
             });
+            
+            const calibrationDate = document.getElementById('calMgmt_calibrationDate').value;
+            const dueDate = document.getElementById('calMgmt_dueDate').value;
+            
+            if (calibrationDate && !validateDate(calibrationDate)) {
+                document.getElementById('calMgmt_calibrationDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ المعايرة غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('calMgmt_calibrationDate').classList.remove('is-invalid');
+            }
+            
+            if (dueDate && !validateDate(dueDate)) {
+                document.getElementById('calMgmt_dueDate').classList.add('is-invalid');
+                showNotification('❌ تاريخ الاستحقاق غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('calMgmt_dueDate').classList.remove('is-invalid');
+            }
+            
             return isValid;
+        }
+        
+        function validateDate(dateString) {
+            if (!dateString) return true;
+            
+            if (validateDMYDate(dateString)) {
+                return true;
+            }
+            
+            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                const match = dateString.match(ddMMyyyyRegex);
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
+                
+                if (year < 1900 || year > 2100) return false;
+                if (month < 1 || month > 12) return false;
+                if (day < 1 || day > 31) return false;
+                
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
+                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            return false;
+        }
+        
+        // ================ EMPLOYEE DATA FUNCTIONS ================
+        async function loadEmployeeData() {
+            try {
+                const res = await jsonp(`${EMPLOYEE_SCRIPT_URL}?action=getAll`);
+                
+                if (res && res.status === 'success') {
+                    let records = [];
+                    
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (Array.isArray(res)) {
+                        records = res;
+                    }
+                    
+                    employeeRecords = records;
+                    populateEmployeeDatalists();
+                } else {
+                    console.log('Failed to load employee data');
+                }
+            } catch (error) {
+                console.error('Error loading employee data:', error);
+            }
+        }
+        
+        function populateEmployeeDatalists() {
+            const technicianList = document.getElementById('technicianList');
+            const qualityReviewerList = document.getElementById('qualityReviewerList');
+            const reviewerList = document.getElementById('reviewerList');
+            
+            technicianList.innerHTML = '';
+            qualityReviewerList.innerHTML = '';
+            reviewerList.innerHTML = '';
+            
+            const names = new Set();
+            
+            employeeRecords.forEach(record => {
+                if (record && record.length > 1 && record[1]) {
+                    names.add(String(record[1]).trim());
+                }
+            });
+            
+            names.forEach(name => {
+                const option1 = document.createElement('option');
+                option1.value = name;
+                technicianList.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = name;
+                qualityReviewerList.appendChild(option2);
+                
+                const option3 = document.createElement('option');
+                option3.value = name;
+                reviewerList.appendChild(option3);
+            });
+        }
+        
+        // ================ STATUS DETAILS FUNCTIONS ================
+        function toggleStatusDetails(type) {
+            const statusSelect = document.getElementById(`calMgmt_status${type === 'before' ? 'Before' : 'After'}`);
+            const detailsDiv = document.getElementById(`status${type === 'before' ? 'Before' : 'After'}Details`);
+            
+            if (statusSelect.value === 'معيب') {
+                detailsDiv.style.display = 'block';
+            } else {
+                detailsDiv.style.display = 'none';
+            }
+        }
+        
+        // ================ AUTOFILL AND FILTER FUNCTIONS ================
+        function updateUniqueValues() {
+            uniqueClients.clear();
+            uniqueDeviceNumbers.clear();
+            uniqueDeviceNames.clear();
+            
+            calibrationMgmtRecords.forEach(record => {
+                // Column mapping correction based on Google Apps Script:
+                // 0: ID, 1: certificateNumber, 2: client, 3: deviceNumber, 4: deviceName,
+                // 5: calibrationDate, 6: frequency, 7: dueDate, 8: calibrationLab,
+                // 9: accreditationNumber, 10: traceability, 11: uncertainty,
+                // 12: statusBefore, 13: statusAfter, 14: fileLocation,
+                // 15: notes, 16: technician, 17: calibrationCost,
+                // 18: downtime, 19: calibrationMethod, 20: qualityReview, 21: reviewer
+                
+                if (record[2] && record[2].toString().trim() !== '') {
+                    uniqueClients.add(record[2].toString().trim());
+                }
+                
+                if (record[3] && record[3].toString().trim() !== '') {
+                    uniqueDeviceNumbers.add(record[3].toString().trim());
+                }
+                
+                if (record[4] && record[4].toString().trim() !== '') {
+                    uniqueDeviceNames.add(record[4].toString().trim());
+                }
+            });
+            
+            // Populate client datalist
+            const clientList = document.getElementById('clientList');
+            clientList.innerHTML = '';
+            uniqueClients.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client;
+                clientList.appendChild(option);
+            });
+            
+            // Populate device number datalist
+            const deviceNumberList = document.getElementById('deviceNumberList');
+            deviceNumberList.innerHTML = '';
+            uniqueDeviceNumbers.forEach(deviceNumber => {
+                const option = document.createElement('option');
+                option.value = deviceNumber;
+                deviceNumberList.appendChild(option);
+            });
+            
+            // Populate device name datalist
+            const deviceNameList = document.getElementById('deviceNameList');
+            deviceNameList.innerHTML = '';
+            uniqueDeviceNames.forEach(deviceName => {
+                const option = document.createElement('option');
+                option.value = deviceName;
+                deviceNameList.appendChild(option);
+            });
+        }
+        
+        function showClientDropdown() {
+            const input = document.getElementById('calMgmt_client');
+            const optionsDiv = document.getElementById('clientOptions');
+            
+            if (uniqueClients.size === 0) return;
+            
+            optionsDiv.innerHTML = '';
+            uniqueClients.forEach(client => {
+                const div = document.createElement('div');
+                div.className = 'autofill-option';
+                div.textContent = client;
+                div.onclick = function() {
+                    input.value = client;
+                    optionsDiv.style.display = 'none';
+                    filterDevicesByClient();
+                };
+                optionsDiv.appendChild(div);
+            });
+            
+            optionsDiv.style.display = 'block';
+        }
+        
+        function hideClientDropdown() {
+            setTimeout(() => {
+                document.getElementById('clientOptions').style.display = 'none';
+            }, 200);
+        }
+        
+        function filterClients() {
+            const input = document.getElementById('calMgmt_client');
+            const filter = input.value.toLowerCase();
+            const optionsDiv = document.getElementById('clientOptions');
+            
+            optionsDiv.innerHTML = '';
+            
+            Array.from(uniqueClients)
+                .filter(client => client.toLowerCase().includes(filter))
+                .forEach(client => {
+                    const div = document.createElement('div');
+                    div.className = 'autofill-option';
+                    div.textContent = client;
+                    div.onclick = function() {
+                        input.value = client;
+                        optionsDiv.style.display = 'none';
+                        filterDevicesByClient();
+                    };
+                    optionsDiv.appendChild(div);
+                });
+            
+            if (optionsDiv.children.length > 0) {
+                optionsDiv.style.display = 'block';
+            } else {
+                optionsDiv.style.display = 'none';
+            }
+        }
+        
+        function filterDevicesByClient() {
+            const client = document.getElementById('calMgmt_client').value.trim();
+            if (!client) return;
+            
+            // Filter records by client
+            filteredRecords = calibrationMgmtRecords.filter(record => 
+                record[2] && record[2].toString().trim() === client
+            );
+            
+            // Update device number and name datalists
+            const deviceNumberList = document.getElementById('deviceNumberList');
+            const deviceNameList = document.getElementById('deviceNameList');
+            
+            deviceNumberList.innerHTML = '';
+            deviceNameList.innerHTML = '';
+            
+            const filteredDeviceNumbers = new Set();
+            const filteredDeviceNames = new Set();
+            
+            filteredRecords.forEach(record => {
+                if (record[3] && record[3].toString().trim() !== '') {
+                    filteredDeviceNumbers.add(record[3].toString().trim());
+                }
+                if (record[4] && record[4].toString().trim() !== '') {
+                    filteredDeviceNames.add(record[4].toString().trim());
+                }
+            });
+            
+            filteredDeviceNumbers.forEach(deviceNumber => {
+                const option = document.createElement('option');
+                option.value = deviceNumber;
+                deviceNumberList.appendChild(option);
+            });
+            
+            filteredDeviceNames.forEach(deviceName => {
+                const option = document.createElement('option');
+                option.value = deviceName;
+                deviceNameList.appendChild(option);
+            });
+        }
+        
+        function showDeviceNumberDropdown() {
+            const input = document.getElementById('calMgmt_deviceNumber');
+            const optionsDiv = document.getElementById('deviceNumberOptions');
+            const client = document.getElementById('calMgmt_client').value.trim();
+            
+            let devicesToShow = uniqueDeviceNumbers;
+            if (client) {
+                // Filter by client if client is selected
+                devicesToShow = new Set();
+                filteredRecords.forEach(record => {
+                    if (record[3] && record[3].toString().trim() !== '') {
+                        devicesToShow.add(record[3].toString().trim());
+                    }
+                });
+            }
+            
+            if (devicesToShow.size === 0) return;
+            
+            optionsDiv.innerHTML = '';
+            devicesToShow.forEach(deviceNumber => {
+                const div = document.createElement('div');
+                div.className = 'autofill-option';
+                div.textContent = deviceNumber;
+                div.onclick = function() {
+                    input.value = deviceNumber;
+                    optionsDiv.style.display = 'none';
+                    autofillFromDevice();
+                };
+                optionsDiv.appendChild(div);
+            });
+            
+            optionsDiv.style.display = 'block';
+        }
+        
+        function hideDeviceNumberDropdown() {
+            setTimeout(() => {
+                document.getElementById('deviceNumberOptions').style.display = 'none';
+            }, 200);
+        }
+        
+        function filterDeviceNumbers() {
+            const input = document.getElementById('calMgmt_deviceNumber');
+            const filter = input.value.toLowerCase();
+            const optionsDiv = document.getElementById('deviceNumberOptions');
+            const client = document.getElementById('calMgmt_client').value.trim();
+            
+            let devicesToShow = uniqueDeviceNumbers;
+            if (client) {
+                devicesToShow = new Set();
+                filteredRecords.forEach(record => {
+                    if (record[3] && record[3].toString().trim() !== '') {
+                        devicesToShow.add(record[3].toString().trim());
+                    }
+                });
+            }
+            
+            optionsDiv.innerHTML = '';
+            
+            Array.from(devicesToShow)
+                .filter(deviceNumber => deviceNumber.toLowerCase().includes(filter))
+                .forEach(deviceNumber => {
+                    const div = document.createElement('div');
+                    div.className = 'autofill-option';
+                    div.textContent = deviceNumber;
+                    div.onclick = function() {
+                        input.value = deviceNumber;
+                        optionsDiv.style.display = 'none';
+                        autofillFromDevice();
+                    };
+                    optionsDiv.appendChild(div);
+                });
+            
+            if (optionsDiv.children.length > 0) {
+                optionsDiv.style.display = 'block';
+            } else {
+                optionsDiv.style.display = 'none';
+            }
+        }
+        
+        function showDeviceNameDropdown() {
+            const input = document.getElementById('calMgmt_deviceName');
+            const optionsDiv = document.getElementById('deviceNameOptions');
+            const client = document.getElementById('calMgmt_client').value.trim();
+            
+            let devicesToShow = uniqueDeviceNames;
+            if (client) {
+                devicesToShow = new Set();
+                filteredRecords.forEach(record => {
+                    if (record[4] && record[4].toString().trim() !== '') {
+                        devicesToShow.add(record[4].toString().trim());
+                    }
+                });
+            }
+            
+            if (devicesToShow.size === 0) return;
+            
+            optionsDiv.innerHTML = '';
+            devicesToShow.forEach(deviceName => {
+                const div = document.createElement('div');
+                div.className = 'autofill-option';
+                div.textContent = deviceName;
+                div.onclick = function() {
+                    input.value = deviceName;
+                    optionsDiv.style.display = 'none';
+                    autofillFromDevice();
+                };
+                optionsDiv.appendChild(div);
+            });
+            
+            optionsDiv.style.display = 'block';
+        }
+        
+        function hideDeviceNameDropdown() {
+            setTimeout(() => {
+                document.getElementById('deviceNameOptions').style.display = 'none';
+            }, 200);
+        }
+        
+        function filterDeviceNames() {
+            const input = document.getElementById('calMgmt_deviceName');
+            const filter = input.value.toLowerCase();
+            const optionsDiv = document.getElementById('deviceNameOptions');
+            const client = document.getElementById('calMgmt_client').value.trim();
+            
+            let devicesToShow = uniqueDeviceNames;
+            if (client) {
+                devicesToShow = new Set();
+                filteredRecords.forEach(record => {
+                    if (record[4] && record[4].toString().trim() !== '') {
+                        devicesToShow.add(record[4].toString().trim());
+                    }
+                });
+            }
+            
+            optionsDiv.innerHTML = '';
+            
+            Array.from(devicesToShow)
+                .filter(deviceName => deviceName.toLowerCase().includes(filter))
+                .forEach(deviceName => {
+                    const div = document.createElement('div');
+                    div.className = 'autofill-option';
+                    div.textContent = deviceName;
+                    div.onclick = function() {
+                        input.value = deviceName;
+                        optionsDiv.style.display = 'none';
+                        autofillFromDevice();
+                    };
+                    optionsDiv.appendChild(div);
+                });
+            
+            if (optionsDiv.children.length > 0) {
+                optionsDiv.style.display = 'block';
+            } else {
+                optionsDiv.style.display = 'none';
+            }
+        }
+        
+        function autofillFromDevice() {
+            const client = document.getElementById('calMgmt_client').value.trim();
+            const deviceNumber = document.getElementById('calMgmt_deviceNumber').value.trim();
+            const deviceName = document.getElementById('calMgmt_deviceName').value.trim();
+            
+            // If we have at least device number or device name, find the most recent record
+            if (!deviceNumber && !deviceName) return;
+            
+            // Filter records based on what we have
+            let matchingRecords = calibrationMgmtRecords.filter(record => {
+                const matchesClient = !client || (record[2] && record[2].toString().trim() === client);
+                const matchesDeviceNumber = !deviceNumber || (record[3] && record[3].toString().trim() === deviceNumber);
+                const matchesDeviceName = !deviceName || (record[4] && record[4].toString().trim() === deviceName);
+                
+                return matchesClient && matchesDeviceNumber && matchesDeviceName;
+            });
+            
+            if (matchingRecords.length === 0) return;
+            
+            // Find the most recent record by calibration date
+            let mostRecentRecord = matchingRecords[0];
+            let mostRecentDate = parseDateFromDMY(matchingRecords[0][5] || '');
+            
+            for (let i = 1; i < matchingRecords.length; i++) {
+                const currentDate = parseDateFromDMY(matchingRecords[i][5] || '');
+                if (currentDate && mostRecentDate) {
+                    if (currentDate > mostRecentDate) {
+                        mostRecentRecord = matchingRecords[i];
+                        mostRecentDate = currentDate;
+                    }
+                }
+            }
+            
+            // Autofill the form (excluding certificate number and dates)
+            if (client && !document.getElementById('calMgmt_client').value) {
+                document.getElementById('calMgmt_client').value = mostRecentRecord[2] || '';
+            }
+            
+            if (deviceNumber && !document.getElementById('calMgmt_deviceNumber').value) {
+                document.getElementById('calMgmt_deviceNumber').value = mostRecentRecord[3] || '';
+            }
+            
+            if (deviceName && !document.getElementById('calMgmt_deviceName').value) {
+                document.getElementById('calMgmt_deviceName').value = mostRecentRecord[4] || '';
+            }
+            
+            // Fill other fields (excluding certificate number and dates)
+            document.getElementById('calMgmt_calibrationLab').value = mostRecentRecord[8] || '';
+            document.getElementById('calMgmt_accreditationNumber').value = mostRecentRecord[9] || '';
+            document.getElementById('calMgmt_traceability').value = mostRecentRecord[10] || '';
+            document.getElementById('calMgmt_uncertainty').value = mostRecentRecord[11] || '';
+            
+            // Handle status fields with details
+            const statusBefore = mostRecentRecord[12] || 'سليم';
+            if (statusBefore.includes(' - ')) {
+                const parts = statusBefore.split(' - ');
+                document.getElementById('calMgmt_statusBefore').value = parts[0];
+                document.getElementById('calMgmt_statusBeforeDetails').value = parts.slice(1).join(' - ');
+                document.getElementById('statusBeforeDetails').style.display = parts[0] === 'معيب' ? 'block' : 'none';
+            } else {
+                document.getElementById('calMgmt_statusBefore').value = statusBefore;
+                document.getElementById('statusBeforeDetails').style.display = 'none';
+            }
+            
+            const statusAfter = mostRecentRecord[13] || 'سليم';
+            if (statusAfter.includes(' - ')) {
+                const parts = statusAfter.split(' - ');
+                document.getElementById('calMgmt_statusAfter').value = parts[0];
+                document.getElementById('calMgmt_statusAfterDetails').value = parts.slice(1).join(' - ');
+                document.getElementById('statusAfterDetails').style.display = parts[0] === 'معيب' ? 'block' : 'none';
+            } else {
+                document.getElementById('calMgmt_statusAfter').value = statusAfter;
+                document.getElementById('statusAfterDetails').style.display = 'none';
+            }
+            
+            document.getElementById('calMgmt_notes').value = mostRecentRecord[15] || '';
+            document.getElementById('calMgmt_technician').value = mostRecentRecord[16] || '';
+            document.getElementById('calMgmt_calibrationCost').value = mostRecentRecord[17] || '';
+            document.getElementById('calMgmt_downtime').value = mostRecentRecord[18] || '';
+            document.getElementById('calMgmt_calibrationMethod').value = mostRecentRecord[19] || '';
+            document.getElementById('calMgmt_qualityReview').value = mostRecentRecord[20] || '';
+            document.getElementById('calMgmt_reviewer').value = mostRecentRecord[21] || '';
+            
+            // Set frequency
+            document.getElementById('calMgmt_frequency').value = mostRecentRecord[6] || '365';
+            document.querySelectorAll('.frequency-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === parseInt(mostRecentRecord[6] || '365')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Don't fill certificate number or dates
+            
+            showNotification('✅ تم تعبئة البيانات تلقائياً من آخر سجل', 'success', 3000);
+        }
+        
+        // ================ CHECK EXISTING CERTIFICATE ================
+        function checkExistingCertificate() {
+            const certificateNumber = document.getElementById('calMgmt_certificateNumber').value.trim();
+            const editingId = document.getElementById('calibrationMgmt_editingId').value;
+            
+            if (!certificateNumber) return;
+            
+            // Check if this certificate number already exists in calibrationMgmtRecords
+            const existingRecord = calibrationMgmtRecords.find(record => {
+                // Skip the current record if we're in edit mode
+                if (editingId && record[0] === editingId) {
+                    return false;
+                }
+                return record[1] && record[1].toString().trim() === certificateNumber;
+            });
+            
+            if (existingRecord) {
+                const confirmFill = confirm('رقم الشهادة موجود مسبقاً. هل تريد تحميل البيانات الموجودة؟');
+                if (confirmFill) {
+                    fillCalibrationMgmtForm(existingRecord);
+                    showNotification('✅ تم تحميل بيانات الشهادة الموجودة', 'success');
+                }
+            }
         }
         
         // ================ CALIBRATION MANAGEMENT SYSTEM FUNCTIONS ================
@@ -909,28 +2033,55 @@
             noRecords.style.display = 'none';
             
             try {
-                const result = await callGoogleScript(CALIBRATION_MGMT_SCRIPT_URL, 'getAll');
+                const res = await jsonp(`${CALIBRATION_MGMT_SCRIPT_URL}?action=getAll&t=${Date.now()}`);
                 
                 spinner.style.display = 'none';
                 
-                if (result.status === 'success') {
-                    calibrationMgmtRecords = result.data;
-                    
-                    if (calibrationMgmtRecords.length > 0) {
-                        displayCalibrationMgmtRecords(calibrationMgmtRecords);
-                        tableContainer.style.display = 'block';
-                        updateTotalRecordsCount();
-                    } else {
-                        noRecords.style.display = 'block';
+                let records = [];
+                let responseStatus = 'error';
+                
+                if (res && res.status === 'success') {
+                    responseStatus = 'success';
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (res.records && typeof res.records === 'object') {
+                        const keys = Object.keys(res.records);
+                        if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
+                            records = res.records[keys[0]];
+                        }
                     }
+                } else if (Array.isArray(res)) {
+                    records = res;
+                    responseStatus = 'success';
+                }
+                
+                if (responseStatus !== 'success') {
+                    noRecords.style.display = 'block';
+                    showNotification('❌ فشل في تحميل سجلات المعايرة', 'error');
+                    document.getElementById('totalRecords').textContent = '0';
+                    return;
+                }
+                
+                calibrationMgmtRecords = records;
+                
+                if (calibrationMgmtRecords.length > 0) {
+                    displayCalibrationMgmtRecords(calibrationMgmtRecords);
+                    tableContainer.style.display = 'block';
+                    document.getElementById('totalRecords').textContent = calibrationMgmtRecords.length.toLocaleString('ar-SA');
+                    
+                    // Update unique values for autofill
+                    updateUniqueValues();
                 } else {
                     noRecords.style.display = 'block';
-                    showNotification(`❌ ${result.message}`, 'error');
+                    document.getElementById('totalRecords').textContent = '0';
                 }
             } catch (error) {
                 spinner.style.display = 'none';
                 noRecords.style.display = 'block';
-                showNotification(`❌ خطأ في تحميل سجلات المعايرة`, 'error');
+                showNotification('❌ خطأ في تحميل سجلات المعايرة', 'error');
+                document.getElementById('totalRecords').textContent = '0';
             }
         }
         
@@ -938,32 +2089,53 @@
             const table = document.getElementById('calibrationMgmtDataTable');
             
             let html = '<thead><tr>';
-            const headers = ['رقم الشهادة', 'اسم الجهاز', 'رقم الجهاز', 'تاريخ المعايرة', 'تاريخ الاستحقاق', 'مختبر المعايرة', 'عدم اليقين', 'الحالة بعد المعايرة', 'الإجراءات'];
+            const headers = ['رقم الشهادة', 'العميل', 'رقم الجهاز', 'اسم الجهاز', 'تاريخ المعايرة', 'تاريخ الاستحقاق', 'مختبر المعايرة', 'الحالة بعد المعايرة', 'الملف المرفوع', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
             html += '</tr></thead><tbody>';
             
-            records.forEach((record, index) => {
+            records.forEach((record) => {
+                // Column mapping correction based on Google Apps Script:
+                // 0: ID, 1: certificateNumber, 2: client, 3: deviceNumber, 4: deviceName,
+                // 5: calibrationDate, 6: frequency, 7: dueDate, 8: calibrationLab,
+                // 9: accreditationNumber, 10: traceability, 11: uncertainty,
+                // 12: statusBefore, 13: statusAfter, 14: fileLocation,
+                // 15: notes, 16: technician, 17: calibrationCost,
+                // 18: downtime, 19: calibrationMethod, 20: qualityReview, 21: reviewer
+                
+                const fileLink = record[14] || '';
+                
                 html += '<tr>';
                 
-                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
+                html += `<td><strong>${escapeHtml(record[1] || '')}</strong></td>`;
                 html += `<td>${escapeHtml(record[2] || '')}</td>`;
-                html += `<td>${escapeHtml(record[1] || '')}</td>`;
-                html += `<td>${formatDate(record[3] || '')}</td>`;
-                html += `<td>${formatDate(record[4] || '')}</td>`;
-                html += `<td>${escapeHtml(record[5] || '')}</td>`;
+                html += `<td>${escapeHtml(record[3] || '')}</td>`;
+                html += `<td>${escapeHtml(record[4] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(record[5] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(record[7] || '')}</td>`;
                 html += `<td>${escapeHtml(record[8] || '')}</td>`;
-                html += `<td>${escapeHtml(record[10] || '')}</td>`;
+                html += `<td>${escapeHtml(record[13] || '')}</td>`;
+                
+                // File link column
+                if (fileLink && fileLink.trim() !== '') {
+                    html += `<td>
+                        <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn">
+                            <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                        </a>
+                    </td>`;
+                } else {
+                    html += `<td><span class="text-muted">لا يوجد ملف</span></td>`;
+                }
                 
                 html += `<td class="action-buttons">
                     <button onclick="editCalibrationMgmtRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
                         <i class="fas fa-edit"></i> تعديل
                     </button>
-                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[2])}', 'calibration-mgmt')" class="btn btn-sm btn-danger" title="حذف">
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[4])}', '${escapeHtml(record[1] || '')}')" class="btn btn-sm btn-danger" title="حذف">
                         <i class="fas fa-trash"></i> حذف
                     </button>
-                    <button onclick="viewDetails('${escapeHtml(record[0])}', 'calibration-mgmt')" class="btn btn-sm btn-info" title="عرض">
+                    <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
                         <i class="fas fa-eye"></i> عرض
                     </button>
                 </td>`;
@@ -976,11 +2148,14 @@
         }
         
         async function addCalibrationMgmtRecord() {
-            const requiredFields = ['calMgmt_certificateNumber', 'calMgmt_deviceName'];
+            const requiredFields = ['calMgmt_certificateNumber', 'calMgmt_deviceNumber', 'calMgmt_deviceName'];
             if (!validateForm(requiredFields)) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
                 return;
             }
+            
+            const calibrationDate = document.getElementById('calMgmt_calibrationDate').value;
+            const dueDate = document.getElementById('calMgmt_dueDate').value;
             
             const button = document.getElementById('calibrationMgmt_addBtn');
             const originalHtml = button.innerHTML;
@@ -988,63 +2163,91 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
             
-            const calibrationDate = getDateString(
-                document.getElementById('calMgmt_calibrationDate_day').value,
-                document.getElementById('calMgmt_calibrationDate_month').value,
-                document.getElementById('calMgmt_calibrationDate_year').value
-            );
+            if (calibrationDate && !validateDate(calibrationDate)) {
+                showNotification('❌ تاريخ المعايرة غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
             
-            const dueDate = getDateString(
-                document.getElementById('calMgmt_dueDate_day').value,
-                document.getElementById('calMgmt_dueDate_month').value,
-                document.getElementById('calMgmt_dueDate_year').value
-            );
+            if (dueDate && !validateDate(dueDate)) {
+                showNotification('❌ تاريخ الاستحقاق غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
             
-            const formData = {
-                certificateNumber: document.getElementById('calMgmt_certificateNumber').value,
-                deviceNumber: document.getElementById('calMgmt_deviceNumber').value,
-                deviceName: document.getElementById('calMgmt_deviceName').value,
-                calibrationDate: calibrationDate,
-                dueDate: dueDate,
-                calibrationLab: document.getElementById('calMgmt_calibrationLab').value,
-                accreditationNumber: document.getElementById('calMgmt_accreditationNumber').value,
-                traceability: document.getElementById('calMgmt_traceability').value,
-                uncertainty: document.getElementById('calMgmt_uncertainty').value,
-                statusBefore: document.getElementById('calMgmt_statusBefore').value,
-                statusAfter: document.getElementById('calMgmt_statusAfter').value,
-                fileLocation: document.getElementById('calMgmt_fileLocation').value,
-                notes: document.getElementById('calMgmt_notes').value,
-                technician: document.getElementById('calMgmt_technician').value,
-                calibrationCost: document.getElementById('calMgmt_calibrationCost').value,
-                downtime: document.getElementById('calMgmt_downtime').value,
-                calibrationMethod: document.getElementById('calMgmt_calibrationMethod').value,
-                qualityReview: document.getElementById('calMgmt_qualityReview').value,
-                reviewer: document.getElementById('calMgmt_reviewer').value
-            };
+            // Generate internal recordId
+            const internalRecordId = 'CAL-' + Date.now();
+            document.getElementById('calibrationMgmt_internalRecordId').value = internalRecordId;
+            
+            // Get file link from hidden field
+            const fileLink = document.getElementById('calibrationMgmt_fileLink').value;
+            
+            // Convert dates to D M Y format
+            const calibrationDateDMY = calibrationDate ? formatDateToDMY(parseDateDDMMYYYY(calibrationDate)) : '';
+            const dueDateDMY = dueDate ? formatDateToDMY(parseDateDDMMYYYY(dueDate)) : '';
+            
+            // Prepare status with details
+            const statusBeforeValue = document.getElementById('calMgmt_statusBefore').value;
+            const statusBeforeDetails = document.getElementById('calMgmt_statusBeforeDetails').value;
+            const statusBeforeToSave = statusBeforeDetails && statusBeforeValue === 'معيب' 
+                ? `${statusBeforeValue} - ${statusBeforeDetails}`
+                : statusBeforeValue;
+            
+            const statusAfterValue = document.getElementById('calMgmt_statusAfter').value;
+            const statusAfterDetails = document.getElementById('calMgmt_statusAfterDetails').value;
+            const statusAfterToSave = statusAfterDetails && statusAfterValue === 'معيب'
+                ? `${statusAfterValue} - ${statusAfterDetails}`
+                : statusAfterValue;
+            
+            // Build query string with correct parameter names
+            let q = `certificateNumber=${encodeURIComponent(document.getElementById('calMgmt_certificateNumber').value || '')}&`;
+            q += `client=${encodeURIComponent(document.getElementById('calMgmt_client').value || '')}&`;
+            q += `deviceNumber=${encodeURIComponent(document.getElementById('calMgmt_deviceNumber').value || '')}&`;
+            q += `deviceName=${encodeURIComponent(document.getElementById('calMgmt_deviceName').value || '')}&`;
+            q += `frequency=${encodeURIComponent(document.getElementById('calMgmt_frequency').value || '365')}&`;
+            q += `calibrationLab=${encodeURIComponent(document.getElementById('calMgmt_calibrationLab').value || '')}&`;
+            q += `accreditationNumber=${encodeURIComponent(document.getElementById('calMgmt_accreditationNumber').value || '')}&`;
+            q += `traceability=${encodeURIComponent(document.getElementById('calMgmt_traceability').value || '')}&`;
+            q += `uncertainty=${encodeURIComponent(document.getElementById('calMgmt_uncertainty').value || '')}&`;
+            q += `statusBefore=${encodeURIComponent(statusBeforeToSave)}&`;
+            q += `statusAfter=${encodeURIComponent(statusAfterToSave)}&`;
+            q += `notes=${encodeURIComponent(document.getElementById('calMgmt_notes').value || '')}&`;
+            q += `technician=${encodeURIComponent(document.getElementById('calMgmt_technician').value || '')}&`;
+            q += `calibrationCost=${encodeURIComponent(document.getElementById('calMgmt_calibrationCost').value || '')}&`;
+            q += `downtime=${encodeURIComponent(document.getElementById('calMgmt_downtime').value || '')}&`;
+            q += `calibrationMethod=${encodeURIComponent(document.getElementById('calMgmt_calibrationMethod').value || '')}&`;
+            q += `qualityReview=${encodeURIComponent(document.getElementById('calMgmt_qualityReview').value || '')}&`;
+            q += `reviewer=${encodeURIComponent(document.getElementById('calMgmt_reviewer').value || '')}&`;
+            q += `calibrationDate=${encodeURIComponent(calibrationDateDMY)}&`;
+            q += `dueDate=${encodeURIComponent(dueDateDMY)}&`;
+            q += `fileLink=${encodeURIComponent(fileLink || '')}`;
             
             try {
-                const result = await callGoogleScript(CALIBRATION_MGMT_SCRIPT_URL, 'add', formData);
+                const res = await jsonp(`${CALIBRATION_MGMT_SCRIPT_URL}?action=add&${q}`);
                 
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     resetCalibrationMgmtForm();
                     await loadCalibrationMgmtData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في الإضافة`, 'error');
+                showNotification('❌ خطأ في الإضافة', 'error');
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
             }
         }
         
-        async function editCalibrationMgmtRecord(certificateNumber) {
+        async function editCalibrationMgmtRecord(recordId) {
             showNotification('🔍 جاري تحميل بيانات سجل المعايرة...', 'info');
             
             const record = calibrationMgmtRecords.find(r => 
-                String(r[0] || '').trim() === String(certificateNumber).trim()
+                String(r[0] || '').trim() === String(recordId).trim()
             );
             
             if (record) {
@@ -1058,43 +2261,138 @@
         }
         
         function fillCalibrationMgmtForm(record) {
-            document.getElementById('calMgmt_certificateNumber').value = record[0] || '';
-            document.getElementById('calMgmt_deviceNumber').value = record[1] || '';
-            document.getElementById('calMgmt_deviceName').value = record[2] || '';
+            // Clear any previous autofill data
+            filteredRecords = [];
             
-            const calibrationDate = formatDateForInput(record[3] || '');
-            document.getElementById('calMgmt_calibrationDate_day').value = calibrationDate.day;
-            document.getElementById('calMgmt_calibrationDate_month').value = calibrationDate.month;
-            document.getElementById('calMgmt_calibrationDate_year').value = calibrationDate.year;
+            document.getElementById('calMgmt_certificateNumber').value = record[1] || '';
+            document.getElementById('calMgmt_client').value = record[2] || '';
+            document.getElementById('calMgmt_deviceNumber').value = record[3] || '';
+            document.getElementById('calMgmt_deviceName').value = record[4] || '';
+            document.getElementById('calMgmt_frequency').value = record[6] || '365';
+            document.getElementById('calMgmt_calibrationLab').value = record[8] || '';
+            document.getElementById('calMgmt_accreditationNumber').value = record[9] || '';
+            document.getElementById('calMgmt_traceability').value = record[10] || '';
+            document.getElementById('calMgmt_uncertainty').value = record[11] || '';
             
-            const dueDate = formatDateForInput(record[4] || '');
-            document.getElementById('calMgmt_dueDate_day').value = dueDate.day;
-            document.getElementById('calMgmt_dueDate_month').value = dueDate.month;
-            document.getElementById('calMgmt_dueDate_year').value = dueDate.year;
+            // Handle status with details
+            const statusBefore = record[12] || 'سليم';
+            if (statusBefore.includes(' - ')) {
+                const parts = statusBefore.split(' - ');
+                document.getElementById('calMgmt_statusBefore').value = parts[0];
+                document.getElementById('calMgmt_statusBeforeDetails').value = parts.slice(1).join(' - ');
+                document.getElementById('statusBeforeDetails').style.display = parts[0] === 'معيب' ? 'block' : 'none';
+            } else {
+                document.getElementById('calMgmt_statusBefore').value = statusBefore;
+                document.getElementById('calMgmt_statusBeforeDetails').value = '';
+                document.getElementById('statusBeforeDetails').style.display = 'none';
+            }
             
-            document.getElementById('calMgmt_calibrationLab').value = record[5] || '';
-            document.getElementById('calMgmt_accreditationNumber').value = record[6] || '';
-            document.getElementById('calMgmt_traceability').value = record[7] || '';
-            document.getElementById('calMgmt_uncertainty').value = record[8] || '';
-            document.getElementById('calMgmt_statusBefore').value = record[9] || '';
-            document.getElementById('calMgmt_statusAfter').value = record[10] || '';
-            document.getElementById('calMgmt_fileLocation').value = record[11] || '';
-            document.getElementById('calMgmt_notes').value = record[12] || '';
-            document.getElementById('calMgmt_technician').value = record[13] || '';
-            document.getElementById('calMgmt_calibrationCost').value = record[14] || '';
-            document.getElementById('calMgmt_downtime').value = record[15] || '';
-            document.getElementById('calMgmt_calibrationMethod').value = record[16] || '';
-            document.getElementById('calMgmt_qualityReview').value = record[17] || '';
-            document.getElementById('calMgmt_reviewer').value = record[18] || '';
+            const statusAfter = record[13] || 'سليم';
+            if (statusAfter.includes(' - ')) {
+                const parts = statusAfter.split(' - ');
+                document.getElementById('calMgmt_statusAfter').value = parts[0];
+                document.getElementById('calMgmt_statusAfterDetails').value = parts.slice(1).join(' - ');
+                document.getElementById('statusAfterDetails').style.display = parts[0] === 'معيب' ? 'block' : 'none';
+            } else {
+                document.getElementById('calMgmt_statusAfter').value = statusAfter;
+                document.getElementById('calMgmt_statusAfterDetails').value = '';
+                document.getElementById('statusAfterDetails').style.display = 'none';
+            }
+            
+            document.getElementById('calMgmt_notes').value = record[15] || '';
+            document.getElementById('calMgmt_technician').value = record[16] || '';
+            document.getElementById('calMgmt_calibrationCost').value = record[17] || '';
+            document.getElementById('calMgmt_downtime').value = record[18] || '';
+            document.getElementById('calMgmt_calibrationMethod').value = record[19] || '';
+            document.getElementById('calMgmt_qualityReview').value = record[20] || '';
+            document.getElementById('calMgmt_reviewer').value = record[21] || '';
+            
+            // Set the file link
+            const fileLink = record[14] || '';
+            document.getElementById('calibrationMgmt_fileLink').value = fileLink;
+            
+            // Display file info if there's a file link
+            if (fileLink && fileLink.trim() !== '') {
+                const fileName = 'ملف المعايرة';
+                document.getElementById('uploadedFileName').textContent = fileName;
+                document.getElementById('uploadedFileSize').textContent = '';
+                document.getElementById('uploadedFileInfo').style.display = 'block';
+                
+                const fileLinkBtn = document.getElementById('uploadedFileLink');
+                fileLinkBtn.href = fileLink;
+                fileLinkBtn.style.display = 'inline-block';
+                
+                const uploadStatus = document.getElementById('uploadStatus');
+                uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                uploadStatus.className = 'upload-status success';
+            }
+            
+            // Set date values using D M Y format
+            const calibrationDateFormatted = formatDMYForInput(record[5] || '');
+            const dueDateFormatted = formatDMYForInput(record[7] || '');
+            
+            document.getElementById('calMgmt_calibrationDate').value = calibrationDateFormatted;
+            document.getElementById('calMgmt_dueDate').value = dueDateFormatted;
+            
+            // Update Flatpickr instances
+            if (flatpickrInstances.calibrationDate && calibrationDateFormatted) {
+                try {
+                    const parts = calibrationDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.calibrationDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting calibration date:', e);
+                }
+            }
+            
+            if (flatpickrInstances.dueDate && dueDateFormatted) {
+                try {
+                    const parts = dueDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.dueDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting due date:', e);
+                }
+            }
+            
             document.getElementById('calibrationMgmt_editingId').value = record[0];
+            document.getElementById('calibrationMgmt_internalRecordId').value = record[0];
+            
+            // Update frequency buttons active state
+            const frequency = record[6] || '365';
+            document.querySelectorAll('.frequency-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === parseInt(frequency)) {
+                    btn.classList.add('active');
+                }
+            });
         }
         
         async function updateCalibrationMgmtRecord() {
-            const certificateNumber = document.getElementById('calibrationMgmt_editingId').value;
-            if (!certificateNumber) {
+            const recordId = document.getElementById('calibrationMgmt_editingId').value;
+            if (!recordId) {
                 showNotification('❌ لم يتم تحديد سجل معايرة للتحديث', 'error');
                 return;
             }
+            
+            const requiredFields = ['calMgmt_certificateNumber', 'calMgmt_deviceNumber', 'calMgmt_deviceName'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+            
+            const calibrationDate = document.getElementById('calMgmt_calibrationDate').value;
+            const dueDate = document.getElementById('calMgmt_dueDate').value;
             
             const button = document.getElementById('calibrationMgmt_updateBtn');
             const originalHtml = button.innerHTML;
@@ -1102,52 +2400,78 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
             
-            const calibrationDate = getDateString(
-                document.getElementById('calMgmt_calibrationDate_day').value,
-                document.getElementById('calMgmt_calibrationDate_month').value,
-                document.getElementById('calMgmt_calibrationDate_year').value
-            );
+            if (calibrationDate && !validateDate(calibrationDate)) {
+                showNotification('❌ تاريخ المعايرة غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
             
-            const dueDate = getDateString(
-                document.getElementById('calMgmt_dueDate_day').value,
-                document.getElementById('calMgmt_dueDate_month').value,
-                document.getElementById('calMgmt_dueDate_year').value
-            );
+            if (dueDate && !validateDate(dueDate)) {
+                showNotification('❌ تاريخ الاستحقاق غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
             
-            const formData = {
-                certificateNumber: document.getElementById('calMgmt_certificateNumber').value,
-                deviceNumber: document.getElementById('calMgmt_deviceNumber').value,
-                deviceName: document.getElementById('calMgmt_deviceName').value,
-                calibrationDate: calibrationDate,
-                dueDate: dueDate,
-                calibrationLab: document.getElementById('calMgmt_calibrationLab').value,
-                accreditationNumber: document.getElementById('calMgmt_accreditationNumber').value,
-                traceability: document.getElementById('calMgmt_traceability').value,
-                uncertainty: document.getElementById('calMgmt_uncertainty').value,
-                statusBefore: document.getElementById('calMgmt_statusBefore').value,
-                statusAfter: document.getElementById('calMgmt_statusAfter').value,
-                fileLocation: document.getElementById('calMgmt_fileLocation').value,
-                notes: document.getElementById('calMgmt_notes').value,
-                technician: document.getElementById('calMgmt_technician').value,
-                calibrationCost: document.getElementById('calMgmt_calibrationCost').value,
-                downtime: document.getElementById('calMgmt_downtime').value,
-                calibrationMethod: document.getElementById('calMgmt_calibrationMethod').value,
-                qualityReview: document.getElementById('calMgmt_qualityReview').value,
-                reviewer: document.getElementById('calMgmt_reviewer').value
-            };
+            // Get file link from hidden field
+            const fileLink = document.getElementById('calibrationMgmt_fileLink').value;
+            
+            // Convert dates to D M Y format
+            const calibrationDateDMY = calibrationDate ? formatDateToDMY(parseDateDDMMYYYY(calibrationDate)) : '';
+            const dueDateDMY = dueDate ? formatDateToDMY(parseDateDDMMYYYY(dueDate)) : '';
+            
+            // Prepare status with details
+            const statusBeforeValue = document.getElementById('calMgmt_statusBefore').value;
+            const statusBeforeDetails = document.getElementById('calMgmt_statusBeforeDetails').value;
+            const statusBeforeToSave = statusBeforeDetails && statusBeforeValue === 'معيب' 
+                ? `${statusBeforeValue} - ${statusBeforeDetails}`
+                : statusBeforeValue;
+            
+            const statusAfterValue = document.getElementById('calMgmt_statusAfter').value;
+            const statusAfterDetails = document.getElementById('calMgmt_statusAfterDetails').value;
+            const statusAfterToSave = statusAfterDetails && statusAfterValue === 'معيب'
+                ? `${statusAfterValue} - ${statusAfterDetails}`
+                : statusAfterValue;
+            
+            // Build query string for update
+            let q = `internalRecordId=${encodeURIComponent(recordId)}&`;
+            q += `certificateNumber=${encodeURIComponent(document.getElementById('calMgmt_certificateNumber').value || '')}&`;
+            q += `client=${encodeURIComponent(document.getElementById('calMgmt_client').value || '')}&`;
+            q += `deviceNumber=${encodeURIComponent(document.getElementById('calMgmt_deviceNumber').value || '')}&`;
+            q += `deviceName=${encodeURIComponent(document.getElementById('calMgmt_deviceName').value || '')}&`;
+            q += `frequency=${encodeURIComponent(document.getElementById('calMgmt_frequency').value || '365')}&`;
+            q += `calibrationLab=${encodeURIComponent(document.getElementById('calMgmt_calibrationLab').value || '')}&`;
+            q += `accreditationNumber=${encodeURIComponent(document.getElementById('calMgmt_accreditationNumber').value || '')}&`;
+            q += `traceability=${encodeURIComponent(document.getElementById('calMgmt_traceability').value || '')}&`;
+            q += `uncertainty=${encodeURIComponent(document.getElementById('calMgmt_uncertainty').value || '')}&`;
+            q += `statusBefore=${encodeURIComponent(statusBeforeToSave)}&`;
+            q += `statusAfter=${encodeURIComponent(statusAfterToSave)}&`;
+            q += `notes=${encodeURIComponent(document.getElementById('calMgmt_notes').value || '')}&`;
+            q += `technician=${encodeURIComponent(document.getElementById('calMgmt_technician').value || '')}&`;
+            q += `calibrationCost=${encodeURIComponent(document.getElementById('calMgmt_calibrationCost').value || '')}&`;
+            q += `downtime=${encodeURIComponent(document.getElementById('calMgmt_downtime').value || '')}&`;
+            q += `calibrationMethod=${encodeURIComponent(document.getElementById('calMgmt_calibrationMethod').value || '')}&`;
+            q += `qualityReview=${encodeURIComponent(document.getElementById('calMgmt_qualityReview').value || '')}&`;
+            q += `reviewer=${encodeURIComponent(document.getElementById('calMgmt_reviewer').value || '')}&`;
+            q += `calibrationDate=${encodeURIComponent(calibrationDateDMY)}&`;
+            q += `dueDate=${encodeURIComponent(dueDateDMY)}&`;
+            q += `fileLink=${encodeURIComponent(fileLink || '')}`;
             
             try {
-                const result = await callGoogleScript(CALIBRATION_MGMT_SCRIPT_URL, 'update', formData);
+                const res = await jsonp(`${CALIBRATION_MGMT_SCRIPT_URL}?action=update&${q}`);
                 
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     resetCalibrationMgmtForm();
                     await loadCalibrationMgmtData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في التحديث`, 'error');
+                showNotification('❌ خطأ في التحديث', 'error');
+                console.error('Update error:', error);
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
@@ -1157,11 +2481,55 @@
         function resetCalibrationMgmtForm() {
             document.getElementById('calibrationMgmtForm').reset();
             document.getElementById('calibrationMgmt_editingId').value = '';
+            document.getElementById('calibrationMgmt_internalRecordId').value = '';
+            document.getElementById('calibrationMgmt_fileLink').value = '';
             document.getElementById('calibrationMgmt_addBtn').style.display = 'inline-block';
             document.getElementById('calibrationMgmt_updateBtn').style.display = 'none';
             document.querySelectorAll('#calibrationMgmtForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
+            
+            // Reset status dropdowns and details
+            document.getElementById('calMgmt_statusBefore').value = 'سليم';
+            document.getElementById('calMgmt_statusBeforeDetails').value = '';
+            document.getElementById('statusBeforeDetails').style.display = 'none';
+            
+            document.getElementById('calMgmt_statusAfter').value = 'سليم';
+            document.getElementById('calMgmt_statusAfterDetails').value = '';
+            document.getElementById('statusAfterDetails').style.display = 'none';
+            
+            // Reset file upload section
+            selectedFile = null;
+            uploadedFileUrl = '';
+            document.getElementById('uploadedFileInfo').style.display = 'none';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            document.getElementById('uploadStatus').textContent = '';
+            document.getElementById('uploadStatus').className = 'upload-status';
+            document.getElementById('fileInput').value = '';
+            
+            // Reset dates and frequency
+            if (flatpickrInstances.calibrationDate) {
+                const today = new Date();
+                const todayFormatted = formatDateToDDMMYYYY(today);
+                document.getElementById('calMgmt_calibrationDate').value = todayFormatted;
+                flatpickrInstances.calibrationDate.setDate(today, false);
+            }
+            
+            if (flatpickrInstances.dueDate) flatpickrInstances.dueDate.clear();
+            
+            document.getElementById('calMgmt_frequency').value = '365';
+            document.querySelectorAll('.frequency-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === 365) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Clear filtered records
+            filteredRecords = [];
+            
+            // Calculate due date
+            calculateDueDate();
         }
         
         function exportCalibrationMgmtCSV() {
@@ -1174,26 +2542,32 @@
             
             try {
                 const headers = [
-                    'رقم الشهادة', 'رقم الجهاز', 'اسم الجهاز', 'تاريخ المعايرة', 'تاريخ الاستحقاق',
-                    'مختبر المعايرة', 'رقم الاعتماد', 'قابلية التتبع', 'عدم اليقين',
-                    'الحالة عند الاستلام', 'الحالة بعد المعايرة', 'موقع الملف', 'الملاحظات',
-                    'الفني المسؤول', 'تكلفة المعايرة', 'مدة التوقف', 'طريقة المعايرة',
-                    'مراجعة الجودة', 'المراجع'
+                    'رقم الشهادة', 'العميل', 'رقم الجهاز', 'اسم الجهاز',
+                    'تاريخ المعايرة', 'التكرار (أيام)', 'تاريخ الاستحقاق',
+                    'مختبر المعايرة', 'رقم الاعتماد', 'قابلية التتبع',
+                    'عدم اليقين', 'الحالة عند الاستلام', 'الحالة بعد المعايرة',
+                    'لينك الملف', 'ملاحظات', 'الفني المسؤول', 'تكلفة المعايرة',
+                    'مدة التوقف', 'طريقة المعايرة', 'مراجعة الجودة', 'المراجع'
                 ];
                 
                 let csvContent = '\uFEFF';
                 csvContent += headers.join(",") + "\r\n";
                 
                 calibrationMgmtRecords.forEach(record => {
+                    const calibrationDateObj = parseDateFromDMY(record[5] || '');
+                    const dueDateObj = parseDateFromDMY(record[7] || '');
+                    
+                    const calibrationDateDisplay = calibrationDateObj ? formatDateToDayMonthYear(calibrationDateObj) : '';
+                    const dueDateDisplay = dueDateObj ? formatDateToDayMonthYear(dueDateObj) : '';
+                    
                     const row = [
-                        record[0] || '',
                         record[1] || '',
                         record[2] || '',
-                        formatDate(record[3] || ''),
-                        formatDate(record[4] || ''),
-                        record[5] || '',
+                        record[3] || '',
+                        record[4] || '',
+                        calibrationDateDisplay,
                         record[6] || '',
-                        record[7] || '',
+                        dueDateDisplay,
                         record[8] || '',
                         record[9] || '',
                         record[10] || '',
@@ -1204,7 +2578,10 @@
                         record[15] || '',
                         record[16] || '',
                         record[17] || '',
-                        record[18] || ''
+                        record[18] || '',
+                        record[19] || '',
+                        record[20] || '',
+                        record[21] || ''
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -1227,15 +2604,13 @@
                 
                 showNotification(`✅ تم تصدير ${calibrationMgmtRecords.length} سجل`, 'success');
             } catch (error) {
-                showNotification(`❌ خطأ في التصدير`, 'error');
+                showNotification('❌ خطأ في التصدير', 'error');
             }
         }
         
         // ================ DETAILS VIEW FUNCTION ================
-        async function viewDetails(recordId, systemType) {
-            let record, title;
-            
-            record = calibrationMgmtRecords.find(r => 
+        function viewDetails(recordId) {
+            const record = calibrationMgmtRecords.find(r => 
                 String(r[0] || '').trim() === String(recordId).trim()
             );
             
@@ -1244,72 +2619,82 @@
                 return;
             }
             
-            title = 'سجل المعايرة';
+            const fileLink = record[14] || '';
             
-            const detailsHTML = generateCalibrationMgmtDetails(record, title);
+            const calibrationDateObj = parseDateFromDMY(record[5] || '');
+            const dueDateObj = parseDateFromDMY(record[7] || '');
             
-            const existingModal = document.getElementById('detailsModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
+            const calibrationDateDisplay = calibrationDateObj ? formatDateToDayMonthYear(calibrationDateObj) : '';
+            const dueDateDisplay = dueDateObj ? formatDateToDayMonthYear(dueDateObj) : '';
             
-            document.getElementById('dynamicModalContainer').innerHTML = detailsHTML;
+            // Parse status with details
+            const statusBefore = record[12] || 'سليم';
+            const statusAfter = record[13] || 'سليم';
             
-            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-            detailsModal.show();
-        }
-        
-        function generateCalibrationMgmtDetails(record, title) {
-            return `
-                <div class="modal fade" id="detailsModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header modal-header-custom">
-                                <h5 class="modal-title">${title}: ${escapeHtml(record[0])}</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>رقم الشهادة:</strong> ${escapeHtml(record[0])}</p>
-                                        <p><strong>رقم الجهاز:</strong> ${escapeHtml(record[1])}</p>
-                                        <p><strong>اسم الجهاز:</strong> ${escapeHtml(record[2])}</p>
-                                        <p><strong>تاريخ المعايرة:</strong> ${formatDate(record[3])}</p>
-                                        <p><strong>تاريخ الاستحقاق:</strong> ${formatDate(record[4])}</p>
-                                        <p><strong>مختبر المعايرة:</strong> ${escapeHtml(record[5])}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>رقم الاعتماد:</strong> ${escapeHtml(record[6])}</p>
-                                        <p><strong>قابلية التتبع:</strong> ${escapeHtml(record[7])}</p>
-                                        <p><strong>عدم اليقين:</strong> ${escapeHtml(record[8])}</p>
-                                        <p><strong>الحالة عند الاستلام:</strong> ${escapeHtml(record[9])}</p>
-                                        <p><strong>الحالة بعد المعايرة:</strong> ${escapeHtml(record[10])}</p>
-                                        <p><strong>موقع الملف:</strong> ${escapeHtml(record[11])}</p>
-                                    </div>
-                                </div>
-                                ${record[12] ? `<p><strong>ملاحظات:</strong> ${escapeHtml(record[12])}</p>` : ''}
-                                ${record[13] ? `<p><strong>الفني المسؤول:</strong> ${escapeHtml(record[13])}</p>` : ''}
-                                ${record[14] ? `<p><strong>تكلفة المعايرة:</strong> ${escapeHtml(record[14])}</p>` : ''}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-                            </div>
-                        </div>
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>رقم الشهادة:</strong> ${escapeHtml(record[1] || '')}</p>
+                        <p><strong>العميل:</strong> ${escapeHtml(record[2] || '')}</p>
+                        <p><strong>رقم الجهاز:</strong> ${escapeHtml(record[3])}</p>
+                        <p><strong>اسم الجهاز:</strong> ${escapeHtml(record[4])}</p>
+                        <p><strong>تاريخ المعايرة:</strong> <span class="english-date">${calibrationDateDisplay}</span></p>
+                        <p><strong>التكرار:</strong> ${escapeHtml(record[6])} يوم</p>
+                        <p><strong>تاريخ الاستحقاق:</strong> <span class="english-date">${dueDateDisplay}</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>مختبر المعايرة:</strong> ${escapeHtml(record[8] || '')}</p>
+                        <p><strong>رقم الاعتماد:</strong> ${escapeHtml(record[9] || '')}</p>
+                        <p><strong>قابلية التتبع:</strong> ${escapeHtml(record[10] || '')}</p>
+                        <p><strong>عدم اليقين:</strong> ${escapeHtml(record[11] || '')}</p>
+                        <p><strong>الحالة عند الاستلام:</strong> ${escapeHtml(statusBefore)}</p>
+                        <p><strong>الحالة بعد المعايرة:</strong> ${escapeHtml(statusAfter)}</p>
                     </div>
                 </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p><strong>الفني المسؤول:</strong> ${escapeHtml(record[16] || '')}</p>
+                        <p><strong>تكلفة المعايرة:</strong> ${escapeHtml(record[17] || '')}</p>
+                        <p><strong>مدة التوقف:</strong> ${escapeHtml(record[18] || '')}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>طريقة المعايرة:</strong> ${escapeHtml(record[19] || '')}</p>
+                        <p><strong>مراجعة الجودة:</strong> ${escapeHtml(record[20] || '')}</p>
+                        <p><strong>المراجع:</strong> ${escapeHtml(record[21] || '')}</p>
+                    </div>
+                </div>
+                
+                ${record[15] ? `<div class="row mt-3">
+                    <div class="col-12">
+                        <p><strong>ملاحظات:</strong> ${escapeHtml(record[15])}</p>
+                    </div>
+                </div>` : ''}
+                
+                ${fileLink ? `<div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>الملف المرفوع:</strong> 
+                            <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn ms-2">
+                                <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                            </a>
+                        </p>
+                    </div>
+                </div>` : ''}
             `;
+            
+            document.getElementById('detailsModalBody').innerHTML = detailsHTML;
+            detailsModalInstance.show();
         }
         
         // ================ DELETE FUNCTIONALITY ================
-        function showDeleteModal(recordId, recordName, systemType) {
+        function showDeleteModal(recordId, recordName, recordNumber = '') {
             deleteRecordId = recordId;
             deleteRecordName = recordName;
             
-            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordId').textContent = recordNumber || 'غير معروف';
             document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
             
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
+            deleteModalInstance.show();
         }
         
         async function confirmDelete() {
@@ -1322,33 +2707,30 @@
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
             
             try {
-                const result = await callGoogleScript(CALIBRATION_MGMT_SCRIPT_URL, 'delete', { certificateNumber: deleteRecordId });
+                const res = await jsonp(`${CALIBRATION_MGMT_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}`);
                 
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     
-                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-                    deleteModal.hide();
+                    deleteModalInstance.hide();
                     
                     deleteRecordId = '';
                     deleteRecordName = '';
                     
                     loadCalibrationMgmtData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في الحذف`, 'error');
-            } finally {
+                console.error('Error deleting record:', error);
                 button.disabled = false;
                 button.innerHTML = originalHtml;
+                showNotification('❌ خطأ في الاتصال بالخادم', 'error');
             }
-        }
-        
-        // ================ HELPER FUNCTIONS ================
-        function updateTotalRecordsCount() {
-            const total = calibrationMgmtRecords.length;
-            document.getElementById('totalRecords').textContent = total.toLocaleString('ar-SA');
         }
     </script>
 </body>
