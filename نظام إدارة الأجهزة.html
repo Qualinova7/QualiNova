@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة معايرة الأجهزة - معمل كواليتك إنترناشيونال</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr Calendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --calibration-color: #3498db;
+        }
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .main-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, var(--calibration-color), #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .main-header .lead {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .header-badge {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Home Button */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            white-space: nowrap;
+        }
+        
+        .home-button:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .home-button i {
+            margin-right: 5px;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (min-width: 769px) {
+            .header-badge-container {
+                position: relative;
+                padding-left: 130px;
+            }
+        }
+        
+        /* Card Styles */
+        .custom-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .card-header-custom {
+            padding: 15px 20px;
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+        }
+        
+        .card-header-calibration {
+            background: linear-gradient(135deg, var(--calibration-color), #2980b9);
+        }
+        
+        .card-header-file {
+            background: linear-gradient(135deg, var(--calibration-color), #2980b9);
+        }
+        
+        /* Form Styles */
+        .form-control-custom, .form-select-custom, .form-textarea-custom {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
+            border-color: var(--calibration-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            background: white;
+        }
+        
+        .form-textarea-custom {
+            min-height: 70px;
+            resize: vertical;
+        }
+        
+        .form-label-custom {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section-title {
+            color: var(--calibration-color);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Upload File Button Styles */
+        .upload-container {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .upload-container:hover {
+            background: #e9ecef;
+            border-color: var(--calibration-color);
+        }
+        
+        .upload-container.dragover {
+            background: #e3f2fd;
+            border-color: var(--calibration-color);
+            border-style: solid;
+        }
+        
+        .upload-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background: #5a6268;
+        }
+        
+        .upload-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        .upload-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+        
+        .upload-status.success {
+            color: var(--success-color);
+        }
+        
+        .upload-status.error {
+            color: var(--danger-color);
+        }
+        
+        .upload-status.loading {
+            color: var(--calibration-color);
+        }
+        
+        .file-link-btn {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .file-link-btn:hover {
+            background: #219653;
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Date Input Styling */
+        .date-input-wrapper {
+            position: relative;
+        }
+        
+        .date-input-wrapper .date-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--calibration-color);
+            pointer-events: none;
+        }
+        
+        .date-input-wrapper .form-control-custom {
+            padding-right: 40px;
+            direction: ltr;
+            text-align: right;
+        }
+        
+        /* Flatpickr Customization */
+        .flatpickr-calendar {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+        
+        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+            background: var(--calibration-color);
+            border-color: var(--calibration-color);
+        }
+        
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .flatpickr-weekdays {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 0;
+        }
+        
+        .table-custom {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0;
+            min-width: 1500px;
+            width: 100%;
+        }
+        
+        .table-custom thead th {
+            background: linear-gradient(135deg, var(--calibration-color), #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        
+        .table-custom tbody tr {
+            transition: all 0.2s;
+        }
+        
+        .table-custom tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.08);
+        }
+        
+        .table-custom tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+        
+        /* Action Buttons */
+        .action-buttons .btn {
+            margin: 0 2px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            min-width: 70px;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            padding: 15px 20px;
+            color: white;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, var(--success-color), #219653);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, var(--calibration-color), #2980b9);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            color: #212529;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        .spinner-border-custom {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-width: 0.2rem;
+        }
+        
+        /* FIX FOR ENGLISH DATE DISPLAY IN RTL CONTEXT */
+        .english-date {
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: embed !important;
+            display: inline-block;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons .btn {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+                margin: 1px;
+                min-width: 60px;
+            }
+            
+            .home-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+            
+            .main-header {
+                padding-top: 60px;
+            }
+            
+            .header-badge-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
+            
+            .table-custom {
+                min-width: 1300px;
+            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--calibration-color);
+            border-radius: 10px;
+        }
+        
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--calibration-color), #2980b9);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        /* Modal Fix - Prevent background scroll */
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+    
+    <!-- Main Container -->
+    <div class="container-fluid main-container">
+        <!-- Main Header -->
+        <div class="main-header fade-in">
+            <!-- Return to Home Button -->
+            <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
+                <i class="fas fa-home"></i> العودة للرئيسية
+            </a>
+            
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1><i class="fas fa-tools me-2"></i> نظام إدارة معايرة الأجهزة - معمل كواليتك إنترناشيونال</h1>
+                        <p class="lead mb-0">نظام متكامل لتسجيل وإدارة معايرة الأجهزة والمعايير الداخلية والخارجية</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
+                        <div class="header-badge d-inline-block me-3">
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> جهاز
+                        </div>
+                        <div class="header-badge d-inline-block">
+                            <i class="fas fa-calendar me-2"></i>
+                            <span id="currentDate">--/--/----</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-calibration">
+                        <i class="fas fa-tools me-2"></i> إدارة معايرة الأجهزة
+                    </div>
+                    <div class="card-body">
+                        <form id="calibrationForm">
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-info-circle"></i> المعلومات الأساسية للجهاز
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم السجل *</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_recordId" placeholder="رقم السجل" required oninput="checkDuplicateRecordNumber()">
+                                        <div class="form-text text-danger duplicate-warning" id="duplicateRecordNumberWarning" style="display: none;">
+                                            <i class="fas fa-exclamation-triangle me-1"></i> هذا الرقم موجود مسبقاً في النظام!
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اسم الجهاز *</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_deviceName" placeholder="اسم الجهاز" required>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الموقع</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_location" placeholder="موقع الجهاز">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الرقم التسلسلي</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_serialNumber" placeholder="الرقم التسلسلي">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الكود الداخلي</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_internalCode" placeholder="الكود الداخلي">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الوصف</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_description" placeholder="وصف الجهاز">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الفئة</label>
+                                        <select class="form-select form-select-custom" id="calibration_category">
+                                            <option value="">اختر الفئة</option>
+                                            <option value="أجهزة قياس">أجهزة قياس</option>
+                                            <option value="أجهزة معايرة">أجهزة معايرة</option>
+                                            <option value="أجهزة اختبار">أجهزة اختبار</option>
+                                            <option value="معايير مرجعية">معايير مرجعية</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الأولوية</label>
+                                        <select class="form-select form-select-custom" id="calibration_priority">
+                                            <option value="">اختر الأولوية</option>
+                                            <option value="عالية">عالية</option>
+                                            <option value="متوسطة">متوسطة</option>
+                                            <option value="منخفضة">منخفضة</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-ruler"></i> نطاقات الجهاز
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 mb-2">
+                                        <label class="form-label-custom">نطاق الجهاز من</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_deviceRangeFrom" placeholder="من">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <label class="form-label-custom">نطاق الجهاز إلى</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_deviceRangeTo" placeholder="إلى">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <label class="form-label-custom">وحدة نطاق الجهاز</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_deviceRangeUnit" placeholder="الوحدة">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <label class="form-label-custom">نطاق التشغيل من</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_operatingRangeFrom" placeholder="من">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <label class="form-label-custom">نطاق التشغيل إلى</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_operatingRangeTo" placeholder="إلى">
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <label class="form-label-custom">وحدة نطاق التشغيل</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_operatingRangeUnit" placeholder="الوحدة">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">أقصى انحراف</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_maxDeviation" placeholder="أقصى انحراف">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">وحدة أقصى انحراف</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_maxDeviationUnit" placeholder="الوحدة">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-cogs"></i> معايرة داخلية
+                                </div>
+                                
+                                <!-- Internal Calibration Certificate Upload -->
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="upload-container" id="internalUploadContainer">
+                                            <h6><i class="fas fa-cloud-upload-alt me-2"></i>رفع شهادة المعايرة الداخلية (PDF أو صورة)</h6>
+                                            <p class="text-muted mb-2" style="font-size: 0.85rem;">الحد الأقصى لحجم الملف: 10 ميجابايت. الأنواع المسموحة: PNG, JPG, JPEG, PDF</p>
+                                            
+                                            <input type="file" id="internalFileInput" 
+                                                   accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                                                   style="display: none">
+                                            <button type="button" class="upload-btn" onclick="document.getElementById('internalFileInput').click()">
+                                                <i class="fas fa-folder-open me-1"></i> اختر ملف للرفع
+                                            </button>
+                                            <button type="button" class="upload-btn" onclick="uploadInternalFile()" id="internalUploadBtn">
+                                                <i class="fas fa-upload me-1"></i> رفع الملف
+                                            </button>
+                                            
+                                            <div class="upload-status" id="internalUploadStatus"></div>
+                                            
+                                            <div id="internalUploadedFileInfo" style="display: none; margin-top: 10px;">
+                                                <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                                    <div>
+                                                        <i class="fas fa-file me-2"></i>
+                                                        <span id="internalUploadedFileName"></span>
+                                                        <span class="badge bg-success ms-2" id="internalUploadedFileSize"></span>
+                                                    </div>
+                                                    <a href="#" target="_blank" class="file-link-btn" id="internalUploadedFileLink" style="display: none;">
+                                                        <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ المعايرة الداخلية</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="calibration_internalCalibrationDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تكرار المعايرة الداخلية</label>
+                                        <select class="form-select form-select-custom" id="calibration_internalCalibrationFrequency">
+                                            <option value="">اختر التكرار</option>
+                                            <option value="شهري">شهري</option>
+                                            <option value="ربع سنوي">ربع سنوي</option>
+                                            <option value="نصف سنوي">نصف سنوي</option>
+                                            <option value="سنوي">سنوي</option>
+                                            <option value="كل سنتين">كل سنتين</option>
+                                            <option value="كل 3 سنوات">كل 3 سنوات</option>
+                                            <option value="كل 5 سنوات">كل 5 سنوات</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ استحقاق المعايرة الداخلية</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="calibration_internalCalibrationDueDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تمت المعايرة بواسطة</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_internalCalibratedBy" placeholder="اسم المعاير">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-industry"></i> معايرة خارجية
+                                </div>
+                                
+                                <!-- External Calibration Certificate Upload -->
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="upload-container" id="externalUploadContainer">
+                                            <h6><i class="fas fa-cloud-upload-alt me-2"></i>رفع شهادة المعايرة الخارجية (PDF أو صورة)</h6>
+                                            <p class="text-muted mb-2" style="font-size: 0.85rem;">الحد الأقصى لحجم الملف: 10 ميجابايت. الأنواع المسموحة: PNG, JPG, JPEG, PDF</p>
+                                            
+                                            <input type="file" id="externalFileInput" 
+                                                   accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                                                   style="display: none">
+                                            <button type="button" class="upload-btn" onclick="document.getElementById('externalFileInput').click()">
+                                                <i class="fas fa-folder-open me-1"></i> اختر ملف للرفع
+                                            </button>
+                                            <button type="button" class="upload-btn" onclick="uploadExternalFile()" id="externalUploadBtn">
+                                                <i class="fas fa-upload me-1"></i> رفع الملف
+                                            </button>
+                                            
+                                            <div class="upload-status" id="externalUploadStatus"></div>
+                                            
+                                            <div id="externalUploadedFileInfo" style="display: none; margin-top: 10px;">
+                                                <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                                    <div>
+                                                        <i class="fas fa-file me-2"></i>
+                                                        <span id="externalUploadedFileName"></span>
+                                                        <span class="badge bg-success ms-2" id="externalUploadedFileSize"></span>
+                                                    </div>
+                                                    <a href="#" target="_blank" class="file-link-btn" id="externalUploadedFileLink" style="display: none;">
+                                                        <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ المعايرة الخارجية</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="calibration_externalCalibrationDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تكرار المعايرة الخارجية</label>
+                                        <select class="form-select form-select-custom" id="calibration_externalCalibrationFrequency">
+                                            <option value="">اختر التكرار</option>
+                                            <option value="سنوي">سنوي</option>
+                                            <option value="كل سنتين">كل سنتين</option>
+                                            <option value="كل 3 سنوات">كل 3 سنوات</option>
+                                            <option value="كل 5 سنوات">كل 5 سنوات</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ استحقاق المعايرة الخارجية</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="calibration_externalCalibrationDueDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تمت المعايرة بواسطة</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_externalCalibratedBy" placeholder="اسم المزود">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-link"></i> روابط ومعلومات إضافية
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">رابط البيانات ذات الصلة</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_relatedDataLink" placeholder="رابط البيانات">
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <label class="form-label-custom">معلومات إضافية</label>
+                                        <textarea class="form-control form-textarea-custom" id="calibration_additionalInfo" placeholder="أي معلومات إضافية عن الجهاز" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button type="button" onclick="resetCalibrationForm()" class="btn btn-outline-secondary">
+                                        <i class="fas fa-redo me-1"></i> مسح النموذج
+                                    </button>
+                                    <div>
+                                        <button type="button" onclick="addCalibrationRecord()" class="btn btn-success me-2" id="calibration_addBtn">
+                                            <i class="fas fa-plus me-1"></i> إضافة جديد
+                                        </button>
+                                        <button type="button" onclick="updateCalibrationRecord()" class="btn btn-primary" id="calibration_updateBtn" style="display: none;">
+                                            <i class="fas fa-save me-1"></i> تحديث السجل
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="calibration_editingId">
+                            <input type="hidden" id="calibration_internalRecordId">
+                            <input type="hidden" id="calibration_internalCertificateLink">
+                            <input type="hidden" id="calibration_externalCertificateLink">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Records Table Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="custom-card">
+                    <div class="card-header-custom card-header-calibration d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-list me-2"></i> قائمة أجهزة المعايرة</span>
+                        <div>
+                            <button onclick="loadCalibrationData()" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-sync-alt"></i> تحديث
+                            </button>
+                            <button onclick="exportCalibrationCSV()" class="btn btn-light btn-sm">
+                                <i class="fas fa-download"></i> تصدير
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="loading-spinner" id="calibrationLoadingSpinner">
+                            <div class="spinner-border text-primary spinner-border-custom" role="status">
+                                <span class="visually-hidden">جاري التحميل...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive" id="calibrationTableContainer" style="display: none;">
+                            <table class="table table-custom table-hover" id="calibrationDataTable">
+                            </table>
+                        </div>
+                        
+                        <div id="calibrationNoRecords" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-tools fa-4x text-muted mb-4"></i>
+                            <h4 class="text-muted">لا توجد أجهزة لعرضها</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="row mt-4 fade-in">
+            <div class="col-12 text-center">
+                <p class="text-muted">
+                    <i class="fas fa-copyright me-1"></i> نظام إدارة معايرة الأجهزة 
+                    <span id="currentYear"></span> | 
+                    <span id="appVersion" class="text-info">الإصدار 1.0 (مع منع تكرار أرقام السجلات)</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تأكيد الحذف</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle fa-2x float-start me-3"></i>
+                        <h5 class="alert-heading">تحذير!</h5>
+                        <p>هل أنت متأكد من حذف هذا الجهاز؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+                        <hr>
+                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">معايرة الأجهزة</span></p>
+                        <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
+                        <p class="mb-0"><strong>اسم الجهاز:</strong> <span id="deleteRecordName">غير معروف</span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> إلغاء
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn">
+                        <i class="fas fa-trash me-1"></i> نعم، احذف السجل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تفاصيل جهاز المعايرة</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr Calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // ================ CONFIGURATION ================
+        const CALIBRATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygfHsjEh7u1Rp3sh5p203T_Wx8SPeiQq47lbnD41aRH6nMY02AEg04Bf7lGlUI414rQg/exec";
+        const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwj4u5FnGHcCto7LPvolgvUdifPxVAbAUBUt3mD3thFJzNm47mIkDWYPv_2YFpNkIlUGg/exec";
+        
+        // ================ GLOBAL VARIABLES ================
+        let calibrationRecords = [];
+        let deleteRecordId = '';
+        let deleteRecordName = '';
+        let flatpickrInstances = {};
+        let deleteModalInstance = null;
+        let detailsModalInstance = null;
+        let selectedInternalFile = null;
+        let selectedExternalFile = null;
+        let uploadedInternalFileUrl = '';
+        let uploadedExternalFileUrl = '';
+        let isDuplicateRecordNumber = false;
+        
+        // ================ DATE SYSTEM FUNCTIONS ================
+        function formatDateToDMY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `D${day} M${month} Y${year}`;
+        }
+        
+        function parseDateFromDMY(dmyString) {
+            if (!dmyString) return null;
+            
+            dmyString = dmyString.toString().trim();
+            
+            const match = dmyString.match(/^D(\d+)\s+M(\d+)\s+Y(\d+)$/);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1;
+                const year = parseInt(match[3], 10);
+                
+                if (day < 1 || day > 31) return null;
+                if (month < 0 || month > 11) return null;
+                if (year < 1900 || year > 2100) return null;
+                
+                const dateObj = new Date(year, month, day);
+                if (dateObj.getDate() !== day || dateObj.getMonth() !== month || dateObj.getFullYear() !== year) {
+                    return null;
+                }
+                
+                return dateObj;
+            }
+            
+            return null;
+        }
+        
+        function formatDMYForDisplay(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return `<span class="english-date">${formatDateToDayMonthYear(regularDate)}</span>`;
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return `<span class="english-date">${dmyString}</span>`;
+            }
+            
+            const formattedDate = formatDateToDayMonthYear(dateObj);
+            return `<span class="english-date">${formattedDate}</span>`;
+        }
+        
+        function formatDateToDayMonthYear(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            
+            const day = date.getDate();
+            const monthIndex = date.getMonth();
+            const year = date.getFullYear();
+            
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            return `${day} ${monthNames[monthIndex]} ${year}`;
+        }
+        
+        function formatDMYForInput(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return formatDateToDDMMYYYY(regularDate);
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return '';
+            }
+            
+            return formatDateToDDMMYYYY(dateObj);
+        }
+        
+        function validateDMYDate(dmyString) {
+            if (!dmyString) return true;
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                try {
+                    const regularDate = new Date(dmyString);
+                    return !isNaN(regularDate.getTime());
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        function checkDuplicateRecordNumber() {
+            const recordNumberInput = document.getElementById('calibration_recordId');
+            const recordNumber = recordNumberInput.value.trim();
+            const editingId = document.getElementById('calibration_editingId').value;
+            const warningElement = document.getElementById('duplicateRecordNumberWarning');
+            
+            if (!recordNumber) {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+            
+            const duplicateRecord = calibrationRecords.find(record => {
+                if (editingId && record[0] === editingId) {
+                    return false;
+                }
+                return record[1] && record[1].toString().trim() === recordNumber;
+            });
+            
+            if (duplicateRecord) {
+                warningElement.style.display = 'block';
+                recordNumberInput.classList.add('is-invalid');
+                isDuplicateRecordNumber = true;
+                return true;
+            } else {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+        }
+        
+        // ================ FILE UPLOAD FUNCTIONS ================
+        function initializeFileUpload() {
+            // Internal file upload
+            const internalFileInput = document.getElementById('internalFileInput');
+            const internalUploadContainer = document.getElementById('internalUploadContainer');
+            
+            internalFileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0], 'internal');
+                }
+            });
+            
+            internalUploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                internalUploadContainer.classList.add('dragover');
+            });
+            
+            internalUploadContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                internalUploadContainer.classList.remove('dragover');
+            });
+            
+            internalUploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                internalUploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0], 'internal');
+                }
+            });
+            
+            // External file upload
+            const externalFileInput = document.getElementById('externalFileInput');
+            const externalUploadContainer = document.getElementById('externalUploadContainer');
+            
+            externalFileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0], 'external');
+                }
+            });
+            
+            externalUploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                externalUploadContainer.classList.add('dragover');
+            });
+            
+            externalUploadContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                externalUploadContainer.classList.remove('dragover');
+            });
+            
+            externalUploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                externalUploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0], 'external');
+                }
+            });
+        }
+        
+        function handleFileSelect(file, type) {
+            const allowedTypes = [
+                "image/png",
+                "image/jpeg",
+                "application/pdf"
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                showNotification("❌ فقط ملفات PNG, JPG, JPEG أو PDF مسموحة", "error");
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification("❌ حجم الملف كبير جداً (الحد الأقصى 10MB)", "error");
+                return;
+            }
+            
+            if (type === 'internal') {
+                selectedInternalFile = file;
+                document.getElementById('internalUploadedFileName').textContent = file.name;
+                document.getElementById('internalUploadedFileSize').textContent = formatFileSize(file.size);
+                document.getElementById('internalUploadedFileInfo').style.display = 'block';
+                document.getElementById('internalUploadedFileLink').style.display = 'none';
+                
+                const uploadStatus = document.getElementById('internalUploadStatus');
+                uploadStatus.textContent = '';
+                uploadStatus.className = 'upload-status';
+            } else {
+                selectedExternalFile = file;
+                document.getElementById('externalUploadedFileName').textContent = file.name;
+                document.getElementById('externalUploadedFileSize').textContent = formatFileSize(file.size);
+                document.getElementById('externalUploadedFileInfo').style.display = 'block';
+                document.getElementById('externalUploadedFileLink').style.display = 'none';
+                
+                const uploadStatus = document.getElementById('externalUploadStatus');
+                uploadStatus.textContent = '';
+                uploadStatus.className = 'upload-status';
+            }
+            
+            showNotification(`✅ تم اختيار الملف: ${file.name}`, 'success', 3000);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' بايت';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
+            else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
+        }
+        
+        async function uploadFile(file, type) {
+            const uploadBtn = type === 'internal' ? document.getElementById('internalUploadBtn') : document.getElementById('externalUploadBtn');
+            const uploadStatus = type === 'internal' ? document.getElementById('internalUploadStatus') : document.getElementById('externalUploadStatus');
+            
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الرفع...';
+            uploadStatus.textContent = 'جاري رفع الملف... ⏳';
+            uploadStatus.className = 'upload-status loading';
+            
+            try {
+                const reader = new FileReader();
+                
+                reader.onload = async function() {
+                    const base64 = reader.result.split(",")[1];
+                    
+                    const response = await fetch(UPLOAD_WEB_APP_URL, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            fileName: file.name,
+                            mimeType: file.type,
+                            fileData: base64
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        if (type === 'internal') {
+                            uploadedInternalFileUrl = data.url;
+                            document.getElementById('calibration_internalCertificateLink').value = uploadedInternalFileUrl;
+                            
+                            const fileLinkBtn = document.getElementById('internalUploadedFileLink');
+                            fileLinkBtn.href = uploadedInternalFileUrl;
+                            fileLinkBtn.style.display = 'inline-block';
+                        } else {
+                            uploadedExternalFileUrl = data.url;
+                            document.getElementById('calibration_externalCertificateLink').value = uploadedExternalFileUrl;
+                            
+                            const fileLinkBtn = document.getElementById('externalUploadedFileLink');
+                            fileLinkBtn.href = uploadedExternalFileUrl;
+                            fileLinkBtn.style.display = 'inline-block';
+                        }
+                        
+                        uploadStatus.textContent = '✅ تم رفع الملف بنجاح';
+                        uploadStatus.className = 'upload-status success';
+                        
+                        showNotification(`✅ تم رفع الملف بنجاح: ${file.name}`, 'success');
+                    } else {
+                        uploadStatus.textContent = '❌ فشل في رفع الملف: ' + (data.message || 'خطأ غير معروف');
+                        uploadStatus.className = 'upload-status error';
+                        showNotification(`❌ فشل في رفع الملف: ${data.message || 'خطأ غير معروف'}`, 'error');
+                    }
+                    
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                };
+                
+                reader.onerror = function() {
+                    uploadStatus.textContent = '❌ خطأ في قراءة الملف';
+                    uploadStatus.className = 'upload-status error';
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                    showNotification('❌ خطأ في قراءة الملف', 'error');
+                };
+                
+                reader.readAsDataURL(file);
+                
+            } catch (error) {
+                uploadStatus.textContent = '❌ فشل في رفع الملف: ' + error;
+                uploadStatus.className = 'upload-status error';
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                showNotification('❌ فشل في رفع الملف: ' + error, 'error');
+            }
+        }
+        
+        function uploadInternalFile() {
+            if (!selectedInternalFile) {
+                showNotification("⚠️ يرجى اختيار ملف أولاً", "warning");
+                return;
+            }
+            uploadFile(selectedInternalFile, 'internal');
+        }
+        
+        function uploadExternalFile() {
+            if (!selectedExternalFile) {
+                showNotification("⚠️ يرجى اختيار ملف أولاً", "warning");
+                return;
+            }
+            uploadFile(selectedExternalFile, 'external');
+        }
+        
+        // ================ INITIALIZATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
+            
+            initializeDatePickers();
+            initializeFileUpload();
+            
+            setTimeout(() => {
+                loadCalibrationData();
+            }, 500);
+            
+            document.getElementById('deleteModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            });
+            
+            document.getElementById('detailsModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            });
+            
+            document.getElementById('calibration_recordId').addEventListener('input', checkDuplicateRecordNumber);
+        });
+        
+        function initializeDatePickers() {
+            if (flatpickrInstances.internalCalibrationDate) flatpickrInstances.internalCalibrationDate.destroy();
+            if (flatpickrInstances.internalCalibrationDueDate) flatpickrInstances.internalCalibrationDueDate.destroy();
+            if (flatpickrInstances.externalCalibrationDate) flatpickrInstances.externalCalibrationDate.destroy();
+            if (flatpickrInstances.externalCalibrationDueDate) flatpickrInstances.externalCalibrationDueDate.destroy();
+            
+            const dateOptions = {
+                locale: 'ar',
+                dateFormat: "d/m/Y",
+                altFormat: "d/m/Y",
+                altInput: false,
+                allowInput: true,
+                clickOpens: true,
+                position: 'auto',
+                monthSelectorType: 'static',
+                yearSelectorType: 'scrolling',
+                prevArrow: '<i class="fas fa-chevron-right"></i>',
+                nextArrow: '<i class="fas fa-chevron-left"></i>',
+                weekNumbers: false,
+                disableMobile: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const formattedDate = formatDateToDDMMYYYY(date);
+                        instance.input.value = formattedDate;
+                    }
+                }
+            };
+            
+            flatpickrInstances.internalCalibrationDate = flatpickr('#calibration_internalCalibrationDate', dateOptions);
+            flatpickrInstances.internalCalibrationDueDate = flatpickr('#calibration_internalCalibrationDueDate', dateOptions);
+            flatpickrInstances.externalCalibrationDate = flatpickr('#calibration_externalCalibrationDate', dateOptions);
+            flatpickrInstances.externalCalibrationDueDate = flatpickr('#calibration_externalCalibrationDueDate', dateOptions);
+            
+            if (flatpickrInstances.internalCalibrationDate) flatpickrInstances.internalCalibrationDate.set('locale', 'ar');
+            if (flatpickrInstances.internalCalibrationDueDate) flatpickrInstances.internalCalibrationDueDate.set('locale', 'ar');
+            if (flatpickrInstances.externalCalibrationDate) flatpickrInstances.externalCalibrationDate.set('locale', 'ar');
+            if (flatpickrInstances.externalCalibrationDueDate) flatpickrInstances.externalCalibrationDueDate.set('locale', 'ar');
+        }
+        
+        function formatDateToDDMMYYYY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
+            
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    if (day < 1 || day > 31) return null;
+                    if (month < 0 || month > 11) return null;
+                    if (year < 1900 || year > 2100) return null;
+                    
+                    return new Date(year, month, day);
+                }
+            }
+            
+            return null;
+        }
+        
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        // ================ NOTIFICATION SYSTEM ================
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-${getNotificationIcon(type)} me-3"></i>
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, duration);
+            }
+            
+            return notification;
+        }
+        
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                default: return 'info-circle';
+            }
+        }
+        
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // ================ JSONP FUNCTION ================
+        function jsonp(url, callbackParam = 'callback') {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
+                
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + callbackParam + '=' + callbackName;
+                
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                
+                script.onerror = function() {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        // ================ VALIDATION HELPER ================
+        function validateForm(requiredFields) {
+            let isValid = true;
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            return isValid;
+        }
+        
+        function validateDate(dateString) {
+            if (!dateString) return true;
+            
+            if (validateDMYDate(dateString)) {
+                return true;
+            }
+            
+            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                const match = dateString.match(ddMMyyyyRegex);
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
+                
+                if (year < 1900 || year > 2100) return false;
+                if (month < 1 || month > 12) return false;
+                if (day < 1 || day > 31) return false;
+                
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
+                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            return false;
+        }
+        
+        // ================ CALIBRATION SYSTEM FUNCTIONS ================
+        async function loadCalibrationData() {
+            const spinner = document.getElementById('calibrationLoadingSpinner');
+            const tableContainer = document.getElementById('calibrationTableContainer');
+            const noRecords = document.getElementById('calibrationNoRecords');
+            
+            spinner.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            noRecords.style.display = 'none';
+            
+            try {
+                const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=getAll&t=${Date.now()}`);
+                
+                spinner.style.display = 'none';
+                
+                let records = [];
+                let responseStatus = 'error';
+                
+                if (res && res.status === 'success') {
+                    responseStatus = 'success';
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (res.records && typeof res.records === 'object') {
+                        const keys = Object.keys(res.records);
+                        if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
+                            records = res.records[keys[0]];
+                        }
+                    }
+                } else if (Array.isArray(res)) {
+                    records = res;
+                    responseStatus = 'success';
+                }
+                
+                if (responseStatus !== 'success') {
+                    noRecords.style.display = 'block';
+                    showNotification('❌ فشل في تحميل أجهزة المعايرة', 'error');
+                    document.getElementById('totalRecords').textContent = '0';
+                    return;
+                }
+                
+                calibrationRecords = records;
+                
+                if (calibrationRecords.length > 0) {
+                    displayCalibrationRecords(calibrationRecords);
+                    tableContainer.style.display = 'block';
+                    document.getElementById('totalRecords').textContent = calibrationRecords.length.toLocaleString('ar-SA');
+                } else {
+                    noRecords.style.display = 'block';
+                    document.getElementById('totalRecords').textContent = '0';
+                }
+            } catch (error) {
+                spinner.style.display = 'none';
+                noRecords.style.display = 'block';
+                showNotification('❌ خطأ في تحميل أجهزة المعايرة', 'error');
+                document.getElementById('totalRecords').textContent = '0';
+            }
+        }
+        
+        function displayCalibrationRecords(records) {
+            const table = document.getElementById('calibrationDataTable');
+            
+            let html = '<thead><tr>';
+            const headers = [
+                'رقم السجل', 'اسم الجهاز', 'الموقع', 'الرقم التسلسلي', 
+                'الكود الداخلي', 'الفئة', 'تاريخ معايرة داخلية', 
+                'تاريخ استحقاق معايرة داخلية', 'تاريخ معايرة خارجية',
+                'تاريخ استحقاق معايرة خارجية', 'شهادة داخلية', 'شهادة خارجية', 'الإجراءات'
+            ];
+            headers.forEach(h => {
+                html += `<th>${h}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            records.forEach((record) => {
+                html += '<tr>';
+                
+                // Column mapping based on Google Sheet structure:
+                // 0: ID, 1: رقم السجل, 2: اسم الجهاز, 3: الموقع, 4: الرقم التسلسلي,
+                // 5: الكود الداخلي, 6: الوصف, 7: الفئة, 8: الأولوية,
+                // 9: نطاق الجهاز من, 10: نطاق الجهاز إلى, 11: وحدة نطاق الجهاز,
+                // 12: نطاق التشغيل من, 13: نطاق التشغيل إلى, 14: وحدة نطاق التشغيل,
+                // 15: أقصى انحراف, 16: وحدة أقصى انحراف, 17: تاريخ المعايرة الداخلية,
+                // 18: تكرار المعايرة الداخلية, 19: تاريخ استحقاق المعايرة الداخلية,
+                // 20: تمت المعايرة الداخلية بواسطة, 21: رابط شهادة المعايرة الداخلية,
+                // 22: تاريخ المعايرة الخارجية, 23: تكرار المعايرة الخارجية,
+                // 24: تاريخ استحقاق المعايرة الخارجية, 25: تمت المعايرة الخارجية بواسطة,
+                // 26: رابط شهادة المعايرة الخارجية, 27: رابط البيانات ذات الصلة,
+                // 28: معلومات إضافية
+                
+                html += `<td><strong>${escapeHtml(record[1] || '')}</strong></td>`;
+                html += `<td>${escapeHtml(record[2] || '')}</td>`;
+                html += `<td>${escapeHtml(record[3] || '')}</td>`;
+                html += `<td>${escapeHtml(record[4] || '')}</td>`;
+                html += `<td>${escapeHtml(record[5] || '')}</td>`;
+                html += `<td>${escapeHtml(record[7] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(record[17] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(record[19] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(record[22] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(record[24] || '')}</td>`;
+                
+                // Internal certificate link
+                const internalCertLink = record[21] || '';
+                if (internalCertLink && internalCertLink.trim() !== '') {
+                    html += `<td>
+                        <a href="${escapeHtml(internalCertLink)}" target="_blank" class="file-link-btn">
+                            <i class="fas fa-external-link-alt me-1"></i> فتح
+                        </a>
+                    </td>`;
+                } else {
+                    html += `<td><span class="text-muted">لا يوجد</span></td>`;
+                }
+                
+                // External certificate link
+                const externalCertLink = record[26] || '';
+                if (externalCertLink && externalCertLink.trim() !== '') {
+                    html += `<td>
+                        <a href="${escapeHtml(externalCertLink)}" target="_blank" class="file-link-btn">
+                            <i class="fas fa-external-link-alt me-1"></i> فتح
+                        </a>
+                    </td>`;
+                } else {
+                    html += `<td><span class="text-muted">لا يوجد</span></td>`;
+                }
+                
+                html += `<td class="action-buttons">
+                    <button onclick="editCalibrationRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                        <i class="fas fa-edit"></i> تعديل
+                    </button>
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[2])}', '${escapeHtml(record[1] || '')}')" class="btn btn-sm btn-danger" title="حذف">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                    <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
+                        <i class="fas fa-eye"></i> عرض
+                    </button>
+                </td>`;
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+        
+        async function addCalibrationRecord() {
+            if (checkDuplicateRecordNumber()) {
+                showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+
+            const requiredFields = ['calibration_recordId', 'calibration_deviceName'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+
+            const internalCalibrationDate = document.getElementById('calibration_internalCalibrationDate').value;
+            const internalCalibrationDueDate = document.getElementById('calibration_internalCalibrationDueDate').value;
+            const externalCalibrationDate = document.getElementById('calibration_externalCalibrationDate').value;
+            const externalCalibrationDueDate = document.getElementById('calibration_externalCalibrationDueDate').value;
+
+            const button = document.getElementById('calibration_addBtn');
+            const originalHtml = button.innerHTML;
+
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
+
+            // Validate dates
+            if (internalCalibrationDate && !validateDate(internalCalibrationDate)) {
+                showNotification('❌ تاريخ المعايرة الداخلية غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (internalCalibrationDueDate && !validateDate(internalCalibrationDueDate)) {
+                showNotification('❌ تاريخ استحقاق المعايرة الداخلية غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (externalCalibrationDate && !validateDate(externalCalibrationDate)) {
+                showNotification('❌ تاريخ المعايرة الخارجية غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (externalCalibrationDueDate && !validateDate(externalCalibrationDueDate)) {
+                showNotification('❌ تاريخ استحقاق المعايرة الخارجية غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            const internalRecordId = 'CAL-' + Date.now();
+            document.getElementById('calibration_internalRecordId').value = internalRecordId;
+
+            const internalCertLink = document.getElementById('calibration_internalCertificateLink').value;
+            const externalCertLink = document.getElementById('calibration_externalCertificateLink').value;
+
+            // Convert dates to D M Y format
+            const internalCalibrationDateDMY = internalCalibrationDate ? formatDateToDMY(parseDateDDMMYYYY(internalCalibrationDate)) : '';
+            const internalCalibrationDueDateDMY = internalCalibrationDueDate ? formatDateToDMY(parseDateDDMMYYYY(internalCalibrationDueDate)) : '';
+            const externalCalibrationDateDMY = externalCalibrationDate ? formatDateToDMY(parseDateDDMMYYYY(externalCalibrationDate)) : '';
+            const externalCalibrationDueDateDMY = externalCalibrationDueDate ? formatDateToDMY(parseDateDDMMYYYY(externalCalibrationDueDate)) : '';
+
+            const fields = [
+                'calibration_recordId',
+                'calibration_deviceName',
+                'calibration_location',
+                'calibration_serialNumber',
+                'calibration_internalCode',
+                'calibration_description',
+                'calibration_category',
+                'calibration_priority',
+                'calibration_deviceRangeFrom',
+                'calibration_deviceRangeTo',
+                'calibration_deviceRangeUnit',
+                'calibration_operatingRangeFrom',
+                'calibration_operatingRangeTo',
+                'calibration_operatingRangeUnit',
+                'calibration_maxDeviation',
+                'calibration_maxDeviationUnit',
+                'calibration_internalCalibrationFrequency',
+                'calibration_internalCalibratedBy',
+                'calibration_externalCalibrationFrequency',
+                'calibration_externalCalibratedBy',
+                'calibration_relatedDataLink',
+                'calibration_additionalInfo'
+            ];
+
+            const paramMap = {
+                'calibration_recordId': 'recordId',
+                'calibration_deviceName': 'deviceName',
+                'calibration_location': 'location',
+                'calibration_serialNumber': 'serialNumber',
+                'calibration_internalCode': 'internalCode',
+                'calibration_description': 'description',
+                'calibration_category': 'category',
+                'calibration_priority': 'priority',
+                'calibration_deviceRangeFrom': 'deviceRangeFrom',
+                'calibration_deviceRangeTo': 'deviceRangeTo',
+                'calibration_deviceRangeUnit': 'deviceRangeUnit',
+                'calibration_operatingRangeFrom': 'operatingRangeFrom',
+                'calibration_operatingRangeTo': 'operatingRangeTo',
+                'calibration_operatingRangeUnit': 'operatingRangeUnit',
+                'calibration_maxDeviation': 'maxDeviation',
+                'calibration_maxDeviationUnit': 'maxDeviationUnit',
+                'calibration_internalCalibrationFrequency': 'internalCalibrationFrequency',
+                'calibration_internalCalibratedBy': 'internalCalibratedBy',
+                'calibration_externalCalibrationFrequency': 'externalCalibrationFrequency',
+                'calibration_externalCalibratedBy': 'externalCalibratedBy',
+                'calibration_relatedDataLink': 'relatedDataLink',
+                'calibration_additionalInfo': 'additionalInfo'
+            };
+
+            let q = '';
+            
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+
+            q += `internalCalibrationDate=${encodeURIComponent(internalCalibrationDateDMY)}&`;
+            q += `internalCalibrationDueDate=${encodeURIComponent(internalCalibrationDueDateDMY)}&`;
+            q += `externalCalibrationDate=${encodeURIComponent(externalCalibrationDateDMY)}&`;
+            q += `externalCalibrationDueDate=${encodeURIComponent(externalCalibrationDueDateDMY)}&`;
+            q += `internalCertificateLink=${encodeURIComponent(internalCertLink || '')}&`;
+            q += `externalCertificateLink=${encodeURIComponent(externalCertLink || '')}`;
+
+            try {
+                const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=add&${q}`);
+
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
+                    resetCalibrationForm();
+                    await loadCalibrationData();
+                } else {
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ خطأ في الإضافة', 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        async function editCalibrationRecord(recordId) {
+            showNotification('🔍 جاري تحميل بيانات الجهاز...', 'info');
+            
+            const record = calibrationRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (record) {
+                fillCalibrationForm(record);
+                document.getElementById('calibration_updateBtn').style.display = 'inline-block';
+                document.getElementById('calibration_addBtn').style.display = 'none';
+                showNotification('✅ تم تحميل بيانات الجهاز', 'success');
+            } else {
+                showNotification('❌ لم يتم العثور على الجهاز', 'error');
+            }
+        }
+        
+        function fillCalibrationForm(record) {
+            document.getElementById('calibration_recordId').value = record[1] || '';
+            document.getElementById('calibration_deviceName').value = record[2] || '';
+            document.getElementById('calibration_location').value = record[3] || '';
+            document.getElementById('calibration_serialNumber').value = record[4] || '';
+            document.getElementById('calibration_internalCode').value = record[5] || '';
+            document.getElementById('calibration_description').value = record[6] || '';
+            document.getElementById('calibration_category').value = record[7] || '';
+            document.getElementById('calibration_priority').value = record[8] || '';
+            document.getElementById('calibration_deviceRangeFrom').value = record[9] || '';
+            document.getElementById('calibration_deviceRangeTo').value = record[10] || '';
+            document.getElementById('calibration_deviceRangeUnit').value = record[11] || '';
+            document.getElementById('calibration_operatingRangeFrom').value = record[12] || '';
+            document.getElementById('calibration_operatingRangeTo').value = record[13] || '';
+            document.getElementById('calibration_operatingRangeUnit').value = record[14] || '';
+            document.getElementById('calibration_maxDeviation').value = record[15] || '';
+            document.getElementById('calibration_maxDeviationUnit').value = record[16] || '';
+            document.getElementById('calibration_internalCalibrationFrequency').value = record[18] || '';
+            document.getElementById('calibration_internalCalibratedBy').value = record[20] || '';
+            document.getElementById('calibration_externalCalibrationFrequency').value = record[23] || '';
+            document.getElementById('calibration_externalCalibratedBy').value = record[25] || '';
+            document.getElementById('calibration_relatedDataLink').value = record[27] || '';
+            document.getElementById('calibration_additionalInfo').value = record[28] || '';
+            
+            // Set certificate links
+            const internalCertLink = record[21] || '';
+            const externalCertLink = record[26] || '';
+            
+            document.getElementById('calibration_internalCertificateLink').value = internalCertLink;
+            document.getElementById('calibration_externalCertificateLink').value = externalCertLink;
+            
+            // Display internal file info if there's a file link
+            if (internalCertLink && internalCertLink.trim() !== '') {
+                document.getElementById('internalUploadedFileName').textContent = 'شهادة معايرة داخلية';
+                document.getElementById('internalUploadedFileSize').textContent = '';
+                document.getElementById('internalUploadedFileInfo').style.display = 'block';
+                
+                const fileLinkBtn = document.getElementById('internalUploadedFileLink');
+                fileLinkBtn.href = internalCertLink;
+                fileLinkBtn.style.display = 'inline-block';
+                
+                const uploadStatus = document.getElementById('internalUploadStatus');
+                uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                uploadStatus.className = 'upload-status success';
+            }
+            
+            // Display external file info if there's a file link
+            if (externalCertLink && externalCertLink.trim() !== '') {
+                document.getElementById('externalUploadedFileName').textContent = 'شهادة معايرة خارجية';
+                document.getElementById('externalUploadedFileSize').textContent = '';
+                document.getElementById('externalUploadedFileInfo').style.display = 'block';
+                
+                const fileLinkBtn = document.getElementById('externalUploadedFileLink');
+                fileLinkBtn.href = externalCertLink;
+                fileLinkBtn.style.display = 'inline-block';
+                
+                const uploadStatus = document.getElementById('externalUploadStatus');
+                uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                uploadStatus.className = 'upload-status success';
+            }
+            
+            // Set date values
+            const internalCalibrationDateFormatted = formatDMYForInput(record[17] || '');
+            const internalCalibrationDueDateFormatted = formatDMYForInput(record[19] || '');
+            const externalCalibrationDateFormatted = formatDMYForInput(record[22] || '');
+            const externalCalibrationDueDateFormatted = formatDMYForInput(record[24] || '');
+            
+            document.getElementById('calibration_internalCalibrationDate').value = internalCalibrationDateFormatted;
+            document.getElementById('calibration_internalCalibrationDueDate').value = internalCalibrationDueDateFormatted;
+            document.getElementById('calibration_externalCalibrationDate').value = externalCalibrationDateFormatted;
+            document.getElementById('calibration_externalCalibrationDueDate').value = externalCalibrationDueDateFormatted;
+            
+            // Update Flatpickr instances
+            if (flatpickrInstances.internalCalibrationDate && internalCalibrationDateFormatted) {
+                try {
+                    const parts = internalCalibrationDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.internalCalibrationDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting internal calibration date:', e);
+                }
+            }
+            
+            if (flatpickrInstances.internalCalibrationDueDate && internalCalibrationDueDateFormatted) {
+                try {
+                    const parts = internalCalibrationDueDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.internalCalibrationDueDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting internal calibration due date:', e);
+                }
+            }
+            
+            if (flatpickrInstances.externalCalibrationDate && externalCalibrationDateFormatted) {
+                try {
+                    const parts = externalCalibrationDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.externalCalibrationDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting external calibration date:', e);
+                }
+            }
+            
+            if (flatpickrInstances.externalCalibrationDueDate && externalCalibrationDueDateFormatted) {
+                try {
+                    const parts = externalCalibrationDueDateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.externalCalibrationDueDate.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting external calibration due date:', e);
+                }
+            }
+            
+            document.getElementById('calibration_editingId').value = record[0];
+            document.getElementById('calibration_internalRecordId').value = record[0];
+            
+            setTimeout(() => {
+                checkDuplicateRecordNumber();
+            }, 100);
+        }
+        
+        async function updateCalibrationRecord() {
+            if (checkDuplicateRecordNumber()) {
+                showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+
+            const recordId = document.getElementById('calibration_editingId').value;
+            if (!recordId) {
+                showNotification('❌ لم يتم تحديد جهاز للتحديث', 'error');
+                return;
+            }
+
+            const requiredFields = ['calibration_recordId', 'calibration_deviceName'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+
+            const internalCalibrationDate = document.getElementById('calibration_internalCalibrationDate').value;
+            const internalCalibrationDueDate = document.getElementById('calibration_internalCalibrationDueDate').value;
+            const externalCalibrationDate = document.getElementById('calibration_externalCalibrationDate').value;
+            const externalCalibrationDueDate = document.getElementById('calibration_externalCalibrationDueDate').value;
+
+            const button = document.getElementById('calibration_updateBtn');
+            const originalHtml = button.innerHTML;
+
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
+
+            if (internalCalibrationDate && !validateDate(internalCalibrationDate)) {
+                showNotification('❌ تاريخ المعايرة الداخلية غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (internalCalibrationDueDate && !validateDate(internalCalibrationDueDate)) {
+                showNotification('❌ تاريخ استحقاق المعايرة الداخلية غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (externalCalibrationDate && !validateDate(externalCalibrationDate)) {
+                showNotification('❌ تاريخ المعايرة الخارجية غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            if (externalCalibrationDueDate && !validateDate(externalCalibrationDueDate)) {
+                showNotification('❌ تاريخ استحقاق المعايرة الخارجية غير صحيح', 'error');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                return;
+            }
+
+            const internalCertLink = document.getElementById('calibration_internalCertificateLink').value;
+            const externalCertLink = document.getElementById('calibration_externalCertificateLink').value;
+
+            // Convert dates to D M Y format
+            const internalCalibrationDateDMY = internalCalibrationDate ? formatDateToDMY(parseDateDDMMYYYY(internalCalibrationDate)) : '';
+            const internalCalibrationDueDateDMY = internalCalibrationDueDate ? formatDateToDMY(parseDateDDMMYYYY(internalCalibrationDueDate)) : '';
+            const externalCalibrationDateDMY = externalCalibrationDate ? formatDateToDMY(parseDateDDMMYYYY(externalCalibrationDate)) : '';
+            const externalCalibrationDueDateDMY = externalCalibrationDueDate ? formatDateToDMY(parseDateDDMMYYYY(externalCalibrationDueDate)) : '';
+
+            const fields = [
+                'calibration_recordId',
+                'calibration_deviceName',
+                'calibration_location',
+                'calibration_serialNumber',
+                'calibration_internalCode',
+                'calibration_description',
+                'calibration_category',
+                'calibration_priority',
+                'calibration_deviceRangeFrom',
+                'calibration_deviceRangeTo',
+                'calibration_deviceRangeUnit',
+                'calibration_operatingRangeFrom',
+                'calibration_operatingRangeTo',
+                'calibration_operatingRangeUnit',
+                'calibration_maxDeviation',
+                'calibration_maxDeviationUnit',
+                'calibration_internalCalibrationFrequency',
+                'calibration_internalCalibratedBy',
+                'calibration_externalCalibrationFrequency',
+                'calibration_externalCalibratedBy',
+                'calibration_relatedDataLink',
+                'calibration_additionalInfo'
+            ];
+
+            const paramMap = {
+                'calibration_recordId': 'recordId',
+                'calibration_deviceName': 'deviceName',
+                'calibration_location': 'location',
+                'calibration_serialNumber': 'serialNumber',
+                'calibration_internalCode': 'internalCode',
+                'calibration_description': 'description',
+                'calibration_category': 'category',
+                'calibration_priority': 'priority',
+                'calibration_deviceRangeFrom': 'deviceRangeFrom',
+                'calibration_deviceRangeTo': 'deviceRangeTo',
+                'calibration_deviceRangeUnit': 'deviceRangeUnit',
+                'calibration_operatingRangeFrom': 'operatingRangeFrom',
+                'calibration_operatingRangeTo': 'operatingRangeTo',
+                'calibration_operatingRangeUnit': 'operatingRangeUnit',
+                'calibration_maxDeviation': 'maxDeviation',
+                'calibration_maxDeviationUnit': 'maxDeviationUnit',
+                'calibration_internalCalibrationFrequency': 'internalCalibrationFrequency',
+                'calibration_internalCalibratedBy': 'internalCalibratedBy',
+                'calibration_externalCalibrationFrequency': 'externalCalibrationFrequency',
+                'calibration_externalCalibratedBy': 'externalCalibratedBy',
+                'calibration_relatedDataLink': 'relatedDataLink',
+                'calibration_additionalInfo': 'additionalInfo'
+            };
+
+            let q = `internalRecordId=${encodeURIComponent(recordId)}&`;
+
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+
+            q += `internalCalibrationDate=${encodeURIComponent(internalCalibrationDateDMY)}&`;
+            q += `internalCalibrationDueDate=${encodeURIComponent(internalCalibrationDueDateDMY)}&`;
+            q += `externalCalibrationDate=${encodeURIComponent(externalCalibrationDateDMY)}&`;
+            q += `externalCalibrationDueDate=${encodeURIComponent(externalCalibrationDueDateDMY)}&`;
+            q += `internalCertificateLink=${encodeURIComponent(internalCertLink || '')}&`;
+            q += `externalCertificateLink=${encodeURIComponent(externalCertLink || '')}`;
+
+            try {
+                const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=update&${q}`);
+
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
+                    resetCalibrationForm();
+                    await loadCalibrationData();
+                } else {
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ خطأ في التحديث', 'error');
+                console.error('Update error:', error);
+            } finally {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
+        }
+        
+        function resetCalibrationForm() {
+            document.getElementById('calibrationForm').reset();
+            document.getElementById('calibration_editingId').value = '';
+            document.getElementById('calibration_internalRecordId').value = '';
+            document.getElementById('calibration_internalCertificateLink').value = '';
+            document.getElementById('calibration_externalCertificateLink').value = '';
+            document.getElementById('calibration_addBtn').style.display = 'inline-block';
+            document.getElementById('calibration_updateBtn').style.display = 'none';
+            document.querySelectorAll('#calibrationForm .is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+            
+            document.getElementById('duplicateRecordNumberWarning').style.display = 'none';
+            isDuplicateRecordNumber = false;
+            
+            // Reset dropdowns
+            document.getElementById('calibration_category').value = '';
+            document.getElementById('calibration_priority').value = '';
+            document.getElementById('calibration_internalCalibrationFrequency').value = '';
+            document.getElementById('calibration_externalCalibrationFrequency').value = '';
+            
+            // Reset file upload sections
+            selectedInternalFile = null;
+            selectedExternalFile = null;
+            uploadedInternalFileUrl = '';
+            uploadedExternalFileUrl = '';
+            
+            document.getElementById('internalUploadedFileInfo').style.display = 'none';
+            document.getElementById('internalUploadedFileLink').style.display = 'none';
+            document.getElementById('internalUploadStatus').textContent = '';
+            document.getElementById('internalUploadStatus').className = 'upload-status';
+            document.getElementById('internalFileInput').value = '';
+            
+            document.getElementById('externalUploadedFileInfo').style.display = 'none';
+            document.getElementById('externalUploadedFileLink').style.display = 'none';
+            document.getElementById('externalUploadStatus').textContent = '';
+            document.getElementById('externalUploadStatus').className = 'upload-status';
+            document.getElementById('externalFileInput').value = '';
+            
+            // Reset dates
+            if (flatpickrInstances.internalCalibrationDate) flatpickrInstances.internalCalibrationDate.clear();
+            if (flatpickrInstances.internalCalibrationDueDate) flatpickrInstances.internalCalibrationDueDate.clear();
+            if (flatpickrInstances.externalCalibrationDate) flatpickrInstances.externalCalibrationDate.clear();
+            if (flatpickrInstances.externalCalibrationDueDate) flatpickrInstances.externalCalibrationDueDate.clear();
+        }
+        
+        function exportCalibrationCSV() {
+            if (calibrationRecords.length === 0) {
+                showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
+                return;
+            }
+            
+            showNotification('📥 جاري تصدير أجهزة المعايرة...', 'info');
+            
+            try {
+                const headers = [
+                    'رقم السجل', 'اسم الجهاز', 'الموقع', 'الرقم التسلسلي', 
+                    'الكود الداخلي', 'الوصف', 'الفئة', 'الأولوية',
+                    'نطاق الجهاز من', 'نطاق الجهاز إلى', 'وحدة نطاق الجهاز',
+                    'نطاق التشغيل من', 'نطاق التشغيل إلى', 'وحدة نطاق التشغيل',
+                    'أقصى انحراف', 'وحدة أقصى انحراف', 'تاريخ المعايرة الداخلية',
+                    'تكرار المعايرة الداخلية', 'تاريخ استحقاق المعايرة الداخلية',
+                    'تمت المعايرة الداخلية بواسطة', 'رابط شهادة المعايرة الداخلية',
+                    'تاريخ المعايرة الخارجية', 'تكرار المعايرة الخارجية',
+                    'تاريخ استحقاق المعايرة الخارجية', 'تمت المعايرة الخارجية بواسطة',
+                    'رابط شهادة المعايرة الخارجية', 'رابط البيانات ذات الصلة',
+                    'معلومات إضافية'
+                ];
+                
+                let csvContent = '\uFEFF';
+                csvContent += headers.join(",") + "\r\n";
+                
+                calibrationRecords.forEach(record => {
+                    const row = [
+                        record[1] || '',
+                        record[2] || '',
+                        record[3] || '',
+                        record[4] || '',
+                        record[5] || '',
+                        record[6] || '',
+                        record[7] || '',
+                        record[8] || '',
+                        record[9] || '',
+                        record[10] || '',
+                        record[11] || '',
+                        record[12] || '',
+                        record[13] || '',
+                        record[14] || '',
+                        record[15] || '',
+                        record[16] || '',
+                        formatDMYForDisplay(record[17] || '').replace(/<[^>]*>/g, ''),
+                        record[18] || '',
+                        formatDMYForDisplay(record[19] || '').replace(/<[^>]*>/g, ''),
+                        record[20] || '',
+                        record[21] || '',
+                        formatDMYForDisplay(record[22] || '').replace(/<[^>]*>/g, ''),
+                        record[23] || '',
+                        formatDMYForDisplay(record[24] || '').replace(/<[^>]*>/g, ''),
+                        record[25] || '',
+                        record[26] || '',
+                        record[27] || '',
+                        record[28] || ''
+                    ];
+                    
+                    const escapedRow = row.map(cell => {
+                        return `"${cell.toString().replace(/"/g, '""')}"`;
+                    });
+                    csvContent += escapedRow.join(",") + "\r\n";
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", `أجهزة_المعايرة_${new Date().toISOString().slice(0,10)}.csv`);
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                showNotification(`✅ تم تصدير ${calibrationRecords.length} جهاز`, 'success');
+            } catch (error) {
+                showNotification('❌ خطأ في التصدير', 'error');
+            }
+        }
+        
+        function viewDetails(recordId) {
+            const record = calibrationRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (!record) {
+                showNotification('❌ لم يتم العثور على الجهاز', 'error');
+                return;
+            }
+            
+            const internalCertLink = record[21] || '';
+            const externalCertLink = record[26] || '';
+            
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[1] || '')}</p>
+                        <p><strong>اسم الجهاز:</strong> ${escapeHtml(record[2])}</p>
+                        <p><strong>الموقع:</strong> ${escapeHtml(record[3])}</p>
+                        <p><strong>الرقم التسلسلي:</strong> ${escapeHtml(record[4])}</p>
+                        <p><strong>الكود الداخلي:</strong> ${escapeHtml(record[5])}</p>
+                        <p><strong>الوصف:</strong> ${escapeHtml(record[6])}</p>
+                        <p><strong>الفئة:</strong> ${escapeHtml(record[7])}</p>
+                        <p><strong>الأولوية:</strong> ${escapeHtml(record[8])}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>نطاق الجهاز:</strong> ${escapeHtml(record[9])} - ${escapeHtml(record[10])} ${escapeHtml(record[11])}</p>
+                        <p><strong>نطاق التشغيل:</strong> ${escapeHtml(record[12])} - ${escapeHtml(record[13])} ${escapeHtml(record[14])}</p>
+                        <p><strong>أقصى انحراف:</strong> ${escapeHtml(record[15])} ${escapeHtml(record[16])}</p>
+                        <p><strong>رابط البيانات:</strong> ${record[27] ? `<a href="${escapeHtml(record[27])}" target="_blank">${escapeHtml(record[27])}</a>` : 'لا يوجد'}</p>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6 class="border-bottom pb-2">المعايرة الداخلية</h6>
+                        <p><strong>التاريخ:</strong> ${formatDMYForDisplay(record[17] || '')}</p>
+                        <p><strong>التكرار:</strong> ${escapeHtml(record[18])}</p>
+                        <p><strong>تاريخ الاستحقاق:</strong> ${formatDMYForDisplay(record[19] || '')}</p>
+                        <p><strong>تمت بواسطة:</strong> ${escapeHtml(record[20])}</p>
+                        ${internalCertLink ? `<p><strong>الشهادة:</strong> 
+                            <a href="${escapeHtml(internalCertLink)}" target="_blank" class="file-link-btn ms-2">
+                                <i class="fas fa-external-link-alt me-1"></i> فتح الشهادة
+                            </a>
+                        </p>` : ''}
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="border-bottom pb-2">المعايرة الخارجية</h6>
+                        <p><strong>التاريخ:</strong> ${formatDMYForDisplay(record[22] || '')}</p>
+                        <p><strong>التكرار:</strong> ${escapeHtml(record[23])}</p>
+                        <p><strong>تاريخ الاستحقاق:</strong> ${formatDMYForDisplay(record[24] || '')}</p>
+                        <p><strong>تمت بواسطة:</strong> ${escapeHtml(record[25])}</p>
+                        ${externalCertLink ? `<p><strong>الشهادة:</strong> 
+                            <a href="${escapeHtml(externalCertLink)}" target="_blank" class="file-link-btn ms-2">
+                                <i class="fas fa-external-link-alt me-1"></i> فتح الشهادة
+                            </a>
+                        </p>` : ''}
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6 class="border-bottom pb-2">معلومات إضافية</h6>
+                        <p>${escapeHtml(record[28] || 'لا توجد معلومات إضافية')}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detailsModalBody').innerHTML = detailsHTML;
+            detailsModalInstance.show();
+        }
+        
+        function showDeleteModal(recordId, recordName, recordNumber = '') {
+            deleteRecordId = recordId;
+            deleteRecordName = recordName;
+            
+            document.getElementById('deleteRecordId').textContent = recordNumber || 'غير معروف';
+            document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
+            
+            deleteModalInstance.show();
+        }
+        
+        async function confirmDelete() {
+            if (!deleteRecordId) return;
+            
+            const button = document.getElementById('confirmDeleteBtn');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
+            
+            try {
+                const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}`);
+                
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
+                    
+                    deleteModalInstance.hide();
+                    
+                    deleteRecordId = '';
+                    deleteRecordName = '';
+                    
+                    loadCalibrationData();
+                } else {
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting record:', error);
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                showNotification('❌ خطأ في الاتصال بالخادم', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
