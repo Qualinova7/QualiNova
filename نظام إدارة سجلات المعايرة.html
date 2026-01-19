@@ -573,6 +573,21 @@
         .autofill-container {
             position: relative;
         }
+        
+        /* Autofill indicator */
+        .autofill-indicator {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            color: var(--calibration-mgmt-color);
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .autofill-indicator.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -661,25 +676,28 @@
                                     <div class="row">
                                         <div class="col-md-3 mb-2">
                                             <label class="form-label-custom">رقم الشهادة *</label>
-                                            <input type="text" class="form-control form-control-custom" id="calMgmt_certificateNumber" placeholder="رقم الشهادة" required oninput="checkExistingCertificate()">
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_certificateNumber" placeholder="رقم الشهادة" required>
                                         </div>
                                         <div class="col-md-3 mb-2 autofill-container">
                                             <label class="form-label-custom">العميل</label>
-                                            <input type="text" class="form-control form-control-custom" id="calMgmt_client" placeholder="اسم العميل" list="clientList" oninput="filterClients()" onfocus="showClientDropdown()" onblur="hideClientDropdown()">
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_client" placeholder="اسم العميل" list="clientList" oninput="filterClients()" onfocus="showClientDropdown()" onblur="hideClientDropdown()" onchange="checkAutoFill()">
                                             <datalist id="clientList"></datalist>
                                             <div class="autofill-options" id="clientOptions"></div>
+                                            <span class="autofill-indicator" id="clientAutofillIndicator"><i class="fas fa-magic"></i></span>
                                         </div>
                                         <div class="col-md-3 mb-2 autofill-container">
                                             <label class="form-label-custom">رقم الجهاز *</label>
-                                            <input type="text" class="form-control form-control-custom" id="calMgmt_deviceNumber" placeholder="رقم الجهاز" required list="deviceNumberList" oninput="filterDeviceNumbers()" onfocus="showDeviceNumberDropdown()" onblur="hideDeviceNumberDropdown()" onchange="autofillFromDevice()">
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_deviceNumber" placeholder="رقم الجهاز" required list="deviceNumberList" oninput="filterDeviceNumbers()" onfocus="showDeviceNumberDropdown()" onblur="hideDeviceNumberDropdown()" onchange="checkAutoFill()">
                                             <datalist id="deviceNumberList"></datalist>
                                             <div class="autofill-options" id="deviceNumberOptions"></div>
+                                            <span class="autofill-indicator" id="deviceNumberAutofillIndicator"><i class="fas fa-magic"></i></span>
                                         </div>
                                         <div class="col-md-3 mb-2 autofill-container">
                                             <label class="form-label-custom">اسم الجهاز *</label>
-                                            <input type="text" class="form-control form-control-custom" id="calMgmt_deviceName" placeholder="اسم الجهاز" required list="deviceNameList" oninput="filterDeviceNames()" onfocus="showDeviceNameDropdown()" onblur="hideDeviceNameDropdown()" onchange="autofillFromDevice()">
+                                            <input type="text" class="form-control form-control-custom" id="calMgmt_deviceName" placeholder="اسم الجهاز" required list="deviceNameList" oninput="filterDeviceNames()" onfocus="showDeviceNameDropdown()" onblur="hideDeviceNameDropdown()" onchange="checkAutoFill()">
                                             <datalist id="deviceNameList"></datalist>
                                             <div class="autofill-options" id="deviceNameOptions"></div>
+                                            <span class="autofill-indicator" id="deviceNameAutofillIndicator"><i class="fas fa-magic"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -969,6 +987,8 @@
         let uniqueDeviceNumbers = new Set();
         let uniqueDeviceNames = new Set();
         let filteredRecords = [];
+        let autoFillTimeout = null;
+        let isAutoFilling = false;
         
         // ================ NEW DATE SYSTEM WITH D, M, Y SIGNS ================
         function formatDateToDMY(date) {
@@ -1288,9 +1308,25 @@
                 if (backdrop) backdrop.remove();
             });
             
-            // Add event listener for certificate number to auto-fill
-            document.getElementById('calMgmt_certificateNumber').addEventListener('change', checkExistingCertificate);
+            // Initialize autofill indicators
+            initializeAutofillIndicators();
         });
+        
+        function initializeAutofillIndicators() {
+            // Show indicators when fields have data that could trigger autofill
+            const fields = ['calMgmt_client', 'calMgmt_deviceNumber', 'calMgmt_deviceName'];
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                field.addEventListener('input', function() {
+                    const indicator = document.getElementById(fieldId + 'AutofillIndicator');
+                    if (this.value.trim() !== '') {
+                        indicator.classList.add('show');
+                    } else {
+                        indicator.classList.remove('show');
+                    }
+                });
+            });
+        }
         
         // ================ DATE PICKER INITIALIZATION ================
         function initializeDatePickers() {
@@ -1661,6 +1697,7 @@
                     input.value = client;
                     optionsDiv.style.display = 'none';
                     filterDevicesByClient();
+                    checkAutoFill();
                 };
                 optionsDiv.appendChild(div);
             });
@@ -1691,6 +1728,7 @@
                         input.value = client;
                         optionsDiv.style.display = 'none';
                         filterDevicesByClient();
+                        checkAutoFill();
                     };
                     optionsDiv.appendChild(div);
                 });
@@ -1700,6 +1738,8 @@
             } else {
                 optionsDiv.style.display = 'none';
             }
+            
+            checkAutoFill();
         }
         
         function filterDevicesByClient() {
@@ -1769,7 +1809,7 @@
                 div.onclick = function() {
                     input.value = deviceNumber;
                     optionsDiv.style.display = 'none';
-                    autofillFromDevice();
+                    checkAutoFill();
                 };
                 optionsDiv.appendChild(div);
             });
@@ -1810,7 +1850,7 @@
                     div.onclick = function() {
                         input.value = deviceNumber;
                         optionsDiv.style.display = 'none';
-                        autofillFromDevice();
+                        checkAutoFill();
                     };
                     optionsDiv.appendChild(div);
                 });
@@ -1820,6 +1860,8 @@
             } else {
                 optionsDiv.style.display = 'none';
             }
+            
+            checkAutoFill();
         }
         
         function showDeviceNameDropdown() {
@@ -1847,7 +1889,7 @@
                 div.onclick = function() {
                     input.value = deviceName;
                     optionsDiv.style.display = 'none';
-                    autofillFromDevice();
+                    checkAutoFill();
                 };
                 optionsDiv.appendChild(div);
             });
@@ -1888,7 +1930,7 @@
                     div.onclick = function() {
                         input.value = deviceName;
                         optionsDiv.style.display = 'none';
-                        autofillFromDevice();
+                        checkAutoFill();
                     };
                     optionsDiv.appendChild(div);
                 });
@@ -1898,26 +1940,60 @@
             } else {
                 optionsDiv.style.display = 'none';
             }
+            
+            checkAutoFill();
         }
         
-        function autofillFromDevice() {
+        // ================ NEW AUTOFILL FUNCTION ================
+        function checkAutoFill() {
+            // Clear previous timeout
+            if (autoFillTimeout) {
+                clearTimeout(autoFillTimeout);
+            }
+            
+            // Set a timeout to check after user stops typing
+            autoFillTimeout = setTimeout(() => {
+                performAutoFill();
+            }, 500);
+        }
+        
+        function performAutoFill() {
+            // Don't autofill if we're in edit mode
+            if (document.getElementById('calibrationMgmt_editingId').value) {
+                return;
+            }
+            
             const client = document.getElementById('calMgmt_client').value.trim();
             const deviceNumber = document.getElementById('calMgmt_deviceNumber').value.trim();
             const deviceName = document.getElementById('calMgmt_deviceName').value.trim();
             
-            // If we have at least device number or device name, find the most recent record
-            if (!deviceNumber && !deviceName) return;
+            // Check if all three fields are filled
+            if (!client || !deviceNumber || !deviceName) {
+                return;
+            }
             
-            // Filter records based on what we have
+            // Don't autofill if we're already in the process of autofilling
+            if (isAutoFilling) {
+                return;
+            }
+            
+            isAutoFilling = true;
+            
+            // Find records that match all three criteria
             let matchingRecords = calibrationMgmtRecords.filter(record => {
-                const matchesClient = !client || (record[2] && record[2].toString().trim() === client);
-                const matchesDeviceNumber = !deviceNumber || (record[3] && record[3].toString().trim() === deviceNumber);
-                const matchesDeviceName = !deviceName || (record[4] && record[4].toString().trim() === deviceName);
+                const recordClient = record[2] ? record[2].toString().trim() : '';
+                const recordDeviceNumber = record[3] ? record[3].toString().trim() : '';
+                const recordDeviceName = record[4] ? record[4].toString().trim() : '';
                 
-                return matchesClient && matchesDeviceNumber && matchesDeviceName;
+                return recordClient === client && 
+                       recordDeviceNumber === deviceNumber && 
+                       recordDeviceName === deviceName;
             });
             
-            if (matchingRecords.length === 0) return;
+            if (matchingRecords.length === 0) {
+                isAutoFilling = false;
+                return;
+            }
             
             // Find the most recent record by calibration date
             let mostRecentRecord = matchingRecords[0];
@@ -1933,93 +2009,145 @@
                 }
             }
             
-            // Autofill the form (excluding certificate number and dates)
-            if (client && !document.getElementById('calMgmt_client').value) {
-                document.getElementById('calMgmt_client').value = mostRecentRecord[2] || '';
+            // Check if this is the same data already in the form
+            if (!isFormDataDifferent(mostRecentRecord)) {
+                isAutoFilling = false;
+                return;
             }
             
-            if (deviceNumber && !document.getElementById('calMgmt_deviceNumber').value) {
-                document.getElementById('calMgmt_deviceNumber').value = mostRecentRecord[3] || '';
-            }
+            // Show confirmation dialog
+            const confirmFill = confirm('تم العثور على سجل مطابق. هل تريد تعبئة البيانات تلقائياً؟');
             
-            if (deviceName && !document.getElementById('calMgmt_deviceName').value) {
-                document.getElementById('calMgmt_deviceName').value = mostRecentRecord[4] || '';
-            }
-            
-            // Fill other fields (excluding certificate number and dates)
-            document.getElementById('calMgmt_calibrationLab').value = mostRecentRecord[8] || '';
-            document.getElementById('calMgmt_accreditationNumber').value = mostRecentRecord[9] || '';
-            document.getElementById('calMgmt_traceability').value = mostRecentRecord[10] || '';
-            document.getElementById('calMgmt_uncertainty').value = mostRecentRecord[11] || '';
-            
-            // Handle status fields with details
-            const statusBefore = mostRecentRecord[12] || 'سليم';
-            if (statusBefore.includes(' - ')) {
-                const parts = statusBefore.split(' - ');
-                document.getElementById('calMgmt_statusBefore').value = parts[0];
-                document.getElementById('calMgmt_statusBeforeDetails').value = parts.slice(1).join(' - ');
-                document.getElementById('statusBeforeDetails').style.display = parts[0] === 'معيب' ? 'block' : 'none';
-            } else {
-                document.getElementById('calMgmt_statusBefore').value = statusBefore;
-                document.getElementById('statusBeforeDetails').style.display = 'none';
-            }
-            
-            const statusAfter = mostRecentRecord[13] || 'سليم';
-            if (statusAfter.includes(' - ')) {
-                const parts = statusAfter.split(' - ');
-                document.getElementById('calMgmt_statusAfter').value = parts[0];
-                document.getElementById('calMgmt_statusAfterDetails').value = parts.slice(1).join(' - ');
-                document.getElementById('statusAfterDetails').style.display = parts[0] === 'معيب' ? 'block' : 'none';
-            } else {
-                document.getElementById('calMgmt_statusAfter').value = statusAfter;
-                document.getElementById('statusAfterDetails').style.display = 'none';
-            }
-            
-            document.getElementById('calMgmt_notes').value = mostRecentRecord[15] || '';
-            document.getElementById('calMgmt_technician').value = mostRecentRecord[16] || '';
-            document.getElementById('calMgmt_calibrationCost').value = mostRecentRecord[17] || '';
-            document.getElementById('calMgmt_downtime').value = mostRecentRecord[18] || '';
-            document.getElementById('calMgmt_calibrationMethod').value = mostRecentRecord[19] || '';
-            document.getElementById('calMgmt_qualityReview').value = mostRecentRecord[20] || '';
-            document.getElementById('calMgmt_reviewer').value = mostRecentRecord[21] || '';
-            
-            // Set frequency
-            document.getElementById('calMgmt_frequency').value = mostRecentRecord[6] || '365';
-            document.querySelectorAll('.frequency-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (parseInt(btn.textContent) === parseInt(mostRecentRecord[6] || '365')) {
-                    btn.classList.add('active');
+            if (confirmFill) {
+                // Fill other fields (excluding certificate number and the three identifying fields)
+                document.getElementById('calMgmt_calibrationLab').value = mostRecentRecord[8] || '';
+                document.getElementById('calMgmt_accreditationNumber').value = mostRecentRecord[9] || '';
+                document.getElementById('calMgmt_traceability').value = mostRecentRecord[10] || '';
+                document.getElementById('calMgmt_uncertainty').value = mostRecentRecord[11] || '';
+                
+                // Handle status fields with details
+                const statusBefore = mostRecentRecord[12] || 'سليم';
+                if (statusBefore.includes(' - ')) {
+                    const parts = statusBefore.split(' - ');
+                    document.getElementById('calMgmt_statusBefore').value = parts[0];
+                    document.getElementById('calMgmt_statusBeforeDetails').value = parts.slice(1).join(' - ');
+                    document.getElementById('statusBeforeDetails').style.display = parts[0] === 'معيب' ? 'block' : 'none';
+                } else {
+                    document.getElementById('calMgmt_statusBefore').value = statusBefore;
+                    document.getElementById('statusBeforeDetails').style.display = 'none';
                 }
-            });
+                
+                const statusAfter = mostRecentRecord[13] || 'سليم';
+                if (statusAfter.includes(' - ')) {
+                    const parts = statusAfter.split(' - ');
+                    document.getElementById('calMgmt_statusAfter').value = parts[0];
+                    document.getElementById('calMgmt_statusAfterDetails').value = parts.slice(1).join(' - ');
+                    document.getElementById('statusAfterDetails').style.display = parts[0] === 'معيب' ? 'block' : 'none';
+                } else {
+                    document.getElementById('calMgmt_statusAfter').value = statusAfter;
+                    document.getElementById('statusAfterDetails').style.display = 'none';
+                }
+                
+                document.getElementById('calMgmt_notes').value = mostRecentRecord[15] || '';
+                document.getElementById('calMgmt_technician').value = mostRecentRecord[16] || '';
+                document.getElementById('calMgmt_calibrationCost').value = mostRecentRecord[17] || '';
+                document.getElementById('calMgmt_downtime').value = mostRecentRecord[18] || '';
+                document.getElementById('calMgmt_calibrationMethod').value = mostRecentRecord[19] || '';
+                document.getElementById('calMgmt_qualityReview').value = mostRecentRecord[20] || '';
+                document.getElementById('calMgmt_reviewer').value = mostRecentRecord[21] || '';
+                
+                // Set frequency
+                document.getElementById('calMgmt_frequency').value = mostRecentRecord[6] || '365';
+                document.querySelectorAll('.frequency-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.textContent) === parseInt(mostRecentRecord[6] || '365')) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Set the file link
+                const fileLink = mostRecentRecord[14] || '';
+                document.getElementById('calibrationMgmt_fileLink').value = fileLink;
+                
+                // Display file info if there's a file link
+                if (fileLink && fileLink.trim() !== '') {
+                    const fileName = 'ملف المعايرة';
+                    document.getElementById('uploadedFileName').textContent = fileName;
+                    document.getElementById('uploadedFileSize').textContent = '';
+                    document.getElementById('uploadedFileInfo').style.display = 'block';
+                    
+                    const fileLinkBtn = document.getElementById('uploadedFileLink');
+                    fileLinkBtn.href = fileLink;
+                    fileLinkBtn.style.display = 'inline-block';
+                    
+                    const uploadStatus = document.getElementById('uploadStatus');
+                    uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                    uploadStatus.className = 'upload-status success';
+                }
+                
+                // Set date values using D M Y format
+                const calibrationDateFormatted = formatDMYForInput(mostRecentRecord[5] || '');
+                const dueDateFormatted = formatDMYForInput(mostRecentRecord[7] || '');
+                
+                document.getElementById('calMgmt_calibrationDate').value = calibrationDateFormatted;
+                document.getElementById('calMgmt_dueDate').value = dueDateFormatted;
+                
+                // Update Flatpickr instances
+                if (flatpickrInstances.calibrationDate && calibrationDateFormatted) {
+                    try {
+                        const parts = calibrationDateFormatted.split('/');
+                        if (parts.length === 3) {
+                            const day = parseInt(parts[0], 10);
+                            const month = parseInt(parts[1], 10) - 1;
+                            const year = parseInt(parts[2], 10);
+                            const dateObj = new Date(year, month, day);
+                            flatpickrInstances.calibrationDate.setDate(dateObj, false);
+                        }
+                    } catch (e) {
+                        console.error('Error setting calibration date:', e);
+                    }
+                }
+                
+                if (flatpickrInstances.dueDate && dueDateFormatted) {
+                    try {
+                        const parts = dueDateFormatted.split('/');
+                        if (parts.length === 3) {
+                            const day = parseInt(parts[0], 10);
+                            const month = parseInt(parts[1], 10) - 1;
+                            const year = parseInt(parts[2], 10);
+                            const dateObj = new Date(year, month, day);
+                            flatpickrInstances.dueDate.setDate(dateObj, false);
+                        }
+                    } catch (e) {
+                        console.error('Error setting due date:', e);
+                    }
+                }
+                
+                // Calculate due date
+                calculateDueDate();
+                
+                showNotification('✅ تم تعبئة البيانات تلقائياً من آخر سجل', 'success', 3000);
+            }
             
-            // Don't fill certificate number or dates
-            
-            showNotification('✅ تم تعبئة البيانات تلقائياً من آخر سجل', 'success', 3000);
+            isAutoFilling = false;
         }
         
-        // ================ CHECK EXISTING CERTIFICATE ================
-        function checkExistingCertificate() {
-            const certificateNumber = document.getElementById('calMgmt_certificateNumber').value.trim();
-            const editingId = document.getElementById('calibrationMgmt_editingId').value;
+        function isFormDataDifferent(record) {
+            // Check if the form data is different from the record
+            // We'll check a few key fields to avoid unnecessary prompts
             
-            if (!certificateNumber) return;
+            const currentCalibrationLab = document.getElementById('calMgmt_calibrationLab').value.trim();
+            const recordCalibrationLab = record[8] || '';
             
-            // Check if this certificate number already exists in calibrationMgmtRecords
-            const existingRecord = calibrationMgmtRecords.find(record => {
-                // Skip the current record if we're in edit mode
-                if (editingId && record[0] === editingId) {
-                    return false;
-                }
-                return record[1] && record[1].toString().trim() === certificateNumber;
-            });
+            const currentTechnician = document.getElementById('calMgmt_technician').value.trim();
+            const recordTechnician = record[16] || '';
             
-            if (existingRecord) {
-                const confirmFill = confirm('رقم الشهادة موجود مسبقاً. هل تريد تحميل البيانات الموجودة؟');
-                if (confirmFill) {
-                    fillCalibrationMgmtForm(existingRecord);
-                    showNotification('✅ تم تحميل بيانات الشهادة الموجودة', 'success');
-                }
-            }
+            const currentNotes = document.getElementById('calMgmt_notes').value.trim();
+            const recordNotes = record[15] || '';
+            
+            return currentCalibrationLab !== recordCalibrationLab ||
+                   currentTechnician !== recordTechnician ||
+                   currentNotes !== recordNotes;
         }
         
         // ================ CALIBRATION MANAGEMENT SYSTEM FUNCTIONS ================
@@ -2527,6 +2655,11 @@
             
             // Clear filtered records
             filteredRecords = [];
+            
+            // Reset autofill indicators
+            document.querySelectorAll('.autofill-indicator').forEach(indicator => {
+                indicator.classList.remove('show');
+            });
             
             // Calculate due date
             calculateDueDate();
