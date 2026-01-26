@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr Calendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -41,7 +44,7 @@
         
         /* Header Styles */
         .main-header {
-            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            background: linear-gradient(135deg, var(--maintenance-color), #d35400);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -133,8 +136,8 @@
         }
         
         .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            border-color: var(--maintenance-color);
+            box-shadow: 0 0 0 0.25rem rgba(230, 126, 34, 0.25);
             background: white;
         }
         
@@ -148,6 +151,102 @@
             color: var(--dark-color);
             margin-bottom: 6px;
             font-size: 0.9rem;
+        }
+        
+        /* Upload File Button Styles */
+        .upload-container {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .upload-container:hover {
+            background: #e9ecef;
+            border-color: var(--maintenance-color);
+        }
+        
+        .upload-container.dragover {
+            background: #e3f2fd;
+            border-color: var(--maintenance-color);
+            border-style: solid;
+        }
+        
+        .upload-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            background: #5a6268;
+        }
+        
+        .upload-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+        
+        .upload-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+        
+        .upload-status.success {
+            color: var(--success-color);
+        }
+        
+        .upload-status.error {
+            color: var(--danger-color);
+        }
+        
+        .upload-status.loading {
+            color: var(--maintenance-color);
+        }
+        
+        .file-link-btn {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .file-link-btn:hover {
+            background: #219653;
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Date Input Styling */
+        .date-input-wrapper {
+            position: relative;
+        }
+        
+        .date-input-wrapper .date-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--maintenance-color);
+            pointer-events: none;
+        }
+        
+        .date-input-wrapper .form-control-custom {
+            padding-right: 40px;
+            direction: ltr;
+            text-align: right;
         }
         
         /* Table Styles */
@@ -165,7 +264,7 @@
         }
         
         .table-custom thead th {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            background: linear-gradient(135deg, var(--maintenance-color), #d35400);
             color: white;
             border: none;
             padding: 15px 12px;
@@ -181,7 +280,7 @@
         }
         
         .table-custom tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.08);
+            background-color: rgba(230, 126, 34, 0.08);
         }
         
         .table-custom tbody td {
@@ -232,7 +331,7 @@
         }
         
         .notification.info {
-            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            background: linear-gradient(135deg, var(--maintenance-color), #d35400);
         }
         
         .notification.warning {
@@ -267,10 +366,6 @@
                 min-width: 60px;
             }
             
-            .table-custom {
-                min-width: 1000px;
-            }
-            
             .home-button {
                 position: relative;
                 top: 0;
@@ -282,52 +377,27 @@
             .main-header {
                 padding-top: 60px;
             }
-        }
-        
-        /* تنسيق مجموعة حقول التاريخ */
-        .date-input-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .date-input-group .form-control-custom {
-            text-align: center;
-            padding: 0.375rem 0.25rem;
-            flex: 1;
-        }
-
-        .date-input-group .date-day {
-            max-width: 60px;
-        }
-
-        .date-input-group .date-month {
-            max-width: 60px;
-        }
-
-        .date-input-group .date-year {
-            max-width: 80px;
-        }
-
-        .date-input-group .date-separator {
-            font-size: 1.2rem;
-            color: #6c757d;
-            font-weight: bold;
-            min-width: 10px;
-        }
-
-        /* تنسيق placeholders داخل حقول التاريخ */
-        .date-input-group input::placeholder {
-            color: #adb5bd;
-            text-align: center;
-            font-size: 0.9rem;
+            
+            .table-custom {
+                min-width: 1000px;
+            }
         }
         
         /* Modal Custom */
         .modal-header-custom {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            background: linear-gradient(135deg, var(--maintenance-color), #d35400);
             color: white;
             border-radius: 15px 15px 0 0;
+        }
+        
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        /* Modal Fix - Prevent background scroll */
+        body.modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
         }
         
         /* Custom Scrollbar */
@@ -342,7 +412,7 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
+            background: var(--maintenance-color);
             border-radius: 10px;
         }
     </style>
@@ -360,19 +430,21 @@
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
             
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-wrench me-2"></i> نظام إدارة سجلات الصيانة - معمل كواليتك إنترناشيونال</h1>
-                    <p class="lead mb-0">نظام متكامل لتسجيل ومتابعة عمليات الصيانة الدورية والطارئة للأجهزة والمعدات</p>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <div class="header-badge d-inline-block me-3">
-                        <i class="fas fa-database me-2"></i>
-                        <span id="totalRecords">0</span> سجل
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1><i class="fas fa-wrench me-2"></i> نظام إدارة سجلات الصيانة - معمل كواليتك إنترناشيونال</h1>
+                        <p class="lead mb-0">نظام متكامل لتسجيل ومتابعة عمليات الصيانة الدورية والطارئة للأجهزة والمعدات</p>
                     </div>
-                    <div class="header-badge d-inline-block">
-                        <i class="fas fa-calendar me-2"></i>
-                        <span id="currentDate">--/--/----</span>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
+                        <div class="header-badge d-inline-block me-3">
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> سجل صيانة
+                        </div>
+                        <div class="header-badge d-inline-block">
+                            <i class="fas fa-calendar me-2"></i>
+                            <span id="currentDate">--/--/----</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -383,41 +455,92 @@
             <div class="col-12">
                 <div class="custom-card">
                     <div class="card-header-custom card-header-maintenance">
-                        <i class="fas fa-wrench me-2"></i> إضافة سجل صيانة جديد
+                        <i class="fas fa-wrench me-2"></i> إدارة سجلات الصيانة
                     </div>
                     <div class="card-body">
                         <form id="maintenanceForm">
+                            <!-- File Upload Section -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="upload-container" id="uploadContainer">
+                                        <h6><i class="fas fa-cloud-upload-alt me-2"></i>رفع نتائج اختبار ما بعد الصيانة (PDF أو صورة)</h6>
+                                        <p class="text-muted mb-2" style="font-size: 0.85rem;">الحد الأقصى لحجم الملف: 10 ميجابايت. الأنواع المسموحة: PNG, JPG, JPEG, PDF</p>
+                                        
+                                        <input type="file" id="fileInput" 
+                                               accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                                               style="display: none">
+                                        <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                                            <i class="fas fa-folder-open me-1"></i> اختر ملف للرفع
+                                        </button>
+                                        <button type="button" class="upload-btn" onclick="uploadFile()" id="uploadBtn">
+                                            <i class="fas fa-upload me-1"></i> رفع الملف
+                                        </button>
+                                        
+                                        <div class="upload-status" id="uploadStatus"></div>
+                                        
+                                        <div id="uploadedFileInfo" style="display: none; margin-top: 10px;">
+                                            <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                                <div>
+                                                    <i class="fas fa-file me-2"></i>
+                                                    <span id="uploadedFileName"></span>
+                                                    <span class="badge bg-success ms-2" id="uploadedFileSize"></span>
+                                                </div>
+                                                <a href="#" target="_blank" class="file-link-btn" id="uploadedFileLink" style="display: none;">
+                                                    <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="row">
                                 <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">الرقم التعريفي *</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_recordId" placeholder="الرقم التعريفي" required>
+                                    <label class="form-label-custom">رقم السجل *</label>
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_recordId" placeholder="رقم السجل" required oninput="checkDuplicateRecordNumber()">
+                                    <div class="form-text text-danger duplicate-warning" id="duplicateRecordNumberWarning" style="display: none;">
+                                        <i class="fas fa-exclamation-triangle me-1"></i> هذا الرقم موجود مسبقاً في النظام!
+                                    </div>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">اسم الجهاز *</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_deviceName" placeholder="اسم الجهاز" required>
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_deviceName" placeholder="اختر اسم الجهاز" required list="deviceNameList" onchange="autoFillFromEquipment('name', this.value)">
+                                    <datalist id="deviceNameList"></datalist>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">الشركة المصنعة</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_manufacturer" placeholder="الشركة المصنعة">
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_manufacturer" placeholder="الشركة المصنعة" list="manufacturerList">
+                                    <datalist id="manufacturerList"></datalist>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">الطراز</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_model" placeholder="الطراز">
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_model" placeholder="الطراز" list="modelList">
+                                    <datalist id="modelList"></datalist>
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">الرقم التسلسلي</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_serialNumber" placeholder="الرقم التسلسلي">
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_serialNumber" placeholder="الرقم التسلسلي" list="serialNumberList" onchange="autoFillFromEquipment('serial', this.value)">
+                                    <datalist id="serialNumberList"></datalist>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">الموقع</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_location" placeholder="الموقع">
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_location" placeholder="الموقع" list="locationList">
+                                    <datalist id="locationList"></datalist>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">نوع العملية</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_operationType" placeholder="نوع العملية">
+                                    <select class="form-select form-select-custom" id="maintenance_operationType">
+                                        <option value="">اختر نوع العملية</option>
+                                        <option value="صيانة دورية">صيانة دورية</option>
+                                        <option value="صيانة طارئة">صيانة طارئة</option>
+                                        <option value="صيانة وقائية">صيانة وقائية</option>
+                                        <option value="إصلاح">إصلاح</option>
+                                        <option value="استبدال">استبدال</option>
+                                        <option value="تحديث">تحديث</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">السبب / المشكلة</label>
@@ -427,18 +550,16 @@
                             
                             <div class="row">
                                 <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">التاريخ</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center" id="maintenance_date_day" placeholder="يوم" min="1" max="31">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center" id="maintenance_date_month" placeholder="شهر" min="1" max="12">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center" id="maintenance_date_year" placeholder="سنة" min="1900" max="2100">
+                                    <label class="form-label-custom">تاريخ الصيانة *</label>
+                                    <div class="date-input-wrapper">
+                                        <input type="text" class="form-control form-control-custom date-picker" id="maintenance_date" placeholder="يوم/شهر/سنة" readonly required>
+                                        <i class="fas fa-calendar-alt date-icon"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">الفني المسؤول</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_technician" placeholder="الفني المسؤول">
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_technician" placeholder="الفني المسؤول" list="technicianList">
+                                    <datalist id="technicianList"></datalist>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">قطع الغيار المستخدمة</label>
@@ -446,7 +567,7 @@
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">مدة التوقف</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_downtime" placeholder="مدة التوقف">
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_downtime" placeholder="مدة التوقف ">
                                 </div>
                             </div>
                             
@@ -456,23 +577,36 @@
                                     <input type="text" class="form-control form-control-custom" id="maintenance_cost" placeholder="التكلفة">
                                 </div>
                                 <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">نتائج الاختبار بعد الصيانة</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_testResults" placeholder="نتائج الاختبار بعد الصيانة">
-                                </div>
-                                <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">الحالة بعد الصيانة</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_statusAfterMaintenance" placeholder="الحالة بعد الصيانة">
+                                    <select class="form-select form-select-custom" id="maintenance_statusAfterMaintenance">
+                                        <option value="">اختر الحالة</option>
+                                        <option value="خارج عن الخدمة">خارج عن الخدمة</option>
+                                        <option value="مقبول">مقبول</option>
+                                        <option value="جيد">جيد</option>
+                                        <option value="جيد جداً">جيد جداً</option>
+                                        <option value="ممتاز">ممتاز</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-3 mb-2">
                                     <label class="form-label-custom">المراجع</label>
-                                    <input type="text" class="form-control form-control-custom" id="maintenance_reference" placeholder="المراجع">
+                                    <input type="text" class="form-control form-control-custom" id="maintenance_reference" placeholder="المراجع" list="referenceList">
+                                    <datalist id="referenceList"></datalist>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label-custom">حالة الجهاز</label>
+                                    <select class="form-select form-select-custom" id="maintenance_deviceStatus">
+                                        <option value="نشط">نشط</option>
+                                        <option value="قيد الصيانة">قيد الصيانة</option>
+                                        <option value="غير نشط">غير نشط</option>
+                                        <option value="متوقف">متوقف</option>
+                                    </select>
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-12 mb-2">
                                     <label class="form-label-custom">الملاحظات</label>
-                                    <textarea class="form-control form-textarea-custom" id="maintenance_notes" placeholder="الملاحظات"></textarea>
+                                    <textarea class="form-control form-textarea-custom" id="maintenance_notes" placeholder="الملاحظات" rows="3"></textarea>
                                 </div>
                             </div>
                             
@@ -492,6 +626,9 @@
                                 </div>
                             </div>
                             <input type="hidden" id="maintenance_editingId">
+                            <input type="hidden" id="maintenance_internalRecordId">
+                            <input type="hidden" id="maintenance_fileLink">
+                            <input type="hidden" id="maintenance_testResults">
                         </form>
                     </div>
                 </div>
@@ -540,25 +677,25 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة سجلات الصيانة 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 1.0</span>
+                    <span id="appVersion" class="text-info">الإصدار 1.1 (مع منع تكرار أرقام السجلات)</span>
                 </p>
             </div>
         </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title">تأكيد الحذف</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle fa-2x float-start me-3"></i>
                         <h5 class="alert-heading">تحذير!</h5>
-                        <p>هل أنت متأكد من حذف هذا السجل؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+                        <p>هل أنت متأكد من حذف سجل الصيانة هذا؟ هذا الإجراء لا يمكن التراجع عنه.</p>
                         <hr>
                         <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">إدارة الصيانة</span></p>
                         <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
@@ -577,22 +714,346 @@
         </div>
     </div>
 
-    <!-- Details Modal Container -->
-    <div id="dynamicModalContainer"></div>
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تفاصيل سجل الصيانة</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr Calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
     
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const MAINTENANCE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzkSfYOpZbOnYBlBuHoIJUzVqvhJGiHB9f7EnvY1O_w5Plf_iJ8U0-4CpjB2SyZLXl57w/exec";
+        const MAINTENANCE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1tMdWCL_Lkid_E8ct5W0u-VVi9am_RLvLbvF5m6ucwXQYX0hDFBSlDsTjCrCoqJh-/exec";
+        const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
+        const EQUIPMENT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZn8ah4jxwJ0jk9JtYWKJxWQIM7mArgM2qt1ZmnjGygvJwrWub4Y_MAjjVKSjEtopl1g/exec";
+        const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxIIuE7K6YEHv_EvGuBnutBN63lEFFWoedFfgAHibbZk5PTGFXCevrky8iEn-2qRqc/exec";
         
         // ================ GLOBAL VARIABLES ================
         let maintenanceRecords = [];
+        let employeeRecords = [];
+        let equipmentRecords = [];
         let deleteRecordId = '';
         let deleteRecordName = '';
-        let deleteSystemType = 'maintenance';
+        let flatpickrInstances = {};
+        let deleteModalInstance = null;
+        let detailsModalInstance = null;
+        let selectedFile = null;
+        let uploadedFileUrl = '';
+        let isDuplicateRecordNumber = false;
+        
+        // ================ NEW DATE SYSTEM WITH D, M, Y SIGNS ================
+        function formatDateToDMY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `D${day} M${month} Y${year}`;
+        }
+        
+        function parseDateFromDMY(dmyString) {
+            if (!dmyString) return null;
+            
+            // Clean the string
+            dmyString = dmyString.toString().trim();
+            
+            // Try to match the pattern: D{day} M{month} Y{year}
+            const match = dmyString.match(/^D(\d+)\s+M(\d+)\s+Y(\d+)$/);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1; // JavaScript months are 0-indexed
+                const year = parseInt(match[3], 10);
+                
+                // Validate date
+                if (day < 1 || day > 31) return null;
+                if (month < 0 || month > 11) return null;
+                if (year < 1900 || year > 2100) return null;
+                
+                // Check if day is valid for the month
+                const dateObj = new Date(year, month, day);
+                if (dateObj.getDate() !== day || dateObj.getMonth() !== month || dateObj.getFullYear() !== year) {
+                    return null;
+                }
+                
+                return dateObj;
+            }
+            
+            return null;
+        }
+        
+        function formatDMYForDisplay(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // If not in D M Y format, try to parse as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return formatDateToDayMonthYear(regularDate);
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return dmyString;
+            }
+            
+            return formatDateToDayMonthYear(dateObj);
+        }
+        
+        function formatDateToDayMonthYear(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            
+            const day = date.getDate();
+            const monthIndex = date.getMonth();
+            const year = date.getFullYear();
+            
+            // Month names in Arabic
+            const monthNames = [
+                "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+                "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+            ];
+            
+            return `${day} ${monthNames[monthIndex]} ${year}`;
+        }
+        
+        function formatDMYForInput(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // If not in D M Y format, try to parse as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return formatDateToDDMMYYYY(regularDate);
+                    }
+                } catch (e) {
+                    // Ignore error
+                }
+                return '';
+            }
+            
+            return formatDateToDDMMYYYY(dateObj);
+        }
+        
+        function validateDMYDate(dmyString) {
+            if (!dmyString) return true;
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                // Try to validate as regular date
+                try {
+                    const regularDate = new Date(dmyString);
+                    return !isNaN(regularDate.getTime());
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // ================ NEW FUNCTION: Check for duplicate record number ================
+        function checkDuplicateRecordNumber() {
+            const recordNumberInput = document.getElementById('maintenance_recordId');
+            const recordNumber = recordNumberInput.value.trim();
+            const editingId = document.getElementById('maintenance_editingId').value;
+            const warningElement = document.getElementById('duplicateRecordNumberWarning');
+            
+            if (!recordNumber) {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+            
+            // Check if this record number already exists in maintenanceRecords
+            const duplicateRecord = maintenanceRecords.find(record => {
+                // Skip the current record if we're in edit mode
+                if (editingId && record[0] === editingId) {
+                    return false;
+                }
+                return record[1] && record[1].toString().trim() === recordNumber;
+            });
+            
+            if (duplicateRecord) {
+                warningElement.style.display = 'block';
+                recordNumberInput.classList.add('is-invalid');
+                isDuplicateRecordNumber = true;
+                return true;
+            } else {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+        }
+        
+        // ================ FILE UPLOAD FUNCTIONS ================
+        function initializeFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadContainer = document.getElementById('uploadContainer');
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            
+            // Drag and drop functionality
+            uploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.add('dragover');
+            });
+            
+            uploadContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+            });
+            
+            uploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+        }
+        
+        function handleFileSelect(file) {
+            const allowedTypes = [
+                "image/png",
+                "image/jpeg",
+                "application/pdf"
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                showNotification("❌ فقط ملفات PNG, JPG, JPEG أو PDF مسموحة", "error");
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification("❌ حجم الملف كبير جداً (الحد الأقصى 10MB)", "error");
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Display file info
+            document.getElementById('uploadedFileName').textContent = file.name;
+            document.getElementById('uploadedFileSize').textContent = formatFileSize(file.size);
+            document.getElementById('uploadedFileInfo').style.display = 'block';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            
+            // Reset upload status
+            const uploadStatus = document.getElementById('uploadStatus');
+            uploadStatus.textContent = '';
+            uploadStatus.className = 'upload-status';
+            
+            showNotification(`✅ تم اختيار الملف: ${file.name}`, 'success', 3000);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' بايت';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
+            else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
+        }
+        
+        async function uploadFile() {
+            if (!selectedFile) {
+                showNotification("⚠️ يرجى اختيار ملف أولاً", "warning");
+                return;
+            }
+            
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadStatus = document.getElementById('uploadStatus');
+            
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الرفع...';
+            uploadStatus.textContent = 'جاري رفع الملف... ⏳';
+            uploadStatus.className = 'upload-status loading';
+            
+            try {
+                const reader = new FileReader();
+                
+                reader.onload = async function() {
+                    const base64 = reader.result.split(",")[1];
+                    
+                    const response = await fetch(UPLOAD_WEB_APP_URL, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            fileName: selectedFile.name,
+                            mimeType: selectedFile.type,
+                            fileData: base64
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        uploadedFileUrl = data.url;
+                        
+                        // Update the hidden fields
+                        document.getElementById('maintenance_fileLink').value = uploadedFileUrl;
+                        document.getElementById('maintenance_testResults').value = uploadedFileUrl;
+                        
+                        // Display success message and file link
+                        uploadStatus.textContent = '✅ تم رفع الملف بنجاح';
+                        uploadStatus.className = 'upload-status success';
+                        
+                        // Show the file link button
+                        const fileLinkBtn = document.getElementById('uploadedFileLink');
+                        fileLinkBtn.href = uploadedFileUrl;
+                        fileLinkBtn.style.display = 'inline-block';
+                        
+                        showNotification(`✅ تم رفع الملف بنجاح: ${selectedFile.name}`, 'success');
+                    } else {
+                        uploadStatus.textContent = '❌ فشل في رفع الملف: ' + (data.message || 'خطأ غير معروف');
+                        uploadStatus.className = 'upload-status error';
+                        showNotification(`❌ فشل في رفع الملف: ${data.message || 'خطأ غير معروف'}`, 'error');
+                    }
+                    
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                };
+                
+                reader.onerror = function() {
+                    uploadStatus.textContent = '❌ خطأ في قراءة الملف';
+                    uploadStatus.className = 'upload-status error';
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                    showNotification('❌ خطأ في قراءة الملف', 'error');
+                };
+                
+                reader.readAsDataURL(selectedFile);
+                
+            } catch (error) {
+                uploadStatus.textContent = '❌ فشل في رفع الملف: ' + error;
+                uploadStatus.className = 'upload-status error';
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                showNotification('❌ فشل في رفع الملف: ' + error, 'error');
+            }
+        }
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
@@ -600,78 +1061,104 @@
             setCurrentDate();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // Load maintenance data
-            loadMaintenanceData();
+            // Initialize modals
+            deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
+            
+            // Initialize calendar pickers
+            initializeDatePickers();
+            
+            // Initialize file upload
+            initializeFileUpload();
+            
+            // Load data
+            setTimeout(() => {
+                loadMaintenanceData();
+                loadEmployeeData();
+                loadEquipmentData();
+            }, 500);
+            
+            // Fix modal backdrop issue
+            document.getElementById('deleteModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            });
+            
+            document.getElementById('detailsModal').addEventListener('hidden.bs.modal', function () {
+                document.body.classList.remove('modal-open');
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            });
+            
+            // Add event listener for record number field to check for duplicates as user types
+            document.getElementById('maintenance_recordId').addEventListener('input', checkDuplicateRecordNumber);
         });
         
-        // ================ DATE FORMAT FUNCTIONS ================
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            try {
-                // Handle dd/mm/yyyy format
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        const day = parts[0].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[2];
-                        return `${day}/${month}/${year}`;
-                    }
-                }
-                
-                // Handle yyyy-mm-dd format
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        const day = parts[2].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[0];
-                        return `${day}/${month}/${year}`;
-                    }
-                }
-                
-                return dateString;
-            } catch (e) {
-                return dateString;
+        // ================ DATE PICKER INITIALIZATION ================
+        function initializeDatePickers() {
+            // Destroy existing instances if any
+            if (flatpickrInstances.date) flatpickrInstances.date.destroy();
+            
+            const dateOptions = {
+                locale: 'ar',
+                dateFormat: "d/m/Y",
+                altFormat: "d/m/Y",
+                altInput: false,
+                allowInput: true,
+                clickOpens: true,
+                position: 'auto',
+                monthSelectorType: 'static',
+                yearSelectorType: 'scrolling',
+                prevArrow: '<i class="fas fa-chevron-right"></i>',
+                nextArrow: '<i class="fas fa-chevron-left"></i>',
+                weekNumbers: false,
+                disableMobile: true
+            };
+            
+            flatpickrInstances.date = flatpickr('#maintenance_date', dateOptions);
+            
+            if (flatpickrInstances.date) flatpickrInstances.date.set('locale', 'ar');
+            
+            // Set date to current date by default
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            document.getElementById('maintenance_date').value = todayFormatted;
+            if (flatpickrInstances.date) {
+                flatpickrInstances.date.setDate(today, false);
             }
         }
         
-        function formatDateForInput(dateString) {
-            if (!dateString) return {day: '', month: '', year: ''};
-            try {
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[0],
-                            month: parts[1],
-                            year: parts[2]
-                        };
-                    }
-                }
-                
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[2],
-                            month: parts[1],
-                            year: parts[0]
-                        };
-                    }
-                }
-                
-                return {day: '', month: '', year: ''};
-            } catch (e) {
-                return {day: '', month: '', year: ''};
-            }
+        // ================ DATE FORMATTING FUNCTIONS ================
+        function formatDateToDDMMYYYY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
         }
         
-        function getDateString(day, month, year) {
-            if (!day || !month || !year) return '';
-            const formattedDay = day.toString().padStart(2, '0');
-            const formattedMonth = month.toString().padStart(2, '0');
-            return `${formattedDay}/${formattedMonth}/${year}`;
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
+            
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    if (day < 1 || day > 31) return null;
+                    if (month < 0 || month > 11) return null;
+                    if (year < 1900 || year > 2100) return null;
+                    
+                    return new Date(year, month, day);
+                }
+            }
+            
+            return null;
         }
         
         function setCurrentDate() {
@@ -682,12 +1169,7 @@
             document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
         }
         
-        function formatTime(timeString) {
-            if (!timeString) return '';
-            return timeString;
-        }
-        
-        // ================ NOTIFICATION FUNCTIONS ================
+        // ================ NOTIFICATION SYSTEM ================
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notificationContainer');
             
@@ -732,7 +1214,6 @@
             }
         }
         
-        // ================ UTILITY FUNCTIONS ================
         function escapeHtml(unsafe) {
             if (unsafe === null || unsafe === undefined) return '';
             return unsafe.toString()
@@ -743,51 +1224,28 @@
                 .replace(/'/g, "&#039;");
         }
         
-        // ================ API COMMUNICATION FUNCTIONS ================
-        function jsonp(url) {
+        // ================ JSONP FUNCTION ================
+        function jsonp(url, callbackParam = 'callback') {
             return new Promise((resolve, reject) => {
-                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
-                const timeout = 60000;
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
                 
-                const timeoutId = setTimeout(() => {
-                    cleanup();
-                    reject(new Error('Request timeout'));
-                }, timeout);
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + callbackParam + '=' + callbackName;
                 
-                function cleanup() {
-                    clearTimeout(timeoutId);
+                window[callbackName] = function(data) {
                     delete window[callbackName];
-                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
-                    if (script) script.remove();
-                }
-                
-                window[callbackName] = function(response) {
-                    cleanup();
-                    resolve(response);
+                    document.body.removeChild(script);
+                    resolve(data);
                 };
                 
-                const script = document.createElement('script');
-                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
-                script.setAttribute('data-callback', callbackName);
                 script.onerror = function() {
-                    cleanup();
-                    reject(new Error('Failed to load script'));
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
                 };
                 
                 document.body.appendChild(script);
             });
-        }
-        
-        function callGoogleScript(scriptUrl, action, data = {}) {
-            let url = scriptUrl + '?action=' + action;
-            
-            for (const key in data) {
-                if (data[key] !== undefined && data[key] !== null) {
-                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
-                }
-            }
-            
-            return jsonp(url);
         }
         
         // ================ VALIDATION HELPER ================
@@ -802,7 +1260,228 @@
                     field.classList.remove('is-invalid');
                 }
             });
+            
+            const date = document.getElementById('maintenance_date').value;
+            
+            if (date && !validateDate(date)) {
+                document.getElementById('maintenance_date').classList.add('is-invalid');
+                showNotification('❌ تاريخ الصيانة غير صحيح', 'error');
+                isValid = false;
+            } else {
+                document.getElementById('maintenance_date').classList.remove('is-invalid');
+            }
+            
             return isValid;
+        }
+        
+        function validateDate(dateString) {
+            if (!dateString) return true;
+            
+            // First try to parse as D M Y format
+            if (validateDMYDate(dateString)) {
+                return true;
+            }
+            
+            // Then try dd/mm/yyyy format
+            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            if (ddMMyyyyRegex.test(dateString)) {
+                const match = dateString.match(ddMMyyyyRegex);
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
+                
+                if (year < 1900 || year > 2100) return false;
+                if (month < 1 || month > 12) return false;
+                if (day < 1 || day > 31) return false;
+                
+                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
+                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                return day <= daysInMonth[month - 1];
+            }
+            
+            return false;
+        }
+        
+        // ================ EMPLOYEE DATA FUNCTIONS ================
+        async function loadEmployeeData() {
+            try {
+                const res = await jsonp(`${EMPLOYEE_SCRIPT_URL}?action=getAll`);
+                
+                if (res && res.status === 'success') {
+                    let records = [];
+                    
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (Array.isArray(res)) {
+                        records = res;
+                    }
+                    
+                    employeeRecords = records;
+                    populateEmployeeDatalists();
+                    showNotification(`✅ تم تحميل ${employeeRecords.length} موظف`, 'success', 3000);
+                } else {
+                    showNotification('❌ فشل في تحميل بيانات الموظفين', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading employee data:', error);
+                showNotification('❌ خطأ في تحميل بيانات الموظفين', 'error');
+            }
+        }
+        
+        function populateEmployeeDatalists() {
+            const technicianList = document.getElementById('technicianList');
+            const referenceList = document.getElementById('referenceList');
+            
+            technicianList.innerHTML = '';
+            referenceList.innerHTML = '';
+            
+            const names = new Set();
+            
+            employeeRecords.forEach(record => {
+                if (record && record.length > 1) {
+                    if (record[1]) names.add(String(record[1]).trim());
+                }
+            });
+            
+            names.forEach(name => {
+                const option1 = document.createElement('option');
+                option1.value = name;
+                technicianList.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = name;
+                referenceList.appendChild(option2);
+            });
+        }
+        
+        // ================ EQUIPMENT DATA FUNCTIONS ================
+        async function loadEquipmentData() {
+            try {
+                const res = await jsonp(`${EQUIPMENT_SCRIPT_URL}?action=getAll`);
+                
+                if (res && res.status === 'success') {
+                    let records = [];
+                    
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (Array.isArray(res)) {
+                        records = res;
+                    }
+                    
+                    equipmentRecords = records;
+                    populateEquipmentDatalists();
+                    setupEquipmentAutocomplete();
+                    showNotification(`✅ تم تحميل ${equipmentRecords.length} جهاز`, 'success', 3000);
+                } else {
+                    showNotification('❌ فشل في تحميل بيانات الأجهزة', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading equipment data:', error);
+                showNotification('❌ خطأ في تحميل بيانات الأجهزة', 'error');
+            }
+        }
+        
+        function populateEquipmentDatalists() {
+            const deviceNameList = document.getElementById('deviceNameList');
+            const manufacturerList = document.getElementById('manufacturerList');
+            const modelList = document.getElementById('modelList');
+            const serialNumberList = document.getElementById('serialNumberList');
+            const locationList = document.getElementById('locationList');
+            
+            deviceNameList.innerHTML = '';
+            manufacturerList.innerHTML = '';
+            modelList.innerHTML = '';
+            serialNumberList.innerHTML = '';
+            locationList.innerHTML = '';
+            
+            const deviceNames = new Set();
+            const manufacturers = new Set();
+            const models = new Set();
+            const serialNumbers = new Set();
+            const locations = new Set();
+            
+            equipmentRecords.forEach(record => {
+                if (record && record.length > 5) {
+                    if (record[2]) deviceNames.add(String(record[2]).trim());
+                    if (record[3]) manufacturers.add(String(record[3]).trim());
+                    if (record[4]) models.add(String(record[4]).trim());
+                    if (record[6]) serialNumbers.add(String(record[6]).trim());
+                    if (record[5]) locations.add(String(record[5]).trim());
+                }
+            });
+            
+            deviceNames.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                deviceNameList.appendChild(option);
+            });
+            
+            manufacturers.forEach(manufacturer => {
+                const option = document.createElement('option');
+                option.value = manufacturer;
+                manufacturerList.appendChild(option);
+            });
+            
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                modelList.appendChild(option);
+            });
+            
+            serialNumbers.forEach(serial => {
+                const option = document.createElement('option');
+                option.value = serial;
+                serialNumberList.appendChild(option);
+            });
+            
+            locations.forEach(location => {
+                const option = document.createElement('option');
+                option.value = location;
+                locationList.appendChild(option);
+            });
+        }
+        
+        function setupEquipmentAutocomplete() {
+            const deviceNameField = document.getElementById('maintenance_deviceName');
+            const serialNumberField = document.getElementById('maintenance_serialNumber');
+            
+            deviceNameField.addEventListener('change', function() {
+                autoFillFromEquipment('name', this.value);
+            });
+            
+            serialNumberField.addEventListener('change', function() {
+                autoFillFromEquipment('serial', this.value);
+            });
+        }
+        
+        function autoFillFromEquipment(fieldType, value) {
+            if (!value || !equipmentRecords.length) return;
+            
+            let record = null;
+            
+            if (fieldType === 'name') {
+                record = equipmentRecords.find(r => 
+                    r && r[2] && String(r[2]).trim().toLowerCase() === String(value).trim().toLowerCase()
+                );
+            } else if (fieldType === 'serial') {
+                record = equipmentRecords.find(r => 
+                    r && r[6] && String(r[6]).trim() === String(value).trim()
+                );
+            }
+            
+            if (record) {
+                document.getElementById('maintenance_deviceName').value = record[2] || '';
+                document.getElementById('maintenance_manufacturer').value = record[3] || '';
+                document.getElementById('maintenance_model').value = record[4] || '';
+                document.getElementById('maintenance_location').value = record[5] || '';
+                document.getElementById('maintenance_serialNumber').value = record[6] || '';
+                
+                showNotification(`✅ تم تحميل بيانات الجهاز: ${record[2] || ''}`, 'success', 2000);
+            }
         }
         
         // ================ MAINTENANCE SYSTEM FUNCTIONS ================
@@ -816,28 +1495,52 @@
             noRecords.style.display = 'none';
             
             try {
-                const result = await callGoogleScript(MAINTENANCE_SCRIPT_URL, 'getAll');
+                const res = await jsonp(`${MAINTENANCE_SCRIPT_URL}?action=getAll&t=${Date.now()}`);
                 
                 spinner.style.display = 'none';
                 
-                if (result.status === 'success') {
-                    maintenanceRecords = result.data;
-                    
-                    if (maintenanceRecords.length > 0) {
-                        displayMaintenanceRecords(maintenanceRecords);
-                        tableContainer.style.display = 'block';
-                        updateTotalRecordsCount();
-                    } else {
-                        noRecords.style.display = 'block';
+                let records = [];
+                let responseStatus = 'error';
+                
+                if (res && res.status === 'success') {
+                    responseStatus = 'success';
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (res.records && typeof res.records === 'object') {
+                        const keys = Object.keys(res.records);
+                        if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
+                            records = res.records[keys[0]];
+                        }
                     }
+                } else if (Array.isArray(res)) {
+                    records = res;
+                    responseStatus = 'success';
+                }
+                
+                if (responseStatus !== 'success') {
+                    noRecords.style.display = 'block';
+                    showNotification('❌ فشل في تحميل سجلات الصيانة', 'error');
+                    document.getElementById('totalRecords').textContent = '0';
+                    return;
+                }
+                
+                maintenanceRecords = records;
+                
+                if (maintenanceRecords.length > 0) {
+                    displayMaintenanceRecords(maintenanceRecords);
+                    tableContainer.style.display = 'block';
+                    document.getElementById('totalRecords').textContent = maintenanceRecords.length.toLocaleString('ar-SA');
                 } else {
                     noRecords.style.display = 'block';
-                    showNotification(`❌ ${result.message}`, 'error');
+                    document.getElementById('totalRecords').textContent = '0';
                 }
             } catch (error) {
                 spinner.style.display = 'none';
                 noRecords.style.display = 'block';
-                showNotification(`❌ خطأ في تحميل سجلات الصيانة`, 'error');
+                showNotification('❌ خطأ في تحميل سجلات الصيانة', 'error');
+                document.getElementById('totalRecords').textContent = '0';
             }
         }
         
@@ -845,30 +1548,51 @@
             const table = document.getElementById('maintenanceDataTable');
             
             let html = '<thead><tr>';
-            const headers = ['الرقم التعريفي', 'اسم الجهاز', 'الشركة المصنعة', 'الطراز', 'الموقع', 'نوع العملية', 'التاريخ', 'الفني المسؤول', 'التكلفة', 'الإجراءات'];
+            const headers = ['رقم السجل', 'اسم الجهاز', 'الشركة المصنعة', 'الطراز', 'المشكلة', 'تاريخ الصيانة', 'نوع العملية', 'الفني المسؤول', 'الحالة بعد الصيانة', 'الملف المرفوع', 'الإجراءات'];
             headers.forEach(h => {
                 html += `<th>${h}</th>`;
             });
             html += '</tr></thead><tbody>';
             
-            records.forEach((record, index) => {
+            records.forEach((record) => {
+                // Column mapping based on the maintenance system:
+                // 0: ID, 1: recordId, 2: deviceName, 3: manufacturer, 4: model, 
+                // 5: location, 6: serialNumber, 7: operationType, 8: problem, 
+                // 9: date, 10: technician, 11: spareParts, 12: downtime, 
+                // 13: cost, 14: testResults, 15: statusAfterMaintenance, 
+                // 16: reference, 17: notes, 18: deviceStatus, 19: creationDate, 20: lastUpdate
+                
+                const fileLink = record[14] || '';
+                const date = record[9] || '';
+                
                 html += '<tr>';
                 
-                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
-                html += `<td>${escapeHtml(record[1] || '')}</td>`;
+                html += `<td><strong>${escapeHtml(record[1] || '')}</strong></td>`;
                 html += `<td>${escapeHtml(record[2] || '')}</td>`;
                 html += `<td>${escapeHtml(record[3] || '')}</td>`;
-                html += `<td>${escapeHtml(record[5] || '')}</td>`;
-                html += `<td>${escapeHtml(record[6] || '')}</td>`;
-                html += `<td>${formatDate(record[8] || '')}</td>`;
-                html += `<td>${escapeHtml(record[9] || '')}</td>`;
-                html += `<td>${escapeHtml(record[12] || '')}</td>`;
+                html += `<td>${escapeHtml(record[4] || '')}</td>`;
+                html += `<td>${escapeHtml(record[8] || '')}</td>`;
+                html += `<td>${formatDMYForDisplay(date)}</td>`;
+                html += `<td>${escapeHtml(record[7] || '')}</td>`;
+                html += `<td>${escapeHtml(record[10] || '')}</td>`;
+                html += `<td>${escapeHtml(record[15] || '')}</td>`;
+                
+                // File link column
+                if (fileLink && fileLink.trim() !== '') {
+                    html += `<td>
+                        <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn">
+                            <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                        </a>
+                    </td>`;
+                } else {
+                    html += `<td><span class="text-muted">لا يوجد ملف</span></td>`;
+                }
                 
                 html += `<td class="action-buttons">
                     <button onclick="editMaintenanceRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
                         <i class="fas fa-edit"></i> تعديل
                     </button>
-                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[1])}')" class="btn btn-sm btn-danger" title="حذف">
+                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[2])}', '${escapeHtml(record[1] || '')}')" class="btn btn-sm btn-danger" title="حذف">
                         <i class="fas fa-trash"></i> حذف
                     </button>
                     <button onclick="viewMaintenanceDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
@@ -884,56 +1608,105 @@
         }
         
         async function addMaintenanceRecord() {
-            const requiredFields = ['maintenance_recordId', 'maintenance_deviceName'];
+            // Check for duplicate record number first
+            if (checkDuplicateRecordNumber()) {
+                showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+
+            const requiredFields = ['maintenance_recordId', 'maintenance_deviceName', 'maintenance_date'];
             if (!validateForm(requiredFields)) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
                 return;
             }
-            
+
+            const date = document.getElementById('maintenance_date').value;
+
+            if (date && !validateDate(date)) {
+                showNotification('❌ تاريخ الصيانة غير صحيح', 'error');
+                return;
+            }
+
             const button = document.getElementById('maintenance_addBtn');
             const originalHtml = button.innerHTML;
-            
+
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
-            
-            const date = getDateString(
-                document.getElementById('maintenance_date_day').value,
-                document.getElementById('maintenance_date_month').value,
-                document.getElementById('maintenance_date_year').value
-            );
-            
-            const formData = {
-                recordId: document.getElementById('maintenance_recordId').value,
-                deviceName: document.getElementById('maintenance_deviceName').value,
-                manufacturer: document.getElementById('maintenance_manufacturer').value,
-                model: document.getElementById('maintenance_model').value,
-                serialNumber: document.getElementById('maintenance_serialNumber').value,
-                location: document.getElementById('maintenance_location').value,
-                operationType: document.getElementById('maintenance_operationType').value,
-                problem: document.getElementById('maintenance_problem').value,
-                date: date,
-                technician: document.getElementById('maintenance_technician').value,
-                spareParts: document.getElementById('maintenance_spareParts').value,
-                downtime: document.getElementById('maintenance_downtime').value,
-                cost: document.getElementById('maintenance_cost').value,
-                testResults: document.getElementById('maintenance_testResults').value,
-                statusAfterMaintenance: document.getElementById('maintenance_statusAfterMaintenance').value,
-                reference: document.getElementById('maintenance_reference').value,
-                notes: document.getElementById('maintenance_notes').value
+
+            // Generate internal recordId
+            const internalRecordId = 'MAINT-' + Date.now();
+            document.getElementById('maintenance_internalRecordId').value = internalRecordId;
+
+            // Get file link from hidden field
+            const fileLink = document.getElementById('maintenance_fileLink').value;
+            const testResults = document.getElementById('maintenance_testResults').value;
+
+            // Convert date to D M Y format
+            const dateDMY = date ? formatDateToDMY(parseDateDDMMYYYY(date)) : '';
+
+            // Build query string
+            const fields = [
+                'maintenance_recordId',
+                'maintenance_deviceName',
+                'maintenance_manufacturer',
+                'maintenance_model',
+                'maintenance_location',
+                'maintenance_serialNumber',
+                'maintenance_operationType',
+                'maintenance_problem',
+                'maintenance_technician',
+                'maintenance_spareParts',
+                'maintenance_downtime',
+                'maintenance_cost',
+                'maintenance_statusAfterMaintenance',
+                'maintenance_reference',
+                'maintenance_notes',
+                'maintenance_deviceStatus'
+            ];
+
+            // Map form field names to Google Apps Script parameter names
+            const paramMap = {
+                'maintenance_recordId': 'recordId',
+                'maintenance_deviceName': 'deviceName',
+                'maintenance_manufacturer': 'manufacturer',
+                'maintenance_model': 'model',
+                'maintenance_location': 'location',
+                'maintenance_serialNumber': 'serialNumber',
+                'maintenance_operationType': 'operationType',
+                'maintenance_problem': 'problem',
+                'maintenance_technician': 'technician',
+                'maintenance_spareParts': 'spareParts',
+                'maintenance_downtime': 'downtime',
+                'maintenance_cost': 'cost',
+                'maintenance_statusAfterMaintenance': 'statusAfterMaintenance',
+                'maintenance_reference': 'reference',
+                'maintenance_notes': 'notes',
+                'maintenance_deviceStatus': 'deviceStatus'
             };
+
+            let q = '';
             
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+
+            q += `date=${encodeURIComponent(dateDMY)}&`;
+            q += `testResults=${encodeURIComponent(testResults || '')}`;
+
             try {
-                const result = await callGoogleScript(MAINTENANCE_SCRIPT_URL, 'add', formData);
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                const res = await jsonp(`${MAINTENANCE_SCRIPT_URL}?action=add&${q}`);
+
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     resetMaintenanceForm();
                     await loadMaintenanceData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في الإضافة`, 'error');
+                showNotification('❌ خطأ في الإضافة', 'error');
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
@@ -958,82 +1731,178 @@
         }
         
         function fillMaintenanceForm(record) {
-            document.getElementById('maintenance_recordId').value = record[0] || '';
-            document.getElementById('maintenance_deviceName').value = record[1] || '';
-            document.getElementById('maintenance_manufacturer').value = record[2] || '';
-            document.getElementById('maintenance_model').value = record[3] || '';
-            document.getElementById('maintenance_serialNumber').value = record[4] || '';
+            document.getElementById('maintenance_recordId').value = record[1] || '';
+            document.getElementById('maintenance_deviceName').value = record[2] || '';
+            document.getElementById('maintenance_manufacturer').value = record[3] || '';
+            document.getElementById('maintenance_model').value = record[4] || '';
             document.getElementById('maintenance_location').value = record[5] || '';
-            document.getElementById('maintenance_operationType').value = record[6] || '';
-            document.getElementById('maintenance_problem').value = record[7] || '';
+            document.getElementById('maintenance_serialNumber').value = record[6] || '';
+            document.getElementById('maintenance_operationType').value = record[7] || '';
+            document.getElementById('maintenance_problem').value = record[8] || '';
+            document.getElementById('maintenance_technician').value = record[10] || '';
+            document.getElementById('maintenance_spareParts').value = record[11] || '';
+            document.getElementById('maintenance_downtime').value = record[12] || '';
+            document.getElementById('maintenance_cost').value = record[13] || '';
+            document.getElementById('maintenance_statusAfterMaintenance').value = record[15] || '';
+            document.getElementById('maintenance_reference').value = record[16] || '';
+            document.getElementById('maintenance_notes').value = record[17] || '';
+            document.getElementById('maintenance_deviceStatus').value = record[18] || 'نشط';
             
-            const date = formatDateForInput(record[8] || '');
-            document.getElementById('maintenance_date_day').value = date.day;
-            document.getElementById('maintenance_date_month').value = date.month;
-            document.getElementById('maintenance_date_year').value = date.year;
+            // Set the file links
+            const fileLink = record[14] || '';
+            document.getElementById('maintenance_fileLink').value = fileLink;
+            document.getElementById('maintenance_testResults').value = fileLink;
             
-            document.getElementById('maintenance_technician').value = record[9] || '';
-            document.getElementById('maintenance_spareParts').value = record[10] || '';
-            document.getElementById('maintenance_downtime').value = record[11] || '';
-            document.getElementById('maintenance_cost').value = record[12] || '';
-            document.getElementById('maintenance_testResults').value = record[13] || '';
-            document.getElementById('maintenance_statusAfterMaintenance').value = record[14] || '';
-            document.getElementById('maintenance_reference').value = record[15] || '';
-            document.getElementById('maintenance_notes').value = record[16] || '';
+            // Display file info if there's a file link
+            if (fileLink && fileLink.trim() !== '') {
+                // Try to extract filename from URL or use a generic name
+                const fileName = 'ملف نتائج الاختبار';
+                document.getElementById('uploadedFileName').textContent = fileName;
+                document.getElementById('uploadedFileSize').textContent = '';
+                document.getElementById('uploadedFileInfo').style.display = 'block';
+                
+                const fileLinkBtn = document.getElementById('uploadedFileLink');
+                fileLinkBtn.href = fileLink;
+                fileLinkBtn.style.display = 'inline-block';
+                
+                const uploadStatus = document.getElementById('uploadStatus');
+                uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                uploadStatus.className = 'upload-status success';
+            }
+            
+            // Set date value using the D M Y format
+            const dateFormatted = formatDMYForInput(record[9] || '');
+            
+            document.getElementById('maintenance_date').value = dateFormatted;
+            
+            // Update Flatpickr instance
+            if (flatpickrInstances.date && dateFormatted) {
+                try {
+                    const parts = dateFormatted.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        flatpickrInstances.date.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting date:', e);
+                }
+            }
+            
             document.getElementById('maintenance_editingId').value = record[0];
+            document.getElementById('maintenance_internalRecordId').value = record[0];
+            
+            // Check for duplicate record number after filling the form (but exclude current record)
+            setTimeout(() => {
+                checkDuplicateRecordNumber();
+            }, 100);
         }
         
         async function updateMaintenanceRecord() {
+            // Check for duplicate record number first (excluding current record)
+            if (checkDuplicateRecordNumber()) {
+                showNotification('❌ رقم السجل هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+
             const recordId = document.getElementById('maintenance_editingId').value;
             if (!recordId) {
                 showNotification('❌ لم يتم تحديد سجل صيانة للتحديث', 'error');
                 return;
             }
-            
+
+            const requiredFields = ['maintenance_recordId', 'maintenance_deviceName', 'maintenance_date'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+
+            const date = document.getElementById('maintenance_date').value;
+
+            if (date && !validateDate(date)) {
+                showNotification('❌ تاريخ الصيانة غير صحيح', 'error');
+                return;
+            }
+
             const button = document.getElementById('maintenance_updateBtn');
             const originalHtml = button.innerHTML;
-            
+
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
-            
-            const date = getDateString(
-                document.getElementById('maintenance_date_day').value,
-                document.getElementById('maintenance_date_month').value,
-                document.getElementById('maintenance_date_year').value
-            );
-            
-            const formData = {
-                recordId: document.getElementById('maintenance_recordId').value,
-                deviceName: document.getElementById('maintenance_deviceName').value,
-                manufacturer: document.getElementById('maintenance_manufacturer').value,
-                model: document.getElementById('maintenance_model').value,
-                serialNumber: document.getElementById('maintenance_serialNumber').value,
-                location: document.getElementById('maintenance_location').value,
-                operationType: document.getElementById('maintenance_operationType').value,
-                problem: document.getElementById('maintenance_problem').value,
-                date: date,
-                technician: document.getElementById('maintenance_technician').value,
-                spareParts: document.getElementById('maintenance_spareParts').value,
-                downtime: document.getElementById('maintenance_downtime').value,
-                cost: document.getElementById('maintenance_cost').value,
-                testResults: document.getElementById('maintenance_testResults').value,
-                statusAfterMaintenance: document.getElementById('maintenance_statusAfterMaintenance').value,
-                reference: document.getElementById('maintenance_reference').value,
-                notes: document.getElementById('maintenance_notes').value
+
+            // Get file link from hidden field
+            const fileLink = document.getElementById('maintenance_fileLink').value;
+            const testResults = document.getElementById('maintenance_testResults').value;
+
+            // Convert date to D M Y format
+            const dateDMY = date ? formatDateToDMY(parseDateDDMMYYYY(date)) : '';
+
+            // Build query string
+            const fields = [
+                'maintenance_recordId',
+                'maintenance_deviceName',
+                'maintenance_manufacturer',
+                'maintenance_model',
+                'maintenance_location',
+                'maintenance_serialNumber',
+                'maintenance_operationType',
+                'maintenance_problem',
+                'maintenance_technician',
+                'maintenance_spareParts',
+                'maintenance_downtime',
+                'maintenance_cost',
+                'maintenance_statusAfterMaintenance',
+                'maintenance_reference',
+                'maintenance_notes',
+                'maintenance_deviceStatus'
+            ];
+
+            // Map form field names to Google Apps Script parameter names for update
+            const paramMap = {
+                'maintenance_recordId': 'recordId',
+                'maintenance_deviceName': 'deviceName',
+                'maintenance_manufacturer': 'manufacturer',
+                'maintenance_model': 'model',
+                'maintenance_location': 'location',
+                'maintenance_serialNumber': 'serialNumber',
+                'maintenance_operationType': 'operationType',
+                'maintenance_problem': 'problem',
+                'maintenance_technician': 'technician',
+                'maintenance_spareParts': 'spareParts',
+                'maintenance_downtime': 'downtime',
+                'maintenance_cost': 'cost',
+                'maintenance_statusAfterMaintenance': 'statusAfterMaintenance',
+                'maintenance_reference': 'reference',
+                'maintenance_notes': 'notes',
+                'maintenance_deviceStatus': 'deviceStatus'
             };
-            
+
+            let q = `internalRecordId=${encodeURIComponent(recordId)}&`;
+
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+
+            q += `date=${encodeURIComponent(dateDMY)}&`;
+            q += `testResults=${encodeURIComponent(testResults || '')}`;
+
             try {
-                const result = await callGoogleScript(MAINTENANCE_SCRIPT_URL, 'update', formData);
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                const res = await jsonp(`${MAINTENANCE_SCRIPT_URL}?action=update&${q}`);
+
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     resetMaintenanceForm();
                     await loadMaintenanceData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في التحديث`, 'error');
+                showNotification('❌ خطأ في التحديث', 'error');
+                console.error('Update error:', error);
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
@@ -1043,11 +1912,41 @@
         function resetMaintenanceForm() {
             document.getElementById('maintenanceForm').reset();
             document.getElementById('maintenance_editingId').value = '';
+            document.getElementById('maintenance_internalRecordId').value = '';
+            document.getElementById('maintenance_fileLink').value = '';
+            document.getElementById('maintenance_testResults').value = '';
             document.getElementById('maintenance_addBtn').style.display = 'inline-block';
             document.getElementById('maintenance_updateBtn').style.display = 'none';
             document.querySelectorAll('#maintenanceForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
+            
+            // Reset duplicate record number warning
+            document.getElementById('duplicateRecordNumberWarning').style.display = 'none';
+            isDuplicateRecordNumber = false;
+            
+            // Reset dropdowns to default values
+            document.getElementById('maintenance_operationType').value = '';
+            document.getElementById('maintenance_statusAfterMaintenance').value = '';
+            document.getElementById('maintenance_deviceStatus').value = 'نشط';
+            
+            // Reset file upload section
+            selectedFile = null;
+            uploadedFileUrl = '';
+            document.getElementById('uploadedFileInfo').style.display = 'none';
+            document.getElementById('uploadedFileLink').style.display = 'none';
+            document.getElementById('uploadStatus').textContent = '';
+            document.getElementById('uploadStatus').className = 'upload-status';
+            document.getElementById('fileInput').value = '';
+            
+            // Reset date
+            if (flatpickrInstances.date) {
+                // Set date to current date
+                const today = new Date();
+                const todayFormatted = formatDateToDDMMYYYY(today);
+                document.getElementById('maintenance_date').value = todayFormatted;
+                flatpickrInstances.date.setDate(today, false);
+            }
         }
         
         function exportMaintenanceCSV() {
@@ -1060,18 +1959,22 @@
             
             try {
                 const headers = [
-                    'الرقم التعريفي', 'اسم الجهاز', 'الشركة المصنعة', 'الطراز', 'الرقم التسلسلي',
-                    'الموقع', 'نوع العملية', 'السبب / المشكلة', 'التاريخ', 'الفني المسؤول',
-                    'قطع الغيار المستخدمة', 'مدة التوقف', 'التكلفة', 'نتائج الاختبار بعد الصيانة',
-                    'الحالة بعد الصيانة', 'المراجع', 'الملاحظات'
+                    'رقم السجل', 'اسم الجهاز', 'الشركة المصنعة', 'الطراز', 'الموقع',
+                    'الرقم التسلسلي', 'نوع العملية', 'السبب / المشكلة', 'تاريخ الصيانة',
+                    'الفني المسؤول', 'قطع الغيار المستخدمة', 'مدة التوقف', 'التكلفة',
+                    'نتائج الاختبار بعد الصيانة (رابط)', 'الحالة بعد الصيانة', 'المراجع',
+                    'الملاحظات', 'حالة الجهاز'
                 ];
                 
                 let csvContent = '\uFEFF';
                 csvContent += headers.join(",") + "\r\n";
                 
                 maintenanceRecords.forEach(record => {
+                    // Convert D M Y format to readable date for CSV export
+                    const dateObj = parseDateFromDMY(record[9] || '');
+                    const dateDisplay = dateObj ? formatDateToDayMonthYear(dateObj) : '';
+                    
                     const row = [
-                        record[0] || '',
                         record[1] || '',
                         record[2] || '',
                         record[3] || '',
@@ -1079,15 +1982,17 @@
                         record[5] || '',
                         record[6] || '',
                         record[7] || '',
-                        formatDate(record[8] || ''),
-                        record[9] || '',
+                        record[8] || '',
+                        dateDisplay,
                         record[10] || '',
                         record[11] || '',
                         record[12] || '',
                         record[13] || '',
                         record[14] || '',
                         record[15] || '',
-                        record[16] || ''
+                        record[16] || '',
+                        record[17] || '',
+                        record[18] || ''
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -1108,22 +2013,91 @@
                 
                 setTimeout(() => URL.revokeObjectURL(url), 100);
                 
-                showNotification(`✅ تم تصدير ${maintenanceRecords.length} سجل`, 'success');
+                showNotification(`✅ تم تصدير ${maintenanceRecords.length} سجل صيانة`, 'success');
             } catch (error) {
-                showNotification(`❌ خطأ في التصدير`, 'error');
+                showNotification('❌ خطأ في التصدير', 'error');
             }
         }
         
+        // ================ DETAILS VIEW FUNCTION ================
+        function viewMaintenanceDetails(recordId) {
+            const record = maintenanceRecords.find(r => 
+                String(r[0] || '').trim() === String(recordId).trim()
+            );
+            
+            if (!record) {
+                showNotification('❌ لم يتم العثور على سجل الصيانة', 'error');
+                return;
+            }
+            
+            const fileLink = record[14] || '';
+            const date = record[9] || '';
+            
+            // Convert date to display format
+            const dateObj = parseDateFromDMY(date);
+            const dateDisplay = dateObj ? formatDateToDayMonthYear(dateObj) : '';
+            
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[1] || '')}</p>
+                        <p><strong>اسم الجهاز:</strong> ${escapeHtml(record[2])}</p>
+                        <p><strong>الشركة المصنعة:</strong> ${escapeHtml(record[3])}</p>
+                        <p><strong>الطراز:</strong> ${escapeHtml(record[4])}</p>
+                        <p><strong>الموقع:</strong> ${escapeHtml(record[5])}</p>
+                        <p><strong>الرقم التسلسلي:</strong> ${escapeHtml(record[6])}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>نوع العملية:</strong> ${escapeHtml(record[7])}</p>
+                        <p><strong>السبب / المشكلة:</strong> ${escapeHtml(record[8])}</p>
+                        <p><strong>تاريخ الصيانة:</strong> ${dateDisplay}</p>
+                        <p><strong>الفني المسؤول:</strong> ${escapeHtml(record[10])}</p>
+                        <p><strong>قطع الغيار المستخدمة:</strong> ${escapeHtml(record[11])}</p>
+                        <p><strong>مدة التوقف:</strong> ${escapeHtml(record[12])}</p>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p><strong>التكلفة:</strong> ${escapeHtml(record[13])}</p>
+                        <p><strong>الحالة بعد الصيانة:</strong> ${escapeHtml(record[15])}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>المراجع:</strong> ${escapeHtml(record[16])}</p>
+                        <p><strong>حالة الجهاز:</strong> ${escapeHtml(record[18])}</p>
+                    </div>
+                </div>
+                
+                ${record[17] ? `<div class="row mt-3">
+                    <div class="col-12">
+                        <p><strong>ملاحظات:</strong> ${escapeHtml(record[17])}</p>
+                    </div>
+                </div>` : ''}
+                
+                ${fileLink ? `<div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>نتائج الاختبار بعد الصيانة:</strong> 
+                            <a href="${escapeHtml(fileLink)}" target="_blank" class="file-link-btn ms-2">
+                                <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                            </a>
+                        </p>
+                    </div>
+                </div>` : ''}
+            `;
+            
+            document.getElementById('detailsModalBody').innerHTML = detailsHTML;
+            detailsModalInstance.show();
+        }
+        
         // ================ DELETE FUNCTIONALITY ================
-        function showDeleteModal(recordId, recordName) {
+        function showDeleteModal(recordId, recordName, recordNumber = '') {
             deleteRecordId = recordId;
             deleteRecordName = recordName;
             
-            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordId').textContent = recordNumber || 'غير معروف';
             document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
             
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
+            deleteModalInstance.show();
         }
         
         async function confirmDelete() {
@@ -1136,105 +2110,30 @@
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
             
             try {
-                const result = await callGoogleScript(MAINTENANCE_SCRIPT_URL, 'delete', { recordId: deleteRecordId });
+                const res = await jsonp(`${MAINTENANCE_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}`);
                 
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     
-                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-                    deleteModal.hide();
+                    deleteModalInstance.hide();
                     
                     deleteRecordId = '';
                     deleteRecordName = '';
                     
-                    await loadMaintenanceData();
+                    loadMaintenanceData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في الحذف`, 'error');
-            } finally {
+                console.error('Error deleting record:', error);
                 button.disabled = false;
                 button.innerHTML = originalHtml;
+                showNotification('❌ خطأ في الاتصال بالخادم', 'error');
             }
-        }
-        
-        // ================ DETAILS VIEW FUNCTION ================
-        async function viewMaintenanceDetails(recordId) {
-            const record = maintenanceRecords.find(r => 
-                String(r[0] || '').trim() === String(recordId).trim()
-            );
-            
-            if (!record) {
-                showNotification('❌ لم يتم العثور على السجل', 'error');
-                return;
-            }
-            
-            const detailsHTML = generateMaintenanceDetails(record);
-            
-            const existingModal = document.getElementById('detailsModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-            
-            document.getElementById('dynamicModalContainer').innerHTML = detailsHTML;
-            
-            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-            detailsModal.show();
-        }
-        
-        function generateMaintenanceDetails(record) {
-            return `
-                <div class="modal fade" id="detailsModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header modal-header-custom">
-                                <h5 class="modal-title">سجل الصيانة: ${escapeHtml(record[0])}</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>الرقم التعريفي:</strong> ${escapeHtml(record[0])}</p>
-                                        <p><strong>اسم الجهاز:</strong> ${escapeHtml(record[1])}</p>
-                                        <p><strong>الشركة المصنعة:</strong> ${escapeHtml(record[2])}</p>
-                                        <p><strong>الطراز:</strong> ${escapeHtml(record[3])}</p>
-                                        <p><strong>الرقم التسلسلي:</strong> ${escapeHtml(record[4])}</p>
-                                        <p><strong>الموقع:</strong> ${escapeHtml(record[5])}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>نوع العملية:</strong> ${escapeHtml(record[6])}</p>
-                                        <p><strong>السبب / المشكلة:</strong> ${escapeHtml(record[7])}</p>
-                                        <p><strong>التاريخ:</strong> ${formatDate(record[8])}</p>
-                                        <p><strong>الفني المسؤول:</strong> ${escapeHtml(record[9])}</p>
-                                        <p><strong>قطع الغيار المستخدمة:</strong> ${escapeHtml(record[10])}</p>
-                                        <p><strong>مدة التوقف:</strong> ${escapeHtml(record[11])}</p>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <p><strong>التكلفة:</strong> ${escapeHtml(record[12])}</p>
-                                        <p><strong>نتائج الاختبار بعد الصيانة:</strong> ${escapeHtml(record[13])}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>الحالة بعد الصيانة:</strong> ${escapeHtml(record[14])}</p>
-                                        <p><strong>المراجع:</strong> ${escapeHtml(record[15])}</p>
-                                    </div>
-                                </div>
-                                ${record[16] ? `<p><strong>ملاحظات:</strong> ${escapeHtml(record[16])}</p>` : ''}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // ================ HELPER FUNCTIONS ================
-        function updateTotalRecordsCount() {
-            document.getElementById('totalRecords').textContent = maintenanceRecords.length.toLocaleString('ar-SA');
         }
     </script>
 </body>
