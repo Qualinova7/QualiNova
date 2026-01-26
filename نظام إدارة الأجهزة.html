@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة معايرة الأجهزة - معمل كواليتك إنترناشيونال</title>
+    <title>نظام إدارة معايرة الأجهزة المتكامل - معمل كواليتك إنترناشيونال</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -13,6 +13,9 @@
     <!-- Flatpickr Calendar -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -20,6 +23,7 @@
             --success-color: #27ae60;
             --danger-color: #e74c3c;
             --warning-color: #f39c12;
+            --info-color: #17a2b8;
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
             --calibration-color: #3498db;
@@ -102,17 +106,36 @@
             margin-right: 5px;
         }
         
-        .header-content {
-            position: relative;
-            z-index: 1;
+        /* Statistics Cards */
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            height: 100%;
         }
         
-        @media (min-width: 769px) {
-            .header-badge-container {
-                position: relative;
-                padding-left: 130px;
-            }
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+        
+        .stats-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .stats-icon.total { background: rgba(52, 152, 219, 0.1); color: var(--calibration-color); }
+        .stats-icon.active { background: rgba(39, 174, 96, 0.1); color: var(--success-color); }
+        .stats-icon.due { background: rgba(243, 156, 18, 0.1); color: var(--warning-color); }
+        .stats-icon.category { background: rgba(155, 89, 182, 0.1); color: #9b59b6; }
         
         /* Card Styles */
         .custom-card {
@@ -135,10 +158,6 @@
         }
         
         .card-header-calibration {
-            background: linear-gradient(135deg, var(--calibration-color), #2980b9);
-        }
-        
-        .card-header-file {
             background: linear-gradient(135deg, var(--calibration-color), #2980b9);
         }
         
@@ -283,64 +302,20 @@
             text-align: right;
         }
         
-        /* Flatpickr Customization */
-        .flatpickr-calendar {
-            font-family: 'Cairo', sans-serif;
-            direction: rtl;
+        /* DataTables Customization */
+        .dataTables_wrapper {
+            padding: 0;
         }
         
-        .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
-            background: var(--calibration-color);
-            border-color: var(--calibration-color);
+        .dataTables_length select {
+            border-radius: 5px;
+            padding: 5px;
         }
         
-        .flatpickr-current-month .flatpickr-monthDropdown-months {
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        .flatpickr-weekdays {
-            font-family: 'Cairo', sans-serif;
-        }
-        
-        /* Table Styles */
-        .table-responsive {
-            overflow-x: auto;
-            margin-bottom: 0;
-        }
-        
-        .table-custom {
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 0;
-            min-width: 1500px;
-            width: 100%;
-        }
-        
-        .table-custom thead th {
-            background: linear-gradient(135deg, var(--calibration-color), #2980b9);
-            color: white;
-            border: none;
-            padding: 15px 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            position: sticky;
-            top: 0;
-            white-space: nowrap;
-        }
-        
-        .table-custom tbody tr {
-            transition: all 0.2s;
-        }
-        
-        .table-custom tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.08);
-        }
-        
-        .table-custom tbody td {
-            padding: 12px;
-            vertical-align: middle;
-            border-bottom: 1px solid #f0f0f0;
-            white-space: nowrap;
+        .dataTables_filter input {
+            border-radius: 5px;
+            padding: 5px 10px;
+            border: 1px solid #dee2e6;
         }
         
         /* Action Buttons */
@@ -350,6 +325,29 @@
             border-radius: 6px;
             font-size: 0.8rem;
             min-width: 70px;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .status-maintenance {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
         }
         
         /* Notification Styles */
@@ -414,6 +412,87 @@
             display: inline-block;
         }
         
+        /* Frequency Input Group */
+        .frequency-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .frequency-input {
+            flex: 1;
+        }
+        
+        .frequency-options {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .frequency-btn {
+            padding: 5px 10px;
+            background: #e9ecef;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .frequency-btn:hover {
+            background: #dee2e6;
+        }
+        
+        .frequency-btn.active {
+            background: var(--calibration-color);
+            color: white;
+            border-color: var(--calibration-color);
+        }
+        
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .filter-btn.active {
+            border-color: white;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+        }
+        
+        .filter-btn-all {
+            background: var(--calibration-color);
+            color: white;
+        }
+        
+        .filter-btn-due {
+            background: var(--warning-color);
+            color: white;
+        }
+        
+        .filter-btn-inactive {
+            background: var(--danger-color);
+            color: white;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .main-header h1 {
@@ -439,15 +518,13 @@
                 padding-top: 60px;
             }
             
-            .header-badge-container {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 10px;
+            .filter-buttons {
+                justify-content: center;
             }
             
-            .table-custom {
-                min-width: 1300px;
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
             }
         }
         
@@ -478,10 +555,60 @@
             filter: invert(1) grayscale(100%) brightness(200%);
         }
         
-        /* Modal Fix - Prevent background scroll */
-        body.modal-open {
-            overflow: hidden;
-            padding-right: 0 !important;
+        /* Autofill dropdown styles */
+        .autofill-options {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .autofill-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .autofill-option:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .autofill-container {
+            position: relative;
+        }
+        
+        /* Due date warning */
+        .due-soon {
+            color: var(--warning-color) !important;
+            font-weight: bold;
+        }
+        
+        .overdue {
+            color: var(--danger-color) !important;
+            font-weight: bold;
+        }
+        
+        /* Filter active indicator */
+        .filter-active {
+            position: relative;
+        }
+        
+        .filter-active::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid var(--calibration-color);
         }
     </style>
 </head>
@@ -501,10 +628,10 @@
             <div class="header-content">
                 <div class="row align-items-center">
                     <div class="col-md-8">
-                        <h1><i class="fas fa-tools me-2"></i> نظام إدارة معايرة الأجهزة - معمل كواليتك إنترناشيونال</h1>
+                        <h1><i class="fas fa-tools me-2"></i> نظام إدارة معايرة الأجهزة المتكامل</h1>
                         <p class="lead mb-0">نظام متكامل لتسجيل وإدارة معايرة الأجهزة والمعايير الداخلية والخارجية</p>
                     </div>
-                    <div class="col-md-4 text-md-end mt-3 mt-md-0 header-badge-container">
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
                         <div class="header-badge d-inline-block me-3">
                             <i class="fas fa-database me-2"></i>
                             <span id="totalRecords">0</span> جهاز
@@ -518,18 +645,62 @@
             </div>
         </div>
         
+        <!-- Statistics Section -->
+        <div class="row mb-4" id="statisticsSection">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon total">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h4 id="statsTotal">0</h4>
+                    <p class="text-muted mb-0">إجمالي الأجهزة</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon active">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4 id="statsActive">0</h4>
+                    <p class="text-muted mb-0">أجهزة نشطة</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon due">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h4 id="statsDue">0</h4>
+                    <p class="text-muted mb-0">معايرة مستحقة</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon category">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h4 id="statsCategories">0</h4>
+                    <p class="text-muted mb-0">فئة مختلفة</p>
+                </div>
+            </div>
+        </div>
+        
         <!-- Form Section -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="custom-card">
-                    <div class="card-header-custom card-header-calibration">
-                        <i class="fas fa-tools me-2"></i> إدارة معايرة الأجهزة
+                    <div class="card-header-custom card-header-calibration d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-tools me-2"></i> إدارة أجهزة المعايرة</span>
+                        <button type="button" class="btn btn-light btn-sm" onclick="toggleFormSection()">
+                            <i class="fas fa-chevron-up" id="formToggleIcon"></i>
+                        </button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" id="formSection">
                         <form id="calibrationForm">
+                            <!-- Section 1: Basic Information -->
                             <div class="form-section">
                                 <div class="form-section-title">
-                                    <i class="fas fa-info-circle"></i> المعلومات الأساسية للجهاز
+                                    <i class="fas fa-info-circle"></i> المعلومات الأساسية
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3 mb-2">
@@ -544,6 +715,17 @@
                                         <input type="text" class="form-control form-control-custom" id="calibration_deviceName" placeholder="اسم الجهاز" required>
                                     </div>
                                     <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الشركة المصنعة</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_manufacturer" placeholder="الشركة المصنعة">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الطراز</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_model" placeholder="طراز الجهاز">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">الموقع</label>
                                         <input type="text" class="form-control form-control-custom" id="calibration_location" placeholder="موقع الجهاز">
                                     </div>
@@ -551,28 +733,24 @@
                                         <label class="form-label-custom">الرقم التسلسلي</label>
                                         <input type="text" class="form-control form-control-custom" id="calibration_serialNumber" placeholder="الرقم التسلسلي">
                                     </div>
-                                </div>
-                                
-                                <div class="row">
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">الكود الداخلي</label>
                                         <input type="text" class="form-control form-control-custom" id="calibration_internalCode" placeholder="الكود الداخلي">
                                     </div>
                                     <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">الوصف</label>
-                                        <input type="text" class="form-control form-control-custom" id="calibration_description" placeholder="وصف الجهاز">
-                                    </div>
-                                    <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">الفئة</label>
                                         <select class="form-select form-select-custom" id="calibration_category">
                                             <option value="">اختر الفئة</option>
-                                            <option value="أجهزة قياس">أجهزة قياس</option>
-                                            <option value="أجهزة معايرة">أجهزة معايرة</option>
-                                            <option value="أجهزة اختبار">أجهزة اختبار</option>
-                                            <option value="معايير مرجعية">معايير مرجعية</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 mb-2">
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">الوصف</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_description" placeholder="وصف الجهاز">
+                                    </div>
+                                    <div class="col-md-4 mb-2">
                                         <label class="form-label-custom">الأولوية</label>
                                         <select class="form-select form-select-custom" id="calibration_priority">
                                             <option value="">اختر الأولوية</option>
@@ -581,12 +759,23 @@
                                             <option value="منخفضة">منخفضة</option>
                                         </select>
                                     </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">حالة الجهاز</label>
+                                        <select class="form-select form-select-custom" id="calibration_deviceStatus">
+                                            <option value="نشط">نشط</option>
+                                            <option value="غير نشط">غير نشط</option>
+                                            <option value="صيانة">صيانة</option>
+                                            <option value="معطّل">معطّل</option>
+                                            <option value="مستبعد">مستبعد</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             
+                            <!-- Section 2: Device Specifications -->
                             <div class="form-section">
                                 <div class="form-section-title">
-                                    <i class="fas fa-ruler"></i> نطاقات الجهاز
+                                    <i class="fas fa-ruler"></i> مواصفات الجهاز
                                 </div>
                                 <div class="row">
                                     <div class="col-md-2 mb-2">
@@ -599,7 +788,9 @@
                                     </div>
                                     <div class="col-md-2 mb-2">
                                         <label class="form-label-custom">وحدة نطاق الجهاز</label>
-                                        <input type="text" class="form-control form-control-custom" id="calibration_deviceRangeUnit" placeholder="الوحدة">
+                                        <select class="form-select form-select-custom" id="calibration_deviceRangeUnit">
+                                            <option value="">اختر الوحدة</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-2 mb-2">
                                         <label class="form-label-custom">نطاق التشغيل من</label>
@@ -611,7 +802,9 @@
                                     </div>
                                     <div class="col-md-2 mb-2">
                                         <label class="form-label-custom">وحدة نطاق التشغيل</label>
-                                        <input type="text" class="form-control form-control-custom" id="calibration_operatingRangeUnit" placeholder="الوحدة">
+                                        <select class="form-select form-select-custom" id="calibration_operatingRangeUnit">
+                                            <option value="">اختر الوحدة</option>
+                                        </select>
                                     </div>
                                 </div>
                                 
@@ -622,11 +815,24 @@
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">وحدة أقصى انحراف</label>
-                                        <input type="text" class="form-control form-control-custom" id="calibration_maxDeviationUnit" placeholder="الوحدة">
+                                        <select class="form-select form-select-custom" id="calibration_maxDeviationUnit">
+                                            <option value="">اختر الوحدة</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">عدم اليقين</label>
+                                        <input type="text" class="form-control form-control-custom" id="calibration_uncertainty" placeholder="عدم اليقين">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">وحدة عدم اليقين</label>
+                                        <select class="form-select form-select-custom" id="calibration_uncertaintyUnit">
+                                            <option value="">اختر الوحدة</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                             
+                            <!-- Section 3: Internal Calibration -->
                             <div class="form-section">
                                 <div class="form-section-title">
                                     <i class="fas fa-cogs"></i> معايرة داخلية
@@ -676,17 +882,17 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">تكرار المعايرة الداخلية</label>
-                                        <select class="form-select form-select-custom" id="calibration_internalCalibrationFrequency">
-                                            <option value="">اختر التكرار</option>
-                                            <option value="شهري">شهري</option>
-                                            <option value="ربع سنوي">ربع سنوي</option>
-                                            <option value="نصف سنوي">نصف سنوي</option>
-                                            <option value="سنوي">سنوي</option>
-                                            <option value="كل سنتين">كل سنتين</option>
-                                            <option value="كل 3 سنوات">كل 3 سنوات</option>
-                                            <option value="كل 5 سنوات">كل 5 سنوات</option>
-                                        </select>
+                                        <label class="form-label-custom">التكرار (بالأيام)</label>
+                                        <div class="frequency-group">
+                                            <div class="frequency-input">
+                                                <input type="number" class="form-control form-control-custom" id="calibration_internalCalibrationFrequency" placeholder="عدد الأيام" min="1" value="365" onchange="calculateInternalDueDate()" oninput="calculateInternalDueDate()">
+                                            </div>
+                                            <div class="frequency-options">
+                                                <button type="button" class="frequency-btn active" onclick="setInternalFrequency(365)">365</button>
+                                                <button type="button" class="frequency-btn" onclick="setInternalFrequency(180)">180</button>
+                                                <button type="button" class="frequency-btn" onclick="setInternalFrequency(90)">90</button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">تاريخ استحقاق المعايرة الداخلية</label>
@@ -695,13 +901,16 @@
                                             <i class="fas fa-calendar-alt date-icon"></i>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 mb-2">
+                                    <div class="col-md-3 mb-2 autofill-container">
                                         <label class="form-label-custom">تمت المعايرة بواسطة</label>
-                                        <input type="text" class="form-control form-control-custom" id="calibration_internalCalibratedBy" placeholder="اسم المعاير">
+                                        <input type="text" class="form-control form-control-custom" id="calibration_internalCalibratedBy" placeholder="اسم المعاير" list="employeeList">
+                                        <datalist id="employeeList"></datalist>
+                                        <div class="autofill-options" id="internalCalibratorOptions"></div>
                                     </div>
                                 </div>
                             </div>
                             
+                            <!-- Section 4: External Calibration -->
                             <div class="form-section">
                                 <div class="form-section-title">
                                     <i class="fas fa-industry"></i> معايرة خارجية
@@ -751,14 +960,17 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 mb-2">
-                                        <label class="form-label-custom">تكرار المعايرة الخارجية</label>
-                                        <select class="form-select form-select-custom" id="calibration_externalCalibrationFrequency">
-                                            <option value="">اختر التكرار</option>
-                                            <option value="سنوي">سنوي</option>
-                                            <option value="كل سنتين">كل سنتين</option>
-                                            <option value="كل 3 سنوات">كل 3 سنوات</option>
-                                            <option value="كل 5 سنوات">كل 5 سنوات</option>
-                                        </select>
+                                        <label class="form-label-custom">التكرار (بالأيام)</label>
+                                        <div class="frequency-group">
+                                            <div class="frequency-input">
+                                                <input type="number" class="form-control form-control-custom" id="calibration_externalCalibrationFrequency" placeholder="عدد الأيام" min="1" value="365" onchange="calculateExternalDueDate()" oninput="calculateExternalDueDate()">
+                                            </div>
+                                            <div class="frequency-options">
+                                                <button type="button" class="frequency-btn active" onclick="setExternalFrequency(365)">365</button>
+                                                <button type="button" class="frequency-btn" onclick="setExternalFrequency(180)">180</button>
+                                                <button type="button" class="frequency-btn" onclick="setExternalFrequency(90)">90</button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-3 mb-2">
                                         <label class="form-label-custom">تاريخ استحقاق المعايرة الخارجية</label>
@@ -767,21 +979,24 @@
                                             <i class="fas fa-calendar-alt date-icon"></i>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 mb-2">
+                                    <div class="col-md-3 mb-2 autofill-container">
                                         <label class="form-label-custom">تمت المعايرة بواسطة</label>
-                                        <input type="text" class="form-control form-control-custom" id="calibration_externalCalibratedBy" placeholder="اسم المزود">
+                                        <input type="text" class="form-control form-control-custom" id="calibration_externalCalibratedBy" placeholder="اسم المزود" list="companiesList">
+                                        <datalist id="companiesList"></datalist>
+                                        <div class="autofill-options" id="externalCalibratorOptions"></div>
                                     </div>
                                 </div>
                             </div>
                             
+                            <!-- Section 5: Additional Information -->
                             <div class="form-section">
                                 <div class="form-section-title">
-                                    <i class="fas fa-link"></i> روابط ومعلومات إضافية
+                                    <i class="fas fa-link"></i> معلومات إضافية
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-12 mb-2">
                                         <label class="form-label-custom">رابط البيانات ذات الصلة</label>
-                                        <input type="text" class="form-control form-control-custom" id="calibration_relatedDataLink" placeholder="رابط البيانات">
+                                        <input type="text" class="form-control form-control-custom" id="calibration_relatedDataLink" placeholder="أدخل الرابط بالضبط كما تريده">
                                     </div>
                                     <div class="col-md-12 mb-2">
                                         <label class="form-label-custom">معلومات إضافية</label>
@@ -790,6 +1005,7 @@
                                 </div>
                             </div>
                             
+                            <!-- Form Buttons -->
                             <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-between">
                                     <button type="button" onclick="resetCalibrationForm()" class="btn btn-outline-secondary">
@@ -805,6 +1021,8 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Hidden Fields -->
                             <input type="hidden" id="calibration_editingId">
                             <input type="hidden" id="calibration_internalRecordId">
                             <input type="hidden" id="calibration_internalCertificateLink">
@@ -828,23 +1046,46 @@
                             <button onclick="exportCalibrationCSV()" class="btn btn-light btn-sm">
                                 <i class="fas fa-download"></i> تصدير
                             </button>
+                            <button onclick="printTable()" class="btn btn-light btn-sm ms-2">
+                                <i class="fas fa-print"></i> طباعة
+                            </button>
                         </div>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="loading-spinner" id="calibrationLoadingSpinner">
-                            <div class="spinner-border text-primary spinner-border-custom" role="status">
-                                <span class="visually-hidden">جاري التحميل...</span>
-                            </div>
+                    <div class="card-body p-3">
+                        <!-- Filter Buttons -->
+                        <div class="filter-buttons mb-3">
+                            <button onclick="filterTable('all')" class="filter-btn filter-btn-all active" id="filterAll">
+                                <i class="fas fa-list"></i> عرض الكل
+                            </button>
+                            <button onclick="filterTable('due')" class="filter-btn filter-btn-due" id="filterDue">
+                                <i class="fas fa-exclamation-triangle"></i> أجهزة تحتاج معايرة
+                            </button>
+                            <button onclick="filterTable('inactive')" class="filter-btn filter-btn-inactive" id="filterInactive">
+                                <i class="fas fa-ban"></i> أجهزة غير نشطة
+                            </button>
                         </div>
                         
-                        <div class="table-responsive" id="calibrationTableContainer" style="display: none;">
-                            <table class="table table-custom table-hover" id="calibrationDataTable">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="calibrationDataTable" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>رقم السجل</th>
+                                        <th>اسم الجهاز</th>
+                                        <th>الشركة المصنعة</th>
+                                        <th>الطراز</th>
+                                        <th>الموقع</th>
+                                        <th>الرقم التسلسلي</th>
+                                        <th>الفئة</th>
+                                        <th>حالة الجهاز</th>
+                                        <th>تاريخ استحقاق داخلي</th>
+                                        <th>تاريخ استحقاق خارجي</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated by DataTables -->
+                                </tbody>
                             </table>
-                        </div>
-                        
-                        <div id="calibrationNoRecords" class="text-center py-5" style="display: none;">
-                            <i class="fas fa-tools fa-4x text-muted mb-4"></i>
-                            <h4 class="text-muted">لا توجد أجهزة لعرضها</h4>
                         </div>
                     </div>
                 </div>
@@ -855,9 +1096,11 @@
         <div class="row mt-4 fade-in">
             <div class="col-12 text-center">
                 <p class="text-muted">
-                    <i class="fas fa-copyright me-1"></i> نظام إدارة معايرة الأجهزة 
+                    <i class="fas fa-copyright me-1"></i> نظام إدارة معايرة الأجهزة المتكامل 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 1.0 </span>
+                    <span class="text-info">الإصدار 2.0 </span>
+                    <span class="mx-2">|</span>
+                    <span id="lastUpdateTime">آخر تحديث: --:--</span>
                 </p>
             </div>
         </div>
@@ -877,9 +1120,9 @@
                         <h5 class="alert-heading">تحذير!</h5>
                         <p>هل أنت متأكد من حذف هذا الجهاز؟ هذا الإجراء لا يمكن التراجع عنه.</p>
                         <hr>
-                        <p class="mb-0"><strong>النظام:</strong> <span id="deleteSystemType">معايرة الأجهزة</span></p>
                         <p class="mb-0"><strong>رقم السجل:</strong> <span id="deleteRecordId">غير معروف</span></p>
                         <p class="mb-0"><strong>اسم الجهاز:</strong> <span id="deleteRecordName">غير معروف</span></p>
+                        <p class="mb-0"><strong>الشركة المصنعة:</strong> <span id="deleteManufacturer">غير معروف</span></p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -896,7 +1139,7 @@
 
     <!-- Details Modal -->
     <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title">تفاصيل جهاز المعايرة</h5>
@@ -907,6 +1150,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-primary" onclick="printDetails()">
+                        <i class="fas fa-print me-1"></i> طباعة التفاصيل
+                    </button>
                 </div>
             </div>
         </div>
@@ -917,17 +1163,30 @@
     <!-- Flatpickr Calendar -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    <!-- DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
     
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const CALIBRATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygfHsjEh7u1Rp3sh5p203T_Wx8SPeiQq47lbnD41aRH6nMY02AEg04Bf7lGlUI414rQg/exec";
+        const CALIBRATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZn8ah4jxwJ0jk9JtYWKJxWQIM7mArgM2qt1ZmnjGygvJwrWub4Y_MAjjVKSjEtopl1g/exec";
+        const UNITS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQG8RwDs5YpVRZ56M3z4-QwjTJCR-qefAM0PrKfMZiBVnPuqfrC2mawsrXLTcCeWGG/exec";
         const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwj4u5FnGHcCto7LPvolgvUdifPxVAbAUBUt3mD3thFJzNm47mIkDWYPv_2YFpNkIlUGg/exec";
+        const EMPLOYEE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiKkgfhdI3xaW6biMBZCCkuIN9P_6mvUQVHJWgj35kHOUvuQjduHzYfAnOCG0aHWlcpA/exec";
         
         // ================ GLOBAL VARIABLES ================
         let calibrationRecords = [];
+        let unitsData = [];
+        let categoriesData = [];
+        let companiesData = [];
+        let employeeData = [];
         let deleteRecordId = '';
         let deleteRecordName = '';
+        let deleteManufacturer = '';
         let flatpickrInstances = {};
         let deleteModalInstance = null;
         let detailsModalInstance = null;
@@ -936,8 +1195,225 @@
         let uploadedInternalFileUrl = '';
         let uploadedExternalFileUrl = '';
         let isDuplicateRecordNumber = false;
+        let dataTable = null;
+        let currentFilter = 'all';
         
-        // ================ DATE SYSTEM FUNCTIONS ================
+        // ================ INITIALIZATION ================
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
+            
+            initializeDatePickers();
+            initializeFileUpload();
+            initializeDataTable();
+            
+            setTimeout(() => {
+                loadCalibrationData();
+                loadStatistics();
+                loadUnitsData();
+                loadEmployeeData();
+            }, 500);
+            
+            setInterval(() => {
+                loadStatistics();
+            }, 300000);
+        });
+        
+        function initializeDataTable() {
+            dataTable = $('#calibrationDataTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json'
+                },
+                responsive: true,
+                pageLength: 25,
+                order: [[0, 'desc']],
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 1 },
+                    { responsivePriority: 3, targets: 10 },
+                    { responsivePriority: 4, targets: 7 },
+                    { responsivePriority: 5, targets: 4 }
+                ]
+            });
+        }
+        
+        function initializeDatePickers() {
+            const dateOptions = {
+                locale: 'ar',
+                dateFormat: "d/m/Y",
+                altFormat: "d/m/Y",
+                altInput: false,
+                allowInput: true,
+                clickOpens: true,
+                position: 'auto',
+                monthSelectorType: 'static',
+                yearSelectorType: 'scrolling',
+                prevArrow: '<i class="fas fa-chevron-right"></i>',
+                nextArrow: '<i class="fas fa-chevron-left"></i>',
+                weekNumbers: false,
+                disableMobile: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const formattedDate = formatDateToDDMMYYYY(date);
+                        instance.input.value = formattedDate;
+                        
+                        if (instance.input.id === 'calibration_internalCalibrationDate') {
+                            calculateInternalDueDate();
+                        } else if (instance.input.id === 'calibration_externalCalibrationDate') {
+                            calculateExternalDueDate();
+                        }
+                    }
+                }
+            };
+            
+            flatpickrInstances.internalCalibrationDate = flatpickr('#calibration_internalCalibrationDate', dateOptions);
+            flatpickrInstances.internalCalibrationDueDate = flatpickr('#calibration_internalCalibrationDueDate', dateOptions);
+            flatpickrInstances.externalCalibrationDate = flatpickr('#calibration_externalCalibrationDate', dateOptions);
+            flatpickrInstances.externalCalibrationDueDate = flatpickr('#calibration_externalCalibrationDueDate', dateOptions);
+            
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            
+            document.getElementById('calibration_internalCalibrationDate').value = todayFormatted;
+            if (flatpickrInstances.internalCalibrationDate) {
+                flatpickrInstances.internalCalibrationDate.setDate(today, false);
+            }
+            
+            document.getElementById('calibration_externalCalibrationDate').value = todayFormatted;
+            if (flatpickrInstances.externalCalibrationDate) {
+                flatpickrInstances.externalCalibrationDate.setDate(today, false);
+            }
+            
+            calculateInternalDueDate();
+            calculateExternalDueDate();
+        }
+        
+        function toggleFormSection() {
+            const formSection = document.getElementById('formSection');
+            const toggleIcon = document.getElementById('formToggleIcon');
+            
+            if (formSection.style.display === 'none') {
+                formSection.style.display = 'block';
+                toggleIcon.className = 'fas fa-chevron-up';
+            } else {
+                formSection.style.display = 'none';
+                toggleIcon.className = 'fas fa-chevron-down';
+            }
+        }
+        
+        // ================ EMPLOYEE DATA FUNCTIONS ================
+        async function loadEmployeeData() {
+            try {
+                const res = await jsonp(`${EMPLOYEE_SCRIPT_URL}?action=getAll&t=${Date.now()}`);
+                
+                if (res && res.status === 'success') {
+                    let records = [];
+                    
+                    if (Array.isArray(res.records)) {
+                        records = res.records;
+                    } else if (Array.isArray(res.data)) {
+                        records = res.data;
+                    } else if (Array.isArray(res)) {
+                        records = res;
+                    }
+                    
+                    employeeData = records;
+                    populateEmployeeDatalists();
+                } else {
+                    console.log('Failed to load employee data');
+                }
+            } catch (error) {
+                console.error('Error loading employee data:', error);
+            }
+        }
+        
+        function populateEmployeeDatalists() {
+            const employeeList = document.getElementById('employeeList');
+            employeeList.innerHTML = '';
+            
+            const names = new Set();
+            
+            employeeData.forEach(record => {
+                if (record && record.length > 1 && record[1]) {
+                    names.add(String(record[1]).trim());
+                }
+            });
+            
+            names.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                employeeList.appendChild(option);
+            });
+        }
+        
+        // ================ UNITS DATA FUNCTIONS ================
+        async function loadUnitsData() {
+            try {
+                const res = await jsonp(`${UNITS_SCRIPT_URL}?action=getAllData&t=${Date.now()}`);
+                
+                if (res && res.status === 'success') {
+                    unitsData = res.units || [];
+                    categoriesData = res.categories || [];
+                    companiesData = res.companies || [];
+                    
+                    populateDropdowns();
+                } else {
+                    console.log('Failed to load units data');
+                }
+            } catch (error) {
+                console.error('Error loading units data:', error);
+            }
+        }
+        
+        function populateDropdowns() {
+            // Populate units dropdowns
+            const unitSelects = [
+                'calibration_deviceRangeUnit',
+                'calibration_operatingRangeUnit',
+                'calibration_maxDeviationUnit',
+                'calibration_uncertaintyUnit'
+            ];
+            
+            unitSelects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">اختر الوحدة</option>';
+                
+                unitsData.forEach(unit => {
+                    const option = document.createElement('option');
+                    option.value = unit;
+                    option.textContent = unit;
+                    select.appendChild(option);
+                });
+            });
+            
+            // Populate categories dropdown
+            const categorySelect = document.getElementById('calibration_category');
+            categorySelect.innerHTML = '<option value="">اختر الفئة</option>';
+            
+            categoriesData.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+            
+            // Populate companies datalist for external calibration
+            const companiesList = document.getElementById('companiesList');
+            companiesList.innerHTML = '';
+            
+            companiesData.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company;
+                companiesList.appendChild(option);
+            });
+        }
+        
+        // ================ DATE FUNCTIONS ================
         function formatDateToDMY(date) {
             if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
             const day = date.getDate();
@@ -956,10 +1432,6 @@
                 const day = parseInt(match[1], 10);
                 const month = parseInt(match[2], 10) - 1;
                 const year = parseInt(match[3], 10);
-                
-                if (day < 1 || day > 31) return null;
-                if (month < 0 || month > 11) return null;
-                if (year < 1900 || year > 2100) return null;
                 
                 const dateObj = new Date(year, month, day);
                 if (dateObj.getDate() !== day || dateObj.getMonth() !== month || dateObj.getFullYear() !== year) {
@@ -982,9 +1454,7 @@
                     if (!isNaN(regularDate.getTime())) {
                         return `<span class="english-date">${formatDateToDayMonthYear(regularDate)}</span>`;
                     }
-                } catch (e) {
-                    // Ignore error
-                }
+                } catch (e) {}
                 return `<span class="english-date">${dmyString}</span>`;
             }
             
@@ -1017,61 +1487,128 @@
                     if (!isNaN(regularDate.getTime())) {
                         return formatDateToDDMMYYYY(regularDate);
                     }
-                } catch (e) {
-                    // Ignore error
-                }
+                } catch (e) {}
                 return '';
             }
             
             return formatDateToDDMMYYYY(dateObj);
         }
         
-        function validateDMYDate(dmyString) {
-            if (!dmyString) return true;
-            
-            const dateObj = parseDateFromDMY(dmyString);
-            if (!dateObj) {
-                try {
-                    const regularDate = new Date(dmyString);
-                    return !isNaN(regularDate.getTime());
-                } catch (e) {
-                    return false;
-                }
-            }
-            
-            return true;
+        function formatDateToDDMMYYYY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
         }
         
-        function checkDuplicateRecordNumber() {
-            const recordNumberInput = document.getElementById('calibration_recordId');
-            const recordNumber = recordNumberInput.value.trim();
-            const editingId = document.getElementById('calibration_editingId').value;
-            const warningElement = document.getElementById('duplicateRecordNumberWarning');
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
             
-            if (!recordNumber) {
-                warningElement.style.display = 'none';
-                recordNumberInput.classList.remove('is-invalid');
-                isDuplicateRecordNumber = false;
-                return false;
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    return new Date(year, month, day);
+                }
             }
             
-            const duplicateRecord = calibrationRecords.find(record => {
-                if (editingId && record[0] === editingId) {
-                    return false;
+            return null;
+        }
+        
+        function setCurrentDate() {
+            const now = new Date();
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        // ================ FREQUENCY FUNCTIONS - FIXED ================
+        function setInternalFrequency(days) {
+            const frequencyInput = document.getElementById('calibration_internalCalibrationFrequency');
+            frequencyInput.value = days;
+            
+            // Update active button
+            const frequencyGroup = frequencyInput.closest('.frequency-group');
+            frequencyGroup.querySelectorAll('.frequency-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === days) {
+                    btn.classList.add('active');
                 }
-                return record[1] && record[1].toString().trim() === recordNumber;
             });
             
-            if (duplicateRecord) {
-                warningElement.style.display = 'block';
-                recordNumberInput.classList.add('is-invalid');
-                isDuplicateRecordNumber = true;
-                return true;
-            } else {
-                warningElement.style.display = 'none';
-                recordNumberInput.classList.remove('is-invalid');
-                isDuplicateRecordNumber = false;
-                return false;
+            calculateInternalDueDate();
+        }
+        
+        function setExternalFrequency(days) {
+            const frequencyInput = document.getElementById('calibration_externalCalibrationFrequency');
+            frequencyInput.value = days;
+            
+            // Update active button
+            const frequencyGroup = frequencyInput.closest('.frequency-group');
+            frequencyGroup.querySelectorAll('.frequency-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseInt(btn.textContent) === days) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            calculateExternalDueDate();
+        }
+        
+        function calculateInternalDueDate() {
+            const calibrationDateInput = document.getElementById('calibration_internalCalibrationDate');
+            const frequencyInput = document.getElementById('calibration_internalCalibrationFrequency');
+            const dueDateInput = document.getElementById('calibration_internalCalibrationDueDate');
+            
+            if (!calibrationDateInput.value || !frequencyInput.value) return;
+            
+            try {
+                const calibrationDate = parseDateDDMMYYYY(calibrationDateInput.value);
+                if (!calibrationDate) return;
+                
+                const frequency = parseInt(frequencyInput.value) || 365;
+                const dueDate = new Date(calibrationDate);
+                dueDate.setDate(dueDate.getDate() + frequency);
+                
+                const formattedDueDate = formatDateToDDMMYYYY(dueDate);
+                dueDateInput.value = formattedDueDate;
+                
+                if (flatpickrInstances.internalCalibrationDueDate) {
+                    flatpickrInstances.internalCalibrationDueDate.setDate(dueDate, false);
+                }
+            } catch (e) {
+                console.error('Error calculating internal due date:', e);
+            }
+        }
+        
+        function calculateExternalDueDate() {
+            const calibrationDateInput = document.getElementById('calibration_externalCalibrationDate');
+            const frequencyInput = document.getElementById('calibration_externalCalibrationFrequency');
+            const dueDateInput = document.getElementById('calibration_externalCalibrationDueDate');
+            
+            if (!calibrationDateInput.value || !frequencyInput.value) return;
+            
+            try {
+                const calibrationDate = parseDateDDMMYYYY(calibrationDateInput.value);
+                if (!calibrationDate) return;
+                
+                const frequency = parseInt(frequencyInput.value) || 365;
+                const dueDate = new Date(calibrationDate);
+                dueDate.setDate(dueDate.getDate() + frequency);
+                
+                const formattedDueDate = formatDateToDDMMYYYY(dueDate);
+                dueDateInput.value = formattedDueDate;
+                
+                if (flatpickrInstances.externalCalibrationDueDate) {
+                    flatpickrInstances.externalCalibrationDueDate.setDate(dueDate, false);
+                }
+            } catch (e) {
+                console.error('Error calculating external due date:', e);
             }
         }
         
@@ -1276,115 +1813,6 @@
             uploadFile(selectedExternalFile, 'external');
         }
         
-        // ================ INITIALIZATION ================
-        document.addEventListener('DOMContentLoaded', function() {
-            setCurrentDate();
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-            
-            deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
-            detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
-            
-            initializeDatePickers();
-            initializeFileUpload();
-            
-            setTimeout(() => {
-                loadCalibrationData();
-            }, 500);
-            
-            document.getElementById('deleteModal').addEventListener('hidden.bs.modal', function () {
-                document.body.classList.remove('modal-open');
-                document.body.style.paddingRight = '';
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) backdrop.remove();
-            });
-            
-            document.getElementById('detailsModal').addEventListener('hidden.bs.modal', function () {
-                document.body.classList.remove('modal-open');
-                document.body.style.paddingRight = '';
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) backdrop.remove();
-            });
-            
-            document.getElementById('calibration_recordId').addEventListener('input', checkDuplicateRecordNumber);
-        });
-        
-        function initializeDatePickers() {
-            if (flatpickrInstances.internalCalibrationDate) flatpickrInstances.internalCalibrationDate.destroy();
-            if (flatpickrInstances.internalCalibrationDueDate) flatpickrInstances.internalCalibrationDueDate.destroy();
-            if (flatpickrInstances.externalCalibrationDate) flatpickrInstances.externalCalibrationDate.destroy();
-            if (flatpickrInstances.externalCalibrationDueDate) flatpickrInstances.externalCalibrationDueDate.destroy();
-            
-            const dateOptions = {
-                locale: 'ar',
-                dateFormat: "d/m/Y",
-                altFormat: "d/m/Y",
-                altInput: false,
-                allowInput: true,
-                clickOpens: true,
-                position: 'auto',
-                monthSelectorType: 'static',
-                yearSelectorType: 'scrolling',
-                prevArrow: '<i class="fas fa-chevron-right"></i>',
-                nextArrow: '<i class="fas fa-chevron-left"></i>',
-                weekNumbers: false,
-                disableMobile: true,
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length > 0) {
-                        const date = selectedDates[0];
-                        const formattedDate = formatDateToDDMMYYYY(date);
-                        instance.input.value = formattedDate;
-                    }
-                }
-            };
-            
-            flatpickrInstances.internalCalibrationDate = flatpickr('#calibration_internalCalibrationDate', dateOptions);
-            flatpickrInstances.internalCalibrationDueDate = flatpickr('#calibration_internalCalibrationDueDate', dateOptions);
-            flatpickrInstances.externalCalibrationDate = flatpickr('#calibration_externalCalibrationDate', dateOptions);
-            flatpickrInstances.externalCalibrationDueDate = flatpickr('#calibration_externalCalibrationDueDate', dateOptions);
-            
-            if (flatpickrInstances.internalCalibrationDate) flatpickrInstances.internalCalibrationDate.set('locale', 'ar');
-            if (flatpickrInstances.internalCalibrationDueDate) flatpickrInstances.internalCalibrationDueDate.set('locale', 'ar');
-            if (flatpickrInstances.externalCalibrationDate) flatpickrInstances.externalCalibrationDate.set('locale', 'ar');
-            if (flatpickrInstances.externalCalibrationDueDate) flatpickrInstances.externalCalibrationDueDate.set('locale', 'ar');
-        }
-        
-        function formatDateToDDMMYYYY(date) {
-            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
-            const day = date.getDate().toString().padStart(2, '0');
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-        }
-        
-        function parseDateDDMMYYYY(dateString) {
-            if (!dateString) return null;
-            
-            if (dateString.includes('/')) {
-                const parts = dateString.split('/');
-                if (parts.length === 3) {
-                    const day = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const year = parseInt(parts[2], 10);
-                    
-                    if (day < 1 || day > 31) return null;
-                    if (month < 0 || month > 11) return null;
-                    if (year < 1900 || year > 2100) return null;
-                    
-                    return new Date(year, month, day);
-                }
-            }
-            
-            return null;
-        }
-        
-        function setCurrentDate() {
-            const now = new Date();
-            const day = now.getDate().toString().padStart(2, '0');
-            const month = (now.getMonth() + 1).toString().padStart(2, '0');
-            const year = now.getFullYear();
-            document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
-        }
-        
         // ================ NOTIFICATION SYSTEM ================
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notificationContainer');
@@ -1464,7 +1892,88 @@
             });
         }
         
-        // ================ VALIDATION HELPER ================
+        // ================ STATISTICS FUNCTIONS - FIXED ================
+        async function loadStatistics() {
+            try {
+                const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=getStats&t=${Date.now()}`);
+                
+                if (res && res.status === 'success') {
+                    document.getElementById('statsTotal').textContent = res.totalDevices.toLocaleString('ar-SA');
+                    document.getElementById('statsActive').textContent = res.activeDevices.toLocaleString('ar-SA');
+                    
+                    // Calculate due devices count locally
+                    const dueCount = countDueDevices();
+                    document.getElementById('statsDue').textContent = dueCount.toLocaleString('ar-SA');
+                    
+                    document.getElementById('statsCategories').textContent = Object.keys(res.byCategory || {}).length;
+                    document.getElementById('totalRecords').textContent = res.totalDevices.toLocaleString('ar-SA');
+                    
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('lastUpdateTime').textContent = `آخر تحديث: ${timeString}`;
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+        
+        function countDueDevices() {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0); // Set to beginning of day for accurate comparison
+            
+            let dueCount = 0;
+            
+            calibrationRecords.forEach(record => {
+                // Column indices based on your data structure:
+                // record[23] = internal due date, record[28] = external due date
+                const internalDueDate = parseDateFromDMY(record[23] || '');
+                const externalDueDate = parseDateFromDMY(record[28] || '');
+                
+                // Check if either due date has passed
+                if ((internalDueDate && internalDueDate < now) || 
+                    (externalDueDate && externalDueDate < now)) {
+                    dueCount++;
+                }
+            });
+            
+            return dueCount;
+        }
+        
+        // ================ DUPLICATE CHECK ================
+        function checkDuplicateRecordNumber() {
+            const recordNumberInput = document.getElementById('calibration_recordId');
+            const recordNumber = recordNumberInput.value.trim();
+            const editingId = document.getElementById('calibration_editingId').value;
+            const warningElement = document.getElementById('duplicateRecordNumberWarning');
+            
+            if (!recordNumber) {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+            
+            const duplicateRecord = calibrationRecords.find(record => {
+                if (editingId && record[0] === editingId) {
+                    return false;
+                }
+                return record[1] && record[1].toString().trim() === recordNumber;
+            });
+            
+            if (duplicateRecord) {
+                warningElement.style.display = 'block';
+                recordNumberInput.classList.add('is-invalid');
+                isDuplicateRecordNumber = true;
+                return true;
+            } else {
+                warningElement.style.display = 'none';
+                recordNumberInput.classList.remove('is-invalid');
+                isDuplicateRecordNumber = false;
+                return false;
+            }
+        }
+        
+        // ================ VALIDATION FUNCTIONS ================
         function validateForm(requiredFields) {
             let isValid = true;
             requiredFields.forEach(fieldId => {
@@ -1480,175 +1989,159 @@
             return isValid;
         }
         
-        function validateDate(dateString) {
-            if (!dateString) return true;
+        // ================ FILTER FUNCTIONS ================
+        function filterTable(filterType) {
+            currentFilter = filterType;
             
-            if (validateDMYDate(dateString)) {
-                return true;
-            }
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
             
-            const ddMMyyyyRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-            if (ddMMyyyyRegex.test(dateString)) {
-                const match = dateString.match(ddMMyyyyRegex);
-                const day = parseInt(match[1], 10);
-                const month = parseInt(match[2], 10);
-                const year = parseInt(match[3], 10);
+            document.getElementById(`filter${filterType.charAt(0).toUpperCase() + filterType.slice(1)}`).classList.add('active');
+            
+            // Apply filter
+            if (dataTable) {
+                dataTable.clear();
                 
-                if (year < 1900 || year > 2100) return false;
-                if (month < 1 || month > 12) return false;
-                if (day < 1 || day > 31) return false;
+                let filteredRecords = calibrationRecords;
                 
-                const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 
-                                    31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                return day <= daysInMonth[month - 1];
+                if (filterType === 'due') {
+                    const now = new Date();
+                    now.setHours(0, 0, 0, 0);
+                    
+                    filteredRecords = calibrationRecords.filter(record => {
+                        const internalDueDate = parseDateFromDMY(record[23] || '');
+                        const externalDueDate = parseDateFromDMY(record[28] || '');
+                        
+                        // Check if either due date has passed or is within 30 days
+                        const isDue = (internalDueDate && internalDueDate < now) || 
+                                     (externalDueDate && externalDueDate < now);
+                        
+                        // Check if due within next 30 days
+                        const thirtyDaysFromNow = new Date();
+                        thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+                        const isDueSoon = (internalDueDate && internalDueDate <= thirtyDaysFromNow && internalDueDate >= now) ||
+                                         (externalDueDate && externalDueDate <= thirtyDaysFromNow && externalDueDate >= now);
+                        
+                        return isDue || isDueSoon;
+                    });
+                } else if (filterType === 'inactive') {
+                    filteredRecords = calibrationRecords.filter(record => {
+                        const status = record[33] || 'نشط';
+                        return status !== 'نشط';
+                    });
+                }
+                
+                // Populate table with filtered records
+                filteredRecords.forEach(record => {
+                    const statusClass = getStatusClass(record[33]);
+                    
+                    // Check if due dates are expired or near expiration
+                    const internalDueDate = parseDateFromDMY(record[23] || '');
+                    const externalDueDate = parseDateFromDMY(record[28] || '');
+                    const now = new Date();
+                    now.setHours(0, 0, 0, 0);
+                    
+                    let internalDueClass = '';
+                    let externalDueClass = '';
+                    
+                    if (internalDueDate) {
+                        if (internalDueDate < now) {
+                            internalDueClass = 'overdue';
+                        } else {
+                            const thirtyDaysFromNow = new Date();
+                            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+                            if (internalDueDate <= thirtyDaysFromNow) {
+                                internalDueClass = 'due-soon';
+                            }
+                        }
+                    }
+                    
+                    if (externalDueDate) {
+                        if (externalDueDate < now) {
+                            externalDueClass = 'overdue';
+                        } else {
+                            const thirtyDaysFromNow = new Date();
+                            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+                            if (externalDueDate <= thirtyDaysFromNow) {
+                                externalDueClass = 'due-soon';
+                            }
+                        }
+                    }
+                    
+                    dataTable.row.add([
+                        escapeHtml(record[1] || ''),
+                        escapeHtml(record[2] || ''),
+                        escapeHtml(record[3] || ''),
+                        escapeHtml(record[4] || ''),
+                        escapeHtml(record[5] || ''),
+                        escapeHtml(record[6] || ''),
+                        escapeHtml(record[9] || ''),
+                        `<span class="status-badge ${statusClass}">${escapeHtml(record[33] || 'نشط')}</span>`,
+                        `<span class="${internalDueClass}">${formatDMYForDisplay(record[23] || '')}</span>`,
+                        `<span class="${externalDueClass}">${formatDMYForDisplay(record[28] || '')}</span>`,
+                        `
+                        <div class="action-buttons">
+                            <button onclick="editCalibrationRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[2])}', '${escapeHtml(record[1] || '')}', '${escapeHtml(record[3] || '')}')" class="btn btn-sm btn-danger" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        `
+                    ]);
+                });
+                
+                dataTable.draw();
+                
+                // Show notification
+                if (filterType === 'all') {
+                    showNotification(`✅ عرض جميع الأجهزة (${filteredRecords.length} جهاز)`, 'success', 3000);
+                } else if (filterType === 'due') {
+                    showNotification(`⚠️ عرض الأجهزة التي تحتاج معايرة (${filteredRecords.length} جهاز)`, 'warning', 3000);
+                } else if (filterType === 'inactive') {
+                    showNotification(`⏸️ عرض الأجهزة غير النشطة (${filteredRecords.length} جهاز)`, 'info', 3000);
+                }
             }
-            
-            return false;
         }
         
         // ================ CALIBRATION SYSTEM FUNCTIONS ================
         async function loadCalibrationData() {
-            const spinner = document.getElementById('calibrationLoadingSpinner');
-            const tableContainer = document.getElementById('calibrationTableContainer');
-            const noRecords = document.getElementById('calibrationNoRecords');
-            
-            spinner.style.display = 'flex';
-            tableContainer.style.display = 'none';
-            noRecords.style.display = 'none';
+            showNotification('📥 جاري تحميل بيانات الأجهزة...', 'info');
             
             try {
                 const res = await jsonp(`${CALIBRATION_SCRIPT_URL}?action=getAll&t=${Date.now()}`);
                 
-                spinner.style.display = 'none';
-                
-                let records = [];
-                let responseStatus = 'error';
-                
                 if (res && res.status === 'success') {
-                    responseStatus = 'success';
-                    if (Array.isArray(res.records)) {
-                        records = res.records;
-                    } else if (Array.isArray(res.data)) {
-                        records = res.data;
-                    } else if (res.records && typeof res.records === 'object') {
-                        const keys = Object.keys(res.records);
-                        if (keys.length > 0 && Array.isArray(res.records[keys[0]])) {
-                            records = res.records[keys[0]];
-                        }
-                    }
-                } else if (Array.isArray(res)) {
-                    records = res;
-                    responseStatus = 'success';
-                }
-                
-                if (responseStatus !== 'success') {
-                    noRecords.style.display = 'block';
-                    showNotification('❌ فشل في تحميل أجهزة المعايرة', 'error');
-                    document.getElementById('totalRecords').textContent = '0';
-                    return;
-                }
-                
-                calibrationRecords = records;
-                
-                if (calibrationRecords.length > 0) {
-                    displayCalibrationRecords(calibrationRecords);
-                    tableContainer.style.display = 'block';
-                    document.getElementById('totalRecords').textContent = calibrationRecords.length.toLocaleString('ar-SA');
+                    calibrationRecords = res.records || [];
+                    
+                    filterTable(currentFilter);
+                    
+                    loadStatistics();
+                    showNotification(`✅ تم تحميل ${calibrationRecords.length} جهاز`, 'success');
                 } else {
-                    noRecords.style.display = 'block';
-                    document.getElementById('totalRecords').textContent = '0';
+                    showNotification('❌ فشل في تحميل بيانات الأجهزة', 'error');
                 }
             } catch (error) {
-                spinner.style.display = 'none';
-                noRecords.style.display = 'block';
-                showNotification('❌ خطأ في تحميل أجهزة المعايرة', 'error');
-                document.getElementById('totalRecords').textContent = '0';
+                console.error('Error loading calibration data:', error);
+                showNotification('❌ خطأ في تحميل بيانات الأجهزة', 'error');
             }
         }
         
-        function displayCalibrationRecords(records) {
-            const table = document.getElementById('calibrationDataTable');
-            
-            let html = '<thead><tr>';
-            const headers = [
-                'رقم السجل', 'اسم الجهاز', 'الموقع', 'الرقم التسلسلي', 
-                'الكود الداخلي', 'الفئة', 'تاريخ معايرة داخلية', 
-                'تاريخ استحقاق معايرة داخلية', 'تاريخ معايرة خارجية',
-                'تاريخ استحقاق معايرة خارجية', 'شهادة داخلية', 'شهادة خارجية', 'الإجراءات'
-            ];
-            headers.forEach(h => {
-                html += `<th>${h}</th>`;
-            });
-            html += '</tr></thead><tbody>';
-            
-            records.forEach((record) => {
-                html += '<tr>';
-                
-                // Column mapping based on Google Sheet structure:
-                // 0: ID, 1: رقم السجل, 2: اسم الجهاز, 3: الموقع, 4: الرقم التسلسلي,
-                // 5: الكود الداخلي, 6: الوصف, 7: الفئة, 8: الأولوية,
-                // 9: نطاق الجهاز من, 10: نطاق الجهاز إلى, 11: وحدة نطاق الجهاز,
-                // 12: نطاق التشغيل من, 13: نطاق التشغيل إلى, 14: وحدة نطاق التشغيل,
-                // 15: أقصى انحراف, 16: وحدة أقصى انحراف, 17: تاريخ المعايرة الداخلية,
-                // 18: تكرار المعايرة الداخلية, 19: تاريخ استحقاق المعايرة الداخلية,
-                // 20: تمت المعايرة الداخلية بواسطة, 21: رابط شهادة المعايرة الداخلية,
-                // 22: تاريخ المعايرة الخارجية, 23: تكرار المعايرة الخارجية,
-                // 24: تاريخ استحقاق المعايرة الخارجية, 25: تمت المعايرة الخارجية بواسطة,
-                // 26: رابط شهادة المعايرة الخارجية, 27: رابط البيانات ذات الصلة,
-                // 28: معلومات إضافية
-                
-                html += `<td><strong>${escapeHtml(record[1] || '')}</strong></td>`;
-                html += `<td>${escapeHtml(record[2] || '')}</td>`;
-                html += `<td>${escapeHtml(record[3] || '')}</td>`;
-                html += `<td>${escapeHtml(record[4] || '')}</td>`;
-                html += `<td>${escapeHtml(record[5] || '')}</td>`;
-                html += `<td>${escapeHtml(record[7] || '')}</td>`;
-                html += `<td>${formatDMYForDisplay(record[17] || '')}</td>`;
-                html += `<td>${formatDMYForDisplay(record[19] || '')}</td>`;
-                html += `<td>${formatDMYForDisplay(record[22] || '')}</td>`;
-                html += `<td>${formatDMYForDisplay(record[24] || '')}</td>`;
-                
-                // Internal certificate link
-                const internalCertLink = record[21] || '';
-                if (internalCertLink && internalCertLink.trim() !== '') {
-                    html += `<td>
-                        <a href="${escapeHtml(internalCertLink)}" target="_blank" class="file-link-btn">
-                            <i class="fas fa-external-link-alt me-1"></i> فتح
-                        </a>
-                    </td>`;
-                } else {
-                    html += `<td><span class="text-muted">لا يوجد</span></td>`;
-                }
-                
-                // External certificate link
-                const externalCertLink = record[26] || '';
-                if (externalCertLink && externalCertLink.trim() !== '') {
-                    html += `<td>
-                        <a href="${escapeHtml(externalCertLink)}" target="_blank" class="file-link-btn">
-                            <i class="fas fa-external-link-alt me-1"></i> فتح
-                        </a>
-                    </td>`;
-                } else {
-                    html += `<td><span class="text-muted">لا يوجد</span></td>`;
-                }
-                
-                html += `<td class="action-buttons">
-                    <button onclick="editCalibrationRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
-                        <i class="fas fa-edit"></i> تعديل
-                    </button>
-                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[2])}', '${escapeHtml(record[1] || '')}')" class="btn btn-sm btn-danger" title="حذف">
-                        <i class="fas fa-trash"></i> حذف
-                    </button>
-                    <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
-                        <i class="fas fa-eye"></i> عرض
-                    </button>
-                </td>`;
-                
-                html += '</tr>';
-            });
-            
-            html += '</tbody>';
-            table.innerHTML = html;
+        function getStatusClass(status) {
+            switch(status) {
+                case 'نشط': return 'status-active';
+                case 'غير نشط': return 'status-inactive';
+                case 'صيانة': return 'status-maintenance';
+                case 'معطّل': return 'status-inactive';
+                case 'مستبعد': return 'status-inactive';
+                default: return 'status-active';
+            }
         }
         
         async function addCalibrationRecord() {
@@ -1674,50 +2167,25 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
 
-            // Validate dates
-            if (internalCalibrationDate && !validateDate(internalCalibrationDate)) {
-                showNotification('❌ تاريخ المعايرة الداخلية غير صحيح', 'error');
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                return;
-            }
-
-            if (internalCalibrationDueDate && !validateDate(internalCalibrationDueDate)) {
-                showNotification('❌ تاريخ استحقاق المعايرة الداخلية غير صحيح', 'error');
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                return;
-            }
-
-            if (externalCalibrationDate && !validateDate(externalCalibrationDate)) {
-                showNotification('❌ تاريخ المعايرة الخارجية غير صحيح', 'error');
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                return;
-            }
-
-            if (externalCalibrationDueDate && !validateDate(externalCalibrationDueDate)) {
-                showNotification('❌ تاريخ استحقاق المعايرة الخارجية غير صحيح', 'error');
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                return;
-            }
-
             const internalRecordId = 'CAL-' + Date.now();
             document.getElementById('calibration_internalRecordId').value = internalRecordId;
 
             const internalCertLink = document.getElementById('calibration_internalCertificateLink').value;
             const externalCertLink = document.getElementById('calibration_externalCertificateLink').value;
 
-            // Convert dates to D M Y format
             const internalCalibrationDateDMY = internalCalibrationDate ? formatDateToDMY(parseDateDDMMYYYY(internalCalibrationDate)) : '';
             const internalCalibrationDueDateDMY = internalCalibrationDueDate ? formatDateToDMY(parseDateDDMMYYYY(internalCalibrationDueDate)) : '';
             const externalCalibrationDateDMY = externalCalibrationDate ? formatDateToDMY(parseDateDDMMYYYY(externalCalibrationDate)) : '';
             const externalCalibrationDueDateDMY = externalCalibrationDueDate ? formatDateToDMY(parseDateDDMMYYYY(externalCalibrationDueDate)) : '';
 
+            const internalFrequency = document.getElementById('calibration_internalCalibrationFrequency').value;
+            const externalFrequency = document.getElementById('calibration_externalCalibrationFrequency').value;
+
             const fields = [
                 'calibration_recordId',
                 'calibration_deviceName',
+                'calibration_manufacturer',
+                'calibration_model',
                 'calibration_location',
                 'calibration_serialNumber',
                 'calibration_internalCode',
@@ -1732,17 +2200,20 @@
                 'calibration_operatingRangeUnit',
                 'calibration_maxDeviation',
                 'calibration_maxDeviationUnit',
-                'calibration_internalCalibrationFrequency',
+                'calibration_uncertainty',
+                'calibration_uncertaintyUnit',
                 'calibration_internalCalibratedBy',
-                'calibration_externalCalibrationFrequency',
                 'calibration_externalCalibratedBy',
                 'calibration_relatedDataLink',
-                'calibration_additionalInfo'
+                'calibration_additionalInfo',
+                'calibration_deviceStatus'
             ];
 
             const paramMap = {
                 'calibration_recordId': 'recordId',
                 'calibration_deviceName': 'deviceName',
+                'calibration_manufacturer': 'manufacturer',
+                'calibration_model': 'model',
                 'calibration_location': 'location',
                 'calibration_serialNumber': 'serialNumber',
                 'calibration_internalCode': 'internalCode',
@@ -1757,12 +2228,13 @@
                 'calibration_operatingRangeUnit': 'operatingRangeUnit',
                 'calibration_maxDeviation': 'maxDeviation',
                 'calibration_maxDeviationUnit': 'maxDeviationUnit',
-                'calibration_internalCalibrationFrequency': 'internalCalibrationFrequency',
+                'calibration_uncertainty': 'uncertainty',
+                'calibration_uncertaintyUnit': 'uncertaintyUnit',
                 'calibration_internalCalibratedBy': 'internalCalibratedBy',
-                'calibration_externalCalibrationFrequency': 'externalCalibrationFrequency',
                 'calibration_externalCalibratedBy': 'externalCalibratedBy',
                 'calibration_relatedDataLink': 'relatedDataLink',
-                'calibration_additionalInfo': 'additionalInfo'
+                'calibration_additionalInfo': 'additionalInfo',
+                'calibration_deviceStatus': 'deviceStatus'
             };
 
             let q = '';
@@ -1772,6 +2244,9 @@
                 q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
             });
 
+            q += `internalCalibrationFrequency=${encodeURIComponent(internalFrequency || '365')}&`;
+            q += `externalCalibrationFrequency=${encodeURIComponent(externalFrequency || '365')}&`;
+            
             q += `internalCalibrationDate=${encodeURIComponent(internalCalibrationDateDMY)}&`;
             q += `internalCalibrationDueDate=${encodeURIComponent(internalCalibrationDueDateDMY)}&`;
             q += `externalCalibrationDate=${encodeURIComponent(externalCalibrationDateDMY)}&`;
@@ -1818,38 +2293,38 @@
         function fillCalibrationForm(record) {
             document.getElementById('calibration_recordId').value = record[1] || '';
             document.getElementById('calibration_deviceName').value = record[2] || '';
-            document.getElementById('calibration_location').value = record[3] || '';
-            document.getElementById('calibration_serialNumber').value = record[4] || '';
-            document.getElementById('calibration_internalCode').value = record[5] || '';
-            document.getElementById('calibration_description').value = record[6] || '';
-            document.getElementById('calibration_category').value = record[7] || '';
-            document.getElementById('calibration_priority').value = record[8] || '';
-            document.getElementById('calibration_deviceRangeFrom').value = record[9] || '';
-            document.getElementById('calibration_deviceRangeTo').value = record[10] || '';
-            document.getElementById('calibration_deviceRangeUnit').value = record[11] || '';
-            document.getElementById('calibration_operatingRangeFrom').value = record[12] || '';
-            document.getElementById('calibration_operatingRangeTo').value = record[13] || '';
-            document.getElementById('calibration_operatingRangeUnit').value = record[14] || '';
-            document.getElementById('calibration_maxDeviation').value = record[15] || '';
-            document.getElementById('calibration_maxDeviationUnit').value = record[16] || '';
-            document.getElementById('calibration_internalCalibrationFrequency').value = record[18] || '';
-            document.getElementById('calibration_internalCalibratedBy').value = record[20] || '';
-            document.getElementById('calibration_externalCalibrationFrequency').value = record[23] || '';
-            document.getElementById('calibration_externalCalibratedBy').value = record[25] || '';
-            document.getElementById('calibration_relatedDataLink').value = record[27] || '';
-            document.getElementById('calibration_additionalInfo').value = record[28] || '';
+            document.getElementById('calibration_manufacturer').value = record[3] || '';
+            document.getElementById('calibration_model').value = record[4] || '';
+            document.getElementById('calibration_location').value = record[5] || '';
+            document.getElementById('calibration_serialNumber').value = record[6] || '';
+            document.getElementById('calibration_internalCode').value = record[7] || '';
+            document.getElementById('calibration_description').value = record[8] || '';
+            document.getElementById('calibration_category').value = record[9] || '';
+            document.getElementById('calibration_priority').value = record[10] || '';
+            document.getElementById('calibration_deviceRangeFrom').value = record[11] || '';
+            document.getElementById('calibration_deviceRangeTo').value = record[12] || '';
+            document.getElementById('calibration_deviceRangeUnit').value = record[13] || '';
+            document.getElementById('calibration_operatingRangeFrom').value = record[14] || '';
+            document.getElementById('calibration_operatingRangeTo').value = record[15] || '';
+            document.getElementById('calibration_operatingRangeUnit').value = record[16] || '';
+            document.getElementById('calibration_maxDeviation').value = record[17] || '';
+            document.getElementById('calibration_maxDeviationUnit').value = record[18] || '';
+            document.getElementById('calibration_uncertainty').value = record[19] || '';
+            document.getElementById('calibration_uncertaintyUnit').value = record[20] || '';
+            document.getElementById('calibration_internalCalibratedBy').value = record[24] || '';
+            document.getElementById('calibration_externalCalibratedBy').value = record[29] || '';
+            document.getElementById('calibration_relatedDataLink').value = record[31] || '';
+            document.getElementById('calibration_additionalInfo').value = record[32] || '';
+            document.getElementById('calibration_deviceStatus').value = record[33] || 'نشط';
             
-            // Set certificate links
-            const internalCertLink = record[21] || '';
-            const externalCertLink = record[26] || '';
+            const internalCertLink = record[25] || '';
+            const externalCertLink = record[30] || '';
             
             document.getElementById('calibration_internalCertificateLink').value = internalCertLink;
             document.getElementById('calibration_externalCertificateLink').value = externalCertLink;
             
-            // Display internal file info if there's a file link
             if (internalCertLink && internalCertLink.trim() !== '') {
                 document.getElementById('internalUploadedFileName').textContent = 'شهادة معايرة داخلية';
-                document.getElementById('internalUploadedFileSize').textContent = '';
                 document.getElementById('internalUploadedFileInfo').style.display = 'block';
                 
                 const fileLinkBtn = document.getElementById('internalUploadedFileLink');
@@ -1861,10 +2336,8 @@
                 uploadStatus.className = 'upload-status success';
             }
             
-            // Display external file info if there's a file link
             if (externalCertLink && externalCertLink.trim() !== '') {
                 document.getElementById('externalUploadedFileName').textContent = 'شهادة معايرة خارجية';
-                document.getElementById('externalUploadedFileSize').textContent = '';
                 document.getElementById('externalUploadedFileInfo').style.display = 'block';
                 
                 const fileLinkBtn = document.getElementById('externalUploadedFileLink');
@@ -1876,77 +2349,24 @@
                 uploadStatus.className = 'upload-status success';
             }
             
-            // Set date values
-            const internalCalibrationDateFormatted = formatDMYForInput(record[17] || '');
-            const internalCalibrationDueDateFormatted = formatDMYForInput(record[19] || '');
-            const externalCalibrationDateFormatted = formatDMYForInput(record[22] || '');
-            const externalCalibrationDueDateFormatted = formatDMYForInput(record[24] || '');
+            const internalFrequency = record[22] || '365';
+            const externalFrequency = record[27] || '365';
             
-            document.getElementById('calibration_internalCalibrationDate').value = internalCalibrationDateFormatted;
-            document.getElementById('calibration_internalCalibrationDueDate').value = internalCalibrationDueDateFormatted;
-            document.getElementById('calibration_externalCalibrationDate').value = externalCalibrationDateFormatted;
-            document.getElementById('calibration_externalCalibrationDueDate').value = externalCalibrationDueDateFormatted;
+            document.getElementById('calibration_internalCalibrationFrequency').value = internalFrequency;
+            document.getElementById('calibration_externalCalibrationFrequency').value = externalFrequency;
             
-            // Update Flatpickr instances
-            if (flatpickrInstances.internalCalibrationDate && internalCalibrationDateFormatted) {
-                try {
-                    const parts = internalCalibrationDateFormatted.split('/');
-                    if (parts.length === 3) {
-                        const day = parseInt(parts[0], 10);
-                        const month = parseInt(parts[1], 10) - 1;
-                        const year = parseInt(parts[2], 10);
-                        const dateObj = new Date(year, month, day);
-                        flatpickrInstances.internalCalibrationDate.setDate(dateObj, false);
-                    }
-                } catch (e) {
-                    console.error('Error setting internal calibration date:', e);
-                }
-            }
+            updateFrequencyButtons('calibration_internalCalibrationFrequency', internalFrequency);
+            updateFrequencyButtons('calibration_externalCalibrationFrequency', externalFrequency);
             
-            if (flatpickrInstances.internalCalibrationDueDate && internalCalibrationDueDateFormatted) {
-                try {
-                    const parts = internalCalibrationDueDateFormatted.split('/');
-                    if (parts.length === 3) {
-                        const day = parseInt(parts[0], 10);
-                        const month = parseInt(parts[1], 10) - 1;
-                        const year = parseInt(parts[2], 10);
-                        const dateObj = new Date(year, month, day);
-                        flatpickrInstances.internalCalibrationDueDate.setDate(dateObj, false);
-                    }
-                } catch (e) {
-                    console.error('Error setting internal calibration due date:', e);
-                }
-            }
+            document.getElementById('calibration_internalCalibrationDate').value = formatDMYForInput(record[21] || '');
+            document.getElementById('calibration_internalCalibrationDueDate').value = formatDMYForInput(record[23] || '');
+            document.getElementById('calibration_externalCalibrationDate').value = formatDMYForInput(record[26] || '');
+            document.getElementById('calibration_externalCalibrationDueDate').value = formatDMYForInput(record[28] || '');
             
-            if (flatpickrInstances.externalCalibrationDate && externalCalibrationDateFormatted) {
-                try {
-                    const parts = externalCalibrationDateFormatted.split('/');
-                    if (parts.length === 3) {
-                        const day = parseInt(parts[0], 10);
-                        const month = parseInt(parts[1], 10) - 1;
-                        const year = parseInt(parts[2], 10);
-                        const dateObj = new Date(year, month, day);
-                        flatpickrInstances.externalCalibrationDate.setDate(dateObj, false);
-                    }
-                } catch (e) {
-                    console.error('Error setting external calibration date:', e);
-                }
-            }
-            
-            if (flatpickrInstances.externalCalibrationDueDate && externalCalibrationDueDateFormatted) {
-                try {
-                    const parts = externalCalibrationDueDateFormatted.split('/');
-                    if (parts.length === 3) {
-                        const day = parseInt(parts[0], 10);
-                        const month = parseInt(parts[1], 10) - 1;
-                        const year = parseInt(parts[2], 10);
-                        const dateObj = new Date(year, month, day);
-                        flatpickrInstances.externalCalibrationDueDate.setDate(dateObj, false);
-                    }
-                } catch (e) {
-                    console.error('Error setting external calibration due date:', e);
-                }
-            }
+            updateFlatpickrDate(flatpickrInstances.internalCalibrationDate, formatDMYForInput(record[21] || ''));
+            updateFlatpickrDate(flatpickrInstances.internalCalibrationDueDate, formatDMYForInput(record[23] || ''));
+            updateFlatpickrDate(flatpickrInstances.externalCalibrationDate, formatDMYForInput(record[26] || ''));
+            updateFlatpickrDate(flatpickrInstances.externalCalibrationDueDate, formatDMYForInput(record[28] || ''));
             
             document.getElementById('calibration_editingId').value = record[0];
             document.getElementById('calibration_internalRecordId').value = record[0];
@@ -1954,6 +2374,37 @@
             setTimeout(() => {
                 checkDuplicateRecordNumber();
             }, 100);
+        }
+        
+        function updateFrequencyButtons(frequencyInputId, frequencyValue) {
+            const frequencyInput = document.getElementById(frequencyInputId);
+            const frequencyGroup = frequencyInput.closest('.frequency-group');
+            if (frequencyGroup) {
+                const buttons = frequencyGroup.querySelectorAll('.frequency-btn');
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.textContent) === parseInt(frequencyValue)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        }
+        
+        function updateFlatpickrDate(instance, dateString) {
+            if (instance && dateString) {
+                try {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        instance.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting date:', e);
+                }
+            }
         }
         
         async function updateCalibrationRecord() {
@@ -1985,46 +2436,22 @@
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
 
-            if (internalCalibrationDate && !validateDate(internalCalibrationDate)) {
-                showNotification('❌ تاريخ المعايرة الداخلية غير صحيح', 'error');
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                return;
-            }
-
-            if (internalCalibrationDueDate && !validateDate(internalCalibrationDueDate)) {
-                showNotification('❌ تاريخ استحقاق المعايرة الداخلية غير صحيح', 'error');
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                return;
-            }
-
-            if (externalCalibrationDate && !validateDate(externalCalibrationDate)) {
-                showNotification('❌ تاريخ المعايرة الخارجية غير صحيح', 'error');
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                return;
-            }
-
-            if (externalCalibrationDueDate && !validateDate(externalCalibrationDueDate)) {
-                showNotification('❌ تاريخ استحقاق المعايرة الخارجية غير صحيح', 'error');
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                return;
-            }
-
             const internalCertLink = document.getElementById('calibration_internalCertificateLink').value;
             const externalCertLink = document.getElementById('calibration_externalCertificateLink').value;
 
-            // Convert dates to D M Y format
             const internalCalibrationDateDMY = internalCalibrationDate ? formatDateToDMY(parseDateDDMMYYYY(internalCalibrationDate)) : '';
             const internalCalibrationDueDateDMY = internalCalibrationDueDate ? formatDateToDMY(parseDateDDMMYYYY(internalCalibrationDueDate)) : '';
             const externalCalibrationDateDMY = externalCalibrationDate ? formatDateToDMY(parseDateDDMMYYYY(externalCalibrationDate)) : '';
             const externalCalibrationDueDateDMY = externalCalibrationDueDate ? formatDateToDMY(parseDateDDMMYYYY(externalCalibrationDueDate)) : '';
 
+            const internalFrequency = document.getElementById('calibration_internalCalibrationFrequency').value;
+            const externalFrequency = document.getElementById('calibration_externalCalibrationFrequency').value;
+
             const fields = [
                 'calibration_recordId',
                 'calibration_deviceName',
+                'calibration_manufacturer',
+                'calibration_model',
                 'calibration_location',
                 'calibration_serialNumber',
                 'calibration_internalCode',
@@ -2039,17 +2466,20 @@
                 'calibration_operatingRangeUnit',
                 'calibration_maxDeviation',
                 'calibration_maxDeviationUnit',
-                'calibration_internalCalibrationFrequency',
+                'calibration_uncertainty',
+                'calibration_uncertaintyUnit',
                 'calibration_internalCalibratedBy',
-                'calibration_externalCalibrationFrequency',
                 'calibration_externalCalibratedBy',
                 'calibration_relatedDataLink',
-                'calibration_additionalInfo'
+                'calibration_additionalInfo',
+                'calibration_deviceStatus'
             ];
 
             const paramMap = {
                 'calibration_recordId': 'recordId',
                 'calibration_deviceName': 'deviceName',
+                'calibration_manufacturer': 'manufacturer',
+                'calibration_model': 'model',
                 'calibration_location': 'location',
                 'calibration_serialNumber': 'serialNumber',
                 'calibration_internalCode': 'internalCode',
@@ -2064,12 +2494,13 @@
                 'calibration_operatingRangeUnit': 'operatingRangeUnit',
                 'calibration_maxDeviation': 'maxDeviation',
                 'calibration_maxDeviationUnit': 'maxDeviationUnit',
-                'calibration_internalCalibrationFrequency': 'internalCalibrationFrequency',
+                'calibration_uncertainty': 'uncertainty',
+                'calibration_uncertaintyUnit': 'uncertaintyUnit',
                 'calibration_internalCalibratedBy': 'internalCalibratedBy',
-                'calibration_externalCalibrationFrequency': 'externalCalibrationFrequency',
                 'calibration_externalCalibratedBy': 'externalCalibratedBy',
                 'calibration_relatedDataLink': 'relatedDataLink',
-                'calibration_additionalInfo': 'additionalInfo'
+                'calibration_additionalInfo': 'additionalInfo',
+                'calibration_deviceStatus': 'deviceStatus'
             };
 
             let q = `internalRecordId=${encodeURIComponent(recordId)}&`;
@@ -2079,6 +2510,9 @@
                 q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
             });
 
+            q += `internalCalibrationFrequency=${encodeURIComponent(internalFrequency || '365')}&`;
+            q += `externalCalibrationFrequency=${encodeURIComponent(externalFrequency || '365')}&`;
+            
             q += `internalCalibrationDate=${encodeURIComponent(internalCalibrationDateDMY)}&`;
             q += `internalCalibrationDueDate=${encodeURIComponent(internalCalibrationDueDateDMY)}&`;
             q += `externalCalibrationDate=${encodeURIComponent(externalCalibrationDateDMY)}&`;
@@ -2121,13 +2555,20 @@
             document.getElementById('duplicateRecordNumberWarning').style.display = 'none';
             isDuplicateRecordNumber = false;
             
-            // Reset dropdowns
             document.getElementById('calibration_category').value = '';
             document.getElementById('calibration_priority').value = '';
-            document.getElementById('calibration_internalCalibrationFrequency').value = '';
-            document.getElementById('calibration_externalCalibrationFrequency').value = '';
+            document.getElementById('calibration_deviceStatus').value = 'نشط';
+            document.getElementById('calibration_deviceRangeUnit').value = '';
+            document.getElementById('calibration_operatingRangeUnit').value = '';
+            document.getElementById('calibration_maxDeviationUnit').value = '';
+            document.getElementById('calibration_uncertaintyUnit').value = '';
             
-            // Reset file upload sections
+            document.getElementById('calibration_internalCalibrationFrequency').value = '365';
+            document.getElementById('calibration_externalCalibrationFrequency').value = '365';
+            
+            updateFrequencyButtons('calibration_internalCalibrationFrequency', '365');
+            updateFrequencyButtons('calibration_externalCalibrationFrequency', '365');
+            
             selectedInternalFile = null;
             selectedExternalFile = null;
             uploadedInternalFileUrl = '';
@@ -2145,11 +2586,24 @@
             document.getElementById('externalUploadStatus').className = 'upload-status';
             document.getElementById('externalFileInput').value = '';
             
-            // Reset dates
-            if (flatpickrInstances.internalCalibrationDate) flatpickrInstances.internalCalibrationDate.clear();
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            
+            if (flatpickrInstances.internalCalibrationDate) {
+                document.getElementById('calibration_internalCalibrationDate').value = todayFormatted;
+                flatpickrInstances.internalCalibrationDate.setDate(today, false);
+            }
+            
+            if (flatpickrInstances.externalCalibrationDate) {
+                document.getElementById('calibration_externalCalibrationDate').value = todayFormatted;
+                flatpickrInstances.externalCalibrationDate.setDate(today, false);
+            }
+            
             if (flatpickrInstances.internalCalibrationDueDate) flatpickrInstances.internalCalibrationDueDate.clear();
-            if (flatpickrInstances.externalCalibrationDate) flatpickrInstances.externalCalibrationDate.clear();
             if (flatpickrInstances.externalCalibrationDueDate) flatpickrInstances.externalCalibrationDueDate.clear();
+            
+            calculateInternalDueDate();
+            calculateExternalDueDate();
         }
         
         function exportCalibrationCSV() {
@@ -2158,24 +2612,23 @@
                 return;
             }
             
-            showNotification('📥 جاري تصدير أجهزة المعايرة...', 'info');
+            showNotification('📥 جاري تصدير بيانات الأجهزة...', 'info');
             
             try {
                 const headers = [
-                    'رقم السجل', 'اسم الجهاز', 'الموقع', 'الرقم التسلسلي', 
-                    'الكود الداخلي', 'الوصف', 'الفئة', 'الأولوية',
+                    'رقم السجل', 'اسم الجهاز', 'الشركة المصنعة', 'الطراز', 'الموقع',
+                    'الرقم التسلسلي', 'الكود الداخلي', 'الوصف', 'الفئة', 'الأولوية',
                     'نطاق الجهاز من', 'نطاق الجهاز إلى', 'وحدة نطاق الجهاز',
                     'نطاق التشغيل من', 'نطاق التشغيل إلى', 'وحدة نطاق التشغيل',
-                    'أقصى انحراف', 'وحدة أقصى انحراف', 'تاريخ المعايرة الداخلية',
-                    'تكرار المعايرة الداخلية', 'تاريخ استحقاق المعايرة الداخلية',
+                    'أقصى انحراف', 'وحدة أقصى انحراف', 'عدم اليقين', 'وحدة عدم اليقين',
+                    'تاريخ المعايرة الداخلية', 'تكرار المعايرة الداخلية (أيام)', 'تاريخ استحقاق المعايرة الداخلية',
                     'تمت المعايرة الداخلية بواسطة', 'رابط شهادة المعايرة الداخلية',
-                    'تاريخ المعايرة الخارجية', 'تكرار المعايرة الخارجية',
-                    'تاريخ استحقاق المعايرة الخارجية', 'تمت المعايرة الخارجية بواسطة',
-                    'رابط شهادة المعايرة الخارجية', 'رابط البيانات ذات الصلة',
-                    'معلومات إضافية'
+                    'تاريخ المعايرة الخارجية', 'تكرار المعايرة الخارجية (أيام)', 'تاريخ استحقاق المعايرة الخارجية',
+                    'تمت المعايرة الخارجية بواسطة', 'رابط شهادة المعايرة الخارجية',
+                    'رابط البيانات ذات الصلة', 'معلومات إضافية', 'حالة الجهاز'
                 ];
                 
-                let csvContent = '\uFEFF';
+            let csvContent = '\uFEFF';
                 csvContent += headers.join(",") + "\r\n";
                 
                 calibrationRecords.forEach(record => {
@@ -2196,18 +2649,23 @@
                         record[14] || '',
                         record[15] || '',
                         record[16] || '',
-                        formatDMYForDisplay(record[17] || '').replace(/<[^>]*>/g, ''),
+                        record[17] || '',
                         record[18] || '',
-                        formatDMYForDisplay(record[19] || '').replace(/<[^>]*>/g, ''),
+                        record[19] || '',
                         record[20] || '',
-                        record[21] || '',
-                        formatDMYForDisplay(record[22] || '').replace(/<[^>]*>/g, ''),
-                        record[23] || '',
-                        formatDMYForDisplay(record[24] || '').replace(/<[^>]*>/g, ''),
+                        formatDMYForDisplay(record[21] || '').replace(/<[^>]*>/g, ''),
+                        record[22] || '',
+                        formatDMYForDisplay(record[23] || '').replace(/<[^>]*>/g, ''),
+                        record[24] || '',
                         record[25] || '',
-                        record[26] || '',
+                        formatDMYForDisplay(record[26] || '').replace(/<[^>]*>/g, ''),
                         record[27] || '',
-                        record[28] || ''
+                        formatDMYForDisplay(record[28] || '').replace(/<[^>]*>/g, ''),
+                        record[29] || '',
+                        record[30] || '',
+                        record[31] || '',
+                        record[32] || '',
+                        record[33] || ''
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -2234,6 +2692,43 @@
             }
         }
         
+        function printTable() {
+            window.print();
+        }
+        
+        function printDetails() {
+            const detailsContent = document.getElementById('detailsModalBody').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>تفاصيل جهاز المعايرة</title>
+                    <style>
+                        body { font-family: 'Cairo', sans-serif; direction: rtl; padding: 20px; }
+                        h1 { color: #3498db; }
+                        .section { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+                        .label { font-weight: bold; color: #2c3e50; }
+                        .value { margin-right: 10px; }
+                        .print-header { text-align: center; margin-bottom: 30px; }
+                        .print-footer { text-align: center; margin-top: 30px; color: #7f8c8d; }
+                    </style>
+                </head>
+                <body>
+                    <div class="print-header">
+                        <h1>تفاصيل جهاز المعايرة</h1>
+                        <p>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-SA')}</p>
+                    </div>
+                    ${detailsContent}
+                    <div class="print-footer">
+                        <p>نظام إدارة معايرة الأجهزة المتكامل - معمل كواليتك إنترناشيونال</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
         function viewDetails(recordId) {
             const record = calibrationRecords.find(r => 
                 String(r[0] || '').trim() === String(recordId).trim()
@@ -2244,60 +2739,91 @@
                 return;
             }
             
-            const internalCertLink = record[21] || '';
-            const externalCertLink = record[26] || '';
+            const internalCertLink = record[25] || '';
+            const externalCertLink = record[30] || '';
             
             const detailsHTML = `
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[1] || '')}</p>
-                        <p><strong>اسم الجهاز:</strong> ${escapeHtml(record[2])}</p>
-                        <p><strong>الموقع:</strong> ${escapeHtml(record[3])}</p>
-                        <p><strong>الرقم التسلسلي:</strong> ${escapeHtml(record[4])}</p>
-                        <p><strong>الكود الداخلي:</strong> ${escapeHtml(record[5])}</p>
-                        <p><strong>الوصف:</strong> ${escapeHtml(record[6])}</p>
-                        <p><strong>الفئة:</strong> ${escapeHtml(record[7])}</p>
-                        <p><strong>الأولوية:</strong> ${escapeHtml(record[8])}</p>
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">المعلومات الأساسية</h6>
+                            <p><span class="label">رقم السجل:</span> <span class="value">${escapeHtml(record[1] || '')}</span></p>
+                            <p><span class="label">اسم الجهاز:</span> <span class="value">${escapeHtml(record[2])}</span></p>
+                            <p><span class="label">الشركة المصنعة:</span> <span class="value">${escapeHtml(record[3])}</span></p>
+                            <p><span class="label">الطراز:</span> <span class="value">${escapeHtml(record[4])}</span></p>
+                            <p><span class="label">الموقع:</span> <span class="value">${escapeHtml(record[5])}</span></p>
+                            <p><span class="label">الرقم التسلسلي:</span> <span class="value">${escapeHtml(record[6])}</span></p>
+                            <p><span class="label">الكود الداخلي:</span> <span class="value">${escapeHtml(record[7])}</span></p>
+                            <p><span class="label">الوصف:</span> <span class="value">${escapeHtml(record[8])}</span></p>
+                            <p><span class="label">الفئة:</span> <span class="value">${escapeHtml(record[9])}</span></p>
+                            <p><span class="label">الأولوية:</span> <span class="value">${escapeHtml(record[10])}</span></p>
+                            <p><span class="label">حالة الجهاز:</span> <span class="value"><span class="status-badge ${getStatusClass(record[33])}">${escapeHtml(record[33] || 'نشط')}</span></span></p>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>نطاق الجهاز:</strong> ${escapeHtml(record[9])} - ${escapeHtml(record[10])} ${escapeHtml(record[11])}</p>
-                        <p><strong>نطاق التشغيل:</strong> ${escapeHtml(record[12])} - ${escapeHtml(record[13])} ${escapeHtml(record[14])}</p>
-                        <p><strong>أقصى انحراف:</strong> ${escapeHtml(record[15])} ${escapeHtml(record[16])}</p>
-                        <p><strong>رابط البيانات:</strong> ${record[27] ? `<a href="${escapeHtml(record[27])}" target="_blank">${escapeHtml(record[27])}</a>` : 'لا يوجد'}</p>
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">مواصفات الجهاز</h6>
+                            <p><span class="label">نطاق الجهاز:</span> <span class="value">${escapeHtml(record[11])} - ${escapeHtml(record[12])} ${escapeHtml(record[13])}</span></p>
+                            <p><span class="label">نطاق التشغيل:</span> <span class="value">${escapeHtml(record[14])} - ${escapeHtml(record[15])} ${escapeHtml(record[16])}</span></p>
+                            <p><span class="label">أقصى انحراف:</span> <span class="value">${escapeHtml(record[17])} ${escapeHtml(record[18])}</span></p>
+                            <p><span class="label">عدم اليقين:</span> <span class="value">${escapeHtml(record[19])} ${escapeHtml(record[20])}</span></p>
+                            <p><span class="label">رابط البيانات:</span> <span class="value">${record[31] ? `<a href="${escapeHtml(record[31])}" target="_blank">${escapeHtml(record[31])}</a>` : 'لا يوجد'}</span></p>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="row mt-3">
+                <div class="row">
                     <div class="col-md-6">
-                        <h6 class="border-bottom pb-2">المعايرة الداخلية</h6>
-                        <p><strong>التاريخ:</strong> ${formatDMYForDisplay(record[17] || '')}</p>
-                        <p><strong>التكرار:</strong> ${escapeHtml(record[18])}</p>
-                        <p><strong>تاريخ الاستحقاق:</strong> ${formatDMYForDisplay(record[19] || '')}</p>
-                        <p><strong>تمت بواسطة:</strong> ${escapeHtml(record[20])}</p>
-                        ${internalCertLink ? `<p><strong>الشهادة:</strong> 
-                            <a href="${escapeHtml(internalCertLink)}" target="_blank" class="file-link-btn ms-2">
-                                <i class="fas fa-external-link-alt me-1"></i> فتح الشهادة
-                            </a>
-                        </p>` : ''}
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">المعايرة الداخلية</h6>
+                            <p><span class="label">التاريخ:</span> <span class="value">${formatDMYForDisplay(record[21] || '')}</span></p>
+                            <p><span class="label">التكرار:</span> <span class="value">${escapeHtml(record[22])} يوم</span></p>
+                            <p><span class="label">تاريخ الاستحقاق:</span> <span class="value">${formatDMYForDisplay(record[23] || '')}</span></p>
+                            <p><span class="label">تمت بواسطة:</span> <span class="value">${escapeHtml(record[24])}</span></p>
+                            <p><span class="label">الشهادة:</span> <span class="value">
+                                ${internalCertLink ? 
+                                    `<a href="${escapeHtml(internalCertLink)}" target="_blank" class="file-link-btn">
+                                        <i class="fas fa-external-link-alt me-1"></i> فتح الشهادة
+                                    </a>` : 
+                                    'لا يوجد شهادة'
+                                }
+                            </span></p>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="border-bottom pb-2">المعايرة الخارجية</h6>
-                        <p><strong>التاريخ:</strong> ${formatDMYForDisplay(record[22] || '')}</p>
-                        <p><strong>التكرار:</strong> ${escapeHtml(record[23])}</p>
-                        <p><strong>تاريخ الاستحقاق:</strong> ${formatDMYForDisplay(record[24] || '')}</p>
-                        <p><strong>تمت بواسطة:</strong> ${escapeHtml(record[25])}</p>
-                        ${externalCertLink ? `<p><strong>الشهادة:</strong> 
-                            <a href="${escapeHtml(externalCertLink)}" target="_blank" class="file-link-btn ms-2">
-                                <i class="fas fa-external-link-alt me-1"></i> فتح الشهادة
-                            </a>
-                        </p>` : ''}
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">المعايرة الخارجية</h6>
+                            <p><span class="label">التاريخ:</span> <span class="value">${formatDMYForDisplay(record[26] || '')}</span></p>
+                            <p><span class="label">التكرار:</span> <span class="value">${escapeHtml(record[27])} يوم</span></p>
+                            <p><span class="label">تاريخ الاستحقاق:</span> <span class="value">${formatDMYForDisplay(record[28] || '')}</span></p>
+                            <p><span class="label">تمت بواسطة:</span> <span class="value">${escapeHtml(record[29])}</span></p>
+                            <p><span class="label">الشهادة:</span> <span class="value">
+                                ${externalCertLink ? 
+                                    `<a href="${escapeHtml(externalCertLink)}" target="_blank" class="file-link-btn">
+                                        <i class="fas fa-external-link-alt me-1"></i> فتح الشهادة
+                                    </a>` : 
+                                    'لا يوجد شهادة'
+                                }
+                            </span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section">
+                            <h6 class="border-bottom pb-2 text-primary">معلومات إضافية</h6>
+                            <p>${escapeHtml(record[32] || 'لا توجد معلومات إضافية')}</p>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="row mt-3">
                     <div class="col-12">
-                        <h6 class="border-bottom pb-2">معلومات إضافية</h6>
-                        <p>${escapeHtml(record[28] || 'لا توجد معلومات إضافية')}</p>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>تاريخ الإنشاء: ${record[34] ? new Date(record[34]).toLocaleString('ar-SA') : 'غير معروف'} | تاريخ آخر تحديث: ${record[35] ? new Date(record[35]).toLocaleString('ar-SA') : 'غير معروف'}</small>
+                        </div>
                     </div>
                 </div>
             `;
@@ -2306,12 +2832,14 @@
             detailsModalInstance.show();
         }
         
-        function showDeleteModal(recordId, recordName, recordNumber = '') {
+        function showDeleteModal(recordId, recordName, recordNumber, manufacturer) {
             deleteRecordId = recordId;
             deleteRecordName = recordName;
+            deleteManufacturer = manufacturer;
             
             document.getElementById('deleteRecordId').textContent = recordNumber || 'غير معروف';
             document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
+            document.getElementById('deleteManufacturer').textContent = manufacturer || 'غير معروف';
             
             deleteModalInstance.show();
         }
@@ -2338,6 +2866,7 @@
                     
                     deleteRecordId = '';
                     deleteRecordName = '';
+                    deleteManufacturer = '';
                     
                     loadCalibrationData();
                 } else {
