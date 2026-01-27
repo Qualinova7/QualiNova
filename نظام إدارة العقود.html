@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة العقود - معمل كواليتك إنترناشيونال</title>
+    <title>نظام إدارة العقود المتكامل - معمل كواليتك إنترناشيونال</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr Calendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -17,6 +23,7 @@
             --success-color: #27ae60;
             --danger-color: #e74c3c;
             --warning-color: #f39c12;
+            --info-color: #17a2b8;
             --light-color: #ecf0f1;
             --dark-color: #2c3e50;
             --contract-color: #e74c3c;
@@ -41,7 +48,7 @@
         
         /* Header Styles */
         .main-header {
-            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            background: linear-gradient(135deg, var(--contract-color), #c0392b);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -71,7 +78,7 @@
             backdrop-filter: blur(10px);
         }
         
-        /* Home Button - Added from first code */
+        /* Home Button */
         .home-button {
             position: absolute;
             top: 20px;
@@ -86,6 +93,7 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             z-index: 10;
+            white-space: nowrap;
         }
         
         .home-button:hover {
@@ -97,6 +105,37 @@
         .home-button i {
             margin-right: 5px;
         }
+        
+        /* Statistics Cards */
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stats-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .stats-icon.total { background: rgba(231, 76, 60, 0.1); color: var(--contract-color); }
+        .stats-icon.active { background: rgba(39, 174, 96, 0.1); color: var(--success-color); }
+        .stats-icon.expiring { background: rgba(243, 156, 18, 0.1); color: var(--warning-color); }
+        .stats-icon.ended { background: rgba(155, 89, 182, 0.1); color: #9b59b6; }
         
         /* Card Styles */
         .custom-card {
@@ -133,8 +172,8 @@
         }
         
         .form-control-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            border-color: var(--contract-color);
+            box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
             background: white;
         }
         
@@ -150,83 +189,133 @@
             font-size: 0.9rem;
         }
         
-        /* Custom Date Input */
-        .date-input-group {
+        /* Form Sections */
+        .form-section {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section-title {
+            color: var(--contract-color);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
         
-        .date-input-group .form-control-custom {
-            text-align: center;
-            padding: 0.375rem 0.25rem;
-            flex: 1;
-        }
-        
-        .date-input-group .date-day {
-            max-width: 60px;
-        }
-        
-        .date-input-group .date-month {
-            max-width: 60px;
-        }
-        
-        .date-input-group .date-year {
-            max-width: 80px;
-        }
-        
-        .date-input-group .date-separator {
-            font-size: 1.2rem;
-            color: #6c757d;
-            font-weight: bold;
-            min-width: 10px;
-        }
-        
-        .date-input-group input::placeholder {
-            color: #adb5bd;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        /* Table Styles */
-        .table-responsive {
-            overflow-x: auto;
-            margin-bottom: 0;
-        }
-        
-        .table-custom {
+        /* Upload File Button Styles */
+        .upload-container {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
             border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 0;
-            min-width: 1200px;
-            width: 100%;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: all 0.3s;
         }
         
-        .table-custom thead th {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+        .upload-container:hover {
+            background: #e9ecef;
+            border-color: var(--contract-color);
+        }
+        
+        .upload-container.dragover {
+            background: #e3f2fd;
+            border-color: var(--contract-color);
+            border-style: solid;
+        }
+        
+        .upload-btn {
+            background: #6c757d;
             color: white;
             border: none;
-            padding: 15px 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            position: sticky;
-            top: 0;
-            white-space: nowrap;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .table-custom tbody tr {
-            transition: all 0.2s;
+        .upload-btn:hover {
+            background: #5a6268;
         }
         
-        .table-custom tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.08);
+        .upload-btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
         }
         
-        .table-custom tbody td {
-            padding: 12px;
-            vertical-align: middle;
-            border-bottom: 1px solid #f0f0f0;
-            white-space: nowrap;
+        .upload-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+        
+        .upload-status.success {
+            color: var(--success-color);
+        }
+        
+        .upload-status.error {
+            color: var(--danger-color);
+        }
+        
+        .upload-status.loading {
+            color: var(--contract-color);
+        }
+        
+        .file-link-btn {
+            display: inline-block;
+            background: var(--success-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .file-link-btn:hover {
+            background: #219653;
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Date Input Styling */
+        .date-input-wrapper {
+            position: relative;
+        }
+        
+        .date-input-wrapper .date-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--contract-color);
+            pointer-events: none;
+        }
+        
+        .date-input-wrapper .form-control-custom {
+            padding-right: 40px;
+            direction: ltr;
+            text-align: right;
+        }
+        
+        /* DataTables Customization */
+        .dataTables_wrapper {
+            padding: 0;
+        }
+        
+        .dataTables_length select {
+            border-radius: 5px;
+            padding: 5px;
+        }
+        
+        .dataTables_filter input {
+            border-radius: 5px;
+            padding: 5px 10px;
+            border: 1px solid #dee2e6;
         }
         
         /* Action Buttons */
@@ -236,6 +325,34 @@
             border-radius: 6px;
             font-size: 0.8rem;
             min-width: 70px;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .status-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .status-suspended {
+            background: rgba(149, 165, 166, 0.1);
+            color: #95a5a6;
         }
         
         /* Notification Styles */
@@ -270,7 +387,7 @@
         }
         
         .notification.info {
-            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            background: linear-gradient(135deg, var(--contract-color), #2980b9);
         }
         
         .notification.warning {
@@ -292,55 +409,70 @@
             border-width: 0.2rem;
         }
         
-        /* Scroll buttons */
-        .scroll-buttons {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
+        /* FIX FOR ENGLISH DATE DISPLAY IN RTL CONTEXT */
+        .english-date {
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: embed !important;
+            display: inline-block;
         }
         
-        .scroll-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--secondary-color);
+        /* Status Filter Dropdown */
+        .status-filter-container {
+            margin-bottom: 15px;
+        }
+        
+        .status-filter-dropdown {
+            min-width: 200px;
+        }
+        
+        .status-filter-btn {
+            background: var(--contract-color);
             color: white;
             border: none;
-            font-size: 1.2rem;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s;
+            gap: 8px;
         }
         
-        .scroll-btn:hover {
-            transform: scale(1.1);
-            background: var(--primary-color);
+        .status-filter-btn:hover {
+            background: #c0392b;
         }
         
-        /* Modal Custom */
-        .modal-header-custom {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+        }
+        
+        .filter-option.active {
+            background-color: rgba(231, 76, 60, 0.1);
+            font-weight: 600;
+        }
+        
+        /* Filter Badges in Dropdown */
+        .filter-count-badge {
+            background: var(--contract-color);
             color: white;
-            border-radius: 15px 15px 0 0;
-        }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
             border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            margin-right: auto;
         }
         
-        ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
-            border-radius: 10px;
+        /* Expiring date warning */
+        .expiring-soon {
+            color: var(--warning-color) !important;
+            font-weight: bold;
+        }
+        
+        .expired {
+            color: var(--danger-color) !important;
+            font-weight: bold;
         }
         
         /* Responsive */
@@ -356,11 +488,6 @@
                 min-width: 60px;
             }
             
-            .table-custom {
-                min-width: 1000px;
-            }
-            
-            /* Home button responsive adjustments */
             .home-button {
                 position: relative;
                 top: 0;
@@ -372,23 +499,43 @@
             .main-header {
                 padding-top: 60px;
             }
+            
+            .status-filter-dropdown {
+                min-width: 100%;
+            }
         }
         
-        /* Form Sections */
-        .form-section {
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e0e0e0;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
         
-        .form-section-title {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 12px;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--contract-color);
+            border-radius: 10px;
+        }
+        
+        /* Modal Custom */
+        .modal-header-custom {
+            background: linear-gradient(135deg, var(--contract-color), #c0392b);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        /* Read-only input for contract duration */
+        .readonly-input {
+            background-color: #e9ecef !important;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -396,171 +543,399 @@
     <!-- Notification Container -->
     <div id="notificationContainer"></div>
     
-    <!-- Scroll Buttons -->
-    <div class="scroll-buttons">
-        <button class="scroll-btn mb-2" onclick="scrollTable('left')" title="تمرير لليسار">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="scroll-btn" onclick="scrollTable('right')" title="تمرير لليمين">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
-    
     <!-- Main Container -->
     <div class="container-fluid main-container">
-        <!-- Main Header with Home Button -->
+        <!-- Main Header -->
         <div class="main-header fade-in">
-            <!-- Return to Home Button - Added from first code -->
+            <!-- Return to Home Button -->
             <a href="https://qualinova7.github.io/QualiNova/" class="home-button">
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
             
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1><i class="fas fa-file-signature me-2"></i> نظام إدارة العقود - معمل كواليتك إنترناشيونال</h1>
-                    <p class="lead mb-0">إدارة وتتبع جميع عقود وعملاء المعمل بشكل مركزي وآمن</p>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <div class="header-badge d-inline-block me-3">
-                        <i class="fas fa-file-contract me-2"></i>
-                        <span id="totalRecords">0</span> عقود
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1><i class="fas fa-file-signature me-2"></i> نظام إدارة العقود المتكامل</h1>
+                        <p class="lead mb-0">نظام متكامل لتسجيل وإدارة عقود العملاء والشركاء</p>
                     </div>
-                    <div class="header-badge d-inline-block">
-                        <i class="fas fa-calendar me-2"></i>
-                        <span id="currentDate">--/--/----</span>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <div class="header-badge d-inline-block me-3">
+                            <i class="fas fa-database me-2"></i>
+                            <span id="totalRecords">0</span> عقد
+                        </div>
+                        <div class="header-badge d-inline-block">
+                            <i class="fas fa-calendar me-2"></i>
+                            <span id="currentDate">--/--/----</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Contract Management System -->
+        <!-- Statistics Section -->
+        <div class="row mb-4" id="statisticsSection">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon total">
+                        <i class="fas fa-file-signature"></i>
+                    </div>
+                    <h4 id="statsTotal">0</h4>
+                    <p class="text-muted mb-0">إجمالي العقود</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon active">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4 id="statsActive">0</h4>
+                    <p class="text-muted mb-0">عقود نشطة</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon expiring">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h4 id="statsExpiring">0</h4>
+                    <p class="text-muted mb-0">عقود منتهية</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon ended">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h4 id="statsTypes">0</h4>
+                    <p class="text-muted mb-0">نوع خدمة مختلف</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="custom-card">
-                    <div class="card-header-custom card-header-contract">
-                        <i class="fas fa-file-signature me-2"></i> نظام إدارة العقود
+                    <div class="card-header-custom card-header-contract d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-file-signature me-2"></i> إدارة العقود</span>
+                        <button type="button" class="btn btn-light btn-sm" onclick="toggleFormSection()">
+                            <i class="fas fa-chevron-up" id="formToggleIcon"></i>
+                        </button>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" id="formSection">
                         <form id="contractForm">
-                            <div class="row">
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">رقم السجل (ID)</label>
-                                    <input type="text" class="form-control form-control-custom" id="contract_recordId" placeholder="أدخل رقم السجل الفريد">
+                            <!-- Section 1: Contract Basic Information -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-info-circle"></i> المعلومات الأساسية للعقد
                                 </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">اسم العميل *</label>
-                                    <input type="text" class="form-control form-control-custom" id="contract_clientName" placeholder="أدخل اسم العميل" required>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">رقم العقد الرئيسي</label>
-                                    <input type="text" class="form-control form-control-custom" id="contract_masterContractNumber" placeholder="رقم العقد الرئيسي">
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">عنوان العميل</label>
-                                    <input type="text" class="form-control form-control-custom" id="contract_clientAddress" placeholder="عنوان العميل الكامل">
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">الشخص المفوض</label>
-                                    <input type="text" class="form-control form-control-custom" id="contract_authorizedPerson" placeholder="اسم الشخص المفوض">
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">تاريخ العقد</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center date-day" id="contract_contractDate_day" placeholder="يوم" min="1" max="31">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-month" id="contract_contractDate_month" placeholder="شهر" min="1" max="12">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-year" id="contract_contractDate_year" placeholder="سنة" min="1900" max="2100">
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم العقد *</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_recordId" placeholder="رقم العقد" required oninput="checkDuplicateContractNumber()">
+                                        <div class="form-text text-danger duplicate-warning" id="duplicateContractNumberWarning" style="display: none;">
+                                            <i class="fas fa-exclamation-triangle me-1"></i> هذا الرقم موجود مسبقاً في النظام!
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">اسم العميل *</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_clientName" placeholder="اسم العميل" required>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم العقد الرئيسي</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_masterContractNumber" placeholder="رقم العقد الرئيسي">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">عنوان العميل</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_clientAddress" placeholder="عنوان العميل الكامل">
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">تاريخ التوقيع</label>
-                                    <div class="date-input-group">
-                                        <input type="number" class="form-control form-control-custom text-center date-day" id="contract_signDate_day" placeholder="يوم" min="1" max="31">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-month" id="contract_signDate_month" placeholder="شهر" min="1" max="12">
-                                        <span class="date-separator">/</span>
-                                        <input type="number" class="form-control form-control-custom text-center date-year" id="contract_signDate_year" placeholder="سنة" min="1900" max="2100">
+                            </div>
+                            
+                            <!-- Section 2: Customer Information -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-user"></i> معلومات العميل الإدارية
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">الرقم الإداري للعميل</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_clientAdminNumber" placeholder="الرقم الإداري للعميل">
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">البريد الإلكتروني الإداري</label>
+                                        <input type="email" class="form-control form-control-custom" id="contract_clientAdminEmail" placeholder="البريد الإلكتروني الإداري للعميل">
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">نوع الخدمة</label>
-                                    <select class="form-select form-select-custom" id="contract_serviceType">
-                                        <option value="">اختر نوع الخدمة</option>
-                                        <option value="استشارية">استشارية</option>
-                                        <option value="تنفيذية">تنفيذية</option>
-                                        <option value="صيانة">صيانة</option>
-                                        <option value="تدريب">تدريب</option>
-                                        <option value="تحليل">تحليل</option>
-                                        <option value="معايرة">معايرة</option>
-                                    </select>
+                            </div>
+                            
+                            <!-- Section 3: Authorized Person Information -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-user-tie"></i> معلومات الشخص المفوض
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">الشخص المفوض</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_authorizedPerson" placeholder="اسم الشخص المفوض">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">منصب الشخص المفوض</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_authorizedPersonPosition" placeholder="منصب الشخص المفوض">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">رقم هاتف الشخص المفوض</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_authorizedPersonPhone" placeholder="رقم هاتف الشخص المفوض">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">البريد الإلكتروني للشخص المفوض</label>
+                                        <input type="email" class="form-control form-control-custom" id="contract_authorizedPersonEmail" placeholder="البريد الإلكتروني للشخص المفوض">
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">مدة الاتفاقية (أشهر)</label>
-                                    <input type="number" class="form-control form-control-custom" id="contract_agreementDuration" placeholder="عدد الأشهر">
+                            <!-- Section 4: Contract Dates -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-calendar-alt"></i> تواريخ العقد
                                 </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">قيمة العقد</label>
-                                    <input type="text" class="form-control form-control-custom" id="contract_contractValue" placeholder="القيمة بالعملة المحلية">
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ العقد</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="contract_contractDate" placeholder="يوم/شهر/سنة" readonly onchange="calculateContractDuration()">
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ التوقيع</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="contract_signDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ البدء</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="contract_startDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ الانتهاء</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="contract_endDate" placeholder="يوم/شهر/سنة" readonly onchange="calculateContractDuration()">
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">حالة العقد</label>
-                                    <select class="form-select form-select-custom" id="contract_status">
-                                        <option value="">اختر حالة العقد</option>
-                                        <option value="نشط">نشط</option>
-                                        <option value="منتهي">منتهي</option>
-                                        <option value="موقف">موقف</option>
-                                        <option value="قيد المراجعة">قيد المراجعة</option>
-                                        <option value="مرفوض">مرفوض</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label class="form-label-custom">طريقة الدفع</label>
-                                    <select class="form-select form-select-custom" id="contract_paymentMethod">
-                                        <option value="">اختر طريقة الدفع</option>
-                                        <option value="نقدي">نقدي</option>
-                                        <option value="تحويل بنكي">تحويل بنكي</option>
-                                        <option value="شيك">شيك</option>
-                                        <option value="أقساط">أقساط</option>
-                                    </select>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">مدة العقد (أشهر)</label>
+                                        <input type="number" class="form-control form-control-custom readonly-input" id="contract_contractDuration" placeholder="يتم الحساب تلقائياً" readonly>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">قيمة العقد</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_contractValue" placeholder="القيمة بالعملة المحلية">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">عملة الدفع</label>
+                                        <select class="form-select form-select-custom" id="contract_currency">
+                                            <option value="جنيه مصري" selected>جنيه مصري</option>
+                                            <option value="ريال سعودي">ريال سعودي</option>
+                                            <option value="دولار أمريكي">دولار أمريكي</option>
+                                            <option value="يورو">يورو</option>
+                                            <option value="درهم إماراتي">درهم إماراتي</option>
+                                            <option value="دينار بحريني">دينار بحريني</option>
+                                            <option value="دينار كويتي">دينار كويتي</option>
+                                            <option value="ريال قطري">ريال قطري</option>
+                                            <option value="ريال عماني">ريال عماني</option>
+                                            <option value="دينار أردني">دينار أردني</option>
+                                            <option value="ليرة لبنانية">ليرة لبنانية</option>
+                                            <option value="ليرة سورية">ليرة سورية</option>
+                                            <option value="دينار عراقي">دينار عراقي</option>
+                                            <option value="دينار ليبي">دينار ليبي</option>
+                                            <option value="دينار جزائري">دينار جزائري</option>
+                                            <option value="درهم مغربي">درهم مغربي</option>
+                                            <option value="دينار تونسي">دينار تونسي</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">حالة العقد</label>
+                                        <select class="form-select form-select-custom" id="contract_contractStatus">
+                                            <option value="نشط" selected>نشط</option>
+                                            <option value="منتهي">منتهي</option>
+                                            <option value="موقف">موقف</option>
+                                            <option value="قيد المراجعة">قيد المراجعة</option>
+                                            <option value="مرفوض">مرفوض</option>
+                                            <option value="ملغي">ملغي</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label class="form-label-custom">نطاق العمل</label>
-                                    <textarea class="form-control form-textarea-custom" id="contract_scopeOfWork" placeholder="وصف تفصيلي لنطاق العمل والمهام المطلوبة"></textarea>
+                            <!-- Section 5: Contract File Upload -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-file-upload"></i> رفع ملف العقد
+                                </div>
+                                
+                                <!-- Contract File Upload -->
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="upload-container" id="contractUploadContainer">
+                                            <h6><i class="fas fa-cloud-upload-alt me-2"></i>رفع ملف العقد (PDF أو صورة)</h6>
+                                            <p class="text-muted mb-2" style="font-size: 0.85rem;">الحد الأقصى لحجم الملف: 10 ميجابايت. الأنواع المسموحة: PNG, JPG, JPEG, PDF</p>
+                                            
+                                            <input type="file" id="contractFileInput" 
+                                                   accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                                                   style="display: none">
+                                            <button type="button" class="upload-btn" onclick="document.getElementById('contractFileInput').click()">
+                                                <i class="fas fa-folder-open me-1"></i> اختر ملف للرفع
+                                            </button>
+                                            <button type="button" class="upload-btn" onclick="uploadContractFile()" id="contractUploadBtn">
+                                                <i class="fas fa-upload me-1"></i> رفع الملف
+                                            </button>
+                                            
+                                            <div class="upload-status" id="contractUploadStatus"></div>
+                                            
+                                            <div id="contractUploadedFileInfo" style="display: none; margin-top: 10px;">
+                                                <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                                    <div>
+                                                        <i class="fas fa-file me-2"></i>
+                                                        <span id="contractUploadedFileName"></span>
+                                                        <span class="badge bg-success ms-2" id="contractUploadedFileSize"></span>
+                                                    </div>
+                                                    <a href="#" target="_blank" class="file-link-btn" id="contractUploadedFileLink" style="display: none;">
+                                                        <i class="fas fa-external-link-alt me-1"></i> فتح الملف
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label-custom">اسم الموقع</label>
-                                    <input type="text" class="form-control form-control-custom" id="contract_siteName" placeholder="اسم موقع التنفيذ">
+                            <!-- Section 6: Work Scope and Location -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-map-marker-alt"></i> نطاق العمل والموقع
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label-custom">منصب الموقع</label>
-                                    <input type="text" class="form-control form-control-custom" id="contract_sitePosition" placeholder="منصب موقع التنفيذ">
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">نوع الخدمة</label>
+                                        <select class="form-select form-select-custom" id="contract_serviceType">
+                                            <option value="">اختر نوع الخدمة</option>
+                                            <option value="استشارية">استشارية</option>
+                                            <option value="تنفيذية">تنفيذية</option>
+                                            <option value="صيانة">صيانة</option>
+                                            <option value="تدريب">تدريب</option>
+                                            <option value="تحليل">تحليل</option>
+                                            <option value="معايرة">معايرة</option>
+                                            <option value="فحص">فحص</option>
+                                            <option value="اختبار">اختبار</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">اسم الموقع</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_siteName" placeholder="اسم موقع التنفيذ">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">نطاق العمل</label>
+                                        <textarea class="form-control form-textarea-custom" id="contract_scopeOfWork" placeholder="وصف تفصيلي لنطاق العمل والمهام المطلوبة" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">منصب الموقع</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_sitePosition" placeholder="منصب موقع التنفيذ">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">بنود العقد</label>
+                                        <textarea class="form-control form-textarea-custom" id="contract_contractTerms" placeholder="البنود والشروط الأساسية للعقد" rows="3"></textarea>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="form-label-custom">شروط خاصة</label>
+                                        <textarea class="form-control form-textarea-custom" id="contract_specialTerms" placeholder="الشروط الخاصة بالعقد" rows="3"></textarea>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <label class="form-label-custom">شروط خاصة</label>
-                                    <textarea class="form-control form-textarea-custom" id="contract_specialTerms" placeholder="الشروط الخاصة بالعقد"></textarea>
+                            <!-- Section 7: Payment Information -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-money-bill-wave"></i> معلومات الدفع
                                 </div>
-                                <div class="col-md-6 mb-2">
-                                    <label class="form-label-custom">ملاحظات إضافية</label>
-                                    <textarea class="form-control form-textarea-custom" id="contract_notes" placeholder="ملاحظات إضافية"></textarea>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label-custom">طريقة الدفع</label>
+                                        <select class="form-select form-select-custom" id="contract_paymentMethod">
+                                            <option value="">اختر طريقة الدفع</option>
+                                            <option value="نقدي">نقدي</option>
+                                            <option value="تحويل بنكي">تحويل بنكي</option>
+                                            <option value="شيك">شيك</option>
+                                            <option value="أقساط">أقساط</option>
+                                            <option value="دفع جزئي">دفع جزئي</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8 mb-2">
+                                        <label class="form-label-custom">معلومات الدفع</label>
+                                        <textarea class="form-control form-textarea-custom" id="contract_paymentInfo" placeholder="تفاصيل الدفع والجدول الزمني" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ الدفعة الأولى</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="contract_firstPaymentDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">قيمة الدفعة الأولى</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_firstPaymentAmount" placeholder="قيمة الدفعة">
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">تاريخ الدفعة الأخيرة</label>
+                                        <div class="date-input-wrapper">
+                                            <input type="text" class="form-control form-control-custom date-picker" id="contract_lastPaymentDate" placeholder="يوم/شهر/سنة" readonly>
+                                            <i class="fas fa-calendar-alt date-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label class="form-label-custom">قيمة الدفعة الأخيرة</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_lastPaymentAmount" placeholder="قيمة الدفعة">
+                                    </div>
                                 </div>
                             </div>
                             
+                            <!-- Section 8: Additional Information -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-clipboard-list"></i> معلومات إضافية
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mb-2">
+                                        <label class="form-label-custom">ملاحظات إضافية</label>
+                                        <textarea class="form-control form-textarea-custom" id="contract_additionalNotes" placeholder="ملاحظات إضافية" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-12 mb-2">
+                                        <label class="form-label-custom">المرفقات الإضافية</label>
+                                        <input type="text" class="form-control form-control-custom" id="contract_additionalAttachments" placeholder="روابط المرفقات الإضافية">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Form Buttons -->
                             <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-between">
                                     <button type="button" onclick="resetContractForm()" class="btn btn-outline-secondary">
@@ -576,7 +951,11 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Hidden Fields -->
                             <input type="hidden" id="contract_editingId">
+                            <input type="hidden" id="contract_internalRecordId">
+                            <input type="hidden" id="contract_contractLink">
                         </form>
                     </div>
                 </div>
@@ -591,32 +970,105 @@
                         <span><i class="fas fa-list me-2"></i> قائمة العقود</span>
                         <div>
                             <button onclick="loadContractData()" class="btn btn-light btn-sm me-2">
-                                <i class="fas fa-sync-alt"></i> تحديث القائمة
+                                <i class="fas fa-sync-alt"></i> تحديث
                             </button>
                             <button onclick="exportContractCSV()" class="btn btn-light btn-sm">
-                                <i class="fas fa-download"></i> تصدير CSV
+                                <i class="fas fa-download"></i> تصدير
                             </button>
-                            <button onclick="printContracts()" class="btn btn-light btn-sm ms-2">
+                            <button onclick="printTable()" class="btn btn-light btn-sm ms-2">
                                 <i class="fas fa-print"></i> طباعة
                             </button>
                         </div>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="loading-spinner" id="contractLoadingSpinner">
-                            <div class="spinner-border text-primary spinner-border-custom" role="status">
-                                <span class="visually-hidden">جاري التحميل...</span>
+                    <div class="card-body p-3">
+                        <!-- Status Filter Dropdown -->
+                        <div class="status-filter-container mb-3">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle status-filter-btn" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-filter me-2"></i>
+                                    <span id="statusFilterText">حالة العقد: جميع العقود</span>
+                                </button>
+                                <ul class="dropdown-menu status-filter-dropdown" aria-labelledby="statusFilterDropdown">
+                                    <li>
+                                        <a class="dropdown-item filter-option active" href="#" onclick="filterByStatus('all')">
+                                            <i class="fas fa-list text-primary me-2"></i> جميع العقود
+                                            <span class="filter-count-badge" id="countAll">0</span>
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item filter-option" href="#" onclick="filterByStatus('نشط')">
+                                            <i class="fas fa-check-circle text-success me-2"></i> عقود نشطة
+                                            <span class="filter-count-badge" id="countActive">0</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item filter-option" href="#" onclick="filterByStatus('منتهي')">
+                                            <i class="fas fa-ban text-danger me-2"></i> عقود منتهية
+                                            <span class="filter-count-badge" id="countEnded">0</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item filter-option" href="#" onclick="filterByStatus('موقف')">
+                                            <i class="fas fa-pause text-warning me-2"></i> عقود موقفة
+                                            <span class="filter-count-badge" id="countSuspended">0</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item filter-option" href="#" onclick="filterByStatus('قيد المراجعة')">
+                                            <i class="fas fa-hourglass-half text-info me-2"></i> عقود قيد المراجعة
+                                            <span class="filter-count-badge" id="countReview">0</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item filter-option" href="#" onclick="filterByStatus('مرفوض')">
+                                            <i class="fas fa-times-circle text-danger me-2"></i> عقود مرفوضة
+                                            <span class="filter-count-badge" id="countRejected">0</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item filter-option" href="#" onclick="filterByStatus('ملغي')">
+                                            <i class="fas fa-trash-alt text-secondary me-2"></i> عقود ملغية
+                                            <span class="filter-count-badge" id="countCancelled">0</span>
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item filter-option" href="#" onclick="filterByStatus('expiring_soon')">
+                                            <i class="fas fa-exclamation-triangle text-warning me-2"></i> عقود قاربة على الانتهاء (30 يوم)
+                                            <span class="filter-count-badge" id="countExpiringSoon">0</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item filter-option" href="#" onclick="filterByStatus('expired')">
+                                            <i class="fas fa-calendar-times text-danger me-2"></i> عقود منتهية تاريخياً
+                                            <span class="filter-count-badge" id="countExpired">0</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                         
-                        <div class="table-responsive" id="contractTableContainer" style="display: none;">
-                            <table class="table table-custom table-hover" id="contractDataTable">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="contractDataTable" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>رقم العقد</th>
+                                        <th>اسم العميل</th>
+                                        <th>الرقم الإداري</th>
+                                        <th>نوع الخدمة</th>
+                                        <th>قيمة العقد</th>
+                                        <th>تاريخ البدء</th>
+                                        <th>تاريخ الانتهاء</th>
+                                        <th>مدة العقد</th>
+                                        <th>حالة العقد</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated by DataTables -->
+                                </tbody>
                             </table>
-                        </div>
-                        
-                        <div id="contractNoRecords" class="text-center py-5" style="display: none;">
-                            <i class="fas fa-file-signature fa-4x text-muted mb-4"></i>
-                            <h4 class="text-muted">لا توجد عقود لعرضها</h4>
-                            <p class="text-muted">ابدأ بإضافة أول عقد باستخدام النموذج أعلاه</p>
                         </div>
                     </div>
                 </div>
@@ -629,19 +1081,21 @@
                 <p class="text-muted">
                     <i class="fas fa-copyright me-1"></i> نظام إدارة العقود المتكامل 
                     <span id="currentYear"></span> | 
-                    <span id="appVersion" class="text-info">الإصدار 1.0</span>
+                    <span class="text-info">الإصدار 2.2 </span>
+                    <span class="mx-2">|</span>
+                    <span id="lastUpdateTime">آخر تحديث: --:--</span>
                 </p>
             </div>
         </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-custom">
-                    <h5 class="modal-title">تأكيد حذف العقد</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title">تأكيد الحذف</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
@@ -659,7 +1113,7 @@
                         <i class="fas fa-times me-1"></i> إلغاء
                     </button>
                     <button type="button" class="btn btn-danger" onclick="confirmDelete()" id="confirmDeleteBtn">
-                        <i class="fas fa-trash me-1"></i> نعم، احذف العقد
+                        <i class="fas fa-trash me-1"></i> نعم، احذف السجل
                     </button>
                 </div>
             </div>
@@ -667,122 +1121,294 @@
     </div>
 
     <!-- Details Modal -->
-    <div id="dynamicModalContainer"></div>
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title">تفاصيل العقد</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-primary" onclick="printDetails()">
+                        <i class="fas fa-print me-1"></i> طباعة التفاصيل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr Calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    <!-- DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
     
     <!-- Main JavaScript -->
     <script>
         // ================ CONFIGURATION ================
-        const CONTRACT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwQGNVgO33TgCISOpBGi2Gb06xIm4RYVGx9PKgwapour1g-21BbzlwsACAyAMMhyoZog/exec";
+        const CONTRACT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxFn7kLQXY6qzxOu8LeUsyTwy4T-UzBthpvlPO3AkMFThp3Tv0TCmIsnaX_zxxCAZysw/exec";
+        const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxUaIvr_Xwh6FqWGyCyVIgekh6-1osP_G9jUUz0EWBjpMWltIST3tFIG3haWTzqLva1jA/exec";
         
         // ================ GLOBAL VARIABLES ================
         let contractRecords = [];
         let deleteRecordId = '';
         let deleteRecordName = '';
         let deleteServiceType = '';
+        let flatpickrInstances = {};
+        let deleteModalInstance = null;
+        let detailsModalInstance = null;
+        let selectedContractFile = null;
+        let uploadedContractFileUrl = '';
+        let isDuplicateContractNumber = false;
+        let dataTable = null;
+        let currentFilter = 'all';
+        let contractStatusCounts = {
+            all: 0,
+            نشط: 0,
+            منتهي: 0,
+            موقف: 0,
+            'قيد المراجعة': 0,
+            مرفوض: 0,
+            ملغي: 0,
+            expiring_soon: 0,
+            expired: 0
+        };
         
         // ================ INITIALIZATION ================
         document.addEventListener('DOMContentLoaded', function() {
-            // Set current date and year
             setCurrentDate();
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // Load contract data
-            loadContractData();
+            deleteModalInstance = new bootstrap.Modal(document.getElementById('deleteModal'));
+            detailsModalInstance = new bootstrap.Modal(document.getElementById('detailsModal'));
             
-            // Setup date field navigation with Tab key
-            setupDateFieldNavigation();
+            initializeDatePickers();
+            initializeFileUpload();
+            initializeDataTable();
+            
+            setTimeout(() => {
+                loadContractData();
+                loadStatistics();
+            }, 500);
+            
+            setInterval(() => {
+                loadStatistics();
+            }, 300000);
         });
         
-        function setupDateFieldNavigation() {
-            // Add event listeners for date fields to move focus on input
-            document.querySelectorAll('.date-day').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    if (this.value.length >= 2) {
-                        this.nextElementSibling.nextElementSibling.nextElementSibling.focus();
+        function initializeDataTable() {
+            dataTable = $('#contractDataTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json'
+                },
+                responsive: true,
+                pageLength: 25,
+                order: [[0, 'desc']],
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 1 },
+                    { responsivePriority: 3, targets: 9 },
+                    { responsivePriority: 4, targets: 8 },
+                    { responsivePriority: 5, targets: 4 }
+                ]
+            });
+        }
+        
+        function initializeDatePickers() {
+            const dateOptions = {
+                locale: 'ar',
+                dateFormat: "d/m/Y",
+                altFormat: "d/m/Y",
+                altInput: false,
+                allowInput: true,
+                clickOpens: true,
+                position: 'auto',
+                monthSelectorType: 'static',
+                yearSelectorType: 'scrolling',
+                prevArrow: '<i class="fas fa-chevron-right"></i>',
+                nextArrow: '<i class="fas fa-chevron-left"></i>',
+                weekNumbers: false,
+                disableMobile: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const formattedDate = formatDateToDDMMYYYY(date);
+                        instance.input.value = formattedDate;
+                        
+                        if (instance.input.id === 'contract_contractDate' || instance.input.id === 'contract_endDate') {
+                            calculateContractDuration();
+                        }
                     }
-                });
+                }
+            };
+            
+            const dateFields = [
+                'contract_contractDate',
+                'contract_signDate',
+                'contract_startDate',
+                'contract_endDate',
+                'contract_firstPaymentDate',
+                'contract_lastPaymentDate'
+            ];
+            
+            dateFields.forEach(field => {
+                flatpickrInstances[field] = flatpickr(`#${field}`, dateOptions);
             });
             
-            document.querySelectorAll('.date-month').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    if (this.value.length >= 2) {
-                        this.nextElementSibling.nextElementSibling.focus();
-                    }
-                });
-            });
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            
+            document.getElementById('contract_contractDate').value = todayFormatted;
+            if (flatpickrInstances.contract_contractDate) {
+                flatpickrInstances.contract_contractDate.setDate(today, false);
+            }
+            
+            document.getElementById('contract_startDate').value = todayFormatted;
+            if (flatpickrInstances.contract_startDate) {
+                flatpickrInstances.contract_startDate.setDate(today, false);
+            }
+            
+            // Set end date to one year from now
+            const oneYearFromNow = new Date();
+            oneYearFromNow.setFullYear(today.getFullYear() + 1);
+            const oneYearFormatted = formatDateToDDMMYYYY(oneYearFromNow);
+            
+            document.getElementById('contract_endDate').value = oneYearFormatted;
+            if (flatpickrInstances.contract_endDate) {
+                flatpickrInstances.contract_endDate.setDate(oneYearFromNow, false);
+            }
+            
+            calculateContractDuration();
         }
         
-        // ================ DATE FORMAT FUNCTIONS ================
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            try {
-                // Handle dd/mm/yyyy format
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        const day = parts[0].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[2];
-                        return `${day}/${month}/${year}`;
-                    }
-                }
-                
-                // Handle yyyy-mm-dd format
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        const day = parts[2].padStart(2, '0');
-                        const month = parts[1].padStart(2, '0');
-                        const year = parts[0];
-                        return `${day}/${month}/${year}`;
-                    }
-                }
-                
-                return dateString;
-            } catch (e) {
-                return dateString;
+        function toggleFormSection() {
+            const formSection = document.getElementById('formSection');
+            const toggleIcon = document.getElementById('formToggleIcon');
+            
+            if (formSection.style.display === 'none') {
+                formSection.style.display = 'block';
+                toggleIcon.className = 'fas fa-chevron-up';
+            } else {
+                formSection.style.display = 'none';
+                toggleIcon.className = 'fas fa-chevron-down';
             }
         }
         
-        function formatDateForInput(dateString) {
-            if (!dateString) return {day: '', month: '', year: ''};
-            try {
-                if (dateString.includes('/')) {
-                    const parts = dateString.split('/');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[0],
-                            month: parts[1],
-                            year: parts[2]
-                        };
-                    }
-                }
-                
-                if (dateString.includes('-')) {
-                    const parts = dateString.split('-');
-                    if (parts.length === 3) {
-                        return {
-                            day: parts[2],
-                            month: parts[1],
-                            year: parts[0]
-                        };
-                    }
-                }
-                
-                return {day: '', month: '', year: ''};
-            } catch (e) {
-                return {day: '', month: '', year: ''};
-            }
+        // ================ DATE FUNCTIONS (UPDATED TO MATCH CALIBRATION SYSTEM) ================
+        function formatDateToDMY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `D${day} M${month} Y${year}`;
         }
         
-        function getDateString(day, month, year) {
-            if (!day || !month || !year) return '';
-            const formattedDay = day.toString().padStart(2, '0');
-            const formattedMonth = month.toString().padStart(2, '0');
-            return `${formattedDay}/${formattedMonth}/${year}`;
+        function parseDateFromDMY(dmyString) {
+            if (!dmyString) return null;
+            
+            dmyString = dmyString.toString().trim();
+            
+            const match = dmyString.match(/^D(\d+)\s+M(\d+)\s+Y(\d+)$/);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1;
+                const year = parseInt(match[3], 10);
+                
+                const dateObj = new Date(year, month, day);
+                if (dateObj.getDate() !== day || dateObj.getMonth() !== month || dateObj.getFullYear() !== year) {
+                    return null;
+                }
+                
+                return dateObj;
+            }
+            
+            return null;
+        }
+        
+        function formatDMYForDisplay(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return `<span class="english-date">${formatDateToDayMonthYear(regularDate)}</span>`;
+                    }
+                } catch (e) {}
+                return `<span class="english-date">${dmyString}</span>`;
+            }
+            
+            const formattedDate = formatDateToDayMonthYear(dateObj);
+            return `<span class="english-date">${formattedDate}</span>`;
+        }
+        
+        function formatDateToDayMonthYear(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            
+            const day = date.getDate();
+            const monthIndex = date.getMonth();
+            const year = date.getFullYear();
+            
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            return `${day} ${monthNames[monthIndex]} ${year}`;
+        }
+        
+        function formatDMYForInput(dmyString) {
+            if (!dmyString) return '';
+            
+            const dateObj = parseDateFromDMY(dmyString);
+            if (!dateObj) {
+                try {
+                    const regularDate = new Date(dmyString);
+                    if (!isNaN(regularDate.getTime())) {
+                        return formatDateToDDMMYYYY(regularDate);
+                    }
+                } catch (e) {}
+                return '';
+            }
+            
+            return formatDateToDDMMYYYY(dateObj);
+        }
+        
+        function formatDateToDDMMYYYY(date) {
+            if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        function parseDateDDMMYYYY(dateString) {
+            if (!dateString) return null;
+            
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    return new Date(year, month, day);
+                }
+            }
+            
+            return null;
         }
         
         function setCurrentDate() {
@@ -791,6 +1417,212 @@
             const month = (now.getMonth() + 1).toString().padStart(2, '0');
             const year = now.getFullYear();
             document.getElementById('currentDate').textContent = `${day}/${month}/${year}`;
+        }
+        
+        function calculateContractDuration() {
+            const contractDateInput = document.getElementById('contract_contractDate');
+            const endDateInput = document.getElementById('contract_endDate');
+            const durationInput = document.getElementById('contract_contractDuration');
+            
+            if (!contractDateInput.value || !endDateInput.value) {
+                durationInput.value = '';
+                return;
+            }
+            
+            try {
+                const contractDate = parseDateDDMMYYYY(contractDateInput.value);
+                const endDate = parseDateDDMMYYYY(endDateInput.value);
+                
+                if (!contractDate || !endDate) {
+                    durationInput.value = '';
+                    return;
+                }
+                
+                // Calculate difference in months
+                const months = (endDate.getFullYear() - contractDate.getFullYear()) * 12 + 
+                              (endDate.getMonth() - contractDate.getMonth());
+                
+                durationInput.value = Math.max(0, months);
+            } catch (e) {
+                console.error('Error calculating contract duration:', e);
+                durationInput.value = '';
+            }
+        }
+        
+        // ================ STATUS CALCULATION FUNCTIONS ================
+        function calculateContractStatusBasedOnDate(contractEndDate, contractStatus) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            
+            if (!contractEndDate) return contractStatus;
+            
+            // Calculate 30 days from now
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+            
+            // Check if contract is already marked as ended
+            if (contractStatus === 'منتهي' || contractStatus === 'مرفوض' || contractStatus === 'ملغي') {
+                return contractStatus;
+            }
+            
+            // If contract end date has passed, mark as expired
+            if (contractEndDate < now) {
+                return 'منتهي';
+            }
+            
+            // If contract end date is within 30 days and status is active, mark as expiring soon
+            if (contractEndDate <= thirtyDaysFromNow && contractEndDate >= now && contractStatus === 'نشط') {
+                return 'نشط (قريب الانتهاء)';
+            }
+            
+            return contractStatus;
+        }
+        
+        function getActualContractStatus(record) {
+            const contractStatus = record[26] || 'نشط';
+            const endDateDMY = record[15] || '';
+            const endDate = parseDateFromDMY(endDateDMY);
+            
+            return calculateContractStatusBasedOnDate(endDate, contractStatus);
+        }
+        
+        // ================ FILE UPLOAD FUNCTIONS ================
+        function initializeFileUpload() {
+            const contractFileInput = document.getElementById('contractFileInput');
+            const contractUploadContainer = document.getElementById('contractUploadContainer');
+            
+            contractFileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            
+            contractUploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                contractUploadContainer.classList.add('dragover');
+            });
+            
+            contractUploadContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                contractUploadContainer.classList.remove('dragover');
+            });
+            
+            contractUploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                contractUploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+        }
+        
+        function handleFileSelect(file) {
+            const allowedTypes = [
+                "image/png",
+                "image/jpeg",
+                "application/pdf"
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                showNotification("❌ فقط ملفات PNG, JPG, JPEG أو PDF مسموحة", "error");
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification("❌ حجم الملف كبير جداً (الحد الأقصى 10MB)", "error");
+                return;
+            }
+            
+            selectedContractFile = file;
+            document.getElementById('contractUploadedFileName').textContent = file.name;
+            document.getElementById('contractUploadedFileSize').textContent = formatFileSize(file.size);
+            document.getElementById('contractUploadedFileInfo').style.display = 'block';
+            document.getElementById('contractUploadedFileLink').style.display = 'none';
+            
+            const uploadStatus = document.getElementById('contractUploadStatus');
+            uploadStatus.textContent = '';
+            uploadStatus.className = 'upload-status';
+            
+            showNotification(`✅ تم اختيار الملف: ${file.name}`, 'success', 3000);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' بايت';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
+            else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
+        }
+        
+        async function uploadContractFile() {
+            if (!selectedContractFile) {
+                showNotification("⚠️ يرجى اختيار ملف أولاً", "warning");
+                return;
+            }
+            
+            const uploadBtn = document.getElementById('contractUploadBtn');
+            const uploadStatus = document.getElementById('contractUploadStatus');
+            
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الرفع...';
+            uploadStatus.textContent = 'جاري رفع الملف... ⏳';
+            uploadStatus.className = 'upload-status loading';
+            
+            try {
+                const reader = new FileReader();
+                
+                reader.onload = async function() {
+                    const base64 = reader.result.split(",")[1];
+                    
+                    const response = await fetch(UPLOAD_WEB_APP_URL, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            fileName: selectedContractFile.name,
+                            mimeType: selectedContractFile.type,
+                            fileData: base64
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        uploadedContractFileUrl = data.url;
+                        document.getElementById('contract_contractLink').value = uploadedContractFileUrl;
+                        
+                        const fileLinkBtn = document.getElementById('contractUploadedFileLink');
+                        fileLinkBtn.href = uploadedContractFileUrl;
+                        fileLinkBtn.style.display = 'inline-block';
+                        
+                        uploadStatus.textContent = '✅ تم رفع الملف بنجاح';
+                        uploadStatus.className = 'upload-status success';
+                        
+                        showNotification(`✅ تم رفع الملف بنجاح: ${selectedContractFile.name}`, 'success');
+                    } else {
+                        uploadStatus.textContent = '❌ فشل في رفع الملف: ' + (data.message || 'خطأ غير معروف');
+                        uploadStatus.className = 'upload-status error';
+                        showNotification(`❌ فشل في رفع الملف: ${data.message || 'خطأ غير معروف'}`, 'error');
+                    }
+                    
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                };
+                
+                reader.onerror = function() {
+                    uploadStatus.textContent = '❌ خطأ في قراءة الملف';
+                    uploadStatus.className = 'upload-status error';
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                    showNotification('❌ خطأ في قراءة الملف', 'error');
+                };
+                
+                reader.readAsDataURL(selectedContractFile);
+                
+            } catch (error) {
+                uploadStatus.textContent = '❌ فشل في رفع الملف: ' + error;
+                uploadStatus.className = 'upload-status error';
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-upload me-1"></i> رفع الملف';
+                showNotification('❌ فشل في رفع الملف: ' + error, 'error');
+            }
         }
         
         // ================ NOTIFICATION SYSTEM ================
@@ -838,7 +1670,6 @@
             }
         }
         
-        // ================ UTILITY FUNCTIONS ================
         function escapeHtml(unsafe) {
             if (unsafe === null || unsafe === undefined) return '';
             return unsafe.toString()
@@ -849,67 +1680,324 @@
                 .replace(/'/g, "&#039;");
         }
         
-        function scrollTable(direction) {
-            const tableContainer = document.querySelector('#contractTableContainer .table-responsive');
-            
-            if (tableContainer) {
-                const scrollAmount = 300;
-                if (direction === 'left') {
-                    tableContainer.scrollLeft -= scrollAmount;
-                } else {
-                    tableContainer.scrollLeft += scrollAmount;
-                }
-            }
-        }
-        
-        // ================ API COMMUNICATION FUNCTIONS ================
-        function jsonp(url) {
+        // ================ JSONP FUNCTION ================
+        function jsonp(url, callbackParam = 'callback') {
             return new Promise((resolve, reject) => {
-                const callbackName = 'callback_' + Date.now() + '_' + Math.random().toString(36).substr(2);
-                const timeout = 60000;
+                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
                 
-                const timeoutId = setTimeout(() => {
-                    cleanup();
-                    reject(new Error('Request timeout'));
-                }, timeout);
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + callbackParam + '=' + callbackName;
                 
-                function cleanup() {
-                    clearTimeout(timeoutId);
+                window[callbackName] = function(data) {
                     delete window[callbackName];
-                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
-                    if (script) script.remove();
-                }
-                
-                window[callbackName] = function(response) {
-                    cleanup();
-                    resolve(response);
+                    document.body.removeChild(script);
+                    resolve(data);
                 };
                 
-                const script = document.createElement('script');
-                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
-                script.setAttribute('data-callback', callbackName);
                 script.onerror = function() {
-                    cleanup();
-                    reject(new Error('Failed to load script'));
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
                 };
                 
                 document.body.appendChild(script);
             });
         }
         
-        function callGoogleScript(scriptUrl, action, data = {}) {
-            let url = scriptUrl + '?action=' + action;
-            
-            for (const key in data) {
-                if (data[key] !== undefined && data[key] !== null) {
-                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+        // ================ STATISTICS FUNCTIONS ================
+        async function loadStatistics() {
+            try {
+                const res = await jsonp(`${CONTRACT_SCRIPT_URL}?action=getStats&t=${Date.now()}`);
+                
+                if (res && res.status === 'success') {
+                    document.getElementById('statsTotal').textContent = res.totalContracts.toLocaleString('ar-SA');
+                    document.getElementById('statsActive').textContent = res.activeContracts.toLocaleString('ar-SA');
+                    
+                    // Calculate expiring contracts count locally
+                    const expiringCount = countExpiringContracts();
+                    document.getElementById('statsExpiring').textContent = expiringCount.toLocaleString('ar-SA');
+                    
+                    document.getElementById('statsTypes').textContent = Object.keys(res.byServiceType || {}).length;
+                    document.getElementById('totalRecords').textContent = res.totalContracts.toLocaleString('ar-SA');
+                    
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('lastUpdateTime').textContent = `آخر تحديث: ${timeString}`;
                 }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
             }
-            
-            return jsonp(url);
         }
         
-        // ================ VALIDATION HELPER ================
+        function countExpiringContracts() {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            
+            let expiringCount = 0;
+            
+            contractRecords.forEach(record => {
+                // Column indices based on contract data structure:
+                // record[15] = end date
+                const endDate = parseDateFromDMY(record[15] || '');
+                
+                // Check if end date has passed or is within 30 days
+                if (endDate) {
+                    const thirtyDaysFromNow = new Date();
+                    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+                    
+                    // Check if end date has passed or is within 30 days
+                    if (endDate <= thirtyDaysFromNow) {
+                        expiringCount++;
+                    }
+                }
+            });
+            
+            return expiringCount;
+        }
+        
+        // ================ STATUS COUNT FUNCTIONS ================
+        function calculateStatusCounts() {
+            // Reset counts
+            contractStatusCounts = {
+                all: contractRecords.length,
+                نشط: 0,
+                منتهي: 0,
+                موقف: 0,
+                'قيد المراجعة': 0,
+                مرفوض: 0,
+                ملغي: 0,
+                expiring_soon: 0,
+                expired: 0
+            };
+            
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+            
+            contractRecords.forEach(record => {
+                const contractStatus = record[26] || 'نشط';
+                const endDateDMY = record[15] || '';
+                const endDate = parseDateFromDMY(endDateDMY);
+                
+                // Count by actual status
+                if (contractStatusCounts.hasOwnProperty(contractStatus)) {
+                    contractStatusCounts[contractStatus]++;
+                }
+                
+                // Calculate expiring soon and expired counts
+                if (endDate) {
+                    // Check if contract is expired (end date passed and status is active)
+                    if (endDate < now && (contractStatus === 'نشط' || contractStatus === 'قيد المراجعة')) {
+                        contractStatusCounts.expired++;
+                    }
+                    
+                    // Check if contract is expiring soon (within 30 days and status is active)
+                    if (endDate <= thirtyDaysFromNow && endDate >= now && contractStatus === 'نشط') {
+                        contractStatusCounts.expiring_soon++;
+                    }
+                }
+            });
+            
+            // Update count badges in dropdown
+            document.getElementById('countAll').textContent = contractStatusCounts.all;
+            document.getElementById('countActive').textContent = contractStatusCounts.نشط;
+            document.getElementById('countEnded').textContent = contractStatusCounts.منتهي;
+            document.getElementById('countSuspended').textContent = contractStatusCounts.موقف;
+            document.getElementById('countReview').textContent = contractStatusCounts['قيد المراجعة'];
+            document.getElementById('countRejected').textContent = contractStatusCounts.مرفوض;
+            document.getElementById('countCancelled').textContent = contractStatusCounts.ملغي;
+            document.getElementById('countExpiringSoon').textContent = contractStatusCounts.expiring_soon;
+            document.getElementById('countExpired').textContent = contractStatusCounts.expired;
+        }
+        
+        // ================ FILTER FUNCTIONS ================
+        function filterByStatus(status) {
+            currentFilter = status;
+            
+            // Update active option in dropdown
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            // Find and activate the clicked option
+            const clickedOption = event.target.closest('.filter-option');
+            if (clickedOption) {
+                clickedOption.classList.add('active');
+            }
+            
+            // Update dropdown button text
+            updateFilterButtonText(status);
+            
+            // Apply filter
+            applyStatusFilter(status);
+        }
+        
+        function updateFilterButtonText(status) {
+            const filterTextElement = document.getElementById('statusFilterText');
+            const statusTexts = {
+                'all': 'جميع العقود',
+                'نشط': 'عقود نشطة',
+                'منتهي': 'عقود منتهية',
+                'موقف': 'عقود موقفة',
+                'قيد المراجعة': 'عقود قيد المراجعة',
+                'مرفوض': 'عقود مرفوضة',
+                'ملغي': 'عقود ملغية',
+                'expiring_soon': 'عقود قاربة على الانتهاء',
+                'expired': 'عقود منتهية تاريخياً'
+            };
+            
+            filterTextElement.textContent = `حالة العقد: ${statusTexts[status] || 'جميع العقود'}`;
+        }
+        
+        function applyStatusFilter(status) {
+            if (dataTable) {
+                dataTable.clear();
+                
+                let filteredRecords = contractRecords;
+                
+                if (status !== 'all') {
+                    if (status === 'expiring_soon') {
+                        // Filter for contracts expiring within 30 days
+                        const now = new Date();
+                        now.setHours(0, 0, 0, 0);
+                        const thirtyDaysFromNow = new Date();
+                        thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+                        
+                        filteredRecords = contractRecords.filter(record => {
+                            const endDate = parseDateFromDMY(record[15] || '');
+                            const contractStatus = record[26] || 'نشط';
+                            
+                            return endDate && 
+                                   endDate <= thirtyDaysFromNow && 
+                                   endDate >= now && 
+                                   contractStatus === 'نشط';
+                        });
+                    } else if (status === 'expired') {
+                        // Filter for contracts that have expired (end date passed but status is still active)
+                        const now = new Date();
+                        now.setHours(0, 0, 0, 0);
+                        
+                        filteredRecords = contractRecords.filter(record => {
+                            const endDate = parseDateFromDMY(record[15] || '');
+                            const contractStatus = record[26] || 'نشط';
+                            
+                            return endDate && 
+                                   endDate < now && 
+                                   (contractStatus === 'نشط' || contractStatus === 'قيد المراجعة');
+                        });
+                    } else {
+                        // Filter by status field
+                        filteredRecords = contractRecords.filter(record => {
+                            return record[26] === status;
+                        });
+                    }
+                }
+                
+                // Populate table with filtered records
+                filteredRecords.forEach(record => {
+                    const actualStatus = getActualContractStatus(record);
+                    const statusClass = getStatusClass(actualStatus);
+                    
+                    // Check if end date is expired or near expiration
+                    const endDate = parseDateFromDMY(record[15] || '');
+                    const now = new Date();
+                    now.setHours(0, 0, 0, 0);
+                    
+                    let endDateClass = '';
+                    
+                    if (endDate) {
+                        if (endDate < now) {
+                            endDateClass = 'expired';
+                        } else {
+                            const thirtyDaysFromNow = new Date();
+                            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+                            if (endDate <= thirtyDaysFromNow) {
+                                endDateClass = 'expiring-soon';
+                            }
+                        }
+                    }
+                    
+                    dataTable.row.add([
+                        escapeHtml(record[1] || ''),
+                        escapeHtml(record[2] || ''),
+                        escapeHtml(record[9] || ''),
+                        escapeHtml(record[19] || ''),
+                        escapeHtml(record[17] || '') + ' ' + (record[18] || 'جنيه مصري'),
+                        formatDMYForDisplay(record[14] || ''),
+                        `<span class="${endDateClass}">${formatDMYForDisplay(record[15] || '')}</span>`,
+                        escapeHtml(record[16] || '') + ' شهر',
+                        `<span class="status-badge ${statusClass}">${escapeHtml(actualStatus)}</span>`,
+                        `
+                        <div class="action-buttons">
+                            <button onclick="editContractRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[2])}', '${escapeHtml(record[1] || '')}', '${escapeHtml(record[19] || '')}')" class="btn btn-sm btn-danger" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button onclick="viewDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        `
+                    ]);
+                });
+                
+                dataTable.draw();
+                
+                // Show notification
+                const statusNames = {
+                    'all': 'جميع العقود',
+                    'نشط': 'عقود نشطة',
+                    'منتهي': 'عقود منتهية',
+                    'موقف': 'عقود موقفة',
+                    'قيد المراجعة': 'عقود قيد المراجعة',
+                    'مرفوض': 'عقود مرفوضة',
+                    'ملغي': 'عقود ملغية',
+                    'expiring_soon': 'عقود قاربة على الانتهاء',
+                    'expired': 'عقود منتهية تاريخياً'
+                };
+                
+                showNotification(`✅ عرض ${statusNames[status] || 'العقود'} (${filteredRecords.length} عقد)`, 'success', 3000);
+            }
+        }
+        
+        // ================ DUPLICATE CHECK ================
+        function checkDuplicateContractNumber() {
+            const contractNumberInput = document.getElementById('contract_recordId');
+            const contractNumber = contractNumberInput.value.trim();
+            const editingId = document.getElementById('contract_editingId').value;
+            const warningElement = document.getElementById('duplicateContractNumberWarning');
+            
+            if (!contractNumber) {
+                warningElement.style.display = 'none';
+                contractNumberInput.classList.remove('is-invalid');
+                isDuplicateContractNumber = false;
+                return false;
+            }
+            
+            const duplicateRecord = contractRecords.find(record => {
+                if (editingId && record[0] === editingId) {
+                    return false;
+                }
+                return record[1] && record[1].toString().trim() === contractNumber;
+            });
+            
+            if (duplicateRecord) {
+                warningElement.style.display = 'block';
+                contractNumberInput.classList.add('is-invalid');
+                isDuplicateContractNumber = true;
+                return true;
+            } else {
+                warningElement.style.display = 'none';
+                contractNumberInput.classList.remove('is-invalid');
+                isDuplicateContractNumber = false;
+                return false;
+            }
+        }
+        
+        // ================ VALIDATION FUNCTIONS ================
         function validateForm(requiredFields) {
             let isValid = true;
             requiredFields.forEach(fieldId => {
@@ -921,166 +2009,179 @@
                     field.classList.remove('is-invalid');
                 }
             });
+            
             return isValid;
+        }
+        
+        function getStatusClass(status) {
+            if (status.includes('نشط')) {
+                return 'status-active';
+            }
+            
+            switch(status) {
+                case 'نشط': return 'status-active';
+                case 'منتهي': return 'status-inactive';
+                case 'موقف': return 'status-suspended';
+                case 'قيد المراجعة': return 'status-pending';
+                case 'مرفوض': return 'status-inactive';
+                case 'ملغي': return 'status-inactive';
+                default: return 'status-active';
+            }
         }
         
         // ================ CONTRACT SYSTEM FUNCTIONS ================
         async function loadContractData() {
-            const spinner = document.getElementById('contractLoadingSpinner');
-            const tableContainer = document.getElementById('contractTableContainer');
-            const noRecords = document.getElementById('contractNoRecords');
-            
-            spinner.style.display = 'flex';
-            tableContainer.style.display = 'none';
-            noRecords.style.display = 'none';
+            showNotification('📥 جاري تحميل بيانات العقود...', 'info');
             
             try {
-                const result = await callGoogleScript(CONTRACT_SCRIPT_URL, 'getAll');
+                const res = await jsonp(`${CONTRACT_SCRIPT_URL}?action=getAll&t=${Date.now()}`);
                 
-                spinner.style.display = 'none';
-                
-                if (result.status === 'success') {
-                    contractRecords = result.data;
+                if (res && res.status === 'success') {
+                    contractRecords = res.records || [];
                     
-                    if (contractRecords.length > 0) {
-                        displayContractRecords(contractRecords);
-                        tableContainer.style.display = 'block';
-                        updateTotalRecordsCount();
-                    } else {
-                        noRecords.style.display = 'block';
-                    }
+                    // Calculate status counts
+                    calculateStatusCounts();
+                    
+                    // Apply current filter
+                    applyStatusFilter(currentFilter);
+                    
+                    loadStatistics();
+                    showNotification(`✅ تم تحميل ${contractRecords.length} عقد`, 'success');
                 } else {
-                    noRecords.style.display = 'block';
-                    showNotification(`❌ ${result.message}`, 'error');
+                    showNotification('❌ فشل في تحميل بيانات العقود', 'error');
                 }
             } catch (error) {
-                spinner.style.display = 'none';
-                noRecords.style.display = 'block';
-                showNotification(`❌ خطأ في تحميل العقود`, 'error');
+                console.error('Error loading contract data:', error);
+                showNotification('❌ خطأ في تحميل بيانات العقود', 'error');
             }
         }
         
-        function displayContractRecords(records) {
-            const table = document.getElementById('contractDataTable');
-            
-            let html = '<thead><tr>';
-            const headers = ['رقم السجل', 'اسم العميل', 'رقم العقد', 'عنوان العميل', 'الشخص المفوض', 'تاريخ العقد', 'نوع الخدمة', 'قيمة العقد', 'حالة العقد', 'الإجراءات'];
-            headers.forEach(h => {
-                html += `<th>${h}</th>`;
-            });
-            html += '</tr></thead><tbody>';
-            
-            records.forEach((record, index) => {
-                // Get contract status for styling
-                let statusClass = 'badge bg-secondary';
-                let statusText = record[16] || 'غير محدد';
-                
-                switch(statusText) {
-                    case 'نشط':
-                        statusClass = 'badge bg-success';
-                        break;
-                    case 'منتهي':
-                        statusClass = 'badge bg-danger';
-                        break;
-                    case 'موقف':
-                        statusClass = 'badge bg-warning';
-                        break;
-                    case 'قيد المراجعة':
-                        statusClass = 'badge bg-info';
-                        break;
-                    case 'مرفوض':
-                        statusClass = 'badge bg-dark';
-                        break;
-                }
-                
-                html += '<tr>';
-                
-                html += `<td><strong>${escapeHtml(record[0] || '')}</strong></td>`;
-                html += `<td>${escapeHtml(record[1] || '')}</td>`;
-                html += `<td>${escapeHtml(record[2] || '')}</td>`;
-                html += `<td>${escapeHtml(record[3] || '').substring(0, 20)}${escapeHtml(record[3] || '').length > 20 ? '...' : ''}</td>`;
-                html += `<td>${escapeHtml(record[4] || '')}</td>`;
-                html += `<td>${formatDate(record[5] || '')}</td>`;
-                html += `<td>${escapeHtml(record[7] || '')}</td>`;
-                html += `<td>${escapeHtml(record[10] || '')}</td>`;
-                html += `<td><span class="${statusClass}">${escapeHtml(statusText)}</span></td>`;
-                
-                html += `<td class="action-buttons">
-                    <button onclick="editContractRecord('${escapeHtml(record[0])}')" class="btn btn-sm btn-primary" title="تعديل">
-                        <i class="fas fa-edit"></i> تعديل
-                    </button>
-                    <button onclick="showDeleteModal('${escapeHtml(record[0])}', '${escapeHtml(record[1])}', '${escapeHtml(record[7] || '')}')" class="btn btn-sm btn-danger" title="حذف">
-                        <i class="fas fa-trash"></i> حذف
-                    </button>
-                    <button onclick="viewContractDetails('${escapeHtml(record[0])}')" class="btn btn-sm btn-info" title="عرض">
-                        <i class="fas fa-eye"></i> عرض
-                    </button>
-                </td>`;
-                
-                html += '</tr>';
-            });
-            
-            html += '</tbody>';
-            table.innerHTML = html;
-        }
-        
         async function addContractRecord() {
+            if (checkDuplicateContractNumber()) {
+                showNotification('❌ رقم العقد هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+
             const requiredFields = ['contract_recordId', 'contract_clientName'];
             if (!validateForm(requiredFields)) {
                 showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
                 return;
             }
-            
+
+            const contractDate = document.getElementById('contract_contractDate').value;
+            const signDate = document.getElementById('contract_signDate').value;
+            const startDate = document.getElementById('contract_startDate').value;
+            const endDate = document.getElementById('contract_endDate').value;
+            const firstPaymentDate = document.getElementById('contract_firstPaymentDate').value;
+            const lastPaymentDate = document.getElementById('contract_lastPaymentDate').value;
+
             const button = document.getElementById('contract_addBtn');
             const originalHtml = button.innerHTML;
-            
+
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الإضافة...';
-            
-            const contractDate = getDateString(
-                document.getElementById('contract_contractDate_day').value,
-                document.getElementById('contract_contractDate_month').value,
-                document.getElementById('contract_contractDate_year').value
-            );
-            
-            const signDate = getDateString(
-                document.getElementById('contract_signDate_day').value,
-                document.getElementById('contract_signDate_month').value,
-                document.getElementById('contract_signDate_year').value
-            );
-            
-            const formData = {
-                recordId: document.getElementById('contract_recordId').value,
-                clientName: document.getElementById('contract_clientName').value,
-                masterContractNumber: document.getElementById('contract_masterContractNumber').value,
-                clientAddress: document.getElementById('contract_clientAddress').value,
-                authorizedPerson: document.getElementById('contract_authorizedPerson').value,
-                contractDate: contractDate,
-                signDate: signDate,
-                serviceType: document.getElementById('contract_serviceType').value,
-                agreementDuration: document.getElementById('contract_agreementDuration').value,
-                contractValue: document.getElementById('contract_contractValue').value,
-                scopeOfWork: document.getElementById('contract_scopeOfWork').value,
-                siteName: document.getElementById('contract_siteName').value,
-                sitePosition: document.getElementById('contract_sitePosition').value,
-                specialTerms: document.getElementById('contract_specialTerms').value,
-                notes: document.getElementById('contract_notes').value,
-                status: document.getElementById('contract_status').value,
-                paymentMethod: document.getElementById('contract_paymentMethod').value
+
+            const internalRecordId = 'CNT-' + Date.now();
+            document.getElementById('contract_internalRecordId').value = internalRecordId;
+
+            const contractLink = document.getElementById('contract_contractLink').value;
+
+            const contractDateDMY = contractDate ? formatDateToDMY(parseDateDDMMYYYY(contractDate)) : '';
+            const signDateDMY = signDate ? formatDateToDMY(parseDateDDMMYYYY(signDate)) : '';
+            const startDateDMY = startDate ? formatDateToDMY(parseDateDDMMYYYY(startDate)) : '';
+            const endDateDMY = endDate ? formatDateToDMY(parseDateDDMMYYYY(endDate)) : '';
+            const firstPaymentDateDMY = firstPaymentDate ? formatDateToDMY(parseDateDDMMYYYY(firstPaymentDate)) : '';
+            const lastPaymentDateDMY = lastPaymentDate ? formatDateToDMY(parseDateDDMMYYYY(lastPaymentDate)) : '';
+
+            const contractDuration = document.getElementById('contract_contractDuration').value;
+
+            const fields = [
+                'contract_recordId',
+                'contract_clientName',
+                'contract_masterContractNumber',
+                'contract_clientAddress',
+                'contract_authorizedPerson',
+                'contract_authorizedPersonPosition',
+                'contract_authorizedPersonPhone',
+                'contract_authorizedPersonEmail',
+                'contract_clientAdminNumber',
+                'contract_clientAdminEmail',
+                'contract_serviceType',
+                'contract_contractValue',
+                'contract_currency',
+                'contract_scopeOfWork',
+                'contract_siteName',
+                'contract_sitePosition',
+                'contract_specialTerms',
+                'contract_contractTerms',
+                'contract_additionalNotes',
+                'contract_contractStatus',
+                'contract_paymentMethod',
+                'contract_paymentInfo',
+                'contract_firstPaymentAmount',
+                'contract_lastPaymentAmount',
+                'contract_additionalAttachments'
+            ];
+
+            const paramMap = {
+                'contract_recordId': 'recordId',
+                'contract_clientName': 'clientName',
+                'contract_masterContractNumber': 'masterContractNumber',
+                'contract_clientAddress': 'clientAddress',
+                'contract_authorizedPerson': 'authorizedPerson',
+                'contract_authorizedPersonPosition': 'authorizedPersonPosition',
+                'contract_authorizedPersonPhone': 'authorizedPersonPhone',
+                'contract_authorizedPersonEmail': 'authorizedPersonEmail',
+                'contract_clientAdminNumber': 'clientAdminNumber',
+                'contract_clientAdminEmail': 'clientAdminEmail',
+                'contract_serviceType': 'serviceType',
+                'contract_contractValue': 'contractValue',
+                'contract_currency': 'currency',
+                'contract_scopeOfWork': 'scopeOfWork',
+                'contract_siteName': 'siteName',
+                'contract_sitePosition': 'sitePosition',
+                'contract_specialTerms': 'specialTerms',
+                'contract_contractTerms': 'contractTerms',
+                'contract_additionalNotes': 'additionalNotes',
+                'contract_contractStatus': 'contractStatus',
+                'contract_paymentMethod': 'paymentMethod',
+                'contract_paymentInfo': 'paymentInfo',
+                'contract_firstPaymentAmount': 'firstPaymentAmount',
+                'contract_lastPaymentAmount': 'lastPaymentAmount',
+                'contract_additionalAttachments': 'additionalAttachments'
             };
+
+            let q = '';
             
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+
+            q += `contractDuration=${encodeURIComponent(contractDuration || '0')}&`;
+            
+            q += `contractDate=${encodeURIComponent(contractDateDMY)}&`;
+            q += `signDate=${encodeURIComponent(signDateDMY)}&`;
+            q += `startDate=${encodeURIComponent(startDateDMY)}&`;
+            q += `endDate=${encodeURIComponent(endDateDMY)}&`;
+            q += `firstPaymentDate=${encodeURIComponent(firstPaymentDateDMY)}&`;
+            q += `lastPaymentDate=${encodeURIComponent(lastPaymentDateDMY)}&`;
+            q += `contractLink=${encodeURIComponent(contractLink || '')}&`;
+            q += `email=${encodeURIComponent('')}`;
+
             try {
-                const result = await callGoogleScript(CONTRACT_SCRIPT_URL, 'add', formData);
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                const res = await jsonp(`${CONTRACT_SCRIPT_URL}?action=add&${q}`);
+
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     resetContractForm();
                     await loadContractData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في إضافة العقد`, 'error');
+                showNotification('❌ خطأ في الإضافة', 'error');
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
@@ -1105,93 +2206,219 @@
         }
         
         function fillContractForm(record) {
-            document.getElementById('contract_recordId').value = record[0] || '';
-            document.getElementById('contract_clientName').value = record[1] || '';
-            document.getElementById('contract_masterContractNumber').value = record[2] || '';
-            document.getElementById('contract_clientAddress').value = record[3] || '';
-            document.getElementById('contract_authorizedPerson').value = record[4] || '';
+            document.getElementById('contract_recordId').value = record[1] || '';
+            document.getElementById('contract_clientName').value = record[2] || '';
+            document.getElementById('contract_masterContractNumber').value = record[3] || '';
+            document.getElementById('contract_clientAddress').value = record[4] || '';
+            document.getElementById('contract_authorizedPerson').value = record[5] || '';
+            document.getElementById('contract_authorizedPersonPosition').value = record[6] || '';
+            document.getElementById('contract_authorizedPersonPhone').value = record[7] || '';
+            document.getElementById('contract_authorizedPersonEmail').value = record[8] || '';
+            document.getElementById('contract_clientAdminNumber').value = record[9] || '';
+            document.getElementById('contract_clientAdminEmail').value = record[10] || '';
+            document.getElementById('contract_serviceType').value = record[19] || '';
+            document.getElementById('contract_contractDuration').value = record[16] || '';
+            document.getElementById('contract_contractValue').value = record[17] || '';
+            document.getElementById('contract_currency').value = record[18] || 'جنيه مصري';
+            document.getElementById('contract_scopeOfWork').value = record[20] || '';
+            document.getElementById('contract_siteName').value = record[21] || '';
+            document.getElementById('contract_sitePosition').value = record[22] || '';
+            document.getElementById('contract_specialTerms').value = record[23] || '';
+            document.getElementById('contract_contractTerms').value = record[24] || '';
+            document.getElementById('contract_additionalNotes').value = record[25] || '';
+            document.getElementById('contract_contractStatus').value = record[26] || 'نشط';
+            document.getElementById('contract_paymentMethod').value = record[27] || '';
+            document.getElementById('contract_paymentInfo').value = record[28] || '';
+            document.getElementById('contract_firstPaymentAmount').value = record[30] || '';
+            document.getElementById('contract_lastPaymentAmount').value = record[32] || '';
+            document.getElementById('contract_additionalAttachments').value = record[34] || '';
             
-            const contractDate = formatDateForInput(record[5] || '');
-            document.getElementById('contract_contractDate_day').value = contractDate.day;
-            document.getElementById('contract_contractDate_month').value = contractDate.month;
-            document.getElementById('contract_contractDate_year').value = contractDate.year;
+            const contractLink = record[33] || '';
+            document.getElementById('contract_contractLink').value = contractLink;
             
-            const signDate = formatDateForInput(record[6] || '');
-            document.getElementById('contract_signDate_day').value = signDate.day;
-            document.getElementById('contract_signDate_month').value = signDate.month;
-            document.getElementById('contract_signDate_year').value = signDate.year;
+            if (contractLink && contractLink.trim() !== '') {
+                document.getElementById('contractUploadedFileName').textContent = 'ملف العقد';
+                document.getElementById('contractUploadedFileInfo').style.display = 'block';
+                
+                const fileLinkBtn = document.getElementById('contractUploadedFileLink');
+                fileLinkBtn.href = contractLink;
+                fileLinkBtn.style.display = 'inline-block';
+                
+                const uploadStatus = document.getElementById('contractUploadStatus');
+                uploadStatus.textContent = '✅ ملف مرفق مسبقاً';
+                uploadStatus.className = 'upload-status success';
+            }
             
-            document.getElementById('contract_serviceType').value = record[7] || '';
-            document.getElementById('contract_agreementDuration').value = record[9] || '';
-            document.getElementById('contract_contractValue').value = record[10] || '';
-            document.getElementById('contract_scopeOfWork').value = record[11] || '';
-            document.getElementById('contract_siteName').value = record[12] || '';
-            document.getElementById('contract_sitePosition').value = record[13] || '';
-            document.getElementById('contract_specialTerms').value = record[14] || '';
-            document.getElementById('contract_notes').value = record[15] || '';
-            document.getElementById('contract_status').value = record[16] || '';
-            document.getElementById('contract_paymentMethod').value = record[17] || '';
+            // Set date fields using the new format functions
+            document.getElementById('contract_contractDate').value = formatDMYForInput(record[12] || '');
+            document.getElementById('contract_signDate').value = formatDMYForInput(record[13] || '');
+            document.getElementById('contract_startDate').value = formatDMYForInput(record[14] || '');
+            document.getElementById('contract_endDate').value = formatDMYForInput(record[15] || '');
+            document.getElementById('contract_firstPaymentDate').value = formatDMYForInput(record[29] || '');
+            document.getElementById('contract_lastPaymentDate').value = formatDMYForInput(record[31] || '');
+            
+            updateFlatpickrDate(flatpickrInstances.contract_contractDate, formatDMYForInput(record[12] || ''));
+            updateFlatpickrDate(flatpickrInstances.contract_signDate, formatDMYForInput(record[13] || ''));
+            updateFlatpickrDate(flatpickrInstances.contract_startDate, formatDMYForInput(record[14] || ''));
+            updateFlatpickrDate(flatpickrInstances.contract_endDate, formatDMYForInput(record[15] || ''));
+            updateFlatpickrDate(flatpickrInstances.contract_firstPaymentDate, formatDMYForInput(record[29] || ''));
+            updateFlatpickrDate(flatpickrInstances.contract_lastPaymentDate, formatDMYForInput(record[31] || ''));
             
             document.getElementById('contract_editingId').value = record[0];
+            document.getElementById('contract_internalRecordId').value = record[0];
+            
+            setTimeout(() => {
+                checkDuplicateContractNumber();
+            }, 100);
+        }
+        
+        function updateFlatpickrDate(instance, dateString) {
+            if (instance && dateString) {
+                try {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const year = parseInt(parts[2], 10);
+                        const dateObj = new Date(year, month, day);
+                        instance.setDate(dateObj, false);
+                    }
+                } catch (e) {
+                    console.error('Error setting date:', e);
+                }
+            }
         }
         
         async function updateContractRecord() {
+            if (checkDuplicateContractNumber()) {
+                showNotification('❌ رقم العقد هذا موجود مسبقاً. يرجى استخدام رقم آخر.', 'error');
+                return;
+            }
+
             const recordId = document.getElementById('contract_editingId').value;
             if (!recordId) {
                 showNotification('❌ لم يتم تحديد عقد للتحديث', 'error');
                 return;
             }
-            
+
+            const requiredFields = ['contract_recordId', 'contract_clientName'];
+            if (!validateForm(requiredFields)) {
+                showNotification('⚠️ يرجى ملء الحقول المطلوبة', 'warning');
+                return;
+            }
+
+            const contractDate = document.getElementById('contract_contractDate').value;
+            const signDate = document.getElementById('contract_signDate').value;
+            const startDate = document.getElementById('contract_startDate').value;
+            const endDate = document.getElementById('contract_endDate').value;
+            const firstPaymentDate = document.getElementById('contract_firstPaymentDate').value;
+            const lastPaymentDate = document.getElementById('contract_lastPaymentDate').value;
+
             const button = document.getElementById('contract_updateBtn');
             const originalHtml = button.innerHTML;
-            
+
             button.disabled = true;
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري التحديث...';
-            
-            const contractDate = getDateString(
-                document.getElementById('contract_contractDate_day').value,
-                document.getElementById('contract_contractDate_month').value,
-                document.getElementById('contract_contractDate_year').value
-            );
-            
-            const signDate = getDateString(
-                document.getElementById('contract_signDate_day').value,
-                document.getElementById('contract_signDate_month').value,
-                document.getElementById('contract_signDate_year').value
-            );
-            
-            const formData = {
-                recordId: document.getElementById('contract_recordId').value,
-                clientName: document.getElementById('contract_clientName').value,
-                masterContractNumber: document.getElementById('contract_masterContractNumber').value,
-                clientAddress: document.getElementById('contract_clientAddress').value,
-                authorizedPerson: document.getElementById('contract_authorizedPerson').value,
-                contractDate: contractDate,
-                signDate: signDate,
-                serviceType: document.getElementById('contract_serviceType').value,
-                agreementDuration: document.getElementById('contract_agreementDuration').value,
-                contractValue: document.getElementById('contract_contractValue').value,
-                scopeOfWork: document.getElementById('contract_scopeOfWork').value,
-                siteName: document.getElementById('contract_siteName').value,
-                sitePosition: document.getElementById('contract_sitePosition').value,
-                specialTerms: document.getElementById('contract_specialTerms').value,
-                notes: document.getElementById('contract_notes').value,
-                status: document.getElementById('contract_status').value,
-                paymentMethod: document.getElementById('contract_paymentMethod').value
+
+            const contractLink = document.getElementById('contract_contractLink').value;
+
+            const contractDateDMY = contractDate ? formatDateToDMY(parseDateDDMMYYYY(contractDate)) : '';
+            const signDateDMY = signDate ? formatDateToDMY(parseDateDDMMYYYY(signDate)) : '';
+            const startDateDMY = startDate ? formatDateToDMY(parseDateDDMMYYYY(startDate)) : '';
+            const endDateDMY = endDate ? formatDateToDMY(parseDateDDMMYYYY(endDate)) : '';
+            const firstPaymentDateDMY = firstPaymentDate ? formatDateToDMY(parseDateDDMMYYYY(firstPaymentDate)) : '';
+            const lastPaymentDateDMY = lastPaymentDate ? formatDateToDMY(parseDateDDMMYYYY(lastPaymentDate)) : '';
+
+            const contractDuration = document.getElementById('contract_contractDuration').value;
+
+            const fields = [
+                'contract_recordId',
+                'contract_clientName',
+                'contract_masterContractNumber',
+                'contract_clientAddress',
+                'contract_authorizedPerson',
+                'contract_authorizedPersonPosition',
+                'contract_authorizedPersonPhone',
+                'contract_authorizedPersonEmail',
+                'contract_clientAdminNumber',
+                'contract_clientAdminEmail',
+                'contract_serviceType',
+                'contract_contractValue',
+                'contract_currency',
+                'contract_scopeOfWork',
+                'contract_siteName',
+                'contract_sitePosition',
+                'contract_specialTerms',
+                'contract_contractTerms',
+                'contract_additionalNotes',
+                'contract_contractStatus',
+                'contract_paymentMethod',
+                'contract_paymentInfo',
+                'contract_firstPaymentAmount',
+                'contract_lastPaymentAmount',
+                'contract_additionalAttachments'
+            ];
+
+            const paramMap = {
+                'contract_recordId': 'recordId',
+                'contract_clientName': 'clientName',
+                'contract_masterContractNumber': 'masterContractNumber',
+                'contract_clientAddress': 'clientAddress',
+                'contract_authorizedPerson': 'authorizedPerson',
+                'contract_authorizedPersonPosition': 'authorizedPersonPosition',
+                'contract_authorizedPersonPhone': 'authorizedPersonPhone',
+                'contract_authorizedPersonEmail': 'authorizedPersonEmail',
+                'contract_clientAdminNumber': 'clientAdminNumber',
+                'contract_clientAdminEmail': 'clientAdminEmail',
+                'contract_serviceType': 'serviceType',
+                'contract_contractValue': 'contractValue',
+                'contract_currency': 'currency',
+                'contract_scopeOfWork': 'scopeOfWork',
+                'contract_siteName': 'siteName',
+                'contract_sitePosition': 'sitePosition',
+                'contract_specialTerms': 'specialTerms',
+                'contract_contractTerms': 'contractTerms',
+                'contract_additionalNotes': 'additionalNotes',
+                'contract_contractStatus': 'contractStatus',
+                'contract_paymentMethod': 'paymentMethod',
+                'contract_paymentInfo': 'paymentInfo',
+                'contract_firstPaymentAmount': 'firstPaymentAmount',
+                'contract_lastPaymentAmount': 'lastPaymentAmount',
+                'contract_additionalAttachments': 'additionalAttachments'
             };
+
+            let q = `internalRecordId=${encodeURIComponent(recordId)}&`;
+
+            fields.forEach(f => {
+                const paramName = paramMap[f];
+                q += `${paramName}=${encodeURIComponent(document.getElementById(f).value || '')}&`;
+            });
+
+            q += `contractDuration=${encodeURIComponent(contractDuration || '0')}&`;
             
+            q += `contractDate=${encodeURIComponent(contractDateDMY)}&`;
+            q += `signDate=${encodeURIComponent(signDateDMY)}&`;
+            q += `startDate=${encodeURIComponent(startDateDMY)}&`;
+            q += `endDate=${encodeURIComponent(endDateDMY)}&`;
+            q += `firstPaymentDate=${encodeURIComponent(firstPaymentDateDMY)}&`;
+            q += `lastPaymentDate=${encodeURIComponent(lastPaymentDateDMY)}&`;
+            q += `contractLink=${encodeURIComponent(contractLink || '')}&`;
+            q += `email=${encodeURIComponent('')}`;
+
             try {
-                const result = await callGoogleScript(CONTRACT_SCRIPT_URL, 'update', formData);
-                
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                const res = await jsonp(`${CONTRACT_SCRIPT_URL}?action=update&${q}`);
+
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     resetContractForm();
                     await loadContractData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ غير معروف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في تحديث العقد`, 'error');
+                showNotification('❌ خطأ في التحديث', 'error');
+                console.error('Update error:', error);
             } finally {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
@@ -1201,51 +2428,133 @@
         function resetContractForm() {
             document.getElementById('contractForm').reset();
             document.getElementById('contract_editingId').value = '';
+            document.getElementById('contract_internalRecordId').value = '';
+            document.getElementById('contract_contractLink').value = '';
             document.getElementById('contract_addBtn').style.display = 'inline-block';
             document.getElementById('contract_updateBtn').style.display = 'none';
             document.querySelectorAll('#contractForm .is-invalid').forEach(el => {
                 el.classList.remove('is-invalid');
             });
+            
+            document.getElementById('duplicateContractNumberWarning').style.display = 'none';
+            isDuplicateContractNumber = false;
+            
+            document.getElementById('contract_serviceType').value = '';
+            document.getElementById('contract_currency').value = 'جنيه مصري';
+            document.getElementById('contract_contractStatus').value = 'نشط';
+            document.getElementById('contract_paymentMethod').value = '';
+            
+            selectedContractFile = null;
+            uploadedContractFileUrl = '';
+            
+            document.getElementById('contractUploadedFileInfo').style.display = 'none';
+            document.getElementById('contractUploadedFileLink').style.display = 'none';
+            document.getElementById('contractUploadStatus').textContent = '';
+            document.getElementById('contractUploadStatus').className = 'upload-status';
+            document.getElementById('contractFileInput').value = '';
+            
+            const today = new Date();
+            const todayFormatted = formatDateToDDMMYYYY(today);
+            
+            document.getElementById('contract_contractDate').value = todayFormatted;
+            document.getElementById('contract_startDate').value = todayFormatted;
+            
+            if (flatpickrInstances.contract_contractDate) {
+                flatpickrInstances.contract_contractDate.setDate(today, false);
+            }
+            
+            if (flatpickrInstances.contract_startDate) {
+                flatpickrInstances.contract_startDate.setDate(today, false);
+            }
+            
+            // Set end date to one year from now
+            const oneYearFromNow = new Date();
+            oneYearFromNow.setFullYear(today.getFullYear() + 1);
+            const oneYearFormatted = formatDateToDDMMYYYY(oneYearFromNow);
+            
+            document.getElementById('contract_endDate').value = oneYearFormatted;
+            if (flatpickrInstances.contract_endDate) {
+                flatpickrInstances.contract_endDate.setDate(oneYearFromNow, false);
+            }
+            
+            // Clear other dates
+            const otherDateFields = [
+                'contract_signDate',
+                'contract_firstPaymentDate',
+                'contract_lastPaymentDate'
+            ];
+            
+            otherDateFields.forEach(field => {
+                document.getElementById(field).value = '';
+                if (flatpickrInstances[field]) {
+                    flatpickrInstances[field].clear();
+                }
+            });
+            
+            calculateContractDuration();
         }
         
         function exportContractCSV() {
             if (contractRecords.length === 0) {
-                showNotification('⚠️ لا توجد عقود للتصدير', 'warning');
+                showNotification('⚠️ لا توجد بيانات للتصدير', 'warning');
                 return;
             }
             
-            showNotification('📥 جاري تصدير العقود...', 'info');
+            showNotification('📥 جاري تصدير بيانات العقود...', 'info');
             
             try {
                 const headers = [
-                    'رقم السجل', 'اسم العميل', 'رقم العقد الرئيسي', 'عنوان العميل',
-                    'الشخص المفوض', 'تاريخ العقد', 'تاريخ التوقيع', 'نوع الخدمة',
-                    'مدة الاتفاقية', 'قيمة العقد', 'نطاق العمل', 'اسم الموقع',
-                    'منصب الموقع', 'الشروط الخاصة', 'ملاحظات', 'حالة العقد', 'طريقة الدفع'
+                    'رقم العقد', 'اسم العميل', 'رقم العقد الرئيسي', 'عنوان العميل',
+                    'الشخص المفوض', 'منصب الشخص المفوض', 'رقم هاتف الشخص المفوض', 'البريد الإلكتروني للشخص المفوض',
+                    'الرقم الإداري للعميل', 'البريد الإلكتروني الإداري للعميل', 'البريد الإلكتروني',
+                    'تاريخ العقد', 'تاريخ التوقيع', 'تاريخ البدء', 'تاريخ الانتهاء',
+                    'مدة العقد (أشهر)', 'قيمة العقد', 'عملة الدفع', 'نوع الخدمة',
+                    'نطاق العمل', 'اسم الموقع', 'منصب الموقع', 'شروط خاصة',
+                    'بنود العقد', 'ملاحظات إضافية', 'حالة العقد', 'طريقة الدفع',
+                    'معلومات الدفع', 'تاريخ الدفعة الأولى', 'قيمة الدفعة الأولى',
+                    'تاريخ الدفعة الأخيرة', 'قيمة الدفعة الأخيرة', 'لينك العقد',
+                    'المرفقات الإضافية'
                 ];
                 
-                let csvContent = '\uFEFF';
+            let csvContent = '\uFEFF';
                 csvContent += headers.join(",") + "\r\n";
                 
                 contractRecords.forEach(record => {
                     const row = [
-                        record[0] || '',
                         record[1] || '',
                         record[2] || '',
                         record[3] || '',
                         record[4] || '',
-                        formatDate(record[5] || ''),
-                        formatDate(record[6] || ''),
+                        record[5] || '',
+                        record[6] || '',
                         record[7] || '',
+                        record[8] || '',
                         record[9] || '',
                         record[10] || '',
                         record[11] || '',
-                        record[12] || '',
-                        record[13] || '',
-                        record[14] || '',
-                        record[15] || '',
+                        formatDMYForDisplay(record[12] || '').replace(/<[^>]*>/g, ''),
+                        formatDMYForDisplay(record[13] || '').replace(/<[^>]*>/g, ''),
+                        formatDMYForDisplay(record[14] || '').replace(/<[^>]*>/g, ''),
+                        formatDMYForDisplay(record[15] || '').replace(/<[^>]*>/g, ''),
                         record[16] || '',
-                        record[17] || ''
+                        record[17] || '',
+                        record[18] || '',
+                        record[19] || '',
+                        record[20] || '',
+                        record[21] || '',
+                        record[22] || '',
+                        record[23] || '',
+                        record[24] || '',
+                        record[25] || '',
+                        record[26] || '',
+                        record[27] || '',
+                        record[28] || '',
+                        formatDMYForDisplay(record[29] || '').replace(/<[^>]*>/g, ''),
+                        record[30] || '',
+                        formatDMYForDisplay(record[31] || '').replace(/<[^>]*>/g, ''),
+                        record[32] || '',
+                        record[33] || '',
+                        record[34] || ''
                     ];
                     
                     const escapedRow = row.map(cell => {
@@ -1268,66 +2577,48 @@
                 
                 showNotification(`✅ تم تصدير ${contractRecords.length} عقد`, 'success');
             } catch (error) {
-                showNotification(`❌ خطأ في التصدير`, 'error');
+                showNotification('❌ خطأ في التصدير', 'error');
             }
         }
         
-        function printContracts() {
+        function printTable() {
+            window.print();
+        }
+        
+        function printDetails() {
+            const detailsContent = document.getElementById('detailsModalBody').innerHTML;
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
-                <html dir="rtl">
+                <html>
                 <head>
-                    <title>طباعة العقود</title>
+                    <title>تفاصيل العقد</title>
                     <style>
-                        body { font-family: 'Cairo', sans-serif; padding: 20px; }
-                        h1 { color: #e74c3c; text-align: center; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-                        th { background-color: #2c3e50; color: white; }
-                        @media print {
-                            button { display: none; }
-                        }
+                        body { font-family: 'Cairo', sans-serif; direction: rtl; padding: 20px; }
+                        h1 { color: #e74c3c; }
+                        .section { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+                        .label { font-weight: bold; color: #2c3e50; }
+                        .value { margin-right: 10px; }
+                        .print-header { text-align: center; margin-bottom: 30px; }
+                        .print-footer { text-align: center; margin-top: 30px; color: #7f8c8d; }
                     </style>
                 </head>
                 <body>
-                    <h1>قائمة العقود - معمل كواليتك إنترناشيونال</h1>
-                    <p>تاريخ الطباعة: ${document.getElementById('currentDate').textContent}</p>
-                    <p>عدد العقود: ${contractRecords.length}</p>
-                    <button onclick="window.print()" style="padding: 10px 20px; margin-bottom: 20px;">طباعة</button>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>رقم السجل</th>
-                                <th>اسم العميل</th>
-                                <th>رقم العقد</th>
-                                <th>نوع الخدمة</th>
-                                <th>قيمة العقد</th>
-                                <th>تاريخ العقد</th>
-                                <th>حالة العقد</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${contractRecords.map(record => `
-                                <tr>
-                                    <td>${escapeHtml(record[0] || '')}</td>
-                                    <td>${escapeHtml(record[1] || '')}</td>
-                                    <td>${escapeHtml(record[2] || '')}</td>
-                                    <td>${escapeHtml(record[7] || '')}</td>
-                                    <td>${escapeHtml(record[10] || '')}</td>
-                                    <td>${formatDate(record[5] || '')}</td>
-                                    <td>${escapeHtml(record[16] || '')}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                    <div class="print-header">
+                        <h1>تفاصيل العقد</h1>
+                        <p>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-SA')}</p>
+                    </div>
+                    ${detailsContent}
+                    <div class="print-footer">
+                        <p>نظام إدارة العقود المتكامل - معمل كواليتك إنترناشيونال</p>
+                    </div>
                 </body>
                 </html>
             `);
             printWindow.document.close();
+            printWindow.print();
         }
         
-        // ================ DETAILS VIEW FUNCTION ================
-        async function viewContractDetails(recordId) {
+        function viewDetails(recordId) {
             const record = contractRecords.find(r => 
                 String(r[0] || '').trim() === String(recordId).trim()
             );
@@ -1337,118 +2628,153 @@
                 return;
             }
             
-            const statusClass = getStatusClass(record[16] || '');
+            const contractLink = record[33] || '';
+            const actualStatus = getActualContractStatus(record);
             
-            const modalHtml = `
-                <div class="modal fade" id="detailsModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header modal-header-custom">
-                                <h5 class="modal-title">تفاصيل العقد: ${escapeHtml(record[0])}</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6 class="border-bottom pb-2 mb-3">معلومات العميل</h6>
-                                        <p><strong>رقم السجل:</strong> ${escapeHtml(record[0])}</p>
-                                        <p><strong>اسم العميل:</strong> ${escapeHtml(record[1])}</p>
-                                        <p><strong>رقم العقد الرئيسي:</strong> ${escapeHtml(record[2])}</p>
-                                        <p><strong>عنوان العميل:</strong> ${escapeHtml(record[3])}</p>
-                                        <p><strong>الشخص المفوض:</strong> ${escapeHtml(record[4])}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6 class="border-bottom pb-2 mb-3">معلومات العقد</h6>
-                                        <p><strong>تاريخ العقد:</strong> ${formatDate(record[5])}</p>
-                                        <p><strong>تاريخ التوقيع:</strong> ${formatDate(record[6])}</p>
-                                        <p><strong>نوع الخدمة:</strong> ${escapeHtml(record[7])}</p>
-                                        <p><strong>مدة الاتفاقية:</strong> ${escapeHtml(record[9])} شهر</p>
-                                        <p><strong>قيمة العقد:</strong> ${escapeHtml(record[10])}</p>
-                                        <p><strong>حالة العقد:</strong> <span class="${statusClass}">${escapeHtml(record[16] || '')}</span></p>
-                                        <p><strong>طريقة الدفع:</strong> ${escapeHtml(record[17] || '')}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="row mt-4">
-                                    <div class="col-md-6">
-                                        <h6 class="border-bottom pb-2 mb-3">موقع التنفيذ</h6>
-                                        <p><strong>اسم الموقع:</strong> ${escapeHtml(record[12] || '')}</p>
-                                        <p><strong>منصب الموقع:</strong> ${escapeHtml(record[13] || '')}</p>
-                                    </div>
-                                </div>
-                                
-                                ${record[11] ? `
-                                <div class="row mt-4">
-                                    <div class="col-md-12">
-                                        <h6 class="border-bottom pb-2 mb-3">نطاق العمل</h6>
-                                        <div class="bg-light p-3 rounded">${escapeHtml(record[11]).replace(/\n/g, '<br>')}</div>
-                                    </div>
-                                </div>
-                                ` : ''}
-                                
-                                ${record[14] ? `
-                                <div class="row mt-4">
-                                    <div class="col-md-12">
-                                        <h6 class="border-bottom pb-2 mb-3">الشروط الخاصة</h6>
-                                        <div class="bg-light p-3 rounded">${escapeHtml(record[14]).replace(/\n/g, '<br>')}</div>
-                                    </div>
-                                </div>
-                                ` : ''}
-                                
-                                ${record[15] ? `
-                                <div class="row mt-4">
-                                    <div class="col-md-12">
-                                        <h6 class="border-bottom pb-2 mb-3">ملاحظات</h6>
-                                        <div class="bg-light p-3 rounded">${escapeHtml(record[15]).replace(/\n/g, '<br>')}</div>
-                                    </div>
-                                </div>
-                                ` : ''}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-                                <button type="button" class="btn btn-primary" onclick="editContractRecord('${escapeHtml(record[0])}')" data-bs-dismiss="modal">
-                                    <i class="fas fa-edit me-1"></i> تعديل العقد
-                                </button>
-                            </div>
+            const detailsHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">معلومات العميل</h6>
+                            <p><span class="label">رقم العقد:</span> <span class="value">${escapeHtml(record[1] || '')}</span></p>
+                            <p><span class="label">اسم العميل:</span> <span class="value">${escapeHtml(record[2])}</span></p>
+                            <p><span class="label">رقم العقد الرئيسي:</span> <span class="value">${escapeHtml(record[3])}</span></p>
+                            <p><span class="label">عنوان العميل:</span> <span class="value">${escapeHtml(record[4])}</span></p>
+                            <p><span class="label">الرقم الإداري للعميل:</span> <span class="value">${escapeHtml(record[9])}</span></p>
+                            <p><span class="label">البريد الإلكتروني الإداري:</span> <span class="value">${escapeHtml(record[10])}</span></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">معلومات الشخص المفوض</h6>
+                            <p><span class="label">الشخص المفوض:</span> <span class="value">${escapeHtml(record[5])}</span></p>
+                            <p><span class="label">منصب الشخص المفوض:</span> <span class="value">${escapeHtml(record[6])}</span></p>
+                            <p><span class="label">رقم هاتف الشخص المفوض:</span> <span class="value">${escapeHtml(record[7])}</span></p>
+                            <p><span class="label">البريد الإلكتروني للشخص المفوض:</span> <span class="value">${escapeHtml(record[8])}</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">معلومات العقد</h6>
+                            <p><span class="label">نوع الخدمة:</span> <span class="value">${escapeHtml(record[19])}</span></p>
+                            <p><span class="label">تاريخ العقد:</span> <span class="value">${formatDMYForDisplay(record[12] || '')}</span></p>
+                            <p><span class="label">تاريخ التوقيع:</span> <span class="value">${formatDMYForDisplay(record[13] || '')}</span></p>
+                            <p><span class="label">تاريخ البدء:</span> <span class="value">${formatDMYForDisplay(record[14] || '')}</span></p>
+                            <p><span class="label">تاريخ الانتهاء:</span> <span class="value">${formatDMYForDisplay(record[15] || '')}</span></p>
+                            <p><span class="label">مدة العقد:</span> <span class="value">${escapeHtml(record[16])} شهر</span></p>
+                            <p><span class="label">قيمة العقد:</span> <span class="value">${escapeHtml(record[17])} ${escapeHtml(record[18])}</span></p>
+                            <p><span class="label">حالة العقد:</span> <span class="value"><span class="status-badge ${getStatusClass(actualStatus)}">${escapeHtml(actualStatus)}</span></span></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">موقع التنفيذ</h6>
+                            <p><span class="label">اسم الموقع:</span> <span class="value">${escapeHtml(record[21] || '')}</span></p>
+                            <p><span class="label">منصب الموقع:</span> <span class="value">${escapeHtml(record[22] || '')}</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">معلومات الدفع</h6>
+                            <p><span class="label">طريقة الدفع:</span> <span class="value">${escapeHtml(record[27] || '')}</span></p>
+                            <p><span class="label">معلومات الدفع:</span> <span class="value">${escapeHtml(record[28] || '')}</span></p>
+                            <p><span class="label">تاريخ الدفعة الأولى:</span> <span class="value">${formatDMYForDisplay(record[29] || '')}</span></p>
+                            <p><span class="label">قيمة الدفعة الأولى:</span> <span class="value">${escapeHtml(record[30] || '')}</span></p>
+                            <p><span class="label">تاريخ الدفعة الأخيرة:</span> <span class="value">${formatDMYForDisplay(record[31] || '')}</span></p>
+                            <p><span class="label">قيمة الدفعة الأخيرة:</span> <span class="value">${escapeHtml(record[32] || '')}</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                ${record[20] ? `
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">نطاق العمل</h6>
+                            <div class="bg-light p-3 rounded">${escapeHtml(record[20]).replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${record[24] ? `
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">بنود العقد</h6>
+                            <div class="bg-light p-3 rounded">${escapeHtml(record[24]).replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${record[23] ? `
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">الشروط الخاصة</h6>
+                            <div class="bg-light p-3 rounded">${escapeHtml(record[23]).replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${record[25] ? `
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">ملاحظات إضافية</h6>
+                            <div class="bg-light p-3 rounded">${escapeHtml(record[25]).replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${contractLink ? `
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="section mb-3">
+                            <h6 class="border-bottom pb-2 text-primary">ملف العقد</h6>
+                            <p>
+                                <a href="${escapeHtml(contractLink)}" target="_blank" class="file-link-btn">
+                                    <i class="fas fa-external-link-alt me-1"></i> فتح ملف العقد
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>تاريخ الإنشاء: ${record[35] ? new Date(record[35]).toLocaleString('ar-SA') : 'غير معروف'} | تاريخ آخر تحديث: ${record[36] ? new Date(record[36]).toLocaleString('ar-SA') : 'غير معروف'}</small>
                         </div>
                     </div>
                 </div>
             `;
             
-            const existingModal = document.getElementById('detailsModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-            
-            document.getElementById('dynamicModalContainer').innerHTML = modalHtml;
-            
-            const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-            detailsModal.show();
+            document.getElementById('detailsModalBody').innerHTML = detailsHTML;
+            detailsModalInstance.show();
         }
         
-        function getStatusClass(status) {
-            switch(status) {
-                case 'نشط': return 'badge bg-success';
-                case 'منتهي': return 'badge bg-danger';
-                case 'موقف': return 'badge bg-warning';
-                case 'قيد المراجعة': return 'badge bg-info';
-                case 'مرفوض': return 'badge bg-dark';
-                default: return 'badge bg-secondary';
-            }
-        }
-        
-        // ================ DELETE FUNCTIONALITY ================
-        function showDeleteModal(recordId, recordName, serviceType) {
+        function showDeleteModal(recordId, recordName, recordNumber, serviceType) {
             deleteRecordId = recordId;
             deleteRecordName = recordName;
             deleteServiceType = serviceType;
             
-            document.getElementById('deleteRecordId').textContent = recordId || 'غير معروف';
+            document.getElementById('deleteRecordId').textContent = recordNumber || 'غير معروف';
             document.getElementById('deleteRecordName').textContent = recordName || 'غير معروف';
             document.getElementById('deleteServiceType').textContent = serviceType || 'غير معروف';
             
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
+            deleteModalInstance.show();
         }
         
         async function confirmDelete() {
@@ -1461,33 +2787,31 @@
             button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> جاري الحذف...';
             
             try {
-                const result = await callGoogleScript(CONTRACT_SCRIPT_URL, 'delete', { recordId: deleteRecordId });
+                const res = await jsonp(`${CONTRACT_SCRIPT_URL}?action=delete&recordId=${encodeURIComponent(deleteRecordId)}`);
                 
-                if (result.status === 'success') {
-                    showNotification(`✅ ${result.message}`, 'success');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+                
+                if (res && res.status === 'success') {
+                    showNotification(`✅ ${res.message}`, 'success');
                     
-                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-                    deleteModal.hide();
+                    deleteModalInstance.hide();
                     
                     deleteRecordId = '';
                     deleteRecordName = '';
                     deleteServiceType = '';
                     
-                    await loadContractData();
+                    loadContractData();
                 } else {
-                    showNotification(`❌ ${result.message}`, 'error');
+                    const errorMsg = res && res.message ? res.message : 'حدث خطأ أثناء الحذف';
+                    showNotification(`❌ ${errorMsg}`, 'error');
                 }
             } catch (error) {
-                showNotification(`❌ خطأ في حذف العقد`, 'error');
-            } finally {
+                console.error('Error deleting record:', error);
                 button.disabled = false;
                 button.innerHTML = originalHtml;
+                showNotification('❌ خطأ في الاتصال بالخادم', 'error');
             }
-        }
-        
-        // ================ HELPER FUNCTIONS ================
-        function updateTotalRecordsCount() {
-            document.getElementById('totalRecords').textContent = contractRecords.length.toLocaleString('ar-SA');
         }
     </script>
 </body>
