@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الملف الشخصي</title>
+    <title>الملف الشخصي – الربط الكامل مع السحابة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -89,23 +89,23 @@
             font-weight: 300;
         }
         
-        .logout-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 20px;
+        .status-badge {
+            background-color: var(--accent-color);
+            padding: 6px 15px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border: none;
+            color: white;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             transition: background-color 0.3s;
         }
-        
-        .logout-btn:hover {
-            background-color: #c0392b;
+        .status-badge:hover {
+            background-color: #16a085;
+        }
+        .status-badge i {
+            margin-left: 5px;
         }
         
         /* Navigation Tabs */
@@ -1186,7 +1186,7 @@
         
         @media (max-width: 768px) {
             .header-content { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .logout-btn { align-self: flex-start; }
+            .status-badge { align-self: flex-start; }
             .nav-tabs { top: 140px; }
             .nav-controls { flex-direction: column; gap: 15px; padding: 15px; }
             .nav-buttons { width: 100%; justify-content: space-between; }
@@ -1226,9 +1226,7 @@
                         <h1>الملف الشخصي</h1>
                     </div>
                 </div>
-                <button class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-                </button>
+                <button class="status-badge" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
             </div>
         </header>
         
@@ -1954,16 +1952,16 @@
                 <div class="impartiality-summary">
                     <h4>حالة متطلبات الحيادية</h4>
                     <div class="impartiality-status">
-                        <div class="status-icon incomplete" id="impartiality-policy-status-icon">
+                        <div class="status-icon incomplete" id="policy-status-icon">
                             <i class="fas fa-times"></i>
                         </div>
-                        <div class="status-text" id="impartiality-policy-status-text">لم تتم قراءة السياسة</div>
+                        <div class="status-text" id="policy-status-text">لم تتم الموافقة على السياسة</div>
                     </div>
                     <div class="impartiality-status">
-                        <div class="status-icon incomplete" id="impartiality-agreement-status-icon">
+                        <div class="status-icon incomplete" id="agreement-status-icon">
                             <i class="fas fa-times"></i>
                         </div>
-                        <div class="status-text" id="impartiality-agreement-status-text">لم تتم الموافقة على السياسة</div>
+                        <div class="status-text" id="agreement-status-text">لم يتم تأكيد الفهم</div>
                     </div>
                 </div>
             </section>
@@ -2038,13 +2036,13 @@
                         <div class="status-icon incomplete" id="confidentiality-policy-status-icon">
                             <i class="fas fa-times"></i>
                         </div>
-                        <div class="status-text" id="confidentiality-policy-status-text">لم تتم قراءة السياسة</div>
+                        <div class="status-text" id="confidentiality-policy-status-text">لم تتم الموافقة على السياسة</div>
                     </div>
                     <div class="impartiality-status">
                         <div class="status-icon incomplete" id="confidentiality-agreement-status-icon">
                             <i class="fas fa-times"></i>
                         </div>
-                        <div class="status-text" id="confidentiality-agreement-status-text">لم تتم الموافقة على السياسة</div>
+                        <div class="status-text" id="confidentiality-agreement-status-text">لم يتم تأكيد الفهم</div>
                     </div>
                 </div>
             </section>
@@ -2119,13 +2117,13 @@
                         <div class="status-icon incomplete" id="quality-policy-status-icon">
                             <i class="fas fa-times"></i>
                         </div>
-                        <div class="status-text" id="quality-policy-status-text">لم تتم قراءة السياسة</div>
+                        <div class="status-text" id="quality-policy-status-text">لم تتم الموافقة على السياسة</div>
                     </div>
                     <div class="impartiality-status">
                         <div class="status-icon incomplete" id="quality-agreement-status-icon">
                             <i class="fas fa-times"></i>
                         </div>
-                        <div class="status-text" id="quality-agreement-status-text">لم تتم الموافقة على السياسة</div>
+                        <div class="status-text" id="quality-agreement-status-text">لم يتم تأكيد الفهم</div>
                     </div>
                 </div>
             </section>
@@ -2184,6 +2182,7 @@
         // ================ إعدادات الربط مع الويب آب (ثابتة) ================
         const UPLOAD_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyeasGElv4TAkFoi8AqCtmMcVFzxwNylbUKKEjxYIDAUJGTFh2Ju9GqIn9ZY3HFNg/exec";  // رابط رفع الملفات
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC1xYFqoSs9BQgKUbbIRac0it4xJRBArEjo6KgoNl57q6ZTeW6CNR_q0P63Zc2Aex4/exec"; // رابط إدارة السجلات
+        const LOGIN_PAGE_URL = "https://qualinova7.github.io/QualiNova/"; // رابط صفحة تسجيل الدخول
 
         // ================ CONFIGURATION ================
         const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'application/pdf'];
@@ -2219,7 +2218,6 @@
         let currentRowNumber = null;          // رقم الصف في الشيت
         let currentRecordId = '';            // المعرف الفريد إن وُجد
         let currentElectronicNumber = '';    // الرقم الإلكتروني للموظف الحالي
-        let currentUserEmail = '';            // بريد المستخدم الحالي
 
         // ================ تعيين البادئات لكل ملف ================
         const FILE_PREFIX = {
@@ -2381,19 +2379,18 @@
             return dateObj ? formatDateToDDMMYYYY(dateObj) : dateString;
         }
 
-        // دالة للحصول على الوقت الحالي بصيغة DMYHMS (مطابقة لتنسيق Apps Script)
-        function getCurrentDateTimeDMYHMS() {
+        // دالة للحصول على الوقت الحالي بتنسيق D M Y H Min Sec (مثل نظام تسجيل الدخول)
+        function getEgyptDateTimeString() {
             const now = new Date();
-            // نستخدم توقيت القاهرة (UTC+2)
-            const options = { timeZone: 'Africa/Cairo', hour12: false };
-            const cairoStr = now.toLocaleString('en-US', options);
-            const cairoDate = new Date(cairoStr);
-            const day = cairoDate.getDate();
-            const month = cairoDate.getMonth() + 1;
-            const year = cairoDate.getFullYear();
-            const hour = cairoDate.getHours();
-            const minute = cairoDate.getMinutes();
-            const second = cairoDate.getSeconds();
+            const egyptDate = Utilities.formatDate(now, "Africa/Cairo", "yyyy-MM-dd HH:mm:ss");
+            const parts = egyptDate.split(' ')[0].split('-');
+            const timeParts = egyptDate.split(' ')[1].split(':');
+            const day = parseInt(parts[2], 10);
+            const month = parseInt(parts[1], 10);
+            const year = parseInt(parts[0], 10);
+            const hour = parseInt(timeParts[0], 10);
+            const minute = parseInt(timeParts[1], 10);
+            const second = parseInt(timeParts[2], 10);
             return `D${day} M${month} Y${year} H${hour} Min${minute} Sec${second}`;
         }
 
@@ -2415,10 +2412,9 @@
                 currentRowNumber = response.row;
                 const record = response.record;
                 currentRecordId = record[0] || '';
-                currentElectronicNumber = record[16] || ''; // الرقم الإلكتروني (col 17)
-                currentUserEmail = record[2] || ''; // البريد الإلكتروني (col 3)
+                currentElectronicNumber = record[16] || ''; // الرقم الإلكتروني
                 populateFormFromRecord(record);
-                showToast(`✅ تم تحميل السجل`, 'success');
+                showToast('✅ تم تحميل البيانات', 'success');
             } else {
                 showToast('❌ لم يتم العثور على سجل بهذا المعرف', 'error');
             }
@@ -2430,9 +2426,7 @@
             setValue('full-name', record[44]);
             setValue('english-name', record[47]);
             setValue('national-id', record[50]);
-            
             setValue('birth-date', formatDMYForInput(record[51])); 
-            
             setValue('birth-place', record[52]);
             setValue('nationality', record[53]);
             if (record[53] === 'آخر') document.getElementById('other-nationality-container').style.display = 'block';
@@ -3298,131 +3292,106 @@
             }
         }
 
+        // تحديث حالة الحيادية بناءً على الـ checkboxes فقط
         function updateImpartialityStatus() {
             const agreement1 = document.getElementById('impartiality-agreement');
             const agreement2 = document.getElementById('impartiality-understanding');
             
-            // تعتمد الحالة على خانة الاختيار فقط (وليس على تحميل iframe)
-            const policyRead = agreement1 && agreement1.checked;
-            const policyAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
+            const policyStatusIcon = document.getElementById('policy-status-icon');
+            const policyStatusText = document.getElementById('policy-status-text');
             
-            impartialityAgreed = policyAgreed;
-            
-            const policyStatusIcon = document.getElementById('impartiality-policy-status-icon');
-            const policyStatusText = document.getElementById('impartiality-policy-status-text');
-            
-            if (policyRead) {
+            if (agreement1 && agreement1.checked) {
                 policyStatusIcon.className = 'status-icon complete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
-                policyStatusText.textContent = 'تمت قراءة السياسة';
+                policyStatusText.textContent = 'تمت الموافقة على السياسة';
             } else {
                 policyStatusIcon.className = 'status-icon incomplete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-times"></i>';
-                policyStatusText.textContent = 'لم تتم قراءة السياسة';
+                policyStatusText.textContent = 'لم تتم الموافقة على السياسة';
             }
             
-            const agreementStatusIcon = document.getElementById('impartiality-agreement-status-icon');
-            const agreementStatusText = document.getElementById('impartiality-agreement-status-text');
+            const agreementStatusIcon = document.getElementById('agreement-status-icon');
+            const agreementStatusText = document.getElementById('agreement-status-text');
             
-            if (policyAgreed) {
+            if (agreement2 && agreement2.checked) {
                 agreementStatusIcon.className = 'status-icon complete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
-                agreementStatusText.textContent = 'تمت الموافقة على السياسة';
+                agreementStatusText.textContent = 'تم تأكيد الفهم';
             } else {
                 agreementStatusIcon.className = 'status-icon incomplete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-times"></i>';
-                agreementStatusText.textContent = 'لم تتم الموافقة على السياسة';
+                agreementStatusText.textContent = 'لم يتم تأكيد الفهم';
             }
             
-            if (policyAgreed) {
-                savedSections.add(7);
-            } else if (savedSections.has(7)) {
-                savedSections.delete(7);
-            }
+            savedSections.add(7); // يمكن تركه لتحديد أن القسم تم زيارته
         }
         
+        // تحديث حالة السرية بناءً على الـ checkboxes فقط
         function updateConfidentialityStatus() {
             const agreement1 = document.getElementById('confidentiality-agreement');
             const agreement2 = document.getElementById('confidentiality-understanding');
             
-            const policyRead = agreement1 && agreement1.checked;
-            const policyAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
-            
-            confidentialityAgreed = policyAgreed;
-            
             const policyStatusIcon = document.getElementById('confidentiality-policy-status-icon');
             const policyStatusText = document.getElementById('confidentiality-policy-status-text');
             
-            if (policyRead) {
+            if (agreement1 && agreement1.checked) {
                 policyStatusIcon.className = 'status-icon complete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
-                policyStatusText.textContent = 'تمت قراءة السياسة';
+                policyStatusText.textContent = 'تمت الموافقة على السياسة';
             } else {
                 policyStatusIcon.className = 'status-icon incomplete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-times"></i>';
-                policyStatusText.textContent = 'لم تتم قراءة السياسة';
+                policyStatusText.textContent = 'لم تتم الموافقة على السياسة';
             }
             
             const agreementStatusIcon = document.getElementById('confidentiality-agreement-status-icon');
             const agreementStatusText = document.getElementById('confidentiality-agreement-status-text');
             
-            if (policyAgreed) {
+            if (agreement2 && agreement2.checked) {
                 agreementStatusIcon.className = 'status-icon complete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
-                agreementStatusText.textContent = 'تمت الموافقة على السياسة';
+                agreementStatusText.textContent = 'تم تأكيد الفهم';
             } else {
                 agreementStatusIcon.className = 'status-icon incomplete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-times"></i>';
-                agreementStatusText.textContent = 'لم تتم الموافقة على السياسة';
+                agreementStatusText.textContent = 'لم يتم تأكيد الفهم';
             }
             
-            if (policyAgreed) {
-                savedSections.add(8);
-            } else if (savedSections.has(8)) {
-                savedSections.delete(8);
-            }
+            savedSections.add(8);
         }
         
+        // تحديث حالة الجودة بناءً على الـ checkboxes فقط
         function updateQualityStatus() {
             const agreement1 = document.getElementById('quality-agreement');
             const agreement2 = document.getElementById('quality-understanding');
             
-            const policyRead = agreement1 && agreement1.checked;
-            const policyAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
-            
-            qualityAgreed = policyAgreed;
-            
             const policyStatusIcon = document.getElementById('quality-policy-status-icon');
             const policyStatusText = document.getElementById('quality-policy-status-text');
             
-            if (policyRead) {
+            if (agreement1 && agreement1.checked) {
                 policyStatusIcon.className = 'status-icon complete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
-                policyStatusText.textContent = 'تمت قراءة السياسة';
+                policyStatusText.textContent = 'تمت الموافقة على السياسة';
             } else {
                 policyStatusIcon.className = 'status-icon incomplete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-times"></i>';
-                policyStatusText.textContent = 'لم تتم قراءة السياسة';
+                policyStatusText.textContent = 'لم تتم الموافقة على السياسة';
             }
             
             const agreementStatusIcon = document.getElementById('quality-agreement-status-icon');
             const agreementStatusText = document.getElementById('quality-agreement-status-text');
             
-            if (policyAgreed) {
+            if (agreement2 && agreement2.checked) {
                 agreementStatusIcon.className = 'status-icon complete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
-                agreementStatusText.textContent = 'تمت الموافقة على السياسة';
+                agreementStatusText.textContent = 'تم تأكيد الفهم';
             } else {
                 agreementStatusIcon.className = 'status-icon incomplete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-times"></i>';
-                agreementStatusText.textContent = 'لم تتم الموافقة على السياسة';
+                agreementStatusText.textContent = 'لم يتم تأكيد الفهم';
             }
             
-            if (policyAgreed) {
-                savedSections.add(9);
-            } else if (savedSections.has(9)) {
-                savedSections.delete(9);
-            }
+            savedSections.add(9);
         }
 
         function generateSummary() {
@@ -3701,11 +3670,11 @@
                     <div class="summary-grid">
                         <div class="summary-item">
                             <div class="summary-label">الموافقة على السياسة</div>
-                            <div class="summary-value">${impartialityAgreedSummary ? 'نعم' : '<span class="empty">لا</span>'}</div>
+                            <div class="summary-value">${impartialityAgreement1 && impartialityAgreement1.checked ? 'نعم' : '<span class="empty">لا</span>'}</div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-label">فهم السياسة</div>
-                            <div class="summary-value">${impartialityAgreedSummary ? 'نعم' : '<span class="empty">لا</span>'}</div>
+                            <div class="summary-value">${impartialityAgreement2 && impartialityAgreement2.checked ? 'نعم' : '<span class="empty">لا</span>'}</div>
                         </div>
                     </div>
                 </div>
@@ -3714,7 +3683,6 @@
             // Section 8
             const confidentialityAgreement1 = document.getElementById('confidentiality-agreement');
             const confidentialityAgreement2 = document.getElementById('confidentiality-understanding');
-            const confidentialityAgreedSummary = confidentialityAgreement1 && confidentialityAgreement1.checked && confidentialityAgreement2 && confidentialityAgreement2.checked;
             
             summaryHTML += `
                 <div class="summary-section">
@@ -3722,11 +3690,11 @@
                     <div class="summary-grid">
                         <div class="summary-item">
                             <div class="summary-label">الموافقة على السياسة</div>
-                            <div class="summary-value">${confidentialityAgreedSummary ? 'نعم' : '<span class="empty">لا</span>'}</div>
+                            <div class="summary-value">${confidentialityAgreement1 && confidentialityAgreement1.checked ? 'نعم' : '<span class="empty">لا</span>'}</div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-label">فهم السياسة</div>
-                            <div class="summary-value">${confidentialityAgreedSummary ? 'نعم' : '<span class="empty">لا</span>'}</div>
+                            <div class="summary-value">${confidentialityAgreement2 && confidentialityAgreement2.checked ? 'نعم' : '<span class="empty">لا</span>'}</div>
                         </div>
                     </div>
                 </div>
@@ -3735,7 +3703,6 @@
             // Section 9
             const qualityAgreement1 = document.getElementById('quality-agreement');
             const qualityAgreement2 = document.getElementById('quality-understanding');
-            const qualityAgreedSummary = qualityAgreement1 && qualityAgreement1.checked && qualityAgreement2 && qualityAgreement2.checked;
             
             summaryHTML += `
                 <div class="summary-section">
@@ -3743,11 +3710,11 @@
                     <div class="summary-grid">
                         <div class="summary-item">
                             <div class="summary-label">الموافقة على السياسة</div>
-                            <div class="summary-value">${qualityAgreedSummary ? 'نعم' : '<span class="empty">لا</span>'}</div>
+                            <div class="summary-value">${qualityAgreement1 && qualityAgreement1.checked ? 'نعم' : '<span class="empty">لا</span>'}</div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-label">فهم السياسة</div>
-                            <div class="summary-value">${qualityAgreedSummary ? 'نعم' : '<span class="empty">لا</span>'}</div>
+                            <div class="summary-value">${qualityAgreement2 && qualityAgreement2.checked ? 'نعم' : '<span class="empty">لا</span>'}</div>
                         </div>
                     </div>
                 </div>
@@ -3824,7 +3791,7 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء PDF...';
             btn.disabled = true;
             
-            generateSummary();
+            generateSummary(); // تحديث الملخص قبل التحميل
             
             const tempContainer = document.createElement('div');
             tempContainer.style.position = 'absolute';
@@ -3839,7 +3806,7 @@
             
             const titleDiv = document.createElement('div');
             titleDiv.innerHTML = `
-                <h1 style="text-align: center; color: #2c3e50; margin-bottom: 5px;">ملف البيانات الشخصية</h1>
+                <h1 style="text-align: center; color: #2c3e50; margin-bottom: 5px;">الملف الشخصي</h1>
                 <p style="text-align: center; color: #666; margin-bottom: 20px;">تاريخ الإنشاء: ${new Date().toLocaleDateString('ar-EG')}</p>
                 <hr style="margin-bottom: 30px;">
             `;
@@ -3850,57 +3817,49 @@
             document.body.appendChild(tempContainer);
             
             html2canvas(tempContainer, {
-                scale: 2,
+                scale: 1.5, // استخدام scale أقل لتجنب التكرار والقطع
                 useCORS: true,
                 logging: false,
                 backgroundColor: '#ffffff',
-                windowWidth: 800,
-                onclone: function(clonedDoc) {
-                    // Ensure all elements are visible and correctly styled
-                    const clonedContainer = clonedDoc.querySelector('div');
-                    if (clonedContainer) {
-                        clonedContainer.style.width = '800px';
-                        clonedContainer.style.margin = '0 auto';
-                    }
-                }
+                windowWidth: 800
             }).then(canvas => {
                 document.body.removeChild(tempContainer);
                 
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jspdf.jsPDF({
-                    orientation: 'portrait',
+                    orientation: 'p',
                     unit: 'mm',
-                    format: 'a4',
-                    compress: true
+                    format: 'a4'
                 });
                 
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = 190; // mm (A4 width minus margins)
+                const pageHeight = 297; // mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 10;
                 
-                // احسب أبعاد الصورة بما يتناسب مع عرض الصفحة
-                const imgWidth = pdfWidth - 20; // هوامش 10 مم من الجانبين
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= (pageHeight - 20); // المساحة المستخدمة (من أعلى إلى أسفل الصفحة)
                 
-                let position = 10; // الهامش العلوي
-                let remainingHeight = imgHeight;
-                
-                // أضف الصفحة الأولى
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight, undefined, 'FAST');
-                remainingHeight -= (pdfHeight - 20); // اطرح ارتفاع الصفحة (مع الهوامش)
-                
-                let page = 2;
-                while (remainingHeight > 0) {
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight + 10; // الصفحة التالية تبدأ من الأسفل
                     pdf.addPage();
-                    position = 10 - (imgHeight * (page - 1)); // إزاحة لأعلى حسب الصفحة
-                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight, undefined, 'FAST');
-                    remainingHeight -= (pdfHeight - 20);
-                    page++;
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= (pageHeight - 20);
+                }
+                
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100);
+                    pdf.text(`الصفحة ${i} من ${totalPages}`, 105, 287, { align: 'center' });
                 }
                 
                 const userName = document.getElementById('full-name').value.trim() || 'غير_محدد';
                 const cleanName = userName.replace(/\s+/g, '_').replace(/[^\w\u0621-\u064A]/g, '');
                 
-                pdf.save(`ملف_البيانات_${cleanName}_${new Date().toISOString().slice(0, 10)}.pdf`);
+                pdf.save(`الملف_الشخصي_${cleanName}_${new Date().toISOString().slice(0, 10)}.pdf`);
                 
                 btn.innerHTML = originalText;
                 btn.disabled = false;
@@ -4119,7 +4078,7 @@
                     });
                 }
             }
-            fields.push({ field: 'workExperiences', value: JSON.stringify(experiences) });
+            fields.push({ field: 'experiences', value: JSON.stringify(experiences) });
             
             fields.push({ field: 'impartialityAgreement', value: document.getElementById('impartiality-agreement').checked ? 'نعم' : 'لا' });
             fields.push({ field: 'impartialityUnderstanding', value: document.getElementById('impartiality-understanding').checked ? 'نعم' : 'لا' });
@@ -4132,7 +4091,7 @@
         }
 
         // ================ دالة حفظ البيانات (تحديث السجل) ================
-        function submitEmployeeData(setProfileStatusWaiting = false) {
+        function submitEmployeeData(isFinalSubmit = false) {
             if (!currentRowNumber) { 
                 showToast('❌ لا يوجد سجل نشط. حمّل بيانات الموظف أولاً.', 'error'); 
                 return; 
@@ -4155,9 +4114,9 @@
                 }
             });
             
-            // إذا كان الطلب هو حفظ وإرسال النموذج، نضيف Profile status = waiting عبر col_13
-            if (setProfileStatusWaiting) {
-                params.append('col_13', 'waiting'); // العمود 13 هو Profile status
+            // إذا كان الإرسال النهائي (من القسم 10) نضيف حالة "waiting" للعمود Profile status (col 13)
+            if (isFinalSubmit) {
+                params.append('col_13', 'waiting');
             }
             
             jsonp(`${SCRIPT_URL}?${params.toString()}&callback=handleUpdateCallback`);
@@ -4165,44 +4124,45 @@
         }
 
         // ================ دالة تسجيل الخروج ================
-        function logoutUser() {
-            if (!currentUserEmail) {
-                // إذا لم يكن هناك بريد إلكتروني، نحاول من sessionStorage
-                currentUserEmail = sessionStorage.getItem('qualitech_email');
-            }
-            if (!currentUserEmail) {
-                showToast('لا توجد جلسة نشطة', 'error');
+        function logout() {
+            const email = sessionStorage.getItem('qualitech_email');
+            const electronicNumber = sessionStorage.getItem('qualitech_electronic_number');
+            const passwordNumber = sessionStorage.getItem('qualitech_password_number');
+            
+            if (!email || !electronicNumber || !passwordNumber) {
+                // إذا لم تكن هناك جلسة، نوجه مباشرة
+                window.location.href = LOGIN_PAGE_URL;
                 return;
             }
             
-            const signOutDate = getCurrentDateTimeDMYHMS();
+            const signOutDate = getEgyptDateTimeString();
             
-            // بناء طلب التحديث
+            // بناء رابط التحديث
             let params = new URLSearchParams();
             params.append('action', 'update');
-            params.append('email', currentUserEmail);
+            params.append('email', email);
+            params.append('electronicNumber', electronicNumber);
+            params.append('password', passwordNumber);
             params.append('Online/Offline Status', '0');
             params.append('Sign out date', signOutDate);
             
-            // يمكن أيضاً إضافة العمود المباشر
-            params.append('col_10', '0'); // Online/Offline Status col 10
-            params.append('col_12', signOutDate); // Sign out date col 12
+            const url = `${SCRIPT_URL}?${params.toString()}&callback=handleLogoutCallback`;
+            jsonp(url);
             
-            jsonp(`${SCRIPT_URL}?${params.toString()}&callback=handleLogoutCallback`);
+            showToast('جاري تسجيل الخروج...', 'info');
         }
 
         window.handleLogoutCallback = function(response) {
             if (response.status === 'success') {
-                showToast('تم تسجيل الخروج بنجاح', 'success');
-                // مسح الجلسة
                 sessionStorage.clear();
-                localStorage.removeItem('qualitech_remember_email');
-                // توجيه المستخدم إلى صفحة تسجيل الدخول (يمكن تعديل الرابط)
+                showToast('✅ تم تسجيل الخروج بنجاح', 'success');
                 setTimeout(() => {
-                    window.location.href = 'https://qualinova7.github.io/QualiNova/'; // رابط صفحة تسجيل الدخول
+                    window.location.href = LOGIN_PAGE_URL;
                 }, 1500);
             } else {
-                showToast('فشل تسجيل الخروج: ' + response.message, 'error');
+                showToast('❌ فشل تسجيل الخروج، سيتم إنهاء الجلسة محلياً', 'error');
+                sessionStorage.clear();
+                window.location.href = LOGIN_PAGE_URL;
             }
         };
 
@@ -4280,13 +4240,13 @@
                 submitEmployeeData(false); 
             });
             document.getElementById('submitBtn').addEventListener('click', function() { 
-                submitEmployeeData(true); // تمرير true لتعيين Profile status = waiting
+                submitEmployeeData(true); 
             });
             document.getElementById('prevBtn').addEventListener('click', prevSection);
             document.getElementById('nextBtn').addEventListener('click', nextSection);
             document.getElementById('downloadPdfBtn').addEventListener('click', generatePDF);
             document.getElementById('add-experience-btn').addEventListener('click', addExperience);
-            document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
             
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
