@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualitech Calibration - Authentication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* (keep all existing styles exactly as provided) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        :root {
+            --primary-blue: #0066CC;
+            --primary-dark: #003366;
+            --primary-light: #4D94FF;
+            --accent-teal: #00A896;
+            --gray-light: #F5F7FA;
+            --gray-medium: #E1E5EB;
+            --gray-dark: #6B7280;
+            --white: #FFFFFF;
+            --shadow: 0 8px 24px rgba(0, 51, 102, 0.08);
+            --radius: 12px;
+            --success-green: #2ecc71;
+            --error-red: #e74c3c;
+        }
+        
+        body {
+            background-color: var(--gray-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: linear-gradient(135deg, rgba(0, 102, 204, 0.03) 0%, rgba(0, 168, 150, 0.03) 100%);
+        }
+        
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            height: auto;
+            min-height: 700px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .left-section {
+            flex: 1;
+            background: linear-gradient(145deg, var(--primary-dark), var(--primary-blue));
+            color: var(--white);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .left-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        
+        .left-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-icon {
+            background-color: var(--white);
+            color: var(--primary-blue);
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .left-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .left-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        
+        .left-description {
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .features {
+            margin-top: 40px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .feature-icon {
+            background-color: rgba(255, 255, 255, 0.15);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+        }
+        
+        .right-section {
+            flex: 1;
+            background-color: var(--white);
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .right-title {
+            color: var(--primary-dark);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .right-subtitle {
+            color: var(--gray-dark);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 2px solid var(--gray-medium);
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: var(--white);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-dark);
+            font-size: 18px;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-dark);
+            font-size: 18px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+        
+        .remember-checkbox {
+            margin-right: 8px;
+            accent-color: var(--primary-blue);
+        }
+        
+        .forgot-password {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+        
+        .forgot-password:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .signin-button, .modal-button {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 25px;
+        }
+        
+        .signin-button:hover, .modal-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: var(--gray-dark);
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--gray-medium);
+        }
+        
+        .divider-text {
+            padding: 0 15px;
+            font-size: 15px;
+        }
+        
+        .signup-button {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+            border-radius: var(--radius);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .signup-button:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 24px;
+            color: var(--gray-dark);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .modal-title {
+            color: var(--primary-dark);
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .modal-text {
+            color: var(--gray-dark);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .modal-form-group {
+            margin-bottom: 20px;
+        }
+        
+        .modal-form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-form-col {
+            flex: 1;
+        }
+        
+        .gender-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .gender-option {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--gray-medium);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .gender-option:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(77, 148, 255, 0.05);
+        }
+        
+        .gender-option.selected {
+            border-color: var(--primary-blue);
+            background-color: rgba(0, 102, 204, 0.1);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .status-loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--gray-dark);
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            margin-top: 10px;
+        }
+        
+        .footer-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .otp-resent {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--accent-teal);
+            font-weight: 600;
+        }
+        
+        .match-status {
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .match-valid {
+            color: var(--success-green);
+        }
+        
+        .match-invalid {
+            color: var(--error-red);
+        }
+        
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                max-width: 600px;
+            }
+            
+            .left-section, .right-section {
+                padding: 40px 30px;
+            }
+            
+            .left-section {
+                order: 2;
+            }
+            
+            .right-section {
+                order: 1;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .left-section, .right-section {
+                padding: 30px 20px;
+            }
+            
+            .left-title {
+                font-size: 26px;
+            }
+            
+            .right-title {
+                font-size: 24px;
+            }
+            
+            .remember-forgot {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .forgot-password {
+                margin-top: 10px;
+            }
+            
+            .modal-content {
+                padding: 30px 20px;
+            }
+            
+            .gender-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 300px;"></div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Section with Company Info -->
+        <div class="left-section">
+            <div class="logo">
+                <div class="logo-icon">Q</div>
+                <div>
+                    <div class="logo-text">QUALITECH</div>
+                    <div class="tagline">Precision Calibration Solutions</div>
+                </div>
+            </div>
+            
+            <div class="left-content">
+                <h1 class="left-title">Precision Measurement Requires Trusted Calibration</h1>
+                <p class="left-description">Access your Qualitech account to manage calibration schedules, view certificates, and track equipment status across all your facilities.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="feature-text">ISO 17025 Accredited Certificates</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="feature-text">Complete Calibration History Tracking</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="feature-text">Automated Schedule Reminders</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Section with Login Form -->
+        <div class="right-section">
+            <h2 class="right-title">Sign In to Your Account</h2>
+            <p class="right-subtitle">Enter your credentials to access the Qualitech calibration portal</p>
+            
+            <div id="statusMessage" class="status-message"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="loginEmail" class="form-input" placeholder="you@company.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required>
+                        <button type="button" class="password-toggle" id="toggleLoginPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="remember-forgot">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" class="remember-checkbox">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-password" id="forgotPasswordLink">Forgot Password?</a>
+                </div>
+                
+                <button type="submit" class="signin-button">Sign In</button>
+                
+                <div class="divider">
+                    <span class="divider-text">New to Qualitech?</span>
+                </div>
+                
+                <button type="button" class="signup-button" id="signupButton">Create Account</button>
+            </form>
+            
+            <div class="footer">
+                <p>© 2026 Qualitech Calibration Solutions. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sign Up Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <button class="close-button" id="closeSignupModal">&times;</button>
+            <h3 class="modal-title">Create Qualitech Account</h3>
+            <p class="modal-text">Fill out the form below to register for a Qualitech calibration portal account.</p>
+            
+            <div id="signupStatus" class="status-message"></div>
+            
+            <form id="signupForm">
+                <div class="form-group">
+                    <label class="form-label" for="signupEmail">Email Address *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="signupEmail" class="form-input" placeholder="you@company.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="confirmEmail">Confirm Email Address *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="confirmEmail" class="form-input" placeholder="Confirm your email" required>
+                    </div>
+                    <div id="emailMatchStatus" class="match-status"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="signupPassword">Password *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signupPassword" class="form-input" placeholder="Create a password (min 6 characters)" required>
+                        <button type="button" class="password-toggle" id="toggleSignupPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Confirm Password *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                        <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div id="passwordMatchStatus" class="match-status"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <div class="gender-container">
+                        <div class="gender-option" data-value="male">Male</div>
+                        <div class="gender-option" data-value="female">Female</div>
+                    </div>
+                    <input type="hidden" id="gender" value="">
+                </div>
+                
+                <button type="submit" class="modal-button">Register Account</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- OTP Verification Modal -->
+    <div class="modal" id="otpModal">
+        <div class="modal-content">
+            <button class="close-button" id="closeOtpModal">&times;</button>
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="font-size: 60px; color: var(--accent-teal); margin-bottom: 20px;">
+                    <i class="fas fa-mail-bulk"></i>
+                </div>
+                <h3 class="modal-title">Verify Your Email</h3>
+                <p class="modal-text">We've sent a 6-digit verification code to your email address. Please enter it below to complete your registration.</p>
+                
+                <div id="otpStatus" class="status-message"></div>
+                
+                <div class="form-group">
+                    <div class="input-with-icon" style="max-width: 300px; margin: 0 auto;">
+                        <i class="fas fa-key input-icon"></i>
+                        <input type="text" id="otpCode" class="form-input" placeholder="Enter 6-digit code" maxlength="6" pattern="\d{6}" inputmode="numeric">
+                    </div>
+                </div>
+                
+                <div class="otp-resent" id="otpResentMessage" style="display: none;">
+                    A new code has been sent to your email.
+                </div>
+                
+                <button class="modal-button" id="verifyOtpButton">Verify & Activate Account</button>
+                <button class="signup-button" id="resendOtpButton" style="margin-top: 10px;">Resend Code</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <button class="close-button" id="closeSuccessModal">&times;</button>
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="font-size: 60px; color: var(--accent-teal); margin-bottom: 20px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="modal-title">Account Verified Successfully!</h3>
+                <p class="modal-text">Your Qualitech account has been verified and activated. You can now sign in with your email and password.</p>
+                <button class="modal-button" id="goToHomePageButton">Go to Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgotPasswordModal">
+        <div class="modal-content">
+            <button class="close-button" id="closeForgotModal">&times;</button>
+            <h3 class="modal-title">Reset Your Password</h3>
+            <p class="modal-text">Enter your email address and we'll send you your current password via email.</p>
+            
+            <div id="forgotPasswordStatus" class="status-message"></div>
+            
+            <div class="form-group">
+                <label class="form-label" for="resetEmail">Email Address</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="resetEmail" class="form-input" placeholder="you@company.com" required>
+                </div>
+            </div>
+            
+            <button class="modal-button" id="sendResetLink">Send Password via Email</button>
+        </div>
+    </div>
+
+    <script>
+        // IMPORTANT: Your Google Apps Script Web App URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC1xYFqoSs9BQgKUbbIRac0it4xJRBArEjo6KgoNl57q6ZTeW6CNR_q0P63Zc2Aex4/exec";
+        
+        // Websites for redirection
+        const HOME_PAGE_URL = "https://qualinova7.github.io/QualiNova/";
+        const DEFAULT_REDIRECT_URL = "file:///C:/Users/DELL/Downloads/startpagesfinished/New%20folder/1.html";
+        
+        // State management
+        let currentUserEmail = '';
+        let signupFormData = {};
+        let isProcessing = false;
+        
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const signupButton = document.getElementById('signupButton');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+        const signupPasswordInput = document.getElementById('signupPassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        
+        // Modal Elements
+        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+        const signupModal = document.getElementById('signupModal');
+        const otpModal = document.getElementById('otpModal');
+        const successModal = document.getElementById('successModal');
+        
+        // Close buttons
+        const closeForgotModal = document.getElementById('closeForgotModal');
+        const closeSignupModal = document.getElementById('closeSignupModal');
+        const closeOtpModal = document.getElementById('closeOtpModal');
+        const closeSuccessModal = document.getElementById('closeSuccessModal');
+        
+        // Action buttons
+        const sendResetLink = document.getElementById('sendResetLink');
+        const signupForm = document.getElementById('signupForm');
+        const verifyOtpButton = document.getElementById('verifyOtpButton');
+        const resendOtpButton = document.getElementById('resendOtpButton');
+        const goToHomePageButton = document.getElementById('goToHomePageButton');
+        
+        // Status message elements
+        const statusMessage = document.getElementById('statusMessage');
+        const signupStatus = document.getElementById('signupStatus');
+        const otpStatus = document.getElementById('otpStatus');
+        const otpResentMessage = document.getElementById('otpResentMessage');
+        const forgotPasswordStatus = document.getElementById('forgotPasswordStatus');
+        
+        // Match status elements
+        const emailMatchStatus = document.getElementById('emailMatchStatus');
+        const passwordMatchStatus = document.getElementById('passwordMatchStatus');
+        
+        // Notification system
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="background: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'}; color: white; padding: 12px 16px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}" style="margin-right: 10px;"></i>
+                            <span>${message}</span>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">×</button>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, duration);
+            }
+        }
+        
+        /* =====================
+           UTILITY FUNCTIONS
+        ===================== */
+        function setStatus(message, type = 'success', element = statusMessage) {
+            element.textContent = message;
+            element.className = 'status-message status-' + type;
+            element.style.display = 'block';
+            
+            if (type === 'success' || type === 'error') {
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        function jsonp(url, callbackName) {
+            return new Promise((resolve, reject) => {
+                // Remove old script if exists
+                const oldScript = document.getElementById('jsonpScript');
+                if (oldScript) oldScript.remove();
+                
+                // Create unique callback name
+                const uniqueCallback = callbackName + '_' + Date.now();
+                
+                // Create script element
+                const script = document.createElement('script');
+                script.id = 'jsonpScript';
+                script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + uniqueCallback;
+                
+                // Define the callback function
+                window[uniqueCallback] = function(response) {
+                    delete window[uniqueCallback];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    resolve(response);
+                };
+                
+                // Handle script loading errors
+                script.onerror = function() {
+                    delete window[uniqueCallback];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                    reject(new Error('JSONP request failed'));
+                };
+                
+                // Add script to document
+                document.body.appendChild(script);
+            });
+        }
+        
+        function closeAllModals() {
+            signupModal.style.display = 'none';
+            otpModal.style.display = 'none';
+            successModal.style.display = 'none';
+            forgotPasswordModal.style.display = 'none';
+        }
+        
+        function showLoading(button, text = 'Processing...') {
+            button.disabled = true;
+            button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+        }
+        
+        function hideLoading(button, originalText) {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
+        
+        function validateEmailMatch() {
+            const email = document.getElementById('signupEmail').value;
+            const confirmEmail = document.getElementById('confirmEmail').value;
+            
+            if (!email || !confirmEmail) {
+                emailMatchStatus.style.display = 'none';
+                return false;
+            }
+            
+            if (email === confirmEmail && email.includes('@')) {
+                emailMatchStatus.textContent = '✓ Emails match';
+                emailMatchStatus.className = 'match-status match-valid';
+                emailMatchStatus.style.display = 'block';
+                return true;
+            } else {
+                emailMatchStatus.textContent = '✗ Emails do not match';
+                emailMatchStatus.className = 'match-status match-invalid';
+                emailMatchStatus.style.display = 'block';
+                return false;
+            }
+        }
+        
+        function validatePasswordMatch() {
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!password || !confirmPassword) {
+                passwordMatchStatus.style.display = 'none';
+                return false;
+            }
+            
+            if (password === confirmPassword && password.length >= 6) {
+                passwordMatchStatus.textContent = '✓ Passwords match';
+                passwordMatchStatus.className = 'match-status match-valid';
+                passwordMatchStatus.style.display = 'block';
+                return true;
+            } else {
+                passwordMatchStatus.textContent = '✗ Passwords do not match';
+                passwordMatchStatus.className = 'match-status match-invalid';
+                passwordMatchStatus.style.display = 'block';
+                return false;
+            }
+        }
+        
+        /* =====================
+           PASSWORD VISIBILITY TOGGLE
+        ===================== */
+        function togglePasswordVisibility(inputElement, toggleButton) {
+            const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputElement.setAttribute('type', type);
+            
+            const eyeIcon = toggleButton.querySelector('i');
+            if (type === 'password') {
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            } else {
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            }
+        }
+        
+        toggleLoginPassword.addEventListener('click', function() {
+            togglePasswordVisibility(loginPasswordInput, this);
+        });
+        
+        if (toggleSignupPassword) {
+            toggleSignupPassword.addEventListener('click', function() {
+                togglePasswordVisibility(signupPasswordInput, this);
+            });
+        }
+        
+        if (toggleConfirmPassword) {
+            toggleConfirmPassword.addEventListener('click', function() {
+                togglePasswordVisibility(confirmPasswordInput, this);
+            });
+        }
+        
+        /* =====================
+           GENDER SELECTION
+        ===================== */
+        function initGenderSelection() {
+            const genderOptions = document.querySelectorAll('.gender-option');
+            const genderInput = document.getElementById('gender');
+            
+            genderOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    genderOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Set the hidden input value
+                    genderInput.value = this.getAttribute('data-value');
+                });
+            });
+        }
+        
+        /* =====================
+           MODAL CONTROLS
+        ===================== */
+        // Show Sign Up Modal
+        signupButton.addEventListener('click', function() {
+            closeAllModals();
+            signupModal.style.display = 'flex';
+            signupForm.reset();
+            signupStatus.style.display = 'none';
+            emailMatchStatus.style.display = 'none';
+            passwordMatchStatus.style.display = 'none';
+            
+            // Reset gender selection
+            const genderOptions = document.querySelectorAll('.gender-option');
+            genderOptions.forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('gender').value = '';
+            
+            // Focus on first input
+            setTimeout(() => {
+                document.getElementById('signupEmail').focus();
+            }, 300);
+        });
+        
+        // Show Forgot Password Modal
+        forgotPasswordLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeAllModals();
+            forgotPasswordModal.style.display = 'flex';
+            forgotPasswordStatus.style.display = 'none';
+            document.getElementById('resetEmail').value = '';
+            
+            // Auto-fill with login email if available
+            const loginEmail = document.getElementById('loginEmail').value;
+            if (loginEmail) {
+                document.getElementById('resetEmail').value = loginEmail;
+            }
+        });
+        
+        // Close Modals
+        closeForgotModal.addEventListener('click', function() {
+            forgotPasswordModal.style.display = 'none';
+        });
+        
+        closeSignupModal.addEventListener('click', function() {
+            signupModal.style.display = 'none';
+        });
+        
+        closeOtpModal.addEventListener('click', function() {
+            otpModal.style.display = 'none';
+        });
+        
+        closeSuccessModal.addEventListener('click', function() {
+            successModal.style.display = 'none';
+        });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === forgotPasswordModal) forgotPasswordModal.style.display = 'none';
+            if (event.target === signupModal) signupModal.style.display = 'none';
+            if (event.target === otpModal) otpModal.style.display = 'none';
+            if (event.target === successModal) successModal.style.display = 'none';
+        });
+        
+        // Go to Login from Success Modal
+        goToHomePageButton.addEventListener('click', function() {
+            successModal.style.display = 'none';
+        });
+        
+        /* =====================
+           SIGNUP FORM HANDLING
+        ===================== */
+        signupForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (isProcessing) return;
+            isProcessing = true;
+            
+            // Get form values
+            const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+            const confirmEmail = document.getElementById('confirmEmail').value.trim().toLowerCase();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const gender = document.getElementById('gender').value || 'male';
+            
+            // Validation
+            if (!email || !confirmEmail || !password || !confirmPassword) {
+                setStatus('Please fill in all required fields (*)', 'error', signupStatus);
+                isProcessing = false;
+                return;
+            }
+            
+            if (!validateEmailMatch()) {
+                setStatus('Emails do not match. Please check and try again.', 'error', signupStatus);
+                isProcessing = false;
+                return;
+            }
+            
+            if (!validatePasswordMatch()) {
+                setStatus('Passwords do not match or are too short (min 6 characters).', 'error', signupStatus);
+                isProcessing = false;
+                return;
+            }
+            
+            if (password.length < 6) {
+                setStatus('Password must be at least 6 characters long.', 'error', signupStatus);
+                isProcessing = false;
+                return;
+            }
+            
+            // Collect form data for submission
+            signupFormData = {
+                'Email': email,
+                'Password': password,
+                'Gender': gender
+            };
+            
+            const registerButton = this.querySelector('button[type="submit"]');
+            const originalButtonText = registerButton.innerHTML;
+            showLoading(registerButton, 'Checking email...');
+            
+            try {
+                // First check if email already exists
+                const checkUrl = `${SCRIPT_URL}?action=getByEmail&email=${encodeURIComponent(signupFormData.Email)}`;
+                
+                const checkResponse = await jsonp(checkUrl, 'handleEmailCheck');
+                
+                if (checkResponse.status === 'success') {
+                    setStatus('This email is already registered. Please use a different email or sign in.', 'error', signupStatus);
+                } else if (checkResponse.message === 'Record not found') {
+                    // Email is available, proceed with registration
+                    showLoading(registerButton, 'Creating account...');
+                    await registerNewUser();
+                } else {
+                    setStatus('Error checking email: ' + checkResponse.message, 'error', signupStatus);
+                }
+            } catch (error) {
+                setStatus('Network error. Please check your connection.', 'error', signupStatus);
+                console.error('Signup error:', error);
+            } finally {
+                hideLoading(registerButton, originalButtonText);
+                isProcessing = false;
+            }
+        });
+        
+        async function registerNewUser() {
+            try {
+                let url = `${SCRIPT_URL}?action=register`;
+                Object.keys(signupFormData).forEach(key => {
+                    if (signupFormData[key]) {
+                        url += `&${encodeURIComponent(key)}=${encodeURIComponent(signupFormData[key])}`;
+                    }
+                });
+                
+                const response = await jsonp(url, 'handleSignupResponse');
+                
+                if (response.status === 'success') {
+                    currentUserEmail = signupFormData.Email;
+                    signupModal.style.display = 'none';
+                    otpModal.style.display = 'flex';
+                    document.getElementById('otpCode').value = '';
+                    otpStatus.style.display = 'none';
+                    otpResentMessage.style.display = 'none';
+                    
+                    setStatus('Verification code sent to your email. Please check your inbox.', 'success', otpStatus);
+                    
+                    // Focus OTP input
+                    setTimeout(() => {
+                        document.getElementById('otpCode').focus();
+                    }, 300);
+                } else {
+                    setStatus('Registration failed: ' + response.message, 'error', signupStatus);
+                }
+            } catch (error) {
+                setStatus('Registration error. Please try again.', 'error', signupStatus);
+                console.error('Registration error:', error);
+            }
+        }
+        
+        /* =====================
+           OTP VERIFICATION
+        ===================== */
+        verifyOtpButton.addEventListener('click', async function() {
+            if (isProcessing) return;
+            
+            const otpCode = document.getElementById('otpCode').value.trim();
+            const originalButtonText = this.innerHTML;
+            
+            if (!otpCode || otpCode.length !== 6 || !/^\d+$/.test(otpCode)) {
+                setStatus('Please enter a valid 6-digit code', 'error', otpStatus);
+                return;
+            }
+            
+            if (!currentUserEmail) {
+                setStatus('Session error. Please try signing up again.', 'error', otpStatus);
+                return;
+            }
+            
+            isProcessing = true;
+            showLoading(this, 'Verifying...');
+            
+            try {
+                const url = `${SCRIPT_URL}?action=verifyOTP&email=${encodeURIComponent(currentUserEmail)}&otp=${encodeURIComponent(otpCode)}`;
+                
+                const response = await jsonp(url, 'handleVerifyOTPResponse');
+                
+                if (response.status === 'success') {
+                    otpModal.style.display = 'none';
+                    successModal.style.display = 'flex';
+                    setStatus('Account verified successfully!', 'success', otpStatus);
+                    
+                    // Show success notification
+                    showNotification('✅ Account verified successfully! You can now sign in.', 'success', 5000);
+                } else {
+                    setStatus('Invalid verification code. Please try again.', 'error', otpStatus);
+                    document.getElementById('otpCode').value = '';
+                    document.getElementById('otpCode').focus();
+                }
+            } catch (error) {
+                setStatus('Verification error. Please try again.', 'error', otpStatus);
+                console.error('OTP verification error:', error);
+            } finally {
+                hideLoading(this, originalButtonText);
+                isProcessing = false;
+            }
+        });
+        
+        resendOtpButton.addEventListener('click', async function() {
+            if (isProcessing) return;
+            
+            if (!currentUserEmail) {
+                setStatus('Session error. Please try signing up again.', 'error', otpStatus);
+                return;
+            }
+            
+            isProcessing = true;
+            const originalButtonText = this.innerHTML;
+            showLoading(this, 'Sending...');
+            
+            try {
+                const url = `${SCRIPT_URL}?action=resendOTP&email=${encodeURIComponent(currentUserEmail)}`;
+                
+                const response = await jsonp(url, 'handleResendOTPResponse');
+                
+                if (response.status === 'success') {
+                    otpResentMessage.style.display = 'block';
+                    setStatus('New verification code sent to your email.', 'success', otpStatus);
+                    
+                    setTimeout(() => {
+                        otpResentMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    setStatus('Failed to resend code: ' + response.message, 'error', otpStatus);
+                }
+            } catch (error) {
+                setStatus('Failed to resend code. Please try again.', 'error', otpStatus);
+                console.error('Resend OTP error:', error);
+            } finally {
+                hideLoading(this, originalButtonText);
+                isProcessing = false;
+            }
+        });
+        
+        /* =====================
+           LOGIN FORM HANDLING
+        ===================== */
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (isProcessing) return;
+            
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+            const loginButton = this.querySelector('button[type="submit"]');
+            const originalButtonText = loginButton.innerHTML;
+            
+            if (!email || !password) {
+                setStatus('Please enter email and password', 'error');
+                return;
+            }
+            
+            isProcessing = true;
+            showLoading(loginButton, 'Signing in...');
+            
+            try {
+                const url = `${SCRIPT_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+                
+                const response = await jsonp(url, 'handleLoginResponse');
+                
+                if (response.status === 'success') {
+                    setStatus('Login successful! Redirecting...', 'success');
+                    
+                    // Store user data in sessionStorage
+                    sessionStorage.setItem('qualitech_session', 'active');
+                    sessionStorage.setItem('qualitech_email', response.user.Email);
+                    sessionStorage.setItem('qualitech_electronic_number', response.user['الرقم الالكتروني']);
+                    sessionStorage.setItem('qualitech_password_number', response.user['رقم المرور']);
+                    sessionStorage.setItem('qualitech_unique_id', response.user['المعرف الفريد']);
+                    sessionStorage.setItem('qualitech_timestamp', Date.now());
+                    
+                    // Clear form
+                    loginForm.reset();
+                    
+                    // Show success notification with login time
+                    showNotification('✅ Login successful! Redirecting...', 'success', 3000);
+                    
+                    // Redirect based on Access Status
+                    setTimeout(() => {
+                        if (response.user['Access Status'] === 'Pass$Cal') {
+                            window.location.href = HOME_PAGE_URL;
+                        } else {
+                            window.location.href = DEFAULT_REDIRECT_URL;
+                        }
+                    }, 1500);
+                    
+                } else if (response.needsVerification) {
+                    setStatus('Your account needs verification. Please check your email for the verification code.', 'error');
+                    currentUserEmail = email;
+                    otpModal.style.display = 'flex';
+                    signupModal.style.display = 'none';
+                    
+                    // Auto-focus OTP input
+                    setTimeout(() => {
+                        document.getElementById('otpCode').focus();
+                    }, 300);
+                } else {
+                    setStatus('Login failed: ' + response.message, 'error');
+                }
+            } catch (error) {
+                setStatus('Network error. Please check your connection.', 'error');
+                console.error('Login error:', error);
+            } finally {
+                hideLoading(loginButton, originalButtonText);
+                isProcessing = false;
+            }
+        });
+        
+        /* =====================
+           FIXED FORGOT PASSWORD FUNCTIONALITY
+        ===================== */
+        sendResetLink.addEventListener('click', async function() {
+            const resetEmail = document.getElementById('resetEmail').value.trim().toLowerCase();
+            
+            if (!resetEmail || !resetEmail.includes('@')) {
+                setStatus('Please enter a valid email address.', 'error', forgotPasswordStatus);
+                showNotification('❌ Please enter a valid email address.', 'error', 3000);
+                return;
+            }
+            
+            const originalButtonText = this.innerHTML;
+            showLoading(this, 'Sending password...');
+            
+            try {
+                const url = `${SCRIPT_URL}?action=forgotPassword&email=${encodeURIComponent(resetEmail)}`;
+                
+                console.log('Sending forgot password request to:', url);
+                
+                const response = await jsonp(url, 'handleForgotPasswordResponse');
+                
+                console.log('Forgot password response:', response);
+                
+                if (response.status === 'success') {
+                    setStatus('Your password has been sent to your email address.', 'success', forgotPasswordStatus);
+                    
+                    // Show success notification
+                    showNotification('✅ Your password has been sent to your email. Please check your inbox.', 'success', 5000);
+                    
+                    // Close modal after 3 seconds
+                    setTimeout(() => {
+                        forgotPasswordModal.style.display = 'none';
+                        document.getElementById('resetEmail').value = '';
+                        
+                        // Auto-fill login form with the email
+                        document.getElementById('loginEmail').value = resetEmail;
+                        document.getElementById('loginPassword').focus();
+                    }, 3000);
+                } else {
+                    setStatus(response.message, 'error', forgotPasswordStatus);
+                    
+                    // Show error notification
+                    showNotification('❌ ' + response.message, 'error', 5000);
+                }
+            } catch (error) {
+                setStatus('Network error. Please try again.', 'error', forgotPasswordStatus);
+                showNotification('❌ Network error. Please check your connection.', 'error', 5000);
+                console.error('Forgot password error:', error);
+            } finally {
+                hideLoading(this, originalButtonText);
+            }
+        });
+        
+        /* =====================
+           INITIALIZATION
+        ===================== */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize gender selection
+            initGenderSelection();
+            
+            // Clear any status messages
+            statusMessage.style.display = 'none';
+            signupStatus.style.display = 'none';
+            otpStatus.style.display = 'none';
+            forgotPasswordStatus.style.display = 'none';
+            
+            // Add input event listeners for real-time validation
+            document.getElementById('signupEmail').addEventListener('input', validateEmailMatch);
+            document.getElementById('confirmEmail').addEventListener('input', validateEmailMatch);
+            document.getElementById('signupPassword').addEventListener('input', validatePasswordMatch);
+            document.getElementById('confirmPassword').addEventListener('input', validatePasswordMatch);
+            
+            // Add input event listener for OTP to auto-verify
+            const otpInput = document.getElementById('otpCode');
+            otpInput.addEventListener('input', function(e) {
+                // Remove non-numeric characters
+                this.value = this.value.replace(/\D/g, '');
+                
+                // Auto-verify when 6 digits are entered
+                if (this.value.length === 6 && !isProcessing) {
+                    verifyOtpButton.click();
+                }
+            });
+            
+            // Remember me functionality
+            const rememberCheckbox = document.getElementById('remember');
+            const loginEmailInput = document.getElementById('loginEmail');
+            
+            // Load saved email if remember me was checked
+            const savedEmail = localStorage.getItem('qualitech_remember_email');
+            if (savedEmail) {
+                loginEmailInput.value = savedEmail;
+                rememberCheckbox.checked = true;
+            }
+            
+            // Save email when checkbox is checked
+            rememberCheckbox.addEventListener('change', function() {
+                if (this.checked && loginEmailInput.value) {
+                    localStorage.setItem('qualitech_remember_email', loginEmailInput.value);
+                } else {
+                    localStorage.removeItem('qualitech_remember_email');
+                }
+            });
+            
+            // Check if SCRIPT_URL is properly set
+            if (!SCRIPT_URL || SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) {
+                console.error('Please update SCRIPT_URL in the JavaScript section with your Google Apps Script Web App URL');
+                setStatus('Please configure the app URL in the code', 'error');
+                showNotification('⚠️ Please configure the SCRIPT_URL in the code', 'error', 10000);
+            } else {
+                console.log('SCRIPT_URL is configured:', SCRIPT_URL);
+            }
+            
+            // Check if there's a session redirect
+            const session = sessionStorage.getItem('qualitech_session');
+            if (session === 'active') {
+                const timestamp = parseInt(sessionStorage.getItem('qualitech_timestamp') || '0');
+                const eightHours = 8 * 60 * 60 * 1000;
+                
+                if (Date.now() - timestamp < eightHours) {
+                    showNotification('Welcome back! You are already logged in.', 'success', 3000);
+                } else {
+                    sessionStorage.clear();
+                }
+            }
+        });
+        
+        // Helper to trigger modal shown event
+        const modalShownEvent = new Event('shown');
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const modal = mutation.target;
+                    if (modal.style.display === 'flex') {
+                        modal.dispatchEvent(modalShownEvent);
+                    }
+                }
+            });
+        });
+        
+        // Observe all modals
+        [signupModal, otpModal, successModal, forgotPasswordModal].forEach(modal => {
+            observer.observe(modal, { attributes: true });
+        });
+        
+        // Handle Enter key in forgot password modal
+        document.getElementById('resetEmail').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('sendResetLink').click();
+            }
+        });
+    </script>
+</body>
+</html>
