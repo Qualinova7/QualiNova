@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الملف الشخصي للموظفين – الربط الكامل مع السحابة</title>
+    <title>الملف الشخصي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -89,26 +89,23 @@
             font-weight: 300;
         }
         
-        .status-badge {
-            background-color: var(--accent-color);
-            padding: 6px 15px;
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 20px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
         }
         
-        /* شريط حالة السجل – يظهر بعد التحميل */
-        .record-status {
-            background: white;
-            padding: 10px 20px;
-            margin: 10px 30px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            color: var(--success-color);
-            font-weight: 600;
-            display: inline-block;
-            box-shadow: var(--shadow);
+        .logout-btn:hover {
+            background-color: #c0392b;
         }
         
         /* Navigation Tabs */
@@ -1189,7 +1186,7 @@
         
         @media (max-width: 768px) {
             .header-content { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .status-badge { align-self: flex-start; }
+            .logout-btn { align-self: flex-start; }
             .nav-tabs { top: 140px; }
             .nav-controls { flex-direction: column; gap: 15px; padding: 15px; }
             .nav-buttons { width: 100%; justify-content: space-between; }
@@ -1226,18 +1223,14 @@
                 <div class="logo">
                     <i class="fas fa-user-tie"></i>
                     <div>
-                        <h1>نظام الملف الشخصي للموظفين</h1>
-                        <div class="subtitle">نموذج متكامل مع رفع الملفات إلى Drive وتحديث السجل</div>
+                        <h1>الملف الشخصي</h1>
                     </div>
                 </div>
-                <div class="status-badge">الربط المباشر مع جدول البيانات</div>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
             </div>
         </header>
-        
-        <!-- شريط حالة السجل – يظهر بعد تحميل البيانات -->
-        <div class="record-status" id="recordStatus">
-            <i class="fas fa-spinner fa-spin"></i> جاري تحميل بيانات الموظف...
-        </div>
         
         <!-- Navigation Tabs -->
         <nav class="nav-tabs" id="navTabs">
@@ -1961,16 +1954,16 @@
                 <div class="impartiality-summary">
                     <h4>حالة متطلبات الحيادية</h4>
                     <div class="impartiality-status">
-                        <div class="status-icon incomplete" id="policy-status-icon">
+                        <div class="status-icon incomplete" id="impartiality-policy-status-icon">
                             <i class="fas fa-times"></i>
                         </div>
-                        <div class="status-text" id="policy-status-text">لم تتم قراءة السياسة</div>
+                        <div class="status-text" id="impartiality-policy-status-text">لم تتم قراءة السياسة</div>
                     </div>
                     <div class="impartiality-status">
-                        <div class="status-icon incomplete" id="agreement-status-icon">
+                        <div class="status-icon incomplete" id="impartiality-agreement-status-icon">
                             <i class="fas fa-times"></i>
                         </div>
-                        <div class="status-text" id="agreement-status-text">لم تتم الموافقة على السياسة</div>
+                        <div class="status-text" id="impartiality-agreement-status-text">لم تتم الموافقة على السياسة</div>
                     </div>
                 </div>
             </section>
@@ -2226,6 +2219,7 @@
         let currentRowNumber = null;          // رقم الصف في الشيت
         let currentRecordId = '';            // المعرف الفريد إن وُجد
         let currentElectronicNumber = '';    // الرقم الإلكتروني للموظف الحالي
+        let currentUserEmail = '';            // بريد المستخدم الحالي
 
         // ================ تعيين البادئات لكل ملف ================
         const FILE_PREFIX = {
@@ -2387,11 +2381,26 @@
             return dateObj ? formatDateToDDMMYYYY(dateObj) : dateString;
         }
 
+        // دالة للحصول على الوقت الحالي بصيغة DMYHMS (مطابقة لتنسيق Apps Script)
+        function getCurrentDateTimeDMYHMS() {
+            const now = new Date();
+            // نستخدم توقيت القاهرة (UTC+2)
+            const options = { timeZone: 'Africa/Cairo', hour12: false };
+            const cairoStr = now.toLocaleString('en-US', options);
+            const cairoDate = new Date(cairoStr);
+            const day = cairoDate.getDate();
+            const month = cairoDate.getMonth() + 1;
+            const year = cairoDate.getFullYear();
+            const hour = cairoDate.getHours();
+            const minute = cairoDate.getMinutes();
+            const second = cairoDate.getSeconds();
+            return `D${day} M${month} Y${year} H${hour} Min${minute} Sec${second}`;
+        }
+
         // ================ استدعاء getOne وتحميل السجل باستخدام المعرف الفريد من sessionStorage ================
         function loadEmployeeRecord(uniqueId) {
             if (!uniqueId) {
                 showToast('⚠️ لا يوجد معرف فريد للمستخدم. يرجى تسجيل الدخول أولاً.', 'error');
-                document.getElementById('recordStatus').innerHTML = '<span style="color:#e74c3c;"><i class="fas fa-times-circle"></i> فشل التحميل – لا توجد جلسة</span>';
                 return;
             }
             
@@ -2406,25 +2415,22 @@
                 currentRowNumber = response.row;
                 const record = response.record;
                 currentRecordId = record[0] || '';
-                currentElectronicNumber = record[16] || ''; // الرقم الإلكتروني
+                currentElectronicNumber = record[16] || ''; // الرقم الإلكتروني (col 17)
+                currentUserEmail = record[2] || ''; // البريد الإلكتروني (col 3)
                 populateFormFromRecord(record);
-                showToast(`✅ تم تحميل السجل – الصف ${currentRowNumber}`, 'success');
-                document.getElementById('recordStatus').innerHTML = `<i class="fas fa-check-circle"></i> السجل محمل (الصف ${currentRowNumber})`;
+                showToast(`✅ تم تحميل السجل`, 'success');
             } else {
                 showToast('❌ لم يتم العثور على سجل بهذا المعرف', 'error');
-                document.getElementById('recordStatus').innerHTML = '<span style="color:#e74c3c;"><i class="fas fa-times-circle"></i> لم يتم العثور على سجل</span>';
             }
         };
 
         function populateFormFromRecord(record) {
-            // تم تعديل الشرط من 97 إلى 96 لأن الجدول يحتوي على 96 عموداً فقط
             if (!record || record.length < 96) return;
 
             setValue('full-name', record[44]);
             setValue('english-name', record[47]);
             setValue('national-id', record[50]);
             
-            // معالجة التاريخ: نحول من D M Y إلى dd/mm/yyyy
             setValue('birth-date', formatDMYForInput(record[51])); 
             
             setValue('birth-place', record[52]);
@@ -2504,7 +2510,6 @@
             document.getElementById('quality-understanding').checked = (record[92] === 'نعم');
             updateImpartialityStatus(); updateConfidentialityStatus(); updateQualityStatus();
 
-            // تحديث flatpickr بالتواريخ بعد التحميل
             setFlatpickrDateFromString('birthDate', document.getElementById('birth-date').value);
             setFlatpickrDateFromString('startDate', document.getElementById('start-date').value);
             setFlatpickrDateFromString('contractEndDate', document.getElementById('contract-end-date').value);
@@ -2527,7 +2532,6 @@
         function loadFileUrlIntoPreview(inputId, url) {
             if (!url || typeof url !== 'string' || !url.startsWith('http')) return;
             uploadedFileUrls[inputId] = url;
-            // لا نعرف نوع الملف، سنتركه undefined
             const previewId = inputId.replace('-file', '-preview');
             const nameSpan = document.getElementById(inputId.replace('-file', '-name'));
             const linkAnchor = document.getElementById(inputId.replace('-file', '-link'));
@@ -2581,7 +2585,6 @@
                         const newUrl = data.url;
                         const fileId = data.fileId;
 
-                        // حفظ نوع الملف
                         uploadedFileTypes[inputId] = file.type;
 
                         const oldUrl = uploadedFileUrls[inputId];
@@ -2668,7 +2671,7 @@
             const fileInput = document.getElementById(inputId);
             if (fileInput) fileInput.value = '';
             delete selectedFiles[inputId];
-            delete uploadedFileTypes[inputId]; // حذف النوع أيضاً
+            delete uploadedFileTypes[inputId];
             const oldUrl = uploadedFileUrls[inputId];
             if (oldUrl) {
                 const fileId = extractFileIdFromUrl(oldUrl);
@@ -3299,15 +3302,16 @@
             const agreement1 = document.getElementById('impartiality-agreement');
             const agreement2 = document.getElementById('impartiality-understanding');
             
-            const policyIframe = document.getElementById('policyIframe');
-            const policyViewed = policyIframe.src && policyIframe.src.includes('preview');
+            // تعتمد الحالة على خانة الاختيار فقط (وليس على تحميل iframe)
+            const policyRead = agreement1 && agreement1.checked;
+            const policyAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
             
-            impartialityAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
+            impartialityAgreed = policyAgreed;
             
-            const policyStatusIcon = document.getElementById('policy-status-icon');
-            const policyStatusText = document.getElementById('policy-status-text');
+            const policyStatusIcon = document.getElementById('impartiality-policy-status-icon');
+            const policyStatusText = document.getElementById('impartiality-policy-status-text');
             
-            if (policyViewed) {
+            if (policyRead) {
                 policyStatusIcon.className = 'status-icon complete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
                 policyStatusText.textContent = 'تمت قراءة السياسة';
@@ -3317,10 +3321,10 @@
                 policyStatusText.textContent = 'لم تتم قراءة السياسة';
             }
             
-            const agreementStatusIcon = document.getElementById('agreement-status-icon');
-            const agreementStatusText = document.getElementById('agreement-status-text');
+            const agreementStatusIcon = document.getElementById('impartiality-agreement-status-icon');
+            const agreementStatusText = document.getElementById('impartiality-agreement-status-text');
             
-            if (impartialityAgreed) {
+            if (policyAgreed) {
                 agreementStatusIcon.className = 'status-icon complete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
                 agreementStatusText.textContent = 'تمت الموافقة على السياسة';
@@ -3330,7 +3334,7 @@
                 agreementStatusText.textContent = 'لم تتم الموافقة على السياسة';
             }
             
-            if (impartialityAgreed) {
+            if (policyAgreed) {
                 savedSections.add(7);
             } else if (savedSections.has(7)) {
                 savedSections.delete(7);
@@ -3341,15 +3345,15 @@
             const agreement1 = document.getElementById('confidentiality-agreement');
             const agreement2 = document.getElementById('confidentiality-understanding');
             
-            const policyIframe = document.getElementById('confidentialityPolicyIframe');
-            const policyViewed = policyIframe.src && policyIframe.src.includes('preview');
+            const policyRead = agreement1 && agreement1.checked;
+            const policyAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
             
-            confidentialityAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
+            confidentialityAgreed = policyAgreed;
             
             const policyStatusIcon = document.getElementById('confidentiality-policy-status-icon');
             const policyStatusText = document.getElementById('confidentiality-policy-status-text');
             
-            if (policyViewed) {
+            if (policyRead) {
                 policyStatusIcon.className = 'status-icon complete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
                 policyStatusText.textContent = 'تمت قراءة السياسة';
@@ -3362,7 +3366,7 @@
             const agreementStatusIcon = document.getElementById('confidentiality-agreement-status-icon');
             const agreementStatusText = document.getElementById('confidentiality-agreement-status-text');
             
-            if (confidentialityAgreed) {
+            if (policyAgreed) {
                 agreementStatusIcon.className = 'status-icon complete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
                 agreementStatusText.textContent = 'تمت الموافقة على السياسة';
@@ -3372,7 +3376,7 @@
                 agreementStatusText.textContent = 'لم تتم الموافقة على السياسة';
             }
             
-            if (confidentialityAgreed) {
+            if (policyAgreed) {
                 savedSections.add(8);
             } else if (savedSections.has(8)) {
                 savedSections.delete(8);
@@ -3383,15 +3387,15 @@
             const agreement1 = document.getElementById('quality-agreement');
             const agreement2 = document.getElementById('quality-understanding');
             
-            const policyIframe = document.getElementById('qualityPolicyIframe');
-            const policyViewed = policyIframe.src && policyIframe.src.includes('preview');
+            const policyRead = agreement1 && agreement1.checked;
+            const policyAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
             
-            qualityAgreed = agreement1 && agreement1.checked && agreement2 && agreement2.checked;
+            qualityAgreed = policyAgreed;
             
             const policyStatusIcon = document.getElementById('quality-policy-status-icon');
             const policyStatusText = document.getElementById('quality-policy-status-text');
             
-            if (policyViewed) {
+            if (policyRead) {
                 policyStatusIcon.className = 'status-icon complete';
                 policyStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
                 policyStatusText.textContent = 'تمت قراءة السياسة';
@@ -3404,7 +3408,7 @@
             const agreementStatusIcon = document.getElementById('quality-agreement-status-icon');
             const agreementStatusText = document.getElementById('quality-agreement-status-text');
             
-            if (qualityAgreed) {
+            if (policyAgreed) {
                 agreementStatusIcon.className = 'status-icon complete';
                 agreementStatusIcon.innerHTML = '<i class="fas fa-check"></i>';
                 agreementStatusText.textContent = 'تمت الموافقة على السياسة';
@@ -3414,7 +3418,7 @@
                 agreementStatusText.textContent = 'لم تتم الموافقة على السياسة';
             }
             
-            if (qualityAgreed) {
+            if (policyAgreed) {
                 savedSections.add(9);
             } else if (savedSections.has(9)) {
                 savedSections.delete(9);
@@ -3438,10 +3442,8 @@
                 let value = element.value.trim();
                 if (!value) return '<span class="empty">لم يتم إدخال البيانات</span>';
                 
-                // إذا كان الحقل تاريخياً، نعرضه باستخدام formatDMYForDisplay
                 const dateFields = ['birth-date', 'start-date', 'contract-end-date', 'work-start-date-', 'work-end-date-'];
                 if (dateFields.some(df => id.startsWith(df))) {
-                    // نحتاج إلى تحويل القيمة من dd/mm/yyyy إلى DMY ثم عرضها
                     const dateObj = parseDateDDMMYYYY(value);
                     if (dateObj) {
                         const dmyString = formatDateToDMY(dateObj);
@@ -3751,7 +3753,7 @@
                 </div>
             `;
             
-            // Files summary with preview boxes (مع دعم الصور)
+            // Files summary with preview boxes
             let filesHTML = '';
             const fileLabels = {
                 'national-id-front-file': 'البطاقة الشخصية (أمامي)',
@@ -3769,9 +3771,8 @@
                 if (url) {
                     const fileIdFromUrl = extractFileIdFromUrl(url);
                     const previewUrl = fileIdFromUrl ? `https://drive.google.com/file/d/${fileIdFromUrl}/preview` : url;
-                    const mimeType = uploadedFileTypes[fileId] || ''; // قد يكون غير معروف للملفات المحملة من السجل
+                    const mimeType = uploadedFileTypes[fileId] || '';
                     
-                    // تحديد نوع المعاينة: إذا كان نوع MIME يبدأ بـ image/ نستخدم img وإلا iframe
                     const isImage = mimeType.startsWith('image/');
                     
                     filesHTML += `
@@ -3852,35 +3853,48 @@
                 scale: 2,
                 useCORS: true,
                 logging: false,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                windowWidth: 800,
+                onclone: function(clonedDoc) {
+                    // Ensure all elements are visible and correctly styled
+                    const clonedContainer = clonedDoc.querySelector('div');
+                    if (clonedContainer) {
+                        clonedContainer.style.width = '800px';
+                        clonedContainer.style.margin = '0 auto';
+                    }
+                }
             }).then(canvas => {
                 document.body.removeChild(tempContainer);
                 
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+                const pdf = new jspdf.jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4',
+                    compress: true
+                });
                 
-                const imgWidth = 190;
-                const pageHeight = 297;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-                let position = 10;
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
                 
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight - 30;
+                // احسب أبعاد الصورة بما يتناسب مع عرض الصفحة
+                const imgWidth = pdfWidth - 20; // هوامش 10 مم من الجانبين
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight + 10;
+                let position = 10; // الهامش العلوي
+                let remainingHeight = imgHeight;
+                
+                // أضف الصفحة الأولى
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight, undefined, 'FAST');
+                remainingHeight -= (pdfHeight - 20); // اطرح ارتفاع الصفحة (مع الهوامش)
+                
+                let page = 2;
+                while (remainingHeight > 0) {
                     pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight - 20;
-                }
-                
-                const totalPages = pdf.internal.getNumberOfPages();
-                for (let i = 1; i <= totalPages; i++) {
-                    pdf.setPage(i);
-                    pdf.setFontSize(10);
-                    pdf.setTextColor(100);
-                    pdf.text(`الصفحة ${i} من ${totalPages}`, 105, 287, { align: 'center' });
+                    position = 10 - (imgHeight * (page - 1)); // إزاحة لأعلى حسب الصفحة
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight, undefined, 'FAST');
+                    remainingHeight -= (pdfHeight - 20);
+                    page++;
                 }
                 
                 const userName = document.getElementById('full-name').value.trim() || 'غير_محدد';
@@ -4003,7 +4017,6 @@
         function collectAllFormData() {
             const fields = [];
             
-            // دالة مساعدة لتحويل معرف الحقل إلى اسم الحقل في جدول البيانات
             function getFieldName(id) {
                 const map = {
                     'full-name': 'fullName',
@@ -4040,7 +4053,6 @@
                 return map[id] || id;
             }
             
-            // معالجة الحقول العادية
             const regularIds = [
                 'full-name', 'english-name', 'national-id', 'birth-date', 'birth-place',
                 'address', 'phone', 'alt-phone', 'email', 'emergency-name', 'emergency-phone', 'emergency-relation',
@@ -4052,7 +4064,6 @@
                 const el = document.getElementById(id);
                 if (el) {
                     let value = el.value.trim();
-                    // تحويل التاريخ من dd/mm/yyyy إلى D M Y
                     if (id.includes('date') && value) {
                         const dateObj = parseDateDDMMYYYY(value);
                         if (dateObj) {
@@ -4063,21 +4074,18 @@
                 }
             });
             
-            // معالجة nationality مع الأخذ بعين الاعتبار "آخر"
             let nationality = document.getElementById('nationality').value;
             if (nationality === 'آخر') {
                 nationality = document.getElementById('other-nationality').value;
             }
             fields.push({ field: 'nationality', value: nationality });
             
-            // معالجة religion مع الأخذ بعين الاعتبار "آخر"
             let religion = document.getElementById('religion').value;
             if (religion === 'آخر') {
                 religion = document.getElementById('other-religion').value;
             }
             fields.push({ field: 'religion', value: religion });
             
-            // معالجة الخبرات
             const experiences = [];
             for (let i = 1; i <= experienceCount; i++) {
                 const company = document.getElementById(`company-${i}`)?.value || '';
@@ -4089,7 +4097,6 @@
                 const hasCertificate = document.getElementById(`experience-certificate-${i}`)?.value || '';
                 const hasSocialSecurity = document.getElementById(`social-security-${i}`)?.value || '';
                 
-                // تحويل التواريخ
                 if (startDate) {
                     const d = parseDateDDMMYYYY(startDate);
                     if (d) startDate = formatDateToDMY(d);
@@ -4112,9 +4119,8 @@
                     });
                 }
             }
-            fields.push({ field: 'experiences', value: JSON.stringify(experiences) });
+            fields.push({ field: 'workExperiences', value: JSON.stringify(experiences) });
             
-            // معالجة سياسات الحيادية والسرية والجودة (نعم/لا)
             fields.push({ field: 'impartialityAgreement', value: document.getElementById('impartiality-agreement').checked ? 'نعم' : 'لا' });
             fields.push({ field: 'impartialityUnderstanding', value: document.getElementById('impartiality-understanding').checked ? 'نعم' : 'لا' });
             fields.push({ field: 'confidentialityAgreement', value: document.getElementById('confidentiality-agreement').checked ? 'نعم' : 'لا' });
@@ -4126,7 +4132,7 @@
         }
 
         // ================ دالة حفظ البيانات (تحديث السجل) ================
-        function submitEmployeeData() {
+        function submitEmployeeData(setProfileStatusWaiting = false) {
             if (!currentRowNumber) { 
                 showToast('❌ لا يوجد سجل نشط. حمّل بيانات الموظف أولاً.', 'error'); 
                 return; 
@@ -4137,7 +4143,6 @@
             params.append('action', 'update');
             params.append('row', currentRowNumber);
             
-            // إضافة جميع الحقول
             fields.forEach(f => params.append(f.field, f.value));
             
             // إضافة روابط الملفات
@@ -4150,9 +4155,56 @@
                 }
             });
             
+            // إذا كان الطلب هو حفظ وإرسال النموذج، نضيف Profile status = waiting عبر col_13
+            if (setProfileStatusWaiting) {
+                params.append('col_13', 'waiting'); // العمود 13 هو Profile status
+            }
+            
             jsonp(`${SCRIPT_URL}?${params.toString()}&callback=handleUpdateCallback`);
             showToast('💾 تم إرسال تحديث البيانات', 'success');
         }
+
+        // ================ دالة تسجيل الخروج ================
+        function logoutUser() {
+            if (!currentUserEmail) {
+                // إذا لم يكن هناك بريد إلكتروني، نحاول من sessionStorage
+                currentUserEmail = sessionStorage.getItem('qualitech_email');
+            }
+            if (!currentUserEmail) {
+                showToast('لا توجد جلسة نشطة', 'error');
+                return;
+            }
+            
+            const signOutDate = getCurrentDateTimeDMYHMS();
+            
+            // بناء طلب التحديث
+            let params = new URLSearchParams();
+            params.append('action', 'update');
+            params.append('email', currentUserEmail);
+            params.append('Online/Offline Status', '0');
+            params.append('Sign out date', signOutDate);
+            
+            // يمكن أيضاً إضافة العمود المباشر
+            params.append('col_10', '0'); // Online/Offline Status col 10
+            params.append('col_12', signOutDate); // Sign out date col 12
+            
+            jsonp(`${SCRIPT_URL}?${params.toString()}&callback=handleLogoutCallback`);
+        }
+
+        window.handleLogoutCallback = function(response) {
+            if (response.status === 'success') {
+                showToast('تم تسجيل الخروج بنجاح', 'success');
+                // مسح الجلسة
+                sessionStorage.clear();
+                localStorage.removeItem('qualitech_remember_email');
+                // توجيه المستخدم إلى صفحة تسجيل الدخول (يمكن تعديل الرابط)
+                setTimeout(() => {
+                    window.location.href = 'https://qualinova7.github.io/QualiNova/'; // رابط صفحة تسجيل الدخول
+                }, 1500);
+            } else {
+                showToast('فشل تسجيل الخروج: ' + response.message, 'error');
+            }
+        };
 
         function showToast(message, type = 'info', duration = 3000) {
             const existingToast = document.querySelector('.toast');
@@ -4225,15 +4277,16 @@
             updateZoomDisplay('quality');
             
             document.getElementById('saveBtn').addEventListener('click', function() { 
-                submitEmployeeData(); 
+                submitEmployeeData(false); 
             });
             document.getElementById('submitBtn').addEventListener('click', function() { 
-                submitEmployeeData(); 
+                submitEmployeeData(true); // تمرير true لتعيين Profile status = waiting
             });
             document.getElementById('prevBtn').addEventListener('click', prevSection);
             document.getElementById('nextBtn').addEventListener('click', nextSection);
             document.getElementById('downloadPdfBtn').addEventListener('click', generatePDF);
             document.getElementById('add-experience-btn').addEventListener('click', addExperience);
+            document.getElementById('logoutBtn').addEventListener('click', logoutUser);
             
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
@@ -4247,7 +4300,6 @@
                 loadEmployeeRecord(uniqueId);
             } else {
                 showToast('⚠️ لا توجد جلسة نشطة. يرجى تسجيل الدخول أولاً.', 'error');
-                document.getElementById('recordStatus').innerHTML = '<span style="color:#e74c3c;"><i class="fas fa-times-circle"></i> لا توجد جلسة نشطة</span>';
             }
         });
     </script>
