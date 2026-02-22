@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* جميع الأنماط كما هي دون تغيير */
+        /* ... keep all existing styles exactly as provided ... */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
@@ -4030,7 +4030,7 @@
             return isValid;
         }
 
-        // ================ دالة جمع البيانات للتحديث (مع تجزئة الأسماء) ================
+        // ================ دالة جمع البيانات للتحديث ================
         function collectAllFormData() {
             const fields = [];
             
@@ -4103,32 +4103,31 @@
             }
             fields.push({ field: 'religion', value: religion });
             
-            // تجزئة الاسم العربي إلى الأول والأخير
+            // ========== استخراج الاسم الأول والأخير من الاسم بالكامل عربي ==========
             const fullNameArabic = document.getElementById('full-name').value.trim();
+            let firstNameArabic = '';
+            let lastNameArabic = '';
             if (fullNameArabic) {
-                const parts = fullNameArabic.split(' ');
-                const firstNameArabic = parts[0] || '';
-                const lastNameArabic = parts.slice(1).join(' ') || '';
-                fields.push({ field: 'الاسم الأول عربى', value: firstNameArabic });
-                fields.push({ field: 'الاسم الأخير عربى', value: lastNameArabic });
-            } else {
-                fields.push({ field: 'الاسم الأول عربى', value: '' });
-                fields.push({ field: 'الاسم الأخير عربى', value: '' });
+                const parts = fullNameArabic.split(/\s+/);
+                firstNameArabic = parts[0] || '';
+                lastNameArabic = parts.length > 1 ? parts[parts.length - 1] : '';
             }
-            
-            // تجزئة الاسم الإنجليزي إلى الأول والأخير
+            // نرسل القيم باستخدام col_46 (الاسم الأول عربى) و col_47 (الاسم الأخير عربى)
+            fields.push({ field: 'col_46', value: firstNameArabic });  // العمود 46: الاسم الأول عربى
+            fields.push({ field: 'col_47', value: lastNameArabic });   // العمود 47: الاسم الأخير عربى
+
+            // ========== استخراج الاسم الأول والأخير من الاسم بالكامل إنجليزي ==========
             const fullNameEnglish = document.getElementById('english-name').value.trim();
+            let firstNameEnglish = '';
+            let lastNameEnglish = '';
             if (fullNameEnglish) {
-                const parts = fullNameEnglish.split(' ');
-                const firstNameEnglish = parts[0] || '';
-                const lastNameEnglish = parts.slice(1).join(' ') || '';
-                fields.push({ field: 'الاسم الأول إنجليزي', value: firstNameEnglish });
-                fields.push({ field: 'الاسم الأخير إنجليزي', value: lastNameEnglish });
-            } else {
-                fields.push({ field: 'الاسم الأول إنجليزي', value: '' });
-                fields.push({ field: 'الاسم الأخير إنجليزي', value: '' });
+                const parts = fullNameEnglish.split(/\s+/);
+                firstNameEnglish = parts[0] || '';
+                lastNameEnglish = parts.length > 1 ? parts[parts.length - 1] : '';
             }
-            
+            fields.push({ field: 'col_49', value: firstNameEnglish }); // العمود 49: الاسم الأول إنجليزي
+            fields.push({ field: 'col_50', value: lastNameEnglish });  // العمود 50: الاسم الأخير إنجليزي
+
             const experiences = [];
             for (let i = 1; i <= experienceCount; i++) {
                 const company = document.getElementById(`company-${i}`)?.value || '';
