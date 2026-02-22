@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        /* جميع الأنماط كما هي دون تغيير */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
@@ -4029,7 +4030,7 @@
             return isValid;
         }
 
-        // ================ دالة جمع البيانات للتحديث ================
+        // ================ دالة جمع البيانات للتحديث (مع تجزئة الأسماء) ================
         function collectAllFormData() {
             const fields = [];
             
@@ -4101,6 +4102,32 @@
                 religion = document.getElementById('other-religion').value;
             }
             fields.push({ field: 'religion', value: religion });
+            
+            // تجزئة الاسم العربي إلى الأول والأخير
+            const fullNameArabic = document.getElementById('full-name').value.trim();
+            if (fullNameArabic) {
+                const parts = fullNameArabic.split(' ');
+                const firstNameArabic = parts[0] || '';
+                const lastNameArabic = parts.slice(1).join(' ') || '';
+                fields.push({ field: 'الاسم الأول عربى', value: firstNameArabic });
+                fields.push({ field: 'الاسم الأخير عربى', value: lastNameArabic });
+            } else {
+                fields.push({ field: 'الاسم الأول عربى', value: '' });
+                fields.push({ field: 'الاسم الأخير عربى', value: '' });
+            }
+            
+            // تجزئة الاسم الإنجليزي إلى الأول والأخير
+            const fullNameEnglish = document.getElementById('english-name').value.trim();
+            if (fullNameEnglish) {
+                const parts = fullNameEnglish.split(' ');
+                const firstNameEnglish = parts[0] || '';
+                const lastNameEnglish = parts.slice(1).join(' ') || '';
+                fields.push({ field: 'الاسم الأول إنجليزي', value: firstNameEnglish });
+                fields.push({ field: 'الاسم الأخير إنجليزي', value: lastNameEnglish });
+            } else {
+                fields.push({ field: 'الاسم الأول إنجليزي', value: '' });
+                fields.push({ field: 'الاسم الأخير إنجليزي', value: '' });
+            }
             
             const experiences = [];
             for (let i = 1; i <= experienceCount; i++) {
