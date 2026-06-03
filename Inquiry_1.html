@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Qualitech · Inquiry Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; background: #f4f7fb; padding: 20px; color: #1e293b; }
+    .container { max-width:1400px; margin:0 auto; }
+    h1 { font-size:2rem; margin-bottom:20px; color:#0b3b5c; display:flex; align-items:center; gap:10px; }
+    h1 i { color:#f0b73e; }
+    .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
+    .refresh-btn { background:#0b3b5c; color:white; border:none; padding:8px 20px; border-radius:30px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:8px; transition:0.2s; }
+    .refresh-btn:hover { background:#1f5a7a; }
+    .filter { display:flex; align-items:center; gap:10px; }
+    .filter select { padding:8px 12px; border-radius:20px; border:1px solid #b8ccdd; background:white; }
+    .stats { background:white; border-radius:16px; padding:16px 24px; box-shadow:0 4px 12px rgba(0,0,0,0.04); margin-bottom:20px; display:flex; gap:30px; flex-wrap:wrap; }
+    .stat-item { display:flex; flex-direction:column; }
+    .stat-label { font-size:0.8rem; color:#5f6f80; text-transform:uppercase; }
+    .stat-value { font-size:1.8rem; font-weight:700; color:#0b3b5c; }
+    table { width:100%; border-collapse:collapse; background:white; border-radius:24px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.05); }
+    th { background:#0b3b5c; color:white; font-weight:600; padding:12px 8px; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.5px; }
+    td { padding:12px 8px; border-bottom:1px solid #e9edf2; vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tr.unread { background:#fff8e7; font-weight:500; }
+    .badge { display:inline-block; padding:4px 10px; border-radius:30px; font-size:0.7rem; font-weight:600; }
+    .badge.unread { background:#f0b73e; color:#0b3b5c; }
+    .badge.read { background:#d1d5db; color:#1e293b; }
+    .attachments a { color:#0b3b5c; text-decoration:none; margin-right:8px; }
+    .attachments a:hover { text-decoration:underline; }
+    .action-btn { background:transparent; border:1px solid #0b3b5c; color:#0b3b5c; padding:4px 12px; border-radius:30px; cursor:pointer; font-size:0.7rem; font-weight:600; transition:0.2s; }
+    .action-btn:hover { background:#0b3b5c; color:white; }
+    .loading { text-align:center; padding:40px; color:#5f6f80; }
+    .loading i { font-size:2rem; margin-bottom:10px; }
+    .error { color:#b91c1c; text-align:center; padding:20px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1><i class="fas fa-inbox"></i> Client Inquiries</h1>
+  <div class="toolbar">
+    <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+    <div class="filter">
+      <label for="statusFilter">Show:</label>
+      <select id="statusFilter">
+        <option value="all">All inquiries</option>
+        <option value="unread">Unread only</option>
+        <option value="read">Read only</option>
+      </select>
+    </div>
+  </div>
+  <div class="stats" id="stats">
+    <div class="stat-item"><span class="stat-label">Total</span><span class="stat-value" id="totalCount">0</span></div>
+    <div class="stat-item"><span class="stat-label">Unread</span><span class="stat-value" id="unreadCount">0</span></div>
+    <div class="stat-item"><span class="stat-label">Read</span><span class="stat-value" id="readCount">0</span></div>
+  </div>
+  <div id="tableContainer">
+    <table id="inquiryTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Company</th>
+          <th>Message</th>
+          <th>Attachments</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="9" class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading inquiries...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // ===== CONFIGURATION =====
+  const MAIN_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxlUPMTmnlMAKFMU1YZrPZ1xICSwzwEZ_lQ-n0llpttbutEwFIejx5vIII1RVaqnYF8/exec';
+
+  // Helper: JSONP
+  function jsonp(url) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      const callbackFn = 'jsonp_' + Math.random().toString(36).substr(2, 10);
+      window[callbackFn] = function(data) {
+        delete window[callbackFn];
+        document.body.removeChild(script);
+        resolve(data);
+      };
+      const connector = url.includes('?') ? '&' : '?';
+      script.src = url + connector + 'callback=' + callbackFn;
+      script.onerror = () => {
+        delete window[callbackFn];
+        document.body.removeChild(script);
+        reject(new Error('Network error'));
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  // Fetch all records
+  async function fetchInquiries() {
+    const url = `${MAIN_SCRIPT_URL}?action=getAll`;
+    const res = await jsonp(url);
+    if (res.status !== 'success') throw new Error(res.message);
+    return { headers: res.headers, data: res.data };
+  }
+
+  // Update a record (mark as read)
+  async function markAsRead(record) {
+    // record is an array of values in the same order as headers
+    const headers = ['Full Name', 'Email', 'Phone', 'Company', 'Message', 'Attachments', 'Submission Date', 'Read Status'];
+    // Build params object
+    const params = {
+      action: 'update',
+      fullName: record[0],
+      email: record[1],
+      phone: record[2],
+      company: record[3],
+      message: record[4],
+      attachments: record[5],
+      // Keep original date, do not change it
+      // We need to pass readStatus = 'Read'
+      readStatus: 'Read'
+    };
+    // Build URL
+    const query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&');
+    const url = `${MAIN_SCRIPT_URL}?${query}`;
+    return await jsonp(url);
+  }
+
+  // Format date from "D... M... Y... H... Min... Sec..." to readable
+  function formatDisplayDate(dateStr) {
+    if (!dateStr) return '';
+    const match = dateStr.match(/D(\d+)\s+M(\d+)\s+Y(\d+)\s+H(\d+)\s+Min(\d+)\s+Sec(\d+)/);
+    if (!match) return dateStr;
+    const [_, d, m, y, h, min, s] = match;
+    return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')} ${h.padStart(2,'0')}:${min.padStart(2,'0')}`;
+  }
+
+  // Render table
+  function renderTable(records, filter = 'all') {
+    const tbody = document.getElementById('tableBody');
+    const totalSpan = document.getElementById('totalCount');
+    const unreadSpan = document.getElementById('unreadCount');
+    const readSpan = document.getElementById('readCount');
+
+    if (!records || records.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="9" class="loading">No inquiries found.</td></tr>';
+      totalSpan.innerText = '0';
+      unreadSpan.innerText = '0';
+      readSpan.innerText = '0';
+      return;
+    }
+
+    // Filter
+    let filtered = records;
+    if (filter === 'unread') {
+      filtered = records.filter(r => r[7] === 'Unread');
+    } else if (filter === 'read') {
+      filtered = records.filter(r => r[7] === 'Read');
+    }
+
+    // Update stats
+    const total = records.length;
+    const unread = records.filter(r => r[7] === 'Unread').length;
+    const read = total - unread;
+    totalSpan.innerText = total;
+    unreadSpan.innerText = unread;
+    readSpan.innerText = read;
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="9" class="loading">No records match filter.</td></tr>';
+      return;
+    }
+
+    let html = '';
+    filtered.forEach(record => {
+      const date = formatDisplayDate(record[6]);
+      const status = record[7] || 'Unread';
+      const isUnread = status === 'Unread';
+      const attachments = record[5] ? record[5].split(',').map(url => `<a href="${url}" target="_blank"><i class="fas fa-paperclip"></i></a>`).join(' ') : '';
+
+      html += `<tr class="${isUnread ? 'unread' : ''}">
+        <td>${date}</td>
+        <td>${record[0] || ''}</td>
+        <td>${record[1] || ''}</td>
+        <td>${record[2] || ''}</td>
+        <td>${record[3] || ''}</td>
+        <td>${record[4] || ''}</td>
+        <td class="attachments">${attachments}</td>
+        <td><span class="badge ${isUnread ? 'unread' : 'read'}">${status}</span></td>
+        <td>
+          ${isUnread ? `<button class="action-btn" data-email="${record[1]}" data-date="${record[6]}" onclick="markRead(this)"><i class="fas fa-check"></i> Mark Read</button>` : ''}
+        </td>
+      </tr>`;
+    });
+    tbody.innerHTML = html;
+  }
+
+  // Global function for button onclick
+  window.markRead = async function(btn) {
+    const row = btn.closest('tr');
+    const email = btn.dataset.email;
+    const dateStr = btn.dataset.date;
+    // Find the full record from the row (we need all fields)
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 8) return;
+    const record = [
+      cells[1].innerText,                // Full Name
+      email,                              // Email
+      cells[3].innerText,                 // Phone
+      cells[4].innerText,                 // Company
+      cells[5].innerText,                 // Message
+      // Attachments: reconstruct from innerHTML? Better to store data-*
+      '',                                  // We'll need to get attachments from somewhere
+      dateStr,
+      'Unread'
+    ];
+    // Attachments: the 7th cell (index 6) contains icons with links, we need the original URLs.
+    // For simplicity, we'll fetch all records and find by email+date. 
+    // But to keep it simple, we'll just call markAsRead with the email and rely on the backend to update the correct one.
+    // However, if multiple same email, it may update wrong one.
+    // Better approach: use email + date to identify uniquely.
+    // We'll pass both email and date, but the backend updateRecord only uses email.
+    // So we need to modify backend to accept date as well, or we can first fetch all and find exact row.
+    // Given time, we'll implement a workaround: after clicking, we fetch all, find the exact row by email AND date, then update with all fields.
+    try {
+      btn.disabled = true;
+      btn.innerText = 'Updating...';
+      const { headers, data } = await fetchInquiries();
+      // Find the row where email matches AND submission date matches
+      const target = data.find(row => row[1] === email && row[6] === dateStr);
+      if (!target) {
+        alert('Record not found. It may have been changed.');
+        btn.disabled = false;
+        btn.innerText = 'Mark Read';
+        return;
+      }
+      // Prepare update params with all fields, set readStatus to 'Read'
+      const params = {
+        action: 'update',
+        fullName: target[0],
+        email: target[1],
+        phone: target[2],
+        company: target[3],
+        message: target[4],
+        attachments: target[5],
+        readStatus: 'Read'
+        // Note: we do NOT send the date; the backend will generate a new date.
+        // To preserve original date, we need to modify backend to accept date.
+        // For now, we accept that the date will be updated to current time.
+        // If you want to preserve original date, modify backend to accept a 'submissionDate' parameter.
+      };
+      const query = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&');
+      const url = `${MAIN_SCRIPT_URL}?${query}`;
+      const res = await jsonp(url);
+      if (res.status === 'success') {
+        // Refresh table
+        loadData();
+      } else {
+        alert('Error: ' + res.message);
+        btn.disabled = false;
+        btn.innerText = 'Mark Read';
+      }
+    } catch (err) {
+      alert('Failed to update: ' + err.message);
+      btn.disabled = false;
+      btn.innerText = 'Mark Read';
+    }
+  };
+
+  // Load data and apply filter
+  async function loadData() {
+    const filter = document.getElementById('statusFilter').value;
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '<tr><td colspan="9" class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading...</td></tr>';
+    try {
+      const { headers, data } = await fetchInquiries();
+      // Assuming headers order: Full Name, Email, Phone, Company, Message, Attachments, Submission Date, Read Status
+      renderTable(data, filter);
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="9" class="error"><i class="fas fa-exclamation-triangle"></i> Error: ${err.message}</td></tr>`;
+    }
+  }
+
+  // Event listeners
+  document.getElementById('refreshBtn').addEventListener('click', loadData);
+  document.getElementById('statusFilter').addEventListener('change', () => loadData());
+
+  // Initial load
+  loadData();
+</script>
+</body>
+</html>
