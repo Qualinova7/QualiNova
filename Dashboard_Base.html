@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualitech International · Unified Calibration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent-teal: #06D6A0;
+            --accent-amber: #F59E0B;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #4B5563;
+            --border-light: #E5E7EB;
+            --card-bg: #FFFFFF;
+            --gradient-blue: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+            --transition-smooth: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ----- HEADER (unchanged) ----- */
+        header {
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+        }
+
+        .logo-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .icons-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .icon-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .icon-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--light);
+            color: var(--dark);
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-light);
+        }
+
+        .icon-btn:hover {
+            background-color: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        header .icon-wrapper .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        header .profile-section:hover {
+            background-color: var(--light);
+        }
+
+        header .profile-pic {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--secondary);
+        }
+
+        header .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        header .profile-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        header .profile-role {
+            font-size: 13px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        header .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-teal);
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            background-color: white;
+            width: 280px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-header {
+            padding: 20px;
+            background-color: var(--light);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dropdown-header .profile-pic {
+            width: 60px;
+            height: 60px;
+        }
+
+        .dropdown-header-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .dropdown-header-info p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .dropdown-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--dark);
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light);
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--gray);
+        }
+
+        .dropdown-item.logout {
+            color: var(--danger);
+            border-bottom: none;
+        }
+
+        .dropdown-item.logout i {
+            color: var(--danger);
+        }
+
+        /* ----- DASHBOARD GRID ----- */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+            padding: 1.8rem 2rem 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* sidebar cards */
+        .sidebar-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: var(--transition-smooth);
+            margin-bottom: 1.5rem;
+        }
+        .sidebar-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card-title i { color: var(--secondary); }
+        .card-subtitle { font-size: 0.8rem; color: var(--gray); margin-top: 0.2rem; }
+
+        /* ----- SCROLLABLE CHAT LIST (with bold unread) ----- */
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 320px;          /* fixed height for scroll */
+            overflow-y: auto;
+            padding-right: 6px;          /* space for scrollbar */
+        }
+
+        /* custom scrollbar (optional) */
+        .chat-list::-webkit-scrollbar,
+        .activity-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .chat-list::-webkit-scrollbar-track,
+        .activity-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .chat-list::-webkit-scrollbar-thumb,
+        .activity-list::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .chat-item:hover { background: var(--light); border-color: var(--border-light); }
+        
+        /* --- BOLD unread messages --- */
+        .chat-item.unread .chat-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .chat-item.unread .chat-preview {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        /* keep subtle unread indicator (dot) */
+        .chat-item.unread { background: rgba(6,214,160,0.05); border-color: rgba(6,214,160,0.2); }
+
+        .chat-avatar {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: var(--gradient-blue); display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 600; flex-shrink: 0;
+        }
+        .chat-content { flex: 1; min-width: 0; }
+        .chat-header { display: flex; justify-content: space-between; margin-bottom: 0.2rem; }
+        .chat-name { font-weight: 600; font-size: 0.9rem; transition: font-weight 0.1s; }
+        .chat-time { font-size: 0.7rem; color: var(--gray); }
+        .chat-preview { font-size: 0.8rem; color: var(--gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .unread-indicator { width: 8px; height: 8px; background: var(--accent-teal); border-radius: 50%; box-shadow: 0 0 0 3px rgba(6,214,160,0.2); }
+
+        /* unread badge (team messages header) – with border circle */
+        .badge.circular-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent-teal);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            line-height: 1;
+        }
+
+        /* recent activity scrollable */
+        .activity-list {
+            list-style: none;
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .activity-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .activity-item:last-child { border: none; }
+        .activity-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 0.9rem; flex-shrink: 0;
+        }
+        .activity-details h4 { font-size: 0.95rem; }
+        .activity-details p { font-size: 0.75rem; color: var(--gray); }
+        .activity-time { margin-left: auto; font-size: 0.7rem; color: var(--gray); white-space: nowrap; }
+
+        /* main content grid */
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: var(--transition-smooth);
+            animation: fadeIn 0.6s forwards;
+            opacity: 0;
+        }
+        .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+        .card-full { grid-column: span 2; }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        .welcome-card h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .welcome-card p { opacity: 0.9; font-size: 0.95rem; }
+
+        .quick-grid {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+        .action-mini-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.3rem 0.8rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border-top: 4px solid var(--secondary);
+        }
+        .action-mini-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+        .action-mini-icon {
+            width: 50px; height: 50px; border-radius: 50%; background: var(--light);
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem;
+            font-size: 1.3rem; color: var(--secondary);
+        }
+        .action-mini-card h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+        .action-mini-card p { font-size: 0.75rem; color: var(--gray); }
+
+        .announcement-card {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            padding: 1.2rem 1.5rem;
+        }
+        .announcement-content { position: relative; z-index: 1; max-width: 70%; }
+        .announcement-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .announcement-subtitle { font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.8rem; }
+        .announcement-btn {
+            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white;
+            padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.85rem;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .announcement-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+
+        .kpi-compact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            height: 100%;
+        }
+        .kpi-compact-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+        .kpi-compact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        .kpi-compact-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        .kpi-compact-info h3 {
+            font-size: 1.4rem;
+            line-height: 1;
+            margin-bottom: 0.2rem;
+        }
+        .kpi-compact-info p {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .copyright { font-size: 14px; opacity: 0.8; }
+
+        @media (max-width: 1200px) {
+            .dashboard { grid-template-columns: 280px 1fr; }
+            .quick-grid { grid-template-columns: repeat(4,1fr); }
+        }
+        @media (max-width: 992px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .sidebar { order: 2; }
+            .main-content { order: 1; }
+            .quick-grid { grid-template-columns: repeat(3,1fr); }
+        }
+        @media (max-width: 768px) {
+            header .profile-info { display: none; }
+            .quick-grid { grid-template-columns: repeat(2,1fr); }
+            .footer-content { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <div><div class="logo-text">Qualitech International</div></div>
+            </div>
+            <div class="header-right">
+                <div class="icons-container">
+                    <div class="icon-wrapper" id="messages-icon">
+                        <div class="icon-btn"><i class="fas fa-envelope"></i></div>
+                        <div class="badge">3</div>
+                    </div>
+                    <div class="icon-wrapper" id="notifications-icon">
+                        <div class="icon-btn"><i class="fas fa-bell"></i></div>
+                        <div class="badge">7</div>
+                    </div>
+                    <div class="icon-wrapper" id="schedule-icon">
+                        <div class="icon-btn"><i class="fas fa-calendar-alt"></i></div>
+                    </div>
+                    <div class="icon-wrapper" id="reports-icon">
+                        <div class="icon-btn"><i class="fas fa-chart-bar"></i></div>
+                    </div>
+                </div>
+                <div class="profile-section" id="profile-dropdown-trigger">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic">
+                    <div class="profile-info">
+                        <div class="profile-name">Amr Elgendy</div>
+                        <div class="profile-role"><span class="status-indicator"></span>Calibration Engineer</div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-menu" id="profile-dropdown">
+                    <div class="dropdown-header">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-pic">
+                        <div class="dropdown-header-info">
+                            <h3>Amr Elgendy</h3>
+                            <p>Calibration Engineer</p>
+                            <p>ID: EMP-0145 | Metrology Dept.</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-item"><i class="fas fa-user"></i><span>My Profile</span></div>
+                    <div class="dropdown-item"><i class="fas fa-tasks"></i><span>My Tasks</span></div>
+                    <div class="dropdown-item"><i class="fas fa-cog"></i><span>Account Settings</span></div>
+                    <div class="dropdown-item"><i class="fas fa-file-certificate"></i><span>My Certificates</span></div>
+                    <div class="dropdown-item"><i class="fas fa-question-circle"></i><span>Help & Support</span></div>
+                    <div class="dropdown-item logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard">
+        <!-- SIDEBAR (scrollable messages & activity) -->
+        <div class="sidebar">
+            <!-- Team Messages with dynamic circular badge -->
+            <div class="sidebar-card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title"><i class="fas fa-comments"></i> Team Messages</div>
+                        <div class="card-subtitle">active conversations</div>
+                    </div>
+                    <span class="badge circular-badge" id="unread-badge">2</span>
+                </div>
+                <div class="chat-list" id="chatList">
+                    <div class="chat-item unread" data-name="Alice Morgan">
+                        <div class="chat-avatar">AM</div>
+                        <div class="chat-content">
+                            <div class="chat-header"><span class="chat-name">Alice Morgan</span><span class="chat-time">10:24</span></div>
+                            <div class="chat-preview">Calibration report requires approval</div>
+                        </div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    <div class="chat-item unread" data-name="Robert Smith">
+                        <div class="chat-avatar">RS</div>
+                        <div class="chat-content">
+                            <div class="chat-header"><span class="chat-name">Robert Smith</span><span class="chat-time">09:45</span></div>
+                            <div class="chat-preview">Device maintenance scheduling</div>
+                        </div>
+                        <div class="unread-indicator"></div>
+                    </div>
+                    <div class="chat-item" data-name="Emily Johnson">
+                        <div class="chat-avatar">EJ</div>
+                        <div class="chat-content">
+                            <div class="chat-header"><span class="chat-name">Emily Johnson</span><span class="chat-time">Yesterday</span></div>
+                            <div class="chat-preview">ISO 17025 certificate approved</div>
+                        </div>
+                    </div>
+                    <div class="chat-item" data-name="Michael Kim">
+                        <div class="chat-avatar">MK</div>
+                        <div class="chat-content">
+                            <div class="chat-header"><span class="chat-name">Michael Kim</span><span class="chat-time">Oct 12</span></div>
+                            <div class="chat-preview">Appreciation for quick turnaround</div>
+                        </div>
+                    </div>
+                    <!-- extra item to demonstrate scroll -->
+                    <div class="chat-item" data-name="Linda Gray">
+                        <div class="chat-avatar">LG</div>
+                        <div class="chat-content">
+                            <div class="chat-header"><span class="chat-name">Linda Gray</span><span class="chat-time">Oct 10</span></div>
+                            <div class="chat-preview">Updated procedure document</div>
+                        </div>
+                    </div>
+                    <div class="chat-item" data-name="David Chen">
+                        <div class="chat-avatar">DC</div>
+                        <div class="chat-content">
+                            <div class="chat-header"><span class="chat-name">David Chen</span><span class="chat-time">Oct 9</span></div>
+                            <div class="chat-preview">Request for new standard</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity (scrollable) -->
+            <div class="sidebar-card">
+                <div class="card-header">
+                    <div class="card-title"><i class="fas fa-history"></i> Recent Activity</div>
+                </div>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background:var(--accent-teal);"><i class="fas fa-check"></i></div>
+                        <div class="activity-details">
+                            <h4>Pressure Gauge Calibrated</h4>
+                            <p>ID: PG-7892 | Lab 3</p>
+                        </div>
+                        <div class="activity-time">10:42 AM</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background:var(--accent-amber);"><i class="fas fa-exclamation"></i></div>
+                        <div class="activity-details">
+                            <h4>Approval Required</h4>
+                            <p>Multimeter DMM-402</p>
+                        </div>
+                        <div class="activity-time">09:15 AM</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background:var(--secondary);"><i class="fas fa-tasks"></i></div>
+                        <div class="activity-details">
+                            <h4>New Job Assigned</h4>
+                            <p>Temperature sensors | Due tomorrow</p>
+                        </div>
+                        <div class="activity-time">Yesterday</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background:var(--danger);"><i class="fas fa-clock"></i></div>
+                        <div class="activity-details">
+                            <h4>Device Overdue</h4>
+                            <p>Oscilloscope OS-205</p>
+                        </div>
+                        <div class="activity-time">Yesterday</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background:var(--primary);"><i class="fas fa-file-pdf"></i></div>
+                        <div class="activity-details">
+                            <h4>Certificate generated</h4>
+                            <p>Calibration #C-1024</p>
+                        </div>
+                        <div class="activity-time">Oct 12</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background:var(--accent-amber);"><i class="fas fa-truck"></i></div>
+                        <div class="activity-details">
+                            <h4>Device shipped</h4>
+                            <p>Tracking #1Z987...</p>
+                        </div>
+                        <div class="activity-time">Oct 11</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT (same as before) -->
+        <div class="main-content">
+            <div class="card card-full welcome-card">
+                <h1>Welcome back, Amr!</h1>
+                <p>You have 3 calibration jobs pending, 2 certificates to approve, and 1 device overdue. Today's schedule includes pressure gauges in Lab 3.</p>
+            </div>
+
+            <div class="quick-grid">
+                <div class="action-mini-card" data-action="New Job"><div class="action-mini-icon"><i class="fas fa-plus"></i></div><h4>New Job</h4><p>Create calibration job</p></div>
+                <div class="action-mini-card" data-action="Devices"><div class="action-mini-icon"><i class="fas fa-flask"></i></div><h4>Devices</h4><p>View assigned devices</p></div>
+                <div class="action-mini-card" data-action="Schedule"><div class="action-mini-icon"><i class="fas fa-calendar-check"></i></div><h4>Schedule</h4><p>Calibration calendar</p></div>
+                <div class="action-mini-card" data-action="Upload Cert"><div class="action-mini-icon"><i class="fas fa-file-upload"></i></div><h4>Upload Cert</h4><p>Upload certificate</p></div>
+                <div class="action-mini-card" data-action="Approvals"><div class="action-mini-icon"><i class="fas fa-clipboard-check"></i></div><h4>Approvals</h4><p>Pending (5)</p></div>
+                <div class="action-mini-card" data-action="Reports"><div class="action-mini-icon"><i class="fas fa-chart-line"></i></div><h4>Reports</h4><p>Generate reports</p></div>
+                <div class="action-mini-card" data-action="Device Management"><div class="action-mini-icon"><i class="fas fa-tools"></i></div><h4>Device Mgmt</h4><p>Equipment tracking</p></div>
+                <div class="action-mini-card" data-action="Financial Dashboard"><div class="action-mini-icon"><i class="fas fa-chart-pie"></i></div><h4>Financial</h4><p>Revenue & invoices</p></div>
+                <div class="action-mini-card" data-action="Reports & Certificates"><div class="action-mini-icon"><i class="fas fa-clipboard-check"></i></div><h4>Reports & Certs</h4><p>Compliance docs</p></div>
+                <div class="action-mini-card" data-action="Training Portal"><div class="action-mini-icon"><i class="fas fa-graduation-cap"></i></div><h4>Training</h4><p>Skill development</p></div>
+            </div>
+
+            <div class="card announcement-card">
+                <div class="announcement-content">
+                    <div class="announcement-title">Quarterly Calibration Review</div>
+                    <div class="announcement-subtitle">All senior engineers required. Friday 10 AM.</div>
+                    <button class="announcement-btn" id="addToCalendarBtn"><i class="fas fa-calendar-alt"></i> Add to Calendar</button>
+                </div>
+                <div style="font-size: 4rem; position:absolute; right:20px; top:20px; opacity:0.2;"><i class="fas fa-bullhorn"></i></div>
+            </div>
+
+            <div class="card" style="padding: 1.2rem;">
+                <div class="kpi-compact-grid">
+                    <div class="kpi-compact-card">
+                        <div class="kpi-compact-icon" style="background:var(--accent-teal);"><i class="fas fa-check-circle"></i></div>
+                        <div class="kpi-compact-info"><h3>12</h3><p>Calibrations done</p></div>
+                    </div>
+                    <div class="kpi-compact-card">
+                        <div class="kpi-compact-icon" style="background:var(--accent-amber);"><i class="fas fa-clock"></i></div>
+                        <div class="kpi-compact-info"><h3>3</h3><p>Pending certs</p></div>
+                    </div>
+                    <div class="kpi-compact-card">
+                        <div class="kpi-compact-icon" style="background:var(--danger);"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="kpi-compact-info"><h3>1</h3><p>Overdue devices</p></div>
+                    </div>
+                    <div class="kpi-compact-card">
+                        <div class="kpi-compact-icon" style="background:var(--secondary);"><i class="fas fa-calendar-day"></i></div>
+                        <div class="kpi-compact-info"><h3>5</h3><p>Due today</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">&copy; 2023 Qualitech International | ISO/IEC 17025:2017 Compliant</div>
+            <div><small>Last login: Today, 8:30 AM from IP 192.168.1.105</small></div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            // Profile dropdown
+            const profileTrigger = document.getElementById('profile-dropdown-trigger');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            profileTrigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', function(e) {
+                if (!profileTrigger.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.remove('show');
+                }
+            });
+
+            // Floating message helper
+            function showFloatingMessage(msg) {
+                const notif = document.createElement('div');
+                notif.style.position = 'fixed';
+                notif.style.bottom = '20px';
+                notif.style.right = '20px';
+                notif.style.background = 'var(--dark)';
+                notif.style.color = 'white';
+                notif.style.padding = '1rem 1.5rem';
+                notif.style.borderRadius = '12px';
+                notif.style.boxShadow = 'var(--shadow-lg)';
+                notif.style.zIndex = '10000';
+                notif.style.display = 'flex';
+                notif.style.alignItems = 'center';
+                notif.style.gap = '0.8rem';
+                notif.style.animation = 'fadeIn 0.3s';
+                notif.innerHTML = `<i class="fas fa-check-circle" style="color: var(--accent-teal);"></i><span>${msg}</span>`;
+                document.body.appendChild(notif);
+                setTimeout(() => {
+                    notif.style.opacity = '0';
+                    notif.style.transition = '0.3s';
+                    setTimeout(() => document.body.removeChild(notif), 300);
+                }, 2800);
+            }
+
+            // Unread badge update function
+            const unreadBadge = document.getElementById('unread-badge');
+            function updateUnreadCount() {
+                const unreadItems = document.querySelectorAll('.chat-item.unread');
+                const count = unreadItems.length;
+                unreadBadge.textContent = count;
+                // optional: hide badge if zero? we keep 0
+            }
+
+            // Chat items click: mark as read, update badge
+            document.querySelectorAll('.chat-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    const wasUnread = this.classList.contains('unread');
+                    const name = this.querySelector('.chat-name')?.textContent || 'chat';
+                    
+                    // Remove unread visual
+                    const unreadDot = this.querySelector('.unread-indicator');
+                    if (unreadDot) {
+                        unreadDot.style.opacity = '0';
+                    }
+                    this.classList.remove('unread');
+                    
+                    // If it was unread, update the badge count
+                    if (wasUnread) {
+                        updateUnreadCount();
+                    }
+                    
+                    showFloatingMessage(`Conversation with ${name} opened`);
+                    
+                    // quick scale feedback
+                    this.style.transform = 'scale(0.99)';
+                    setTimeout(() => this.style.transform = '', 150);
+                });
+            });
+
+            // Header icons
+            document.getElementById('messages-icon').addEventListener('click', () => showFloatingMessage('Messages panel: 3 unread'));
+            document.getElementById('notifications-icon').addEventListener('click', () => showFloatingMessage('Notifications: 7 unread'));
+            document.getElementById('schedule-icon').addEventListener('click', () => showFloatingMessage('Opening schedule...'));
+            document.getElementById('reports-icon').addEventListener('click', () => showFloatingMessage('Reports dashboard'));
+
+            // Quick action cards
+            document.querySelectorAll('.action-mini-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action') || this.querySelector('h4').textContent;
+                    showFloatingMessage(`Opening ${action} module...`);
+                    this.style.transform = 'scale(0.97)';
+                    setTimeout(() => this.style.transform = '', 200);
+                });
+            });
+
+            // Announcement button
+            document.getElementById('addToCalendarBtn')?.addEventListener('click', function() {
+                showFloatingMessage('Added to calendar');
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => this.style.transform = '', 200);
+            });
+
+            // Dropdown items
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const text = this.querySelector('span')?.textContent || 'item';
+                    if (text === 'Logout') {
+                        showFloatingMessage('Logging out ... redirecting');
+                    } else {
+                        showFloatingMessage(`Opening ${text}`);
+                    }
+                    profileDropdown.classList.remove('show');
+                });
+            });
+
+            // KPI cards click
+            document.querySelectorAll('.kpi-compact-card').forEach(card => {
+                card.addEventListener('click', () => showFloatingMessage('Detailed view'));
+            });
+
+            // Initial unread count sync
+            updateUnreadCount();
+        })();
+    </script>
+</body>
+</html>
