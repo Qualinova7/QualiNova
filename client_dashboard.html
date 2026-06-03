@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calibration Portal · Client</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: #f2f6fc;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background 0.2s;
+        }
+        body.dark-mode {
+            background: #1a2634;
+            color: #eef2f6;
+        }
+        /* top bar */
+        .top-bar {
+            background: white;
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            flex-shrink: 0;
+            transition: 0.2s;
+            z-index: 10;
+        }
+        body.dark-mode .top-bar {
+            background: #2d3748;
+            color: #e2e8f0;
+            box-shadow: 0 4px 12px #0f172a;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 20px;
+            color: #1e4a76;
+        }
+        body.dark-mode .logo-area { color: #90cdf4; }
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .notif-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 22px;
+        }
+        .notif-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #c5283d;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 11px;
+        }
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-left: 1px solid #ddd;
+            padding-left: 20px;
+        }
+        body.dark-mode .language-selector { border-color: #4a5568; }
+        .lang-flag {
+            cursor: pointer;
+            opacity: 0.6;
+            font-size: 24px;
+        }
+        .lang-flag.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+        .dark-toggle {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #2d3748;
+        }
+        body.dark-mode .dark-toggle { color: #f7fafc; }
+        .client-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f0f7ff;
+            padding: 6px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        body.dark-mode .client-profile { background: #3f4e6b; }
+
+        /* main layout: sidebar + content */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 24px 12px;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.02);
+            overflow-y: auto;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        body.dark-mode .sidebar {
+            background: #2d3748;
+            box-shadow: 4px 0 12px #0f172a;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            margin: 4px 0;
+            border-radius: 16px;
+            color: #2c3e50;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        body.dark-mode .menu-item { color: #cbd5e0; }
+        .menu-item i { width: 24px; font-size: 20px; color: #1e4a76; }
+        body.dark-mode .menu-item i { color: #90cdf4; }
+        .menu-item:hover {
+            background: #eaf1fb;
+        }
+        body.dark-mode .menu-item:hover { background: #3f4e6b; }
+        .menu-item.active {
+            background: #1f3a5f;
+            color: white;
+        }
+        .menu-item.active i { color: white; }
+        body.dark-mode .menu-item.active { background: #2b4f6e; }
+
+        /* main content area */
+        .content-area {
+            flex: 1;
+            padding: 28px 32px;
+            overflow-y: auto;
+            background: #f2f6fc;
+            transition: 0.2s;
+        }
+        body.dark-mode .content-area {
+            background: #1a2634;
+        }
+
+        /* sections (all hidden by default, active one shown) */
+        .section {
+            display: none;
+            animation: fadeIn 0.2s;
+        }
+        .section.active-section {
+            display: block;
+        }
+        @keyframes fadeIn { from { opacity:0.3; } to { opacity:1; } }
+
+        /* card style for each section */
+        .section-card {
+            background: white;
+            border-radius: 32px;
+            padding: 28px 30px;
+            box-shadow: 0 18px 35px -12px rgba(0,35,65,0.12);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        body.dark-mode .section-card {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+
+        /* welcome section special background */
+        .welcome-card {
+            background: linear-gradient(145deg, #1a3f60, #102a40), url('https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+            background-blend-mode: overlay;
+            color: white;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 48px;
+            padding: 50px;
+        }
+        .welcome-card h1 { font-size: 48px; font-weight: 700; margin-bottom: 16px; text-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .welcome-card p { font-size: 20px; max-width: 600px; opacity: 0.9; }
+        .announcement-badge {
+            background: #ffb347; color: #1e2f47; padding: 8px 24px; border-radius: 60px; font-weight: 600; margin-top: 30px;
+        }
+
+        /* utility grid etc (reuse from previous) */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; margin-top: 15px; }
+        .weekday { font-weight:600; color:#7b8c9e; text-align:center; }
+        .cal-day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; background:#f8fafd; border-radius:16px; cursor:default; }
+        .cal-day.available { background:#e2f0fa; color:#0b3b5c; font-weight:600; cursor:pointer; border:1px solid #b8d1e8; }
+        .cal-day.reserved { background:#f1f3f6; color:#a0b2c6; text-decoration:line-through; cursor:not-allowed; }
+        .due-list { list-style:none; } .due-list li { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #edf2f7; }
+        .devices-table { width:100%; border-collapse:collapse; } .devices-table th { text-align:left; padding:12px 4px; color:#4f6f8f; }
+        .search-add { display:flex; gap:10px; margin-bottom:20px; } .search-add input { flex:1; padding:12px 18px; border-radius:44px; border:1px solid #e3eaf2; }
+        .live-device-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px dashed #dde5ef; }
+        .status-badge { padding:4px 10px; border-radius:40px; font-size:12px; } .status-pass { background:#dff0d8; color:#2e6b2e; }
+        .invoice-item { display:flex; justify-content:space-between; padding:8px 0; } .paid { color:#2e7d5e; } .unpaid { color:#b33c3c; }
+        .star-rating { font-size:28px; color:#f0c14b; cursor:pointer; }
+        .qr-icon { cursor:pointer; margin-left:5px; color:#1f4e7a; }
+        .small-note { color:#8699b0; font-size:13px; margin-top:12px; }
+        .btn { background:#1f3a5f; color:white; padding:12px 28px; border-radius:40px; border:none; font-weight:600; cursor:pointer; }
+    </style>
+</head>
+<body>
+    <!-- top bar with global elements -->
+    <div class="top-bar">
+        <div class="logo-area">
+            <i class="fas fa-flask"></i>
+            <span>CALIBR8</span>
+        </div>
+        <div class="top-actions">
+            <div class="notif-bell">
+                <i class="fas fa-bell"></i>
+                <span class="notif-badge">3</span>
+            </div>
+            <div class="language-selector">
+                <span class="lang-flag active" title="English">🇬🇧</span>
+                <span class="lang-flag" title="Arabic">🇸🇦</span>
+                <span class="lang-flag" title="Spanish">🇪🇸</span>
+            </div>
+            <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
+            <div class="client-profile" onclick="alert('Profile menu')">
+                <i class="fas fa-user-circle"></i>
+                <span>John Chen</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- main layout with sidebar and content -->
+    <div class="main-layout">
+        <!-- left navigation menu -->
+        <div class="sidebar" id="sidebar">
+            <div class="menu-item active" data-section="welcome"><i class="fas fa-home"></i> Home / Announcements</div>
+            <div class="menu-item" data-section="calendar"><i class="fas fa-calendar-check"></i> Calendar reservation</div>
+            <div class="menu-item" data-section="due"><i class="fas fa-exclamation-triangle"></i> Due devices</div>
+            <div class="menu-item" data-section="live"><i class="fas fa-sync-alt"></i> Live visit</div>
+            <div class="menu-item" data-section="inventory"><i class="fas fa-microscope"></i> Device inventory</div>
+            <div class="menu-item" data-section="certificates"><i class="fas fa-certificate"></i> Certificates</div>
+            <div class="menu-item" data-section="invoices"><i class="fas fa-file-invoice"></i> Invoices</div>
+            <div class="menu-item" data-section="references"><i class="fas fa-book-open"></i> References</div>
+            <div class="menu-item" data-section="complaint"><i class="fas fa-comment-dots"></i> Complaint</div>
+            <div class="menu-item" data-section="messages"><i class="fas fa-envelope"></i> Messages</div>
+            <div class="menu-item" data-section="survey"><i class="fas fa-star"></i> Satisfaction survey</div>
+            <div class="menu-item" data-section="sites"><i class="fas fa-building"></i> Site summary</div>
+            <div class="menu-item" data-section="qr"><i class="fas fa-qrcode"></i> QR label generator</div>
+        </div>
+
+        <!-- dynamic content area -->
+        <div class="content-area" id="contentArea">
+            <!-- WELCOME SECTION (active by default) -->
+            <div id="section-welcome" class="section active-section">
+                <div class="welcome-card">
+                    <h1>Welcome back, John</h1>
+                    <p>Your next calibration visit is scheduled for March 15. Two devices are due this week.</p>
+                    <div class="announcement-badge"><i class="fas fa-volume-up"></i> New: Online certificate download available</div>
+                </div>
+                <!-- additional quick stats or announcements can be placed here -->
+            </div>
+
+            <!-- CALENDAR SECTION -->
+            <div id="section-calendar" class="section">
+                <div class="section-card">
+                    <div class="card-header" style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                        <h2><i class="fas fa-calendar-check"></i> Reserve calibration date</h2>
+                        <span class="badge-icon" style="background:#ecf3fa; padding:5px 12px; border-radius:40px;">March 2026</span>
+                    </div>
+                    <div class="calendar-grid" id="calendarContainer"></div>
+                    <div class="small-note"><i class="far fa-clock"></i> Free days are bright. Click to request.</div>
+                </div>
+            </div>
+
+            <!-- DUE DEVICES SECTION -->
+            <div id="section-due" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Devices due now</h2>
+                    <ul class="due-list" id="dueList" style="margin-top:20px;"></ul>
+                    <div class="small-note"><i class="fas fa-plus-circle"></i> Include them in next visit</div>
+                </div>
+            </div>
+
+            <!-- LIVE VISIT SECTION -->
+            <div id="section-live" class="section">
+                <div class="section-card">
+                    <div style="display:flex; justify-content:space-between;">
+                        <h2><i class="fas fa-sync-alt fa-spin"></i> Live visit #231</h2>
+                        <span class="badge-icon">updating</span>
+                    </div>
+                    <div id="liveDeviceList" style="margin:20px 0;"></div>
+                    <div id="liveTimestamp" class="small-note"><i class="far fa-clock"></i> <span>updating...</span></div>
+                </div>
+            </div>
+
+            <!-- DEVICE INVENTORY SECTION -->
+            <div id="section-inventory" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-microscope"></i> Device inventory</h2>
+                    <div class="search-add">
+                        <input type="text" id="searchDevice" placeholder="🔍 Search name, model, serial...">
+                        <button class="btn" id="addDeviceBtn"><i class="fas fa-plus"></i> Add device</button>
+                    </div>
+                    <div class="devices-table-wrapper">
+                        <table class="devices-table">
+                            <thead><tr><th>Device</th><th>Model</th><th>Serial</th><th>Due date</th><th></th></tr></thead>
+                            <tbody id="deviceTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CERTIFICATES SECTION -->
+            <div id="section-certificates" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-certificate"></i> Recent certificates</h2>
+                    <ul class="file-list" style="list-style:none; margin-top:20px;">
+                        <li style="padding:12px 0; border-bottom:1px solid #ecf2f8;"><i class="fas fa-file-pdf"></i> VISIT_231_Micrometer <span style="float:right;">Mar 8</span></li>
+                        <li style="padding:12px 0; border-bottom:1px solid #ecf2f8;"><i class="fas fa-file-pdf"></i> VISIT_230_Thermometer <span style="float:right;">Feb 28</span></li>
+                        <li style="padding:12px 0; border-bottom:1px solid #ecf2f8;"><i class="fas fa-file-pdf"></i> CAL_2026-02-15_Manometer <span style="float:right;">Feb 15</span></li>
+                        <li style="padding:12px 0;"><i class="fas fa-file-pdf"></i> CAL_2026-02-08_Gauge <span style="float:right;">Feb 8</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- INVOICES SECTION -->
+            <div id="section-invoices" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-file-invoice"></i> Invoices & quotes</h2>
+                    <div style="margin-top:20px;">
+                        <div class="invoice-item"><span>INV-2026-0215</span><span class="paid">paid</span></div>
+                        <div class="invoice-item"><span>INV-2026-0222</span><span class="paid">paid</span></div>
+                        <div class="invoice-item"><span>INV-2026-0301</span><span class="unpaid">unpaid</span></div>
+                    </div>
+                    <div class="small-note"><i class="fas-regular fa-credit-card"></i> Pay online (coming soon)</div>
+                </div>
+            </div>
+
+            <!-- REFERENCES SECTION -->
+            <div id="section-references" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-book-open"></i> Reference library</h2>
+                    <ul style="list-style:none; margin-top:20px;">
+                        <li style="margin:12px 0;"><i class="fas fa-file-contract"></i> ISO 17025:2024</li>
+                        <li style="margin:12px 0;"><i class="fas fa-shield-alt"></i> Risk assessment template</li>
+                        <li style="margin:12px 0;"><i class="fas fa-chart-line"></i> MSA guide</li>
+                        <li style="margin:12px 0;"><i class="fas fa-clipboard-list"></i> Uncertainty budget</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- COMPLAINT SECTION -->
+            <div id="section-complaint" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-comment-dots"></i> Make a complaint</h2>
+                    <textarea rows="3" id="complaintText" placeholder="Describe issue..." style="width:100%; border-radius:24px; padding:16px; border:1px solid #d7e1ec; margin:20px 0;"></textarea>
+                    <button class="btn" id="submitComplaint"><i class="fas fa-paper-plane"></i> Send</button>
+                </div>
+            </div>
+
+            <!-- MESSAGES SECTION -->
+            <div id="section-messages" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-envelope"></i> Messages</h2>
+                    <div style="margin-top:20px;">
+                        <div style="display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #ecf2f8;"><i class="fas fa-user-circle" style="font-size:28px;"></i><div><div style="font-weight:600;">Calibration team</div><div>Visit #231 completed</div></div></div>
+                        <div style="display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #ecf2f8;"><i class="fas fa-user-circle" style="font-size:28px;"></i><div><div style="font-weight:600;">Support</div><div>New certificate ready</div></div></div>
+                        <div style="display:flex; gap:12px; padding:12px 0;"><i class="fas fa-user-circle" style="font-size:28px;"></i><div><div style="font-weight:600;">Billing</div><div>Invoice for March</div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SATISFACTION SURVEY SECTION -->
+            <div id="section-survey" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-star"></i> Rate last visit</h2>
+                    <div class="star-rating" id="starRating">
+                        <i class="far fa-star" data-star="1"></i><i class="far fa-star" data-star="2"></i><i class="far fa-star" data-star="3"></i><i class="far fa-star" data-star="4"></i><i class="far fa-star" data-star="5"></i>
+                    </div>
+                    <div class="small-note">Your feedback helps us improve</div>
+                </div>
+            </div>
+
+            <!-- SITE SUMMARY SECTION -->
+            <div id="section-sites" class="section">
+                <div class="section-card">
+                    <h2><i class="fas fa-building"></i> Multi‑site overview</h2>
+                    <div style="margin-top:20px;">
+                        <div style="padding:12px; background:#f1f7fd; border-radius:20px; margin-bottom:12px;">Main Lab (HQ) – 14 devices</div>
+                        <div style="padding:12px; background:#f1f7fd; border-radius:20px; margin-bottom:12px;">North warehouse – 6 devices</div>
+                        <div style="padding:12px; background:#f1f7fd; border-radius:20px;">South factory – 4 devices</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR LABEL GENERATOR SECTION -->
+            <div id="section-qr" class="section">
+                <div class="section-card" style="text-align:center;">
+                    <h2><i class="fas fa-qrcode"></i> QR label generator</h2>
+                    <div style="font-size:120px; color:#1f4e7a; margin:20px;"><i class="fas fa-qrcode"></i></div>
+                    <button class="btn" onclick="alert('QR code for selected device would be printed')">Print label for device</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- DATA ----------
+            const today = new Date();
+            const reservedDays = [3,7,11,14,18,22,25,28,29];
+            let devices = [
+                { id:1, name:'Micrometer', model:'MIT-2025', serial:'M2309-12', due:'2026-03-10' },
+                { id:2, name:'Thermometer', model:'Fluke 52', serial:'T552-08', due:'2026-02-28' },
+                { id:3, name:'Pressure gauge', model:'Wika 213.40', serial:'P887-03', due:'2026-03-22' },
+                { id:4, name:'Oscilloscope', model:'Tektronix TBS', serial:'O334-91', due:'2026-03-05' },
+                { id:5, name:'Calibrator', model:'Fluke 754', serial:'C117-45', due:'2026-04-01' },
+                { id:6, name:'Hygrometer', model:'Testo 605i', serial:'H229-77', due:'2026-02-15' }
+            ];
+            let liveDevices = [
+                { name:'Micrometer', status:'pass', comment:'as found within spec' },
+                { name:'Thermometer', status:'fail', comment:'out of tolerance' },
+                { name:'Pressure gauge', status:'progress', comment:'stabilizing' },
+                { name:'Oscilloscope', status:'progress', comment:'vertical scale check' }
+            ];
+
+            // ---------- SIDEBAR NAVIGATION ----------
+            const menuItems = document.querySelectorAll('.menu-item');
+            const sections = document.querySelectorAll('.section');
+            menuItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const targetSection = item.dataset.section;
+                    menuItems.forEach(m => m.classList.remove('active'));
+                    item.classList.add('active');
+                    sections.forEach(s => s.classList.remove('active-section'));
+                    document.getElementById(`section-${targetSection}`).classList.add('active-section');
+                });
+            });
+
+            // ---------- CALENDAR RENDER (always present, hidden if not active, but fine) ----------
+            function renderCalendar() {
+                const month = 2; // March 2026
+                const year = 2026;
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month+1, 0).getDate();
+                let html = '';
+                const weekdays = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+                weekdays.forEach(d => html += `<div class="weekday">${d}</div>`);
+                for (let i=0; i<firstDay; i++) html += '<div></div>';
+                for (let d=1; d<=daysInMonth; d++) {
+                    const cellDate = new Date(year, month, d);
+                    let cls = 'cal-day';
+                    if (cellDate < today && cellDate.toDateString() !== today.toDateString()) cls += ' past';
+                    else if (reservedDays.includes(d)) cls += ' reserved';
+                    else cls += ' available';
+                    html += `<div class="${cls}" data-day="${d}">${d}</div>`;
+                }
+                document.getElementById('calendarContainer').innerHTML = html;
+                document.querySelectorAll('.cal-day.available').forEach(el => {
+                    el.addEventListener('click', () => alert(`✅ Request for March ${el.dataset.day} sent.`));
+                });
+                document.querySelectorAll('.cal-day.reserved').forEach(el => {
+                    el.addEventListener('click', () => alert(' This day is reserved.'));
+                });
+            }
+
+            // ---------- DEVICE TABLE & DUE ----------
+            function renderDevices() {
+                const search = document.getElementById('searchDevice')?.value.toLowerCase() || '';
+                const filtered = devices.filter(d => d.name.toLowerCase().includes(search) || d.model.toLowerCase().includes(search) || d.serial.toLowerCase().includes(search));
+                const tbody = document.getElementById('deviceTableBody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+                filtered.forEach(dev => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${dev.name} <i class="fas fa-qrcode qr-icon" onclick="alert('QR for ${dev.name} (simulated)')"></i></td><td>${dev.model}</td><td>${dev.serial}</td><td>${dev.due}</td>
+                        <td class="device-actions"><i class="fas fa-edit" data-id="${dev.id}"></i><i class="fas fa-trash-alt" data-id="${dev.id}"></i></td>`;
+                    tbody.appendChild(tr);
+                });
+                document.querySelectorAll('.fa-edit').forEach(icon => {
+                    icon.addEventListener('click', (e) => {
+                        const id = Number(e.target.dataset.id);
+                        const dev = devices.find(d=>d.id===id);
+                        const newName = prompt('Edit device name', dev.name);
+                        if(newName) { dev.name = newName; renderDevices(); updateDue(); }
+                    });
+                });
+                document.querySelectorAll('.fa-trash-alt').forEach(icon => {
+                    icon.addEventListener('click', (e) => {
+                        const id = Number(e.target.dataset.id);
+                        devices = devices.filter(d=>d.id!==id);
+                        renderDevices(); updateDue();
+                    });
+                });
+            }
+
+            function updateDue() {
+                const todayStr = today.toISOString().split('T')[0];
+                const dueDevs = devices.filter(d => d.due <= todayStr);
+                const dueList = document.getElementById('dueList');
+                if (dueList) {
+                    dueList.innerHTML = '';
+                    dueDevs.forEach(dev => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<span><i class="fas fa-exclamation-circle" style="color:#c44545;"></i> ${dev.name} (${dev.due})</span><span class="device-tag" style="background:#fce4e4; color:#b33c3c; padding:4px 10px; border-radius:40px;">due</span>`;
+                        dueList.appendChild(li);
+                    });
+                }
+            }
+
+            // ---------- LIVE SIMULATION ----------
+            function refreshLive() {
+                if (liveDevices.length) {
+                    const r = Math.floor(Math.random()*liveDevices.length);
+                    const newStatus = ['pass','fail','progress'][Math.floor(Math.random()*3)];
+                    liveDevices[r].status = newStatus;
+                    liveDevices[r].comment = newStatus==='pass'?'within spec':(newStatus==='fail'?'adjust needed':'verifying');
+                }
+                let html = '';
+                liveDevices.forEach(d => {
+                    let badge = 'status-badge ';
+                    if(d.status==='pass') badge+='status-pass';
+                    else if(d.status==='fail') badge+='status-fail';
+                    else badge+='status-progress';
+                    const statusText = d.status==='pass'?'passed':(d.status==='fail'?'failed':'in progress');
+                    html += `<div class="live-device-row"><span><strong>${d.name}</strong> <span style="color:#596f88;">${d.comment}</span></span><span class="${badge}">${statusText}</span></div>`;
+                });
+                const liveDiv = document.getElementById('liveDeviceList');
+                if (liveDiv) liveDiv.innerHTML = html;
+                const ts = document.querySelector('#liveTimestamp span');
+                if (ts) ts.innerText = new Date().toLocaleTimeString() + ' (live)';
+            }
+
+            // ---------- DARK MODE ----------
+            document.getElementById('darkToggle').addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const icon = document.querySelector('#darkToggle i');
+                icon.classList.toggle('fa-moon');
+                icon.classList.toggle('fa-sun');
+            });
+
+            // ---------- COMPLAINT ----------
+            document.getElementById('submitComplaint')?.addEventListener('click', ()=>{
+                const txt = document.getElementById('complaintText')?.value;
+                alert(txt?.trim() ? 'Complaint submitted' : 'Please write something');
+            });
+
+            // ---------- ADD DEVICE ----------
+            document.getElementById('addDeviceBtn')?.addEventListener('click', ()=>{
+                const name = prompt('Device name?');
+                if(!name) return;
+                const model = prompt('Model?') || 'unknown';
+                const serial = prompt('Serial?') || 'unknown';
+                const due = prompt('Due date (YYYY-MM-DD)?') || '2026-12-31';
+                const newId = devices.length ? Math.max(...devices.map(d=>d.id)) + 1 : 7;
+                devices.push({id:newId, name, model, serial, due});
+                renderDevices(); updateDue();
+            });
+
+            document.getElementById('searchDevice')?.addEventListener('input', renderDevices);
+
+            // ---------- STAR RATING ----------
+            const stars = document.querySelectorAll('#starRating i');
+            stars.forEach(star => {
+                star.addEventListener('mouseover', ()=>{
+                    const val = star.dataset.star;
+                    stars.forEach((s,idx) => {
+                        if(idx < val) { s.classList.remove('far'); s.classList.add('fas'); }
+                        else { s.classList.remove('fas'); s.classList.add('far'); }
+                    });
+                });
+                star.addEventListener('mouseout', ()=>{
+                    stars.forEach(s => { s.classList.remove('fas'); s.classList.add('far'); });
+                });
+                star.addEventListener('click', ()=>{
+                    alert(`Thank you for rating ${star.dataset.star} stars!`);
+                });
+            });
+
+            // ---------- INITIAL RENDERS ----------
+            renderCalendar();
+            renderDevices();
+            updateDue();
+            refreshLive();
+            setInterval(refreshLive, 5000);
+        })();
+    </script>
+</body>
+</html>
